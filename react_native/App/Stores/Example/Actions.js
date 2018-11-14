@@ -1,4 +1,4 @@
-import { createActions } from 'reduxsauce'
+import { createActions } from 'reduxsauce';
 
 /**
  * We use reduxsauce's `createActions()` helper to easily create redux actions.
@@ -27,7 +27,7 @@ const { Types, Creators } = createActions({
   fetchTemperatureSuccess: ['temperature'],
   // An error occurred
   fetchTemperatureFailure: ['errorMessage'],
-})
+});
 
-export const ExampleTypes = Types
-export default Creators
+export const ExampleTypes = Types;
+export default Creators;

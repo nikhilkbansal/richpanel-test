@@ -1,7 +1,7 @@
-import { applyMiddleware, compose, createStore } from 'redux'
-import createSagaMiddleware from 'redux-saga'
-import { persistReducer, persistStore } from 'redux-persist'
-import immutableTransform from 'redux-persist-transform-immutable'
+import { applyMiddleware, compose, createStore } from 'redux';
+import createSagaMiddleware from 'redux-saga';
+import { persistReducer, persistStore } from 'redux-persist';
+import immutableTransform from 'redux-persist-transform-immutable';
 
 /**
  * This import defaults to localStorage for web and AsyncStorage for react-native.
@@ -12,7 +12,7 @@ import immutableTransform from 'redux-persist-transform-immutable'
  * If you need to store sensitive information, use redux-persist-sensitive-storage.
  * @see https://github.com/CodingZeal/redux-persist-sensitive-storage
  */
-import storage from 'redux-persist/lib/storage'
+import storage from 'redux-persist/lib/storage';
 
 const persistConfig = {
   transforms: [
@@ -23,33 +23,38 @@ const persistConfig = {
     immutableTransform(),
   ],
   key: 'root',
-  storage: storage,
+  storage,
   /**
    * Blacklist state that we do not need/want to persist
    */
   blacklist: [
     // 'auth',
   ],
-}
+};
 
 export default (rootReducer, rootSaga) => {
-  const middleware = []
-  const enhancers = []
+  const middleware = [];
+  const enhancers = [];
 
   // Connect the sagas to the redux store
-  const sagaMiddleware = createSagaMiddleware()
-  middleware.push(sagaMiddleware)
+  const sagaMiddleware = createSagaMiddleware();
+  middleware.push(sagaMiddleware);
 
-  enhancers.push(applyMiddleware(...middleware))
+  // Connect react native debugger to app
+  // middleware.push(window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()); // eslint-disable-line no-underscore-dangle
+  enhancers.push(applyMiddleware(...middleware));
 
   // Redux persist
-  const persistedReducer = persistReducer(persistConfig, rootReducer)
+  const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-  const store = createStore(persistedReducer, compose(...enhancers))
-  const persistor = persistStore(store)
+  // Connecting __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ with app
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // eslint-disable-line no-underscore-dangle
+
+  const store = createStore(persistedReducer, composeEnhancers(...enhancers));
+  const persistor = persistStore(store);
 
   // Kick off the root saga
-  sagaMiddleware.run(rootSaga)
+  sagaMiddleware.run(rootSaga);
 
-  return { store, persistor }
-}
+  return { store, persistor };
+};

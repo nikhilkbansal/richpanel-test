@@ -1,5 +1,5 @@
 import React from 'react'
-import { Platform, Text, View, Button } from 'react-native'
+import { Platform, Text, View, Button, TouchableNativeFeedback } from 'react-native'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import ExampleActions from 'App/Stores/Example/Actions'
@@ -19,9 +19,13 @@ const instructions = Platform.select({
 })
 
 class ExampleScreen extends React.Component {
+  state = {
+    showMsg: false
+  }
   componentDidMount() {
     this.props.fetchTemperature()
   }
+
 
   render() {
     let temperature = this.props.temperatureIsLoading ? '...' : this.props.temperature
@@ -31,13 +35,19 @@ class ExampleScreen extends React.Component {
 
     return (
       <View style={Style.container}>
-        <Text style={Style.title}>TheCodingMachine boilerplate</Text>
-        <Text style={Style.text}>To get started, edit App.js</Text>
-        <Text style={Style.text}>{instructions}</Text>
+       <TouchableNativeFeedback
+        onPress={() => this.setState({showMsg:!this.state.showMsg})}
+        background={TouchableNativeFeedback.SelectableBackground()}>
+          <View >
+            <Text style={Style.title}> {this.state.showMsg?"Clicked":"Click here to see magic"}</Text>
+          </View>
+        </TouchableNativeFeedback>
+        <Text style={Style.text} >Help boilerplate</Text>
+        {/* <Text style={Style.text}>{instructions}</Text>
         <Text style={Style.text}>The weather temperature is: {temperature}</Text>
         <Text style={Style.text}>{this.props.isHot ? "It's pretty hot!" : ''}</Text>
         <Text style={Style.text}>{this.props.temperatureErrorMessage}</Text>
-        <Button onPress={this.props.fetchTemperature} title="Refresh" />
+        <Button onPress={this.props.fetchTemperature} title="Refresh" /> */}
       </View>
     )
   }

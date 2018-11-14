@@ -6,6 +6,4 @@
  * Writing selectors is optional as it is not always necessary, we provide a simple example below.
  */
 
-export const isHot = (state) => {
-  return state.example.get('temperature') && state.example.get('temperature') > 25
-}
+export const isHot = state => state.example.get('temperature') && state.example.get('temperature') > 25;
