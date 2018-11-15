@@ -12,6 +12,7 @@
     "rename": "react-native-rename"
   },
   "dependencies": {
+    "@shoutem/ui": "^0.23.9",
     "apisauce": "^0.15.2",
     "immutable": "^3.8.2",
     "prop-types": "^15.6.1",
