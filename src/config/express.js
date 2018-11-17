@@ -6,16 +6,32 @@ const methodOverride = require('method-override');
 const cors = require('cors');
 const helmet = require('helmet');
 const passport = require('passport');
+const Ddos = require('ddos');
 const routes = require('../api/routes/v1');
 const { logs } = require('./vars');
 const strategies = require('./passport');
 const error = require('../api/middlewares/error');
+const { whitelist, ddosConfig } = require('./vars');
+
+const ddosInstance = new Ddos(ddosConfig);
+const corsOptions = {
+  origin(origin, callback) {
+    if (!whitelist || whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
 
 /**
 * Express instance
 * @public
 */
 const app = express();
+
+// npm module for preventing ddos attack. See more https://www.npmjs.com/package/ddos
+app.use(ddosInstance.express);
 
 // request logging. dev: console | production: file
 app.use(morgan(logs));
@@ -35,7 +51,7 @@ app.use(methodOverride());
 app.use(helmet());
 
 // enable CORS - Cross Origin Resource Sharing
-app.use(cors());
+app.use(cors(corsOptions));
 
 // enable authentication
 app.use(passport.initialize());

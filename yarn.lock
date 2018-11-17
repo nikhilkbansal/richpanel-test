@@ -1055,6 +1055,11 @@ dasherize@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/dasherize/-/dasherize-2.0.0.tgz#6d809c9cd0cf7bb8952d80fc84fa13d47ddb1308"
 
+ddos@^0.1.31:
+  version "0.1.31"
+  resolved "https://registry.yarnpkg.com/ddos/-/ddos-0.1.31.tgz#ce9f6c405f0abcee2f6b9296c5d0da11962e4422"
+  integrity sha512-8XbnbTOgs8gWNkuspI0Yle+bgd0l4oQySJzkXkjzXT50uKvDUcHWKXcuJ2AebxHxwpXioLyE2kxYAZPgHxqqRA==
+
 debug-log@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/debug-log/-/debug-log-1.0.1.tgz#2307632d4c04382b8df8a32f70b895046d52745f"
