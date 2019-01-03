@@ -11,6 +11,11 @@
     "lint-check": "eslint .",
     "rename": "react-native-rename"
   },
+  "rnpm": {
+    "assets": [
+      "App/Assets/fonts/Roboto"
+    ]
+  },
   "dependencies": {
     "@shoutem/ui": "^0.23.9",
     "apisauce": "^0.15.2",
@@ -19,6 +24,10 @@
     "prop-types": "^15.6.1",
     "react": "16.5.0",
     "react-native": "0.57.1",
+    "react-native-paper": "^2.3.0",
+    "react-native-responsive-screen": "^1.1.10",
+    "react-native-textinput-effects": "^0.4.2",
+    "react-native-vector-icons": "^6.1.0",
     "react-navigation": "^2.12.1",
     "react-redux": "^5.0.7",
     "redux": "^3.7.2",
@@ -31,9 +40,11 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "23.2.0",
     "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-promise": "^3.7.0",

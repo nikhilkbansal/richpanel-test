@@ -2,13 +2,20 @@ import React, { Component } from 'react';
 import { createStackNavigator } from 'react-navigation';
 import NavigationService from 'App/Services/NavigationService';
 import { View } from 'react-native';
-import ExampleScreen from 'App/Containers/Example/ExampleScreen';
-import LogIn from 'App/Containers/Account/LogIn';
+// import ExampleScreen from 'App/Containers/Example/ExampleScreen';
+import LogIn from 'App/Containers/Login/LogIn';
+import SignUp from 'App/Containers/Signup/SignUp';
+import HomePage from 'App/Containers/HomePage/HomePage';
+import ForgetPassword from 'App/Containers/ForgetPassword/ForgetPassword';
 import SplashScreen from 'App/Containers/SplashScreen/SplashScreen';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import StartupActions from 'App/Stores/Startup/Actions';
+import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import styles from './RootScreenStyle';
+import Colors from '../../Theme/Colors';
+import Fonts from '../../Theme/Fonts';
 
 /**
  * The root screen contains the application's navigation.
@@ -17,22 +24,34 @@ import styles from './RootScreenStyle';
  */
 const AppNav = createStackNavigator(
   {
-    // Create the application routes here (the key is the route name,
-    // the value is the target screen)
-    // See https://reactnavigation.org/docs/en/stack-navigator.html#routeconfigs
     SplashScreen,
-    // The main application screen is our "ExampleScreen". Feel free to replace it with your
-    // own screen and remove the example.
-    MainScreen: LogIn,
+    LogIn,
+    SignUp,
+    ForgetPassword,
+    HomePage,
   },
   {
-    // By default the application will show the splash screen
-    initialRouteName: 'MainScreen',
+    // By default the application will show the this screen
+    initialRouteName: 'HomePage',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },
 );
 
+/**
+ * Theme configuraion
+ */
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    ...Colors,
+  },
+  fonts: {
+    ...DefaultTheme.fonts,
+    ...Fonts,
+  },
+};
 class RootScreen extends Component {
   componentDidMount() {
     // Run the startup saga when the application is starting
@@ -42,14 +61,16 @@ class RootScreen extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <AppNav
+      <PaperProvider theme={theme}>
+        <View style={styles.container}>
+          <AppNav
           // Initialize the NavigationService (see https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html)
-          ref={(navigatorRef) => {
-            NavigationService.setTopLevelNavigator(navigatorRef);
-          }}
-        />
-      </View>
+            ref={(navigatorRef) => {
+              NavigationService.setTopLevelNavigator(navigatorRef);
+            }}
+          />
+        </View>
+      </PaperProvider>
     );
   }
 }

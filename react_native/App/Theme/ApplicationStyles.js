@@ -1,13 +1,16 @@
-/**
- * This file defines the base application styles.
- *
- * Use it to define generic component styles (e.g. the default text styles, default button styles...).
- */
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default {
   screen: {
     container: {
       flex: 1,
     },
+  },
+  viewMarginHorizontal: wp('3%'),
+  headerBar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
   },
 };
