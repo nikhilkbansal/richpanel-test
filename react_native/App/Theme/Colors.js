@@ -6,10 +6,13 @@
  */
 
 export default {
-  primary: '#2EB3EA',
-  background: '#fff',
-  accent: '#fff',
-  surface: '#fff',
+  primary: '#1B8AE5',
+  background: '#F8F8F8',
+  accent: '#E9E9E9',
+  darkFont: 'black',
+  mediumDarkFont: '#848484',
+  slightDarkFont: '#dddbdb',
+  lightFont: '#fff',
   backdrop: '#fff',
   disabled: 'gray',
 };

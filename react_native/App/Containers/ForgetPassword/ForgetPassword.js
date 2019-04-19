@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
 import {
-  View, Text, Image,
+  View, Image,
 } from 'react-native';
-import {
-  Button, HelperText, Divider, withTheme,
-} from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
-import Container from '../../Components/Container';
-import TextInput from '../../Components/TextInput';
-import styles from './ForgetPasswordStyle';
-import images from '../../Theme/Images';
-import SmallButton from '../../Components/SmallButton';
-import SpaceBar from '../../Components/SpaceBar';
-import commonStyle from '../../Theme/ApplicationStyles';
+import {
+  Text, NavigationBar, TextInput, Button,
+} from '../../Components';
+import { Colors, FontSizes } from '../../Theme';
 
 class ForgetPassword extends Component {
   static get propTypes() {
@@ -35,36 +29,34 @@ class ForgetPassword extends Component {
     const { email, password } = this.state;
     const { theme, navigation: { goBack } } = this.props;
     return (
-      <Container>
-        <View style={styles.logoContainer}>
-          <Image source={images.logo} style={styles.logo} />
-        </View>
-        <View style={styles.subContainer}>
-          <TextInput
-            label="Email/username"
-            mode="flat"
-            value={email}
-            onChangeText={text => this.setState({ email: text })}
-          />
-          <HelperText
-            type="error"
-            visible={email !== null && !email.includes('@')}
-          >
-          Email address is invalid!
-          </HelperText>
-          <View style={{ flexDirection: 'row' }}>
-            <Button icon="add-a-photo" color={theme.colors.primary} mode="contained" style={styles.buttonStyle} onPress={() => this.setState(state => ({ visible: !state.visible }))}>
-            Forgot Password
-            </Button>
+      <View style={{ flex: 1, backgroundColor: Colors.background }}>
+        <NavigationBar />
+
+        <View style={{ flex: 1, paddingHorizontal: wp('4%') }}>
+          <View style={{ flex: 1 }}>
+            <Text size="h1">Forgot Password?</Text>
+            <Text size="h3" color="slightDark">Don't worry! just follow along</Text>
           </View>
-          <SpaceBar />
-          <Button mode="text" onPress={() => goBack()}>
-            Back
-          </Button>
+          <View style={{ flex: 4 }}>
+            <TextInput label="Email" />
+
+            <Button
+              style={{
+                marginTop: hp('4%'),
+                backgroundColor: Colors.primary,
+                borderRadius: wp('2%'),
+                width: wp('80%'),
+                alignSelf: 'center',
+                height: hp('7%'),
+              }}
+              titleStyle={{ color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 }}
+              title="SUBMIT"
+            />
+          </View>
         </View>
-      </Container>
+      </View>
     );
   }
 }
 
-export default withTheme(ForgetPassword);
+export default ForgetPassword;

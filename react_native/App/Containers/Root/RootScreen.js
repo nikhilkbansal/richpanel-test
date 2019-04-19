@@ -16,7 +16,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import styles from './RootScreenStyle';
 import Colors from '../../Theme/Colors';
 import Fonts from '../../Theme/Fonts';
-
+import FontSizes from '../../Theme/FontSizes';
 /**
  * The root screen contains the application's navigation.
  *
@@ -32,7 +32,7 @@ const AppNav = createStackNavigator(
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'HomePage',
+    initialRouteName: 'SignUp',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },
@@ -50,6 +50,9 @@ const theme = {
   fonts: {
     ...DefaultTheme.fonts,
     ...Fonts,
+  },
+  fontSizes: {
+    ...FontSizes,
   },
 };
 class RootScreen extends Component {

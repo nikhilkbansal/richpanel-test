@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
 import {
-  View, Text, Image,
+  View, Image,
 } from 'react-native';
-import {
-  Button, HelperText, Divider, withTheme,
-} from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
-import Container from '../../Components/Container';
-import TextInput from '../../Components/TextInput';
-import styles from './SignUpStyle';
-import images from '../../Theme/Images';
-import SmallButton from '../../Components/SmallButton';
-import SpaceBar from '../../Components/SpaceBar';
-import IsNgo from '../../Components/IsNgo';
+import {
+  Text, NavigationBar, TextInput, Button,
+} from '../../Components';
+import { Colors, FontSizes } from '../../Theme';
 
 class SignUpScreen extends Component {
   static get propTypes() {
@@ -36,71 +30,60 @@ class SignUpScreen extends Component {
     const { email, password, isNgo } = this.state;
     const { theme, navigation: { goBack } } = this.props;
     return (
-      <Container>
-        <View style={styles.logoContainer}>
-          <Image source={images.logo} style={styles.logo} />
-        </View>
-        <View style={styles.subContainer}>
-          <IsNgo onPress={() => this.setState({ isNgo: !isNgo })} checked={isNgo} />
-          <SpaceBar />
-          <Button color="#3b5998" icon="add-a-photo" mode="contained" onPress={() => this.setState(state => ({ visible: !state.visible }))}>
-            Signup with facebook
-          </Button>
-          <SpaceBar />
-          <Divider />
-          <TextInput
-            label="Email/username"
-            mode="flat"
-            value={email}
-            onChangeText={text => this.setState({ email: text })}
-          />
-          <TextInput
-            label="Password"
-            mode="flat"
-            value={password}
-            onChangeText={text => this.setState({ password: text })}
-          />
-          <TextInput
-            label="Email/username"
-            mode="flat"
-            value={email}
-            onChangeText={text => this.setState({ email: text })}
-          />
-          <TextInput
-            label="Email/username"
-            mode="flat"
-            value={email}
-            onChangeText={text => this.setState({ email: text })}
-          />
-          <TextInput
-            label="Email/username"
-            mode="flat"
-            value={email}
-            onChangeText={text => this.setState({ email: text })}
-          />
-          <TextInput
-            label="Email/username"
-            mode="flat"
-            value={email}
-            onChangeText={text => this.setState({ email: text })}
-          />
-          <SpaceBar />
-          <View style={{ flexDirection: 'row' }}>
+      <View style={{ flex: 1, backgroundColor: Colors.background }}>
+        <NavigationBar />
 
-            <Button icon="add-a-photo" mode="outlined" color={theme.colors.primary} style={styles.buttonStyle} onPress={() => goBack()}>
-            Login
-            </Button>
-            <Button icon="add-a-photo" style={styles.buttonStyle} mode="contained">
-            Signup
-            </Button>
+        <View style={{ flex: 1, paddingHorizontal: wp('4%') }}>
+          <View style={{ flex: 1 }}>
+            <Text size="h1">Signup</Text>
+            <Text size="h3" color="slightDark">Lets start from here</Text>
           </View>
-          <SpaceBar />
-          <SpaceBar />
-          <SmallButton title="You are a ngo?" />
+          <View style={{ flex: 4 }}>
+            <View style={{
+              flexDirection: 'row', borderRadius: wp('2%'), overflow: 'hidden', marginHorizontal: wp('2%'),
+            }}
+            >
+              <Button
+                style={{
+                  backgroundColor: Colors.accent,
+                  alignSelf: 'center',
+                  height: hp('7%'),
+                  flex: 1,
+                }}
+                titleStyle={{ color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 }}
+                title="User"
+              />
+              <Button
+                style={{
+                  flex: 1,
+
+                  backgroundColor: Colors.primary,
+                  alignSelf: 'center',
+                  height: hp('7%'),
+                }}
+                titleStyle={{ color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 }}
+                title="NGO"
+              />
+            </View>
+            <TextInput label="Email" />
+
+            <Button
+              style={{
+                marginTop: hp('4%'),
+                backgroundColor: Colors.primary,
+                borderRadius: wp('2%'),
+                width: wp('80%'),
+                alignSelf: 'center',
+                height: hp('7%'),
+              }}
+              titleStyle={{ color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 }}
+              title="SUBMIT"
+            />
+          </View>
         </View>
-      </Container>
+      </View>
     );
   }
 }
 
-export default withTheme(SignUpScreen);
+export default SignUpScreen;

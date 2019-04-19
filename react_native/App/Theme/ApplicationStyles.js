@@ -1,6 +1,7 @@
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default {
+  // deprecated
   screen: {
     container: {
       flex: 1,
@@ -13,4 +14,8 @@ export default {
     right: 0,
     top: 0,
   },
+
+  // new
+  iconSize: 35,
+
 };

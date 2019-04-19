@@ -11,21 +11,4 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.primary,
   },
-  logo: {
-    width: wp('20%'),
-    height: wp('20%'),
-  },
-  logoContainer: {
-    marginTop: hp('1%'),
-    marginHorizontal: wp('3%'),
-    padding: 10,
-    alignItems: 'center',
-  },
-  subContainer: {
-    marginHorizontal: wp('3%'),
-    backgroundColor: '#FFFFFF',
-    padding: 10,
-    flex: 1,
-  },
-  buttonStyle: { marginRight: 2, flex: 1, height: hp('6%') },
 });

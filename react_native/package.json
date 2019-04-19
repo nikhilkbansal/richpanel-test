@@ -9,7 +9,10 @@
     "prettier-check": "prettier --list-different **/*.js",
     "lint-fix": "eslint --fix .",
     "lint-check": "eslint .",
-    "rename": "react-native-rename"
+    "rename": "react-native-rename",
+    "appcenter-apps-list": "appcenter apps list",
+    "code-push login": "code-push login",
+    "code-push-keys": "code-push deployment ls help --displayKeys"
   },
   "rnpm": {
     "assets": [
@@ -24,7 +27,10 @@
     "prop-types": "^15.6.1",
     "react": "16.5.0",
     "react-native": "0.57.1",
-    "react-native-paper": "^2.3.0",
+    "react-native-checkbox": "^2.0.0",
+    "react-native-code-push": "^5.5.2",
+    "react-native-paper": "^2.6.3",
+    "react-native-responsive-fontsize": "^0.1.7",
     "react-native-responsive-screen": "^1.1.10",
     "react-native-textinput-effects": "^0.4.2",
     "react-native-vector-icons": "^6.1.0",

@@ -2,21 +2,14 @@ import React, { Component } from 'react';
 import {
   FlatList, View, StatusBar
 } from 'react-native';
-import {
-  Button, HelperText, Divider, withTheme,
+import { 
+  withTheme
 } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
-import Container from '../../Components/Container';
-import TextInput from '../../Components/TextInput';
-import styles from './PostStyle';
-import images from '../../Theme/Images';
-import SmallButton from '../../Components/SmallButton';
-import SpaceBar from '../../Components/SpaceBar';
-import commonStyle from '../../Theme/ApplicationStyles';
-import { Card, Title, Paragraph } from 'react-native-paper';
 import { Appbar } from 'react-native-paper';
 import defaultStyle from '../../Theme/ApplicationStyles';
+import PostEventUi from '../../Components/PostEventUi';
 class LoginScreen extends Component {
   static get propTypes() {
     return {
@@ -34,40 +27,29 @@ class LoginScreen extends Component {
     };
   }
 
-  _renderItem = ({item}) => (
-    <Card>
-    <Card.Content>
-    <Title>Card title</Title>
-    <Paragraph>Card content</Paragraph>
-      </Card.Content>
-      <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-      <Card.Actions>
-        <Button>Cancel</Button>
-        <Button>Ok</Button>
-      </Card.Actions>
-    </Card>
-  );
+  _renderItem = ({item}) =><PostEventUi />;
 
   render() {
+    console.log('propsprops',this.props);
+
     const { email, password, checked } = this.state;
-    const { theme } = this.props;
+    const { theme, navigation: { navigate }  } = this.props;
     return (
       <View style={{flex:1}}>
-        <Appbar style={defaultStyle.headerBar}>
+        <Appbar  style={[defaultStyle.headerBar,{backgroundColor:'#fff'}]}>
         <Appbar.Content
           title=""
         />
-        <Appbar.Action icon="archive" onPress={() => console.log('Pressed archive')} />
-        <Appbar.Action icon="mail" onPress={() => console.log('Pressed mail')} />
-        <Appbar.Action icon="label" onPress={() => console.log('Pressed label')} />
-        <Appbar.Action icon="add" onPress={() => console.log('Pressed delete')} />
+        <Appbar.Action icon="archive" color={theme.colors.primary} onPress={() =>navigate('LogIn')} />
+        <Appbar.Action icon="mail" color={theme.colors.primary} onPress={() => console.log('Pressed mail')} />
+        <Appbar.Action icon="label" color={theme.colors.primary} onPress={() => console.log('Pressed label')} />
+        <Appbar.Action icon="add" color={theme.colors.primary} onPress={() => console.log('Pressed delete')} />
       </Appbar>
-      <Container>
         <FlatList
-          data={[1,2,3]}
+          data={[{a:3},{a:3},{a:3},{a:3}]} 
+          style={{marginTop:hp('10%'),paddingBottom:20}}
           renderItem={this._renderItem}
         />
-      </Container>
       </View>
     );
   }

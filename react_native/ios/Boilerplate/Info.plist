@@ -96,5 +96,7 @@
 		<string>Roboto-Thin.ttf</string>
 		<string>Roboto-ThinItalic.ttf</string>
 	</array>
+	<key>CodePushDeploymentKey</key>
+	<string>deployment-key-here</string>
 </dict>
 </plist>

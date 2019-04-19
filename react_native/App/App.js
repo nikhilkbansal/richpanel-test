@@ -1,12 +1,15 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
+import codePush from 'react-native-code-push';
 import createStore from 'App/Stores';
 import RootScreen from './Containers/Root/RootScreen';
 
+const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME };
+
 const { store, persistor } = createStore();
 
-export default function () {
+const myApp = function myApp() {
   return (
   /**
    * @see https://github.com/reduxjs/react-redux/blob/master/docs/api.md#provider-store
@@ -26,4 +29,6 @@ export default function () {
       </PersistGate>
     </Provider>
   );
-}
+};
+
+export default codePush(codePushOptions)(myApp);
