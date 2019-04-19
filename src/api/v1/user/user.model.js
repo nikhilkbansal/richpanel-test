@@ -5,13 +5,13 @@ const bcrypt = require('bcryptjs');
 const moment = require('moment-timezone');
 const jwt = require('jwt-simple');
 const uuidv4 = require('uuid/v4');
-const APIError = require('../utils/APIError');
-const { env, jwtSecret, jwtExpirationInterval } = require('../../config/vars');
+const APIError = require('../../utils/APIError');
+const { env, jwtSecret, jwtExpirationInterval } = require('../../../config/vars');
 
 /**
 * User Roles
 */
-const roles = ['user', 'admin'];
+const roles = ['user', 'admin', 'ngo'];
 
 /**
  * User Schema
@@ -32,6 +32,11 @@ const userSchema = new mongoose.Schema({
     minlength: 6,
     maxlength: 128,
   },
+  forgotPasswordKey: {
+    type: String,
+    default: '',
+
+  },
   name: {
     type: String,
     maxlength: 128,
@@ -50,6 +55,17 @@ const userSchema = new mongoose.Schema({
   picture: {
     type: String,
     trim: true,
+  },
+  googleAuth: {
+    access_token: String,
+    refresh_token: String,
+    scope: String,
+    token_type: String,
+    expiry_date: Number,
+  },
+  preferences: {
+    type: Array,
+    default: [],
   },
 }, {
   timestamps: true,
@@ -99,7 +115,6 @@ userSchema.method({
     };
     return jwt.encode(playload, jwtSecret);
   },
-
   async passwordMatches(password) {
     return bcrypt.compare(password, this.password);
   },
@@ -137,7 +152,26 @@ userSchema.statics = {
       throw error;
     }
   },
-
+  /**
+  * Get user
+  *
+  * @param {emailID} email - The emailID of user.
+  * @returns {Promise<User, APIError>}
+  */
+  async getUser(filter) {
+    try {
+      const user = await this.findOne(filter).exec();
+      if (user) {
+        return user;
+      }
+      throw new APIError({
+        message: 'User does not exist',
+        status: httpStatus.NOT_FOUND,
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
   /**
    * Find user by email and tries to generate a JWT token
    *
@@ -159,8 +193,8 @@ userSchema.statics = {
       }
       err.message = 'Incorrect email or password';
     } else if (refreshObject && refreshObject.userEmail === email) {
-      if (moment(refreshObject.expires).isBefore()) {
-        err.message = 'Invalid refresh token.';
+      if (refreshObject.isLogout || moment(refreshObject.expires).isBefore()) {
+        err.message = 'Refresh token expired or user is not loggedin.';
       } else {
         return { user, accessToken: user.token() };
       }
@@ -175,14 +209,39 @@ userSchema.statics = {
    *
    * @param {number} skip - Number of users to be skipped.
    * @param {number} limit - Limit number of users to be returned.
-   * @returns {Promise<User[]>}
+   * @returns {Promise<User[]>} array of users
    */
   list({
     page = 1, perPage = 30, name, email, role,
   }) {
     const options = omitBy({ name, email, role }, isNil);
 
-    return this.find(options)
+    return this.aggregate([{
+      $match: options,
+    },
+    {
+      $lookup: {
+        from: 'youtubechannels',
+        let: { id: '$_id' }, // $_id is from users collection
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ['$$id', '$userId'] }, // $$id is let variable and $userId is from youtubechannels collection
+            },
+          },
+          { $count: 'count' },
+        ],
+        as: 'channelsCount',
+      },
+    },
+    {
+      $addFields: {
+        channelsCount: { $sum: '$channelsCount.count' },
+      },
+    },
+    {
+      $project: { password: 0 },
+    }])
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
@@ -193,8 +252,8 @@ userSchema.statics = {
    * Return new validation error
    * if error is a mongoose duplicate key error
    *
-   * @param {Error} error
-   * @returns {Error|APIError}
+   * @param {Error} error error instance
+   * @returns {Error|APIError} returns specific error
    */
   checkDuplicateEmail(error) {
     if (error.name === 'MongoError' && error.code === 11000) {
@@ -227,6 +286,28 @@ userSchema.statics = {
     return this.create({
       services: { [service]: id }, email, password, name, picture,
     });
+  },
+
+  /**
+   * Set google auth creds for specific user
+   *
+   * @param {String} _id User's id
+   * @param {Object} googleAuth google auth object
+   * @returns {Object} { n: 1, nModified: 1, ok: 1 }
+   */
+  setGoogleAuth(_id, googleAuth = {}) {
+    const refreshTokenExist = googleAuth.refresh_token ? { 'googleAuth.refresh_token': googleAuth.refresh_token } : {};
+    return this.updateOne(
+      { _id },
+      {
+        $set: {
+          ...refreshTokenExist,
+          'googleAuth.access_token': googleAuth.access_token,
+          'googleAuth.token_type': googleAuth.token_type,
+          'googleAuth.expiry_date': googleAuth.expiry_date,
+        },
+      },
+    ).exec();
   },
 };
 

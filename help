@@ -24,7 +24,7 @@ address
 phone_no
 working_since
 award (array)
-department
+department(maybe array)
 website_links(array)
 
 

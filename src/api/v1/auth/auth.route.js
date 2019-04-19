@@ -1,13 +1,16 @@
 const express = require('express');
 const validate = require('express-validation');
-const controller = require('../../controllers/auth.controller');
+const controller = require('./auth.controller');
 const oAuthLogin = require('../../middlewares/auth').oAuth;
+const { authorize } = require('../../middlewares/auth');
 const {
   login,
   register,
   oAuth,
   refresh,
-} = require('../../validations/auth.validation');
+  logout,
+  googleAuthVerify,
+} = require('./auth.validation');
 
 const router = express.Router();
 
@@ -142,6 +145,56 @@ router.route('/facebook')
  */
 router.route('/google')
   .post(validate(oAuth), oAuthLogin('google'), controller.oAuth);
+
+
+/**
+ * @api {get} v1/auth/googleAuthInit Google auth init
+ * @apiDescription Intitiate google authentication. This will return a url
+ * @apiVersion 1.0.0
+ * @apiName GoogleAuthInit
+ * @apiGroup Auth
+ * @apiPermission public
+ *
+ *
+ * @apiSuccess {String}  url     For get permissions by user, user should navigate to it
+ */
+router.route('/googleAuthInit')
+  .get(controller.googleAuthInit);
+
+
+/**
+ * @api {post} v1/auth/googleAuthVerify Google auth verify
+ * @apiDescription Verify google authentication.
+ * @apiVersion 1.0.0
+ * @apiName GoogleAuthInit
+ * @apiGroup Auth
+ * @apiPermission public
+ *
+ *
+ * @apiSuccess {String}  url     For get permissions by user, user needs to redircts to it
+ */
+router.route('/googleAuthVerify')
+  .post(validate(googleAuthVerify), controller.googleAuthVerify);
+
+
+/**
+ * @api {post} v1/auth/logout Logout
+ * @apiDescription Logout from application
+ * @apiVersion 1.0.0
+ * @apiName Logout
+ * @apiGroup Auth
+ * @apiPermission user
+ *
+ * @apiHeader {String} Authorization   User's access token
+ * @apiParam  {String}  refreshToken  Refresh token if given logouts from single device else
+ * from all devices
+ *
+ * @apiSuccess (No Content 204)  Successfully logout
+ * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+ *
+ */
+router.route('/logout')
+  .post(validate(logout), authorize(), controller.logout);
 
 
 module.exports = router;
