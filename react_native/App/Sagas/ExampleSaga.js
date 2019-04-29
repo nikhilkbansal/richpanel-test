@@ -1,6 +1,6 @@
 import { put, call } from 'redux-saga/effects';
 import ExampleActions from 'App/Stores/Example/Actions';
-import { WeatherService } from 'App/Services/WeatherService';
+// import { WeatherService } from 'App/Services/WeatherService';
 
 /**
  * A saga can contain multiple functions.
@@ -14,13 +14,13 @@ export function* fetchTemperature() {
   yield put(ExampleActions.fetchTemperatureLoading());
 
   // Fetch the temperature from an API
-  const temperature = yield call(WeatherService.fetchTemperature);
+  // const temperature = yield call(WeatherService.fetchTemperature);
 
-  if (temperature) {
-    yield put(ExampleActions.fetchTemperatureSuccess(temperature));
-  } else {
-    yield put(
-      ExampleActions.fetchTemperatureFailure('There was an error while fetching the temperature.'),
-    );
-  }
+  // if (temperature) {
+  //   yield put(ExampleActions.fetchTemperatureSuccess(temperature));
+  // } else {
+  //   yield put(
+  //     ExampleActions.fetchTemperatureFailure('There was an error while fetching the temperature.'),
+  //   );
+  // }
 }

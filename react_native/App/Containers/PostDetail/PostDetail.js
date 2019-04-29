@@ -66,11 +66,11 @@ class LoginScreen extends Component {
           <View style={styles.firstSection}>
             <Image
               style={{
-              height: hp('30%'),
-              width: null,
-              flex: 1,
-              justifyContent: 'center',
-            }}
+                height: hp('30%'),
+                width: null,
+                flex: 1,
+                justifyContent: 'center',
+              }}
               source={require('../../Assets/Images/child.jpeg')}
             />
           </View>
