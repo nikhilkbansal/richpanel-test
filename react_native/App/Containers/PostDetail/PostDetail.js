@@ -1,5 +1,5 @@
 import React, { Fragment, Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
 import CheckBox from 'react-native-checkbox';
@@ -64,22 +64,18 @@ class LoginScreen extends Component {
 
         <View style={styles.subContainer}>
           <View style={styles.firstSection}>
-            <Text size="h1">Login</Text>
-            <Text size="h3" color="slightDark">Get started with your journey</Text>
+            <Image
+              style={{
+              height: hp('30%'),
+              width: null,
+              flex: 1,
+              justifyContent: 'center',
+            }}
+              source={require('../../Assets/Images/child.jpeg')}
+            />
           </View>
           <View style={styles.secondSection}>
-            <TextInput label="Email" />
-            <TextInput label="Password" secureTextEntry />
-            <View style={styles.remeberPassContainer}>
 
-              <Text style={styles.remeberText} color="mediumDark" size="h3">Remember Password </Text>
-              <Button
-                style={styles.forgetButtonContainer}
-                titleStyle={styles.forgetButton}
-                title="Forget Password"
-                onPress={() => navigation.navigate('ForgetPassword')}
-              />
-            </View>
             <Button
               style={styles.loginContainer}
               titleStyle={styles.loginTitle}

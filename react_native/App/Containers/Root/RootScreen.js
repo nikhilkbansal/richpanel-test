@@ -7,6 +7,8 @@ import LogIn from 'App/Containers/Login/LogIn';
 import SignUp from 'App/Containers/Signup/SignUp';
 import HomePage from 'App/Containers/HomePage/HomePage';
 import ForgetPassword from 'App/Containers/ForgetPassword/ForgetPassword';
+import GetStarted from 'App/Containers/GetStarted/GetStarted';
+import PostDetail from 'App/Containers/PostDetail/PostDetail';
 import SplashScreen from 'App/Containers/SplashScreen/SplashScreen';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -29,10 +31,12 @@ const AppNav = createStackNavigator(
     SignUp,
     ForgetPassword,
     HomePage,
+    GetStarted,
+    PostDetail,
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'SignUp',
+    initialRouteName: 'LogIn',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },

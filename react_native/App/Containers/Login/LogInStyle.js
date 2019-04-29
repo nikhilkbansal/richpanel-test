@@ -4,11 +4,5 @@ import ApplicationStyles from 'App/Theme/ApplicationStyles';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default StyleSheet.create({
-  container: {
-    ...ApplicationStyles.screen.container,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: Colors.primary,
-  },
+
 });

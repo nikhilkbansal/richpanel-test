@@ -40,16 +40,16 @@ const styles = StyleSheet.create({
 });
 
 
-function NavigationBar({ title, showRightSection }) {
+function NavigationBar({ title, showRightSection, goBack }) {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
       <View style={styles.subContainer}>
         <View style={styles.leftArea}>
           <Button
-          onPress={() => { alert(2); }}
-          icon="ios-arrow-round-back"
-        />
+            onPress={() => goBack()}
+            icon="ios-arrow-round-back"
+          />
         </View>
         <View style={styles.centerArea}>
           <Text style={styles.label}>
@@ -73,10 +73,12 @@ function NavigationBar({ title, showRightSection }) {
 NavigationBar.propTypes = {
   title: PropTypes.string,
   showRightSection: PropTypes.bool,
+  goBack: PropTypes.func,
 };
 
 NavigationBar.defaultProps = {
   title: '',
+  goBack: Function,
   showRightSection: false,
 };
 

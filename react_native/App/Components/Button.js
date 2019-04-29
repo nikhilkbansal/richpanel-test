@@ -12,11 +12,11 @@ const styles = StyleSheet.create({
 });
 
 function Button({
-  onPress, title, icon, style, titleStyle,
+  onPress, title, icon, style, titleStyle, iconSize, buttonWrapperStyle, iconColor,
 }) {
   const Content = () => (
     <Fragment>
-      {!!icon && <Icon name={icon} size={ApplicationStyles.iconSize} color={Colors.darkFont} />}
+      {!!icon && <Icon name={icon} size={iconSize || ApplicationStyles.iconSize} color={iconColor} />}
       {!!title && <Text style={[titleStyle]}>{ title }</Text>}
     </Fragment>
   );
@@ -36,7 +36,7 @@ function Button({
             useForeground
             background={TouchableNativeFeedback.SelectableBackground()}
           >
-            <View style={styles.buttonStyle}>
+            <View style={[styles.buttonStyle, buttonWrapperStyle]}>
               <Content />
             </View>
           </TouchableNativeFeedback>
@@ -53,6 +53,9 @@ Button.propTypes = {
   onPress: PropTypes.func,
   titleStyle: PropTypes.object,
   style: PropTypes.object,
+  iconSize: PropTypes.number,
+  buttonWrapperStyle: PropTypes.object,
+  iconColor: PropTypes.string,
 };
 
 Button.defaultProps = {
@@ -60,7 +63,10 @@ Button.defaultProps = {
   title: '',
   titleStyle: {},
   style: {},
+  buttonWrapperStyle: {},
+  iconSize: null,
   onPress: () => alert('Its working'),
+  iconColor: Colors.darkFont,
 };
 
 

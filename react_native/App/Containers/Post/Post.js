@@ -1,15 +1,25 @@
 import React, { Component } from 'react';
 import {
-  FlatList, View, StatusBar
+  FlatList, View, StyleSheet
 } from 'react-native';
 import { 
   withTheme
 } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
-import { Appbar } from 'react-native-paper';
+import ActionButton from 'react-native-action-button';
 import defaultStyle from '../../Theme/ApplicationStyles';
 import PostEventUi from '../../Components/PostEventUi';
+import { Colors, FontSizes } from '../../Theme';
+import Icon from 'react-native-vector-icons/Ionicons';
+const styles = StyleSheet.create({
+  actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
+  },
+});
+
 class LoginScreen extends Component {
   static get propTypes() {
     return {
@@ -35,21 +45,20 @@ class LoginScreen extends Component {
     const { email, password, checked } = this.state;
     const { theme, navigation: { navigate }  } = this.props;
     return (
-      <View style={{flex:1}}>
-        <Appbar  style={[defaultStyle.headerBar,{backgroundColor:'#fff'}]}>
-        <Appbar.Content
-          title=""
-        />
-        <Appbar.Action icon="archive" color={theme.colors.primary} onPress={() =>navigate('LogIn')} />
-        <Appbar.Action icon="mail" color={theme.colors.primary} onPress={() => console.log('Pressed mail')} />
-        <Appbar.Action icon="label" color={theme.colors.primary} onPress={() => console.log('Pressed label')} />
-        <Appbar.Action icon="add" color={theme.colors.primary} onPress={() => console.log('Pressed delete')} />
-      </Appbar>
+      <View style={{flex: 1, backgroundColor: Colors.background}}>
+
         <FlatList
           data={[{a:3},{a:3},{a:3},{a:3}]} 
-          style={{marginTop:hp('10%'),paddingBottom:20}}
           renderItem={this._renderItem}
         />
+          <ActionButton buttonColor={Colors.primary}>
+          <ActionButton.Item buttonColor='#9b59b6' title="Add new Post" onPress={() => console.log("notes tapped!")}>
+            <Icon name="md-create" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+          <ActionButton.Item buttonColor='#1abc9c' title="Add new Event" onPress={() => {}}>
+            <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+        </ActionButton>
       </View>
     );
   }

@@ -10,9 +10,11 @@ export default {
   background: '#F8F8F8',
   accent: '#E9E9E9',
   darkFont: 'black',
+  golden: '#FFDF00',
   mediumDarkFont: '#848484',
   slightDarkFont: '#dddbdb',
   lightFont: '#fff',
   backdrop: '#fff',
+  cardBackground: '#fff',
   disabled: 'gray',
 };
