@@ -46,13 +46,13 @@ function PostEventUi({
         <View style={{ flex: 5, paddingHorizontal: wp('2%'), justifyContent: 'space-around' }}>
           <View style={{ flexDirection: 'row' }}>
             <Text size="h4" font="regular">
-Goonj
+              Goonj
 
             </Text>
             <Text size="h4" font="thin" style={{ paddingHorizontal: wp('2%'), alignItems: 'center' }}>
               <Icon name="md-medal" size={wp('4%')} color={Colors.golden} style={{ paddingHorizontal: wp('2%') }} />
               {' '}
-200
+            200
             </Text>
           </View>
           <Text

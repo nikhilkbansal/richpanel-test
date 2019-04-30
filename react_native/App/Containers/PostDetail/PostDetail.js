@@ -1,5 +1,7 @@
 import React, { Fragment, Component } from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import {
+  View, StyleSheet, Image, ScrollView,
+} from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
 import CheckBox from 'react-native-checkbox';
@@ -10,7 +12,7 @@ import { Colors, FontSizes } from '../../Theme';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
-  subContainer: { flex: 1, paddingHorizontal: wp('4%') },
+  subContainer: { flex: 1, paddingHorizontal: wp('2%') },
   firstSection: { flex: 1 },
   secondSection: { flex: 4 },
   remeberPassContainer: {
@@ -25,7 +27,7 @@ const styles = StyleSheet.create({
   forgetButton: { color: Colors.mediumDarkFont, textAlign: 'center', fontSize: FontSizes.h3 },
   forgetButtonContainer: { alignSelf: 'center' },
   loginContainer: {
-    marginTop: hp('4%'),
+    marginVertical: hp('2%'),
     backgroundColor: Colors.primary,
     borderRadius: wp('2%'),
     width: wp('80%'),
@@ -61,36 +63,63 @@ class LoginScreen extends Component {
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} />
-
         <View style={styles.subContainer}>
-          <View style={styles.firstSection}>
-            <Image
-              style={{
-                height: hp('30%'),
-                width: null,
-                flex: 1,
-                justifyContent: 'center',
-              }}
-              source={require('../../Assets/Images/child.jpeg')}
-            />
+          <Image
+            style={{
+              width: null,
+              height: hp('30%'),
+              borderRadius: hp('1.5%'),
+              justifyContent: 'center',
+            }}
+            resizeMode="cover"
+            source={require('../../Assets/Images/child.jpeg')}
+          />
+          <View style={{ paddingHorizontal: wp('2.5%') }}>
+            <View style={{ paddingVertical: hp('2.5%') }}>
+              <Text size="h3" color="slightDark">john abrahm added on 23 jan 2019</Text>
+              <Text size="h2">Help the poor children and give them clothes </Text>
+            </View>
+            <View style={{ backgroundColor: Colors.accent, height: hp('0.2%') }}>
+              <View style={{ backgroundColor: Colors.primary, width: '56%', height: hp('0.2%') }} />
+            </View>
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingVertical: hp('1%'),
+            }}
+            >
+              <Text size="h3" color="slightDark">TOTAL RAISED</Text>
+              <Text size="h3" color="slightDark">
+            $1000
+                <Text size="h2" color="primary"> $1500</Text>
+              </Text>
+            </View>
           </View>
           <View style={styles.secondSection}>
-
-            <Button
-              style={styles.loginContainer}
-              titleStyle={styles.loginTitle}
-              onPress={() => navigation.navigate('HomePage')}
-              title="CONTINUE TO LOGIN"
-            />
-            <View style={styles.signUpLinkContainer}>
-              <Text color="mediumDark" size="h3">Don't have an account? </Text>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Text size="h3" color="mediumDark" style={{ textAlign: 'justify', paddingHorizontal: wp('2.5%'), paddingVertical: hp('1%') }}>
+              We need your help. We are doing good job. We need your help. We are doing good job.
+               We need your help. We are doing good job. We need your help. We are doing good job.
+               We need your help. We are doing good job. We need your help. We are doing good job.
+               We need your help. We are doing good job. We need your help. We are doing good job.
+               We need your help. We are doing good job. We need your help. We are doing good job.
+               We need your help. We are doing good job. We need your help. We are doing good job.
+               We need your help. We are doing good job. We need your help.  We need your help. We are doing good job. We need your help. We are doing good job.
+               We need your help. We are doing good job. We need your help. We are doing good job.
+               We need your help. We are doing good job. We need your help. We are doing good job.
+               We need your help. We are doing good job. We need your help. We are doing good job.
+               We need your help. We are doing good job. We need your help. We are doing good job.
+               We need your help. We are doing good job. We need your help. We are doing good job.
+               We need your help. We are doing good job. We need your help. We are doing good job.
+               We need your help. We are doing good job. We need your help. We are doing good job.
+              </Text>
               <Button
-                style={styles.signUpContainer}
-                titleStyle={styles.signUpButton}
-                title="Sign Up"
-                onPress={() => navigation.navigate('SignUp')}
+                style={styles.loginContainer}
+                titleStyle={styles.loginTitle}
+                onPress={() => navigation.navigate('HomePage')}
+                title="DONATE"
               />
-            </View>
+            </ScrollView>
           </View>
         </View>
       </View>

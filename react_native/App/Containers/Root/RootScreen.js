@@ -9,6 +9,7 @@ import HomePage from 'App/Containers/HomePage/HomePage';
 import ForgetPassword from 'App/Containers/ForgetPassword/ForgetPassword';
 import GetStarted from 'App/Containers/GetStarted/GetStarted';
 import PostDetail from 'App/Containers/PostDetail/PostDetail';
+import EditProfile from 'App/Containers/EditProfile/EditProfile';
 import SplashScreen from 'App/Containers/SplashScreen/SplashScreen';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -33,10 +34,11 @@ const AppNav = createStackNavigator(
     HomePage,
     GetStarted,
     PostDetail,
+    EditProfile,
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'LogIn',
+    initialRouteName: 'EditProfile',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },
