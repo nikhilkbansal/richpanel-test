@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { createStackNavigator } from 'react-navigation';
 import NavigationService from 'App/Services/NavigationService';
-import { View } from 'react-native';
+import { View, StatusBar } from 'react-native';
 // import ExampleScreen from 'App/Containers/Example/ExampleScreen';
 import LogIn from 'App/Containers/Login/LogIn';
 import SignUp from 'App/Containers/Signup/SignUp';
@@ -10,12 +10,16 @@ import ForgetPassword from 'App/Containers/ForgetPassword/ForgetPassword';
 import GetStarted from 'App/Containers/GetStarted/GetStarted';
 import PostDetail from 'App/Containers/PostDetail/PostDetail';
 import EditProfile from 'App/Containers/EditProfile/EditProfile';
+import MyDonations from 'App/Containers/MyDonations/MyDonations';
+import AddPost from 'App/Containers/AddPost/AddPost';
 import SplashScreen from 'App/Containers/SplashScreen/SplashScreen';
+import StyleGuide from 'App/Containers/Login/StyleGuide';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import StartupActions from 'App/Stores/Startup/Actions';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import Loader from '../../Components/Loader';
 import styles from './RootScreenStyle';
 import Colors from '../../Theme/Colors';
 import Fonts from '../../Theme/Fonts';
@@ -35,10 +39,13 @@ const AppNav = createStackNavigator(
     GetStarted,
     PostDetail,
     EditProfile,
+    MyDonations,
+    AddPost,
+    StyleGuide,
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'EditProfile',
+    initialRouteName: 'LogIn',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },
@@ -72,6 +79,8 @@ class RootScreen extends Component {
     return (
       <PaperProvider theme={theme}>
         <View style={styles.container}>
+          <StatusBar barStyle="dark-content" />
+          <Loader />
           <AppNav
           // Initialize the NavigationService (see https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html)
             ref={(navigatorRef) => {

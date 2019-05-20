@@ -45,9 +45,16 @@ class EditProfile extends Component {
     const { navigation } = this.props;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} title="Edit Profile" containerStyle={{ paddingHorizontal: wp('2%') }} />
+        <NavigationBar {...navigation} statusBarColor={Colors.background} title="ADD POST" containerStyle={{ paddingHorizontal: wp('2%') }} />
 
         <ScrollView style={styles.subContainer}>
+          <TextInput label="title" />
+          <TextInput
+            multiline
+            numberOfLines={4}
+            label="Description"
+          />
+          <Text size="h3" color="mediumDark">Add images or videos</Text>
 
           <FlatList
             data={[{ empty: true }, { a: 3 }, { a: 3 }, { a: 3 }, { a: 3 }]}
@@ -56,9 +63,9 @@ class EditProfile extends Component {
             renderItem={({ item }) => (
               <View style={{ marginHorizontal: wp('1%') }}>
                 <View style={{
-                  width: wp('20%'),
-                  height: wp('20%'),
-                  borderRadius: wp('2.1%'),
+                  width: wp('25%'),
+                  height: wp('25%'),
+                  borderRadius: wp('1.1%'),
                   overflow: 'hidden',
                   borderColor: Colors.primary,
                   borderWidth: item.empty ? 1 : 0,
@@ -125,16 +132,12 @@ class EditProfile extends Component {
             )}
             horizontal
           />
-          <TextInput label="Email" />
-          <TextInput label="Phone" />
-          <TextInput label="Address" />
-          <TextInput label="Password" secureTextEntry />
 
           <Button
             style={styles.loginContainer}
             titleStyle={styles.loginTitle}
             onPress={() => navigation.navigate('HomePage')}
-            title="UPDATE"
+            title="ADD"
           />
 
         </ScrollView>

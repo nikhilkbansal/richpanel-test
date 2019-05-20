@@ -1,44 +1,55 @@
 import React, { Fragment, Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import {
+  View, StyleSheet, ScrollView, ActivityIndicator,
+} from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
-import CheckBox from 'react-native-checkbox';
+// import CheckBox from 'react-native-checkbox';
+import CheckBox from 'react-native-check-box';
 import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
-import { Colors, FontSizes } from '../../Theme';
+import {
+  Colors, FontSizes, Fonts, FontStyles, ApplicationStyles,
+} from '../../Theme';
+// const ItemCheckbox = require('react-native-item-checkbox');
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
-  subContainer: { flex: 1, paddingHorizontal: wp('4%') },
+  subContainer: { flex: 1, paddingHorizontal: wp('7%') },
   firstSection: { flex: 1 },
-  secondSection: { flex: 4 },
+  secondSection: { flex: 4, marginTop: hp('4%') },
   remeberPassContainer: {
     marginVertical: hp('1%'),
-    width: wp('92%'),
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'space-between',
   },
-  remeberText: { justifyContent: 'flex-start' },
-  forgetButton: { color: Colors.mediumDarkFont, textAlign: 'center', fontSize: FontSizes.h3 },
+  remeberText: { ...ApplicationStyles.body },
+  forgetButton: {
+    ...ApplicationStyles.body,
+
+  },
   forgetButtonContainer: { alignSelf: 'center' },
   loginContainer: {
-    marginTop: hp('4%'),
+    marginTop: hp('5%'),
     backgroundColor: Colors.primary,
-    borderRadius: wp('2%'),
+    borderRadius: ApplicationStyles.commonBorderRadius(wp('80%')),
     width: wp('80%'),
     alignSelf: 'center',
     height: hp('7%'),
   },
-  loginTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
+  loginTitle: { },
   signUpLinkContainer: {
     width: wp('80%'), marginVertical: hp('2%'), flexDirection: 'row', alignItems: 'center', alignContent: 'center', justifyContent: 'center',
   },
   signUpContainer: { alignSelf: 'center' },
-  signUpButton: { color: Colors.primary, textAlign: 'center', fontSize: FontSizes.h3 },
+  signUpButton: {
+    ...ApplicationStyles.info, ...ApplicationStyles.primaryColor,
+  },
 });
+
 
 class LoginScreen extends Component {
   static get propTypes() {
@@ -52,27 +63,38 @@ class LoginScreen extends Component {
     this.state = {
       email: null,
       password: '',
-      checked: false,
+      isChecked: false,
     };
   }
 
   render() {
     const { navigation } = this.props;
     return (
-      <View style={styles.container}>
-        <NavigationBar {...navigation} />
-
+      <ScrollView style={styles.container}>
+        <NavigationBar {...navigation} showLeftSection />
         <View style={styles.subContainer}>
           <View style={styles.firstSection}>
-            <Text size="h1">Login</Text>
-            <Text size="h3" color="slightDark">Get started with your journey</Text>
+            <Text style={ApplicationStyles.headline}>Login</Text>
+            <Text style={ApplicationStyles.subHeadline}>Get started with your journey</Text>
           </View>
           <View style={styles.secondSection}>
-            <TextInput label="Email" />
+            <TextInput label="Username or Email" />
             <TextInput label="Password" secureTextEntry />
             <View style={styles.remeberPassContainer}>
+              <CheckBox
+                style={{ flex: 1 }}
+                onClick={() => {
+                  this.setState({
+                    isChecked: !this.state.isChecked,
+                  });
+                }}
+                isChecked={this.state.isChecked}
+                rightText="Remember Password"
+                rightTextStyle={{ ...ApplicationStyles.body, textAlign: 'left' }}
+                checkBoxColor={ApplicationStyles.primaryColor.color}
+                uncheckedCheckBoxColor={ApplicationStyles.disabledColor.color}
+              />
 
-              <Text style={styles.remeberText} color="mediumDark" size="h3">Remember Password </Text>
               <Button
                 style={styles.forgetButtonContainer}
                 titleStyle={styles.forgetButton}
@@ -87,7 +109,7 @@ class LoginScreen extends Component {
               title="CONTINUE TO LOGIN"
             />
             <View style={styles.signUpLinkContainer}>
-              <Text color="mediumDark" size="h3">Don't have an account? </Text>
+              <Text style={{ ...ApplicationStyles.info }}>Don't have an account? </Text>
               <Button
                 style={styles.signUpContainer}
                 titleStyle={styles.signUpButton}
@@ -97,7 +119,7 @@ class LoginScreen extends Component {
             </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

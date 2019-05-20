@@ -1,11 +1,14 @@
 import * as React from 'react';
-import { View, TextInput as RNTextInput } from 'react-native';
+import { View, TextInput as RNTextInput, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { flush } from 'redux-saga/effects';
 import Button from './Button';
 import Text from './Text';
-import { Colors, ApplicationStyles } from '../Theme';
+import {
+  Colors, ApplicationStyles, Fonts, FontSizes, FontStyles,
+} from '../Theme';
 
 class TextInput extends React.Component {
   constructor(props) {
@@ -31,18 +34,33 @@ class TextInput extends React.Component {
   }
 
   render() {
-    const { secureTextEntry, showEyeIcon } = this.state;
-    const { label } = this.props;
+    const { showEyeIcon } = this.state;
+    const {
+      label, numberOfLines, multiline, secureTextEntry,
+    } = this.props;
     return (
       <View style={{ marginVertical: hp('2%') }}>
-        <Text size="h3" color="mediumDark">{label}</Text>
+        <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>{label}</Text>
         <RNTextInput
+          multiline={multiline}
+          numberOfLines={numberOfLines}
           secureTextEntry={secureTextEntry}
-          style={{ paddingHorizontal: 0, margin: 0 }}
-          underlineColorAndroid={Colors.primary}
+          style={{
+            ...ApplicationStyles.textInputValue,
+            paddingHorizontal: 0,
+            paddingTop: hp('0.5%'),
+            paddingBottom: hp('1.5%'),
+            borderColor: 'transparent',
+            margin: 0,
+            borderBottomColor: Colors.mediumDarkFont,
+            borderWidth: StyleSheet.hairlineWidth * 2,
+          }}
+          underlineColorAndroid="transparent"
         />
-        {showEyeIcon && secureTextEntry && this.eyeButton('ios-eye') }
-        {showEyeIcon && !secureTextEntry && this.eyeButton('ios-eye-off') }
+        {/* <Text style={[{ ...ApplicationStyles.textInputLabel }, { ...ApplicationStyles.warningColor }]}>Please enter valid username</Text> */}
+
+        {false && showEyeIcon && secureTextEntry && this.eyeButton('ios-eye') }
+        {false && showEyeIcon && secureTextEntry && this.eyeButton('ios-eye-off') }
 
       </View>
     );
@@ -65,11 +83,15 @@ class TextInput extends React.Component {
 TextInput.propTypes = {
   secureTextEntry: PropTypes.bool,
   label: PropTypes.string,
+  numberOfLines: PropTypes.number,
+  multiline: PropTypes.bool,
 };
 
 TextInput.defaultProps = {
   secureTextEntry: false,
   label: '',
+  numberOfLines: 1,
+  multiline: false,
 };
 
 export default TextInput;

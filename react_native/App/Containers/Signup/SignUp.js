@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
-import { Colors, FontSizes } from '../../Theme';
+import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
@@ -23,16 +23,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: hp('7%'),
   },
-  buttonTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
   submitContainer: {
     marginTop: hp('4%'),
-    backgroundColor: Colors.primary,
     borderRadius: wp('2%'),
     width: wp('80%'),
     alignSelf: 'center',
     height: hp('7%'),
   },
-  submitTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
+  submitTitle: { },
 });
 
 
@@ -91,13 +89,13 @@ class SignUpScreen extends Component {
             <View style={styles.tabularButton}>
               <Button
                 style={[styles.tabButton, this.tabButtonsStyle('user').container]}
-                titleStyle={[styles.buttonTitle, this.tabButtonsStyle('user').title]}
+                titleStyle={[this.tabButtonsStyle('user').title]}
                 title="AS USER"
                 onPress={() => this.setState({ userType: 'user' })}
               />
               <Button
                 style={[styles.tabButton, this.tabButtonsStyle('ngo').container]}
-                titleStyle={[styles.buttonTitle, this.tabButtonsStyle('ngo').title]}
+                titleStyle={[this.tabButtonsStyle('ngo').title]}
                 title="AS NGO"
                 onPress={() => this.setState({ userType: 'ngo' })}
               />

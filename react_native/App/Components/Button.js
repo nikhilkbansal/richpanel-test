@@ -1,23 +1,25 @@
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import {
-  View, Text, TouchableOpacity, TouchableNativeFeedback, Platform, StyleSheet,
+  View, TouchableOpacity, TouchableNativeFeedback, Platform, StyleSheet,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
-import { ApplicationStyles, Colors } from '../Theme';
+import Text from './Text';
+import { ApplicationStyles, Colors, Fonts } from '../Theme';
 
 const styles = StyleSheet.create({
   buttonStyle: { alignContent: 'center', justifyContent: 'center', flex: 1 },
 });
 
 function Button({
-  onPress, title, icon, style, titleStyle, iconSize, buttonWrapperStyle, iconColor,
+  onPress, title, icon, style, titleStyle, iconSize, buttonWrapperStyle, iconColor, children,
 }) {
   const Content = () => (
     <Fragment>
       {!!icon && <Icon name={icon} size={iconSize || ApplicationStyles.iconSize} color={iconColor} />}
-      {!!title && <Text style={[titleStyle]}>{ title }</Text>}
+      {!!title && <Text style={[{ ...ApplicationStyles.button }, titleStyle]}>{ title }</Text>}
+      {!!children && children }
     </Fragment>
   );
 
@@ -56,6 +58,7 @@ Button.propTypes = {
   iconSize: PropTypes.number,
   buttonWrapperStyle: PropTypes.object,
   iconColor: PropTypes.string,
+  children: PropTypes.any,
 };
 
 Button.defaultProps = {
@@ -64,6 +67,7 @@ Button.defaultProps = {
   titleStyle: {},
   style: {},
   buttonWrapperStyle: {},
+  children: null,
   iconSize: null,
   onPress: () => alert('Its working'),
   iconColor: Colors.darkFont,
