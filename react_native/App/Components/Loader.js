@@ -1,35 +1,11 @@
-/*
- * @file: Loader.js
- * @description: Top header component for showing statusbar, back button, title etc
- * @date: 05.Jan.2018
- * @author: Manish Budhiraja
- * */
-
 import React from 'react';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 
-class Loader extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      visible: true,
-    };
-  }
+const Loader = ({ isLoading }) => <Spinner visible={isLoading} />;
 
-  componentDidMount() {
-    const context = this;
-    setTimeout(() => {
-      context.setState({
-        visible: false,
-      });
-    }, 7000);
-  }
+Loader.propTypes = { isLoading: PropTypes.bool.isRequired };
 
-  render() {
-    return <Spinner visible={this.state.visible} />;
-  }
-}
-
-
-module.exports = Loader;
+export default connect(({ app: { isLoading } }) => ({ isLoading }))(Loader);

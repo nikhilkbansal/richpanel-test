@@ -22,6 +22,8 @@
   "dependencies": {
     "@shoutem/ui": "^0.23.9",
     "apisauce": "^0.15.2",
+    "axios": "^0.18.0",
+    "idx": "^2.5.6",
     "immutable": "^3.8.2",
     "lottie-react-native": "^2.5.10",
     "prop-types": "^15.6.1",
@@ -40,6 +42,7 @@
     "react-native-responsive-screen": "^1.1.10",
     "react-native-svg": "^9.4.0",
     "react-native-textinput-effects": "^0.4.2",
+    "react-native-tiny-toast": "^1.0.3",
     "react-native-typography": "^1.4.0",
     "react-native-vector-icons": "^6.1.0",
     "react-navigation": "^2.12.1",

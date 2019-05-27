@@ -31,6 +31,9 @@ export default {
   disabledColor: {
     color: Colors.font.shadyLady,
   },
+  lightColor: {
+    color: Colors.font.white,
+  },
   headline: {
     color: Colors.font.blackRussian,
     fontSize: FontSizes.h1,

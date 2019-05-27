@@ -13,10 +13,10 @@ import EditProfile from 'App/Containers/EditProfile/EditProfile';
 import MyDonations from 'App/Containers/MyDonations/MyDonations';
 import AddPost from 'App/Containers/AddPost/AddPost';
 import SplashScreen from 'App/Containers/SplashScreen/SplashScreen';
-import StyleGuide from 'App/Containers/Login/StyleGuide';
+import StyleGuide from 'App/Containers/StyleGuide/StyleGuide';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import StartupActions from 'App/Stores/Startup/Actions';
+// import StartupActions from 'App/Stores/Startup/Actions';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Loader from '../../Components/Loader';
@@ -71,8 +71,8 @@ const theme = {
 class RootScreen extends Component {
   componentDidMount() {
     // Run the startup saga when the application is starting
-    const { startup } = this.props;
-    startup();
+    // const { startup } = this.props;
+    // startup();
   }
 
   render() {
@@ -95,16 +95,16 @@ class RootScreen extends Component {
 
 const mapStateToProps = state => ({});
 
-const mapDispatchToProps = dispatch => ({
-  startup: () => dispatch(StartupActions.startup()),
-});
+// const mapDispatchToProps = dispatch => ({
+//   startup: () => dispatch(StartupActions.startup()),
+// });
 
 
 RootScreen.propTypes = {
-  startup: PropTypes.arrayOf(PropTypes.object).isRequired,
+  // startup: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  null,
 )(RootScreen);

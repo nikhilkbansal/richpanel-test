@@ -2,6 +2,7 @@ import React, { Fragment, Component } from 'react';
 import {
   View, StyleSheet, ScrollView, ActivityIndicator,
 } from 'react-native';
+import { connect } from 'react-redux';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
 // import CheckBox from 'react-native-checkbox';
@@ -13,6 +14,10 @@ import {
   Colors, FontSizes, Fonts, FontStyles, ApplicationStyles,
 } from '../../Theme';
 // const ItemCheckbox = require('react-native-item-checkbox');
+import AppActions from '../../Stores/App/Actions';
+import UserActions from '../../Stores/User/Actions';
+import Toast from '../../Services/ToastService';
+import { Validations } from '../../Utils';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
@@ -64,11 +69,27 @@ class LoginScreen extends Component {
       email: null,
       password: '',
       isChecked: false,
+      errors: {},
     };
+    this.loginInit = this.loginInit.bind(this);
+    TextInput.validateForm = TextInput.validateForm.bind(this);
+    TextInput.updateTextInput = TextInput.updateTextInput.bind(this);
+    this.passwordRef = React.createRef();
   }
+
+
+  loginInit() {
+    const { loginInit } = this.props;
+    const { email, password } = this.state;
+    if (!TextInput.validateForm(['password'])) return false;
+
+    loginInit({ email, password });
+  }
+
 
   render() {
     const { navigation } = this.props;
+    const { errors, isChecked } = this.state;
     return (
       <ScrollView style={styles.container}>
         <NavigationBar {...navigation} showLeftSection />
@@ -78,17 +99,32 @@ class LoginScreen extends Component {
             <Text style={ApplicationStyles.subHeadline}>Get started with your journey</Text>
           </View>
           <View style={styles.secondSection}>
-            <TextInput label="Username or Email" />
-            <TextInput label="Password" secureTextEntry />
+            <TextInput
+              error={errors.email}
+              label="Username or Email"
+              returnKeyType="next"
+              onChangeText={text => TextInput.updateTextInput('email', text)}
+              onSubmitEditing={() => this.passwordRef.current.focus()}
+            />
+            <TextInput
+              error={errors.password}
+              label="Password"
+              textInputRef={this.passwordRef}
+              returnKeyType="done"
+              secureTextEntry
+              onSubmitEditing={this.loginInit}
+              onChangeText={text => TextInput.updateTextInput('password', text)}
+              placeholder="Enter between 6 to 18 characters"
+            />
             <View style={styles.remeberPassContainer}>
               <CheckBox
                 style={{ flex: 1 }}
                 onClick={() => {
                   this.setState({
-                    isChecked: !this.state.isChecked,
+                    isChecked: !isChecked,
                   });
                 }}
-                isChecked={this.state.isChecked}
+                isChecked={isChecked}
                 rightText="Remember Password"
                 rightTextStyle={{ ...ApplicationStyles.body, textAlign: 'left' }}
                 checkBoxColor={ApplicationStyles.primaryColor.color}
@@ -105,7 +141,7 @@ class LoginScreen extends Component {
             <Button
               style={styles.loginContainer}
               titleStyle={styles.loginTitle}
-              onPress={() => navigation.navigate('HomePage')}
+              onPress={this.loginInit}
               title="CONTINUE TO LOGIN"
             />
             <View style={styles.signUpLinkContainer}>
@@ -124,4 +160,6 @@ class LoginScreen extends Component {
   }
 }
 
-export default LoginScreen;
+export default connect(null, {
+  loginInit: UserActions.loginInit,
+})(LoginScreen);

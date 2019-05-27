@@ -1,9 +1,8 @@
 import { createActions } from 'reduxsauce';
 
 const { Types, Creators } = createActions({
-  // This action is triggered when the application starts
-  startup: null,
+  isLoading: ['isLoading'],
 });
 
-export const StartupTypes = Types;
+export const AppTypes = Types;
 export default Creators;
