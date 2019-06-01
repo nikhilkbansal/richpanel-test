@@ -1,55 +1,64 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Image, View } from 'react-native';
-import {
-  Button, Title, Text, IconButton, Card, withTheme,
-} from 'react-native-paper';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import Text from './Text';
+import Button from './Button';
+import { Colors } from '../Theme';
 
 function NotificationUi({
   title, onPress, containerStyle, theme,
 }) {
-  const styles = {
-    container: {
-      alignSelf: 'center',
-    },
-    title: {
-      fontFamily: theme.fonts.thin,
-      color: theme.colors.primary,
-    },
-  };
   return (
-    <Card style={{
-      backgroundColor: '#fff', borderBottomWidth: 1, borderColor: '#FBFCFD', padding: wp('2%'),
+
+    <View style={{
+      backgroundColor: Colors.lightFont,
+      flex: 1,
+      flexDirection: 'row',
+      padding: wp('2%'),
+      alignContent: 'center',
+      justifyContent: 'center',
+      margin: wp('1%'),
+      elevation: 1,
     }}
     >
+      <Image
+        style={{
+          width: wp('14%'), height: wp('14%'), borderRadius: wp('7.5%'), alignSelf: 'center',
+        }}
+        source={require('../Assets/Images/child.jpeg')}
+      />
       <View style={{
-        flex: 1, flexDirection: 'row', paddingVertical: wp('1%'), alignContent: 'center', justifyContent: 'center',
+        flex: 1, paddingHorizontal: wp('2%'), justifyContent: 'space-between',
       }}
       >
-        <Image
-          style={{
-            width: wp('11%'), height: wp('11%'), borderRadius: wp('7.5%'), alignSelf: 'center',
-          }}
-          source={require('../Assets/Images/child.jpeg')}
-        />
-        <View style={{
-          flex: 1, paddingHorizontal: wp('1%'), justifyContent: 'space-between',
-        }}
-        >
-          <Text style={{ fontFamily: theme.fonts.light, fontSize: theme.fontSizes.h3 }}>
-            <Text style={{ fontFamily: theme.fonts.regular }}>Goonj</Text>
-            {' '}
+        <Text color="dark" size="h4">
+          <Text color="dark" font="medium" size="h4">Goonj</Text>
+          {' '}
 added a new post
-            {' '}
-            <Text style={{ fontFamily: theme.fonts.regular }}>Here is new way to help poor people</Text>
-          </Text>
-          <Text style={{ fontFamily: theme.fonts.thin, fontSize: theme.fontSizes.h5 }}>2 hours ago</Text>
-        </View>
-
+          {' '}
+          <Text size="h4" color="primary">Here is new way to help poor people</Text>
+        </Text>
+        <Text size="h5">2 hours ago</Text>
       </View>
+      <Button
+        icon="md-more"
+        iconSize={25}
+        iconColor={Colors.mediumDarkFont}
+        style={{
 
-    </Card>
+          alignContent: 'center',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        buttonWrapperStyle={{
+          width: wp('5%'),
+          alignItems: 'center',
+          overflow: 'hidden',
+        }}
+      />
+
+    </View>
   );
 }
 
@@ -66,4 +75,4 @@ NotificationUi.defaultProps = {
 };
 
 
-export default withTheme(NotificationUi);
+export default NotificationUi;

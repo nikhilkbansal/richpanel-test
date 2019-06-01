@@ -16,7 +16,7 @@ import commonStyle from '../../Theme/ApplicationStyles';
 import { Card, Title, Paragraph,Chip } from 'react-native-paper';
 import { Appbar } from 'react-native-paper';
 import defaultStyle from '../../Theme/ApplicationStyles';
-import NotificationUi from '../../Components/NotificationUi';
+import {NotificationUi, NavigationBar} from '../../Components';
 class Notification extends Component {
   static get propTypes() {
     return {
@@ -38,11 +38,15 @@ class Notification extends Component {
 
   render() {
     const { email, password, checked } = this.state;
-    const { theme } = this.props;
+    const { navigation } = this.props;
     return (
       <View style={{flex:1}}>
+
+<NavigationBar {...navigation} title='Notifications' showLeftSection={false}/>
+
         <FlatList
-          data={[{a:3},{a:3},{a:3},{a:3}]} 
+          style={{paddingHorizontal: wp('3%')}}
+          data={[{a:3},{a:3},{a:3},{a:3},{a:3},{a:3},{a:3},{a:3},{a:3},{a:3},{a:3},{a:3}]} 
           renderItem={this._renderItem}
         />
       </View>
@@ -50,4 +54,4 @@ class Notification extends Component {
   }
 }
 
-export default withTheme(Notification);
+export default Notification;

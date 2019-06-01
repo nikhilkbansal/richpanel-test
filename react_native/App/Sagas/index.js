@@ -1,17 +1,8 @@
-import { takeLatest } from 'redux-saga/effects';
-import { ExampleTypes } from 'App/Stores/Example/Actions';
-import { StartupTypes } from 'App/Stores/Startup/Actions';
-import { fetchTemperature } from './ExampleSaga';
-import { startup } from './StartupSaga';
+import { all } from 'redux-saga/effects';
+import user from './UserSaga';
 
-export default function* root() {
-  yield [
-    /**
-     * @see https://redux-saga.js.org/docs/basics/UsingSagaHelpers.html
-     */
-    // Run the startup saga when the application starts
-    takeLatest(StartupTypes.STARTUP, startup),
-    // Call `fetchTemperature()` when a `FETCH_TEMPERATURE` action is triggered
-    takeLatest(ExampleTypes.FETCH_TEMPERATURE, fetchTemperature),
-  ];
-}
+const sagas = function* sagas() {
+  yield all([user()]);
+};
+
+export default sagas;

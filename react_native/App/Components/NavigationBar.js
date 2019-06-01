@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingHorizontal: wp('4%'),
+    paddingHorizontal: wp('5%'),
   },
   leftArea: {
     flex: 1,
@@ -42,20 +42,23 @@ const styles = StyleSheet.create({
 
 
 function NavigationBar({
-  title, showRightSection, goBack, containerStyle,
+  title, showRightSection, goBack, containerStyle, showLeftSection, rightIcon, statusBarColor,
 }) {
   return (
     <View style={[styles.container, containerStyle]}>
-      <StatusBar backgroundColor={Colors.background} barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" />
       <View style={styles.subContainer}>
         <View style={styles.leftArea}>
+          {showLeftSection && (
           <Button
             onPress={() => goBack()}
+            style={{ paddingHorizontal: wp('2%') }}
             icon="ios-arrow-round-back"
           />
+          )}
         </View>
         <View style={styles.centerArea}>
-          <Text size="h2" color="dark" style={styles.label}>
+          <Text size="h2" color="dark" font="medium" style={styles.label}>
             {title}
           </Text>
         </View>
@@ -63,7 +66,8 @@ function NavigationBar({
           {showRightSection && (
           <Button
             onPress={() => { alert(2); }}
-            icon="long-arrow-right"
+            icon={rightIcon}
+            iconSize={wp('6%')}
           />
           )}
         </View>
@@ -78,6 +82,9 @@ NavigationBar.propTypes = {
   showRightSection: PropTypes.bool,
   goBack: PropTypes.func,
   containerStyle: PropTypes.object,
+  showLeftSection: PropTypes.bool,
+  rightIcon: PropTypes.string,
+  statusBarColor: PropTypes.string,
 };
 
 NavigationBar.defaultProps = {
@@ -85,6 +92,9 @@ NavigationBar.defaultProps = {
   goBack: Function,
   showRightSection: false,
   containerStyle: {},
+  showLeftSection: true,
+  rightIcon: 'md-create',
+  statusBarColor: Colors.accent,
 };
 
 

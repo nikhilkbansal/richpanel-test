@@ -3,10 +3,12 @@ import React from 'react';
 import {
   Text as RNText,
 } from 'react-native';
-import { FontSizes, Colors, Fonts } from '../Theme';
+import {
+  FontSizes, Colors, Fonts, FontStyles,
+} from '../Theme';
 
 function Text({
-  children, size, color, font, style,
+  children, size, color, font, style, fontStyle,
 }) {
   const sizes = {
     h1: {
@@ -57,8 +59,10 @@ function Text({
       fontFamily: Fonts.thin,
     },
   };
+
+
   return (
-    <RNText style={[style, { ...sizes[size] }, { ...colors[color] }, { ...fonts[font] }]}>
+    <RNText style={[{ ...FontStyles[fontStyle] }, style, { ...sizes[size] }, { ...colors[color] }, { ...fonts[font] }]}>
       {children}
     </RNText>
   );
@@ -70,13 +74,15 @@ Text.propTypes = {
   color: PropTypes.string,
   font: PropTypes.string,
   style: PropTypes.object,
+  fontStyle: PropTypes.string,
 };
 
 Text.defaultProps = {
-  size: 'h3',
-  color: 'dark',
-  font: 'light',
+  size: '',
+  color: '',
+  font: '',
   style: {},
+  fontStyle: 'headline',
 };
 
 
