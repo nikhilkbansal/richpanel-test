@@ -4,6 +4,9 @@ const postRoutes = require('./post/post.route');
 const eventRoutes = require('./event/event.route');
 const authRoutes = require('./auth/auth.route');
 const followRoutes = require('./follow/follow.route');
+const fileRoutes = require('./files/files.route');
+const commentRoutes = require('./comment/comment.route');
+const reactionRoutes = require('./reaction/reaction.route');
 
 
 const router = express.Router();
@@ -28,6 +31,9 @@ router.use('/auth', authRoutes);
 router.use('/post', postRoutes);
 router.use('/event', eventRoutes);
 router.use('/follow', followRoutes);
+router.use('/files', fileRoutes);
+router.use('/comment', commentRoutes);
+router.use('/reaction', reactionRoutes);
 
 
 module.exports = router;

@@ -32,6 +32,12 @@ const userSchema = new mongoose.Schema({
     minlength: 6,
     maxlength: 128,
   },
+  userName: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
   forgotPasswordKey: {
     type: String,
     default: '',
@@ -52,9 +58,9 @@ const userSchema = new mongoose.Schema({
     enum: roles,
     default: 'user',
   },
-  picture: {
-    type: String,
-    trim: true,
+  files: {
+    type: Array,
+    default: [],
   },
   googleAuth: {
     access_token: String,
@@ -179,10 +185,12 @@ userSchema.statics = {
    * @returns {Promise<User, APIError>}
    */
   async findAndGenerateToken(options) {
-    const { email, password, refreshObject } = options;
-    if (!email) throw new APIError({ message: 'An email is required to generate a token' });
+    const {
+      userName, password, refreshObject, email,
+    } = options;
+    if (!userName) throw new APIError({ message: 'Email/Username is required to login' });
 
-    const user = await this.findOne({ email }).exec();
+    const user = await this.findOne({ $or: [{ userName }, { email: userName }] }).exec();
     const err = {
       status: httpStatus.UNAUTHORIZED,
       isPublic: true,

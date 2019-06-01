@@ -34,9 +34,9 @@ const postSchema = new mongoose.Schema({
     required: true,
     maxlength: 128,
   },
-  uploads: {
-    type: String,
-    default: '',
+  files: {
+    type: Array,
+    default: [],
 
   },
   location: {

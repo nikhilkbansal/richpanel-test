@@ -20,7 +20,7 @@ module.exports = {
       description: Joi.string().max(128),
       location: Joi.string(),
       startTime: Joi.string().required(),
-      endTime: Joi.string.required(),
+      endTime: Joi.string().required(),
     },
   },
 
@@ -31,7 +31,7 @@ module.exports = {
       description: Joi.string().max(128),
       location: Joi.string(),
       startTime: Joi.string().required(),
-      endTime: Joi.string.required(),
+      endTime: Joi.string().required(),
     },
   },
 

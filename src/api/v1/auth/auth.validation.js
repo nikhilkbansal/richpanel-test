@@ -6,6 +6,7 @@ module.exports = {
     body: {
       email: Joi.string().email().required(),
       password: Joi.string().required().min(6).max(128),
+      userName: Joi.string().required(),
       clientType: Joi.string().valid('browser', 'ios', 'android').optional(),
       deviceToken: Joi.string().optional(),
     },
@@ -14,7 +15,7 @@ module.exports = {
   // POST /v1/auth/login
   login: {
     body: {
-      email: Joi.string().email().required(),
+      userName: Joi.string().required(),
       password: Joi.string().required().max(128),
       clientType: Joi.string().valid('browser', 'ios', 'android').optional(),
       deviceToken: Joi.string().optional(),
