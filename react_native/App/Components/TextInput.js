@@ -12,23 +12,32 @@ import {
 import { Validations } from '../Utils';
 
 class TextInput extends React.Component {
-  static updateTextInput(key, value) {
-    this.setState({ [key]: value });
-  }
-
-  static validateForm(keys = []) {
-    const { email, password } = this.state;
+  static validateForm(keys = [], state) {
+    const {
+      email, password, confirmPassword, username, usernameOrEmail,
+    } = state;
     let errors = {};
+
+    if (keys.includes('usernameOrEmail') && !usernameOrEmail) {
+      errors = { ...errors, usernameOrEmail: 'Enter a valid username or email' };
+    }
+
+    if (keys.includes('username') && !username) {
+      errors = { ...errors, username: 'Enter a valid username' };
+    }
+
     if (keys.includes('email') && !Validations.validateEmail(email)) {
       errors = { ...errors, email: 'Email must be valid' };
     }
 
     if (keys.includes('password') && !Validations.validatePassword(password)) {
-      errors = { ...errors, password: 'Please enter valid password' };
+      errors = { ...errors, password: 'Enter a valid password' };
     }
 
-    this.setState({ errors });
-    return Object.keys(errors).length > 0;
+    if (keys.includes('confirmPassword') && confirmPassword !== password) {
+      errors = { ...errors, confirmPassword: 'Both passwords are different' };
+    }
+    return Object.keys(errors).length === 0 ? false : errors;
   }
 
   constructor(props) {
@@ -58,6 +67,7 @@ class TextInput extends React.Component {
     const {
       label, numberOfLines, multiline, secureTextEntry, error,
       placeholder, onChangeText, returnKeyType, textInputRef, onSubmitEditing,
+      value,
     } = this.props;
     return (
       <View style={{ marginTop: hp('1%'), marginBottom: !error ? hp('1%') : 0 }}>
@@ -71,6 +81,7 @@ class TextInput extends React.Component {
           returnKeyType={returnKeyType}
           enablesReturnKeyAutomatically
           ref={textInputRef}
+          value={value || undefined}
           onSubmitEditing={onSubmitEditing}
           style={{
             ...ApplicationStyles.textInputValue,
@@ -118,6 +129,7 @@ TextInput.propTypes = {
   onChangeText: PropTypes.func,
   textInputRef: PropTypes.func,
   onSubmitEditing: PropTypes.func,
+  value: PropTypes.any,
 };
 
 TextInput.defaultProps = {
@@ -125,6 +137,7 @@ TextInput.defaultProps = {
   label: '',
   numberOfLines: 1,
   multiline: false,
+  value: '',
   placeholder: '',
   error: null,
   onChangeText: Function,

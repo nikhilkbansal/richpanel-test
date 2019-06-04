@@ -5,6 +5,7 @@ import {
 import { connect } from 'react-redux';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
@@ -16,7 +17,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
   subContainer: { flex: 1, paddingHorizontal: wp('7%') },
   firstSection: { flex: 1 },
-  secondSection: { flex: 4 },
+  secondSection: { flex: 4, marginTop: hp('5%') },
   submitContainer: {
     marginTop: hp('4%'),
     backgroundColor: Colors.primary,
@@ -46,14 +47,23 @@ class ForgetPassword extends Component {
     };
     this.forgotPassInit = this.forgotPassInit.bind(this);
     TextInput.validateForm = TextInput.validateForm.bind(this);
-    TextInput.updateTextInput = TextInput.updateTextInput.bind(this);
+    this.updateTextInput = this.updateTextInput.bind(this);
+  }
+
+  updateTextInput(key, value) {
+    this.setState({ [key]: value });
   }
 
   forgotPassInit() {
     const { forgotPasswordInit } = this.props;
     const { email } = this.state;
-    if (!TextInput.validateForm(['email'])) return false;
 
+    const validateForm = TextInput.validateForm(['email'], this.state);
+    if (validateForm) {
+      this.setState({ errors: validateForm });
+      alert(3434);
+      return false;
+    }
     forgotPasswordInit({ email });
   }
 
@@ -63,7 +73,7 @@ class ForgetPassword extends Component {
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} />
-        <View style={styles.subContainer}>
+        <KeyboardAwareScrollView style={styles.subContainer}>
           <View style={styles.firstSection}>
             <Text style={ApplicationStyles.headline}>Forgot Password?</Text>
             <Text style={ApplicationStyles.subHeadline}>Don't worry! just follow along</Text>
@@ -73,7 +83,7 @@ class ForgetPassword extends Component {
               error={errors.email}
               label="Email"
               returnKeyType="done"
-              onChangeText={text => TextInput.updateTextInput('email', text)}
+              onChangeText={text => this.updateTextInput('email', text)}
               onSubmitEditing={this.forgotPassInit}
             />
             <Button
@@ -83,7 +93,7 @@ class ForgetPassword extends Component {
               title="SUBMIT"
             />
           </View>
-        </View>
+        </KeyboardAwareScrollView>
       </View>
     );
   }

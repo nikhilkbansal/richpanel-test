@@ -11,14 +11,13 @@ import { Colors } from '../Theme';
 const styles = StyleSheet.create({
   container: {
     width: wp('100%'),
-    height: hp('10%'),
+    height: hp('9%'),
   },
   subContainer: {
     flex: 1,
     alignContent: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingHorizontal: wp('5%'),
   },
   leftArea: {
     flex: 1,
@@ -42,7 +41,7 @@ const styles = StyleSheet.create({
 
 
 function NavigationBar({
-  title, showRightSection, goBack, containerStyle, showLeftSection, rightIcon, statusBarColor,
+  title, showRightSection, goBack, containerStyle, showLeftSection, rightIcon, statusBarColor, rightButtonAction,
 }) {
   return (
     <View style={[styles.container, containerStyle]}>
@@ -52,7 +51,8 @@ function NavigationBar({
           {showLeftSection && (
           <Button
             onPress={() => goBack()}
-            style={{ paddingHorizontal: wp('2%') }}
+            style={{ }}
+            buttonWrapperStyle={{ paddingHorizontal: wp('7%') }}
             icon="ios-arrow-round-back"
           />
           )}
@@ -65,8 +65,10 @@ function NavigationBar({
         <View style={styles.rightArea}>
           {showRightSection && (
           <Button
-            onPress={() => { alert(2); }}
+            onPress={rightButtonAction}
             icon={rightIcon}
+            style={{ }}
+            buttonWrapperStyle={{ paddingHorizontal: wp('7%') }}
             iconSize={wp('6%')}
           />
           )}
@@ -82,9 +84,10 @@ NavigationBar.propTypes = {
   showRightSection: PropTypes.bool,
   goBack: PropTypes.func,
   containerStyle: PropTypes.object,
-  showLeftSection: PropTypes.bool,
   rightIcon: PropTypes.string,
+  rightButtonAction: PropTypes.func,
   statusBarColor: PropTypes.string,
+  showLeftSection: PropTypes.bool,
 };
 
 NavigationBar.defaultProps = {
@@ -93,6 +96,7 @@ NavigationBar.defaultProps = {
   showRightSection: false,
   containerStyle: {},
   showLeftSection: true,
+  rightButtonAction: Function,
   rightIcon: 'md-create',
   statusBarColor: Colors.accent,
 };

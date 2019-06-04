@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import ActionButton from 'react-native-action-button';
 import defaultStyle from '../../Theme/ApplicationStyles';
 import PostEventUi from '../../Components/PostEventUi';
-import { Colors, FontSizes } from '../../Theme';
+import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import Icon from 'react-native-vector-icons/Ionicons';
 const styles = StyleSheet.create({
   actionButtonIcon: {
@@ -45,7 +45,7 @@ class LoginScreen extends Component {
     const { email, password, checked } = this.state;
     const { theme, navigation: { navigate }  } = this.props;
     return (
-      <View style={{flex: 1, backgroundColor: Colors.background}}>
+      <View style={{flex: 1, backgroundColor: ApplicationStyles.lightBackgkround.color}}>
 
         <FlatList
           data={[{a:3},{a:3},{a:3},{a:3}]} 

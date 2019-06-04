@@ -2,13 +2,17 @@ import {
   all, call, put, takeLatest, select, take,
 } from 'redux-saga/effects';
 
-import { UserTypes } from '../Stores/User/Actions';
-
+import userActions, { UserTypes } from '../Stores/User/Actions';
+import NavigationService from '../Services/NavigationService';
 import httpClient from './HttpClient';
 
 
 export function* login({ payload }) {
   try {
+    if (!payload.isRememberMe) {
+      yield put(userActions.manageRememberMe(null));
+    }
+
     const payloadData = {
       method: 'post',
       data: {
@@ -16,9 +20,13 @@ export function* login({ payload }) {
       },
       url: 'auth/login',
     };
-    const members = yield call(httpClient, payloadData);
-    console.log('members', members);
-    // yield put();
+    const data = yield call(httpClient, payloadData);
+    NavigationService.navigate('HomePage');
+    yield put(userActions.putUserInfo({ ...data, isLoggedIn: true }));
+
+    if (payload.isRememberMe) {
+      yield put(userActions.manageRememberMe(payload));
+    }
   } catch (e) {
     console.log('eee', e);
     // catch errors here
@@ -35,7 +43,7 @@ export function* forgotPassword({ payload }) {
       },
       url: 'users/forgotPassword',
     };
-    const members = yield call(httpClient, payloadData);
+    yield call(httpClient, payloadData);
   } catch (e) {
   }
 }
@@ -47,9 +55,11 @@ export function* register({ payload }) {
       data: {
         ...payload,
       },
-      url: 'users/forgotPassword',
+      url: 'auth/register',
     };
-    const members = yield call(httpClient, payloadData);
+    const data = yield call(httpClient, payloadData);
+    NavigationService.navigate('HomePage');
+    yield put(userActions.putUserInfo({ ...data, isLoggedIn: true }));
   } catch (e) {
   }
 }

@@ -5,6 +5,7 @@ import {
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
@@ -15,19 +16,23 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
   subContainer: { flex: 1, paddingHorizontal: wp('7%') },
   firstSection: { flex: 1 },
-  secondSection: { flex: 4 },
+  secondSection: { flex: 4, marginTop: hp('5%') },
   tabularButton: {
-    marginVertical: hp('4%'), flexDirection: 'row', borderRadius: wp('2%'), overflow: 'hidden', marginHorizontal: wp('2%'),
+    marginVertical: hp('4%'),
+    flexDirection: 'row',
+    borderRadius: ApplicationStyles.commonBorderRadius(wp('80%')),
+    overflow: 'hidden',
+    width: wp('80%'),
   },
   tabButton: {
     flex: 1,
-    backgroundColor: Colors.primary,
     alignSelf: 'center',
     height: hp('7%'),
   },
   submitContainer: {
-    marginTop: hp('4%'),
-    borderRadius: wp('2%'),
+    marginVertical: hp('5%'),
+    backgroundColor: ApplicationStyles.primaryColor.color,
+    borderRadius: ApplicationStyles.commonBorderRadius(wp('80%')),
     width: wp('80%'),
     alignSelf: 'center',
     height: hp('7%'),
@@ -52,15 +57,21 @@ class SignUpScreen extends Component {
       userType: 'user',
       errors: {},
     };
-    TextInput.validateForm = TextInput.validateForm.bind(this);
-    TextInput.updateTextInput = TextInput.updateTextInput.bind(this);
+    this.updateTextInput = this.updateTextInput.bind(this);
     this.passwordRef = React.createRef();
+    this.confirmPasswordRef = React.createRef();
+    this.usernameRef = React.createRef();
   }
+
+  updateTextInput(key, value) {
+    this.setState({ [key]: value });
+  }
+
 
   tabButtonsStyle(renderedUserType) {
     const { userType } = this.state;
     const activeStyle = { backgroundColor: ApplicationStyles.primaryColor.color };
-    const deactiveStyle = { backgroundColor: '#F2F2F2' };
+    const deactiveStyle = { backgroundColor: ApplicationStyles.lightBackgkround.color };
     const activeTitleStyle = { color: ApplicationStyles.lightColor.color };
     const deactiveTitleStyle = { color: Colors.darkFont };
     switch (renderedUserType) {
@@ -77,12 +88,17 @@ class SignUpScreen extends Component {
   }
 
 
-  reegisterInit() {
+  signUpInit() {
     const { registerInit } = this.props;
-    const { email, password } = this.state;
-    if (!TextInput.validateForm(['password'])) return false;
+    const { email, password, username } = this.state;
+    const validateForm = TextInput.validateForm(['password', 'confirmPassword', 'email', 'username'], this.state);
+    if (validateForm) {
+      this.setState({ errors: validateForm });
+      return false;
+    }
 
-    registerInit({ email, password });
+    registerInit({ email, password, username });
+    return true;
   }
 
 
@@ -96,7 +112,7 @@ class SignUpScreen extends Component {
       <View style={styles.container}>
         <NavigationBar {...navigation} />
 
-        <ScrollView style={styles.subContainer}>
+        <KeyboardAwareScrollView style={styles.subContainer}>
           <View style={styles.firstSection}>
             <Text style={ApplicationStyles.headline}>Signup</Text>
             <Text style={ApplicationStyles.subHeadline}>Let's take first step</Text>
@@ -117,41 +133,53 @@ class SignUpScreen extends Component {
               />
             </View>
             <TextInput
+              error={errors.fullName}
+              label="Full Name"
+              returnKeyType="next"
+              onChangeText={text => this.updateTextInput('fullName', text)}
+              onSubmitEditing={() => this.usernameRef.current.focus()}
+            />
+            <TextInput
               error={errors.email}
               label="Email"
               returnKeyType="next"
-              onChangeText={text => TextInput.updateTextInput('email', text)}
-              onSubmitEditing={() => this.passwordRef.current.focus()}
+              onChangeText={text => this.updateTextInput('email', text)}
+              onSubmitEditing={() => this.usernameRef.current.focus()}
             />
             <TextInput
-              error={errors.email}
+              error={errors.username}
               label="Username"
               returnKeyType="next"
-              onChangeText={text => TextInput.updateTextInput('email', text)}
+              textInputRef={this.usernameRef}
+              onChangeText={text => this.updateTextInput('username', text)}
               onSubmitEditing={() => this.passwordRef.current.focus()}
             />
             <TextInput
-              error={errors.email}
+              error={errors.password}
               label="Password"
               returnKeyType="next"
-              onChangeText={text => TextInput.updateTextInput('email', text)}
-              onSubmitEditing={() => this.passwordRef.current.focus()}
+              textInputRef={this.passwordRef}
+              secureTextEntry
+              onChangeText={text => this.updateTextInput('password', text)}
+              onSubmitEditing={() => this.confirmPasswordRef.current.focus()}
             />
             <TextInput
-              error={errors.email}
-              label="Username or Email"
-              returnKeyType="next"
-              onChangeText={text => TextInput.updateTextInput('email', text)}
-              onSubmitEditing={() => this.passwordRef.current.focus()}
+              error={errors.confirmPassword}
+              label="Confirm Password"
+              returnKeyType="done"
+              secureTextEntry
+              textInputRef={this.confirmPasswordRef}
+              onChangeText={text => this.updateTextInput('confirmPassword', text)}
+              onSubmitEditing={() => this.signUpInit()}
             />
             <Button
               style={styles.submitContainer}
               titleStyle={styles.submitTitle}
               title="SUBMIT"
-              onPress={() => navigation.goBack()}
+              onPress={() => this.signUpInit()}
             />
           </View>
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </View>
     );
   }

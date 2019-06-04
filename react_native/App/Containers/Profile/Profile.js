@@ -6,10 +6,13 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import CheckBox from 'react-native-checkbox';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
 import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
-import { Colors, FontSizes, Fonts } from '../../Theme';
+import {
+  Colors, FontSizes, Fonts, ApplicationStyles,
+} from '../../Theme';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.accent },
@@ -23,6 +26,22 @@ const styles = StyleSheet.create({
     height: hp('7%'),
   },
   loginTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
+  sectionContainer: {
+    backgroundColor: Colors.background,
+    elevation: 2,
+    flex: 1,
+    borderRadius: wp('2%'),
+    overflow: 'hidden',
+    paddingBottom: hp('3%'),
+  },
+  userInfo: {
+    padding: wp('2%'),
+    borderRadius: wp('2%'),
+    marginTop: -hp('1%'),
+    backgroundColor: Colors.background,
+
+  },
+  nameDetail: { paddingHorizontal: wp('2%') },
 });
 
 class Profile extends Component {
@@ -42,22 +61,14 @@ class Profile extends Component {
   }
 
   render() {
-    const { navigation } = this.props;
+    const { navigation, user } = this.props;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} showLeftSection={false} showRightSection rightIcon="md-create" title="Profile" containerStyle={{ paddingHorizontal: wp('2%') }} />
+        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('EditProfile')} showLeftSection={false} showRightSection rightIcon="md-create" title="Profile" containerStyle={{ paddingHorizontal: wp('2%') }} />
 
         <ScrollView style={styles.subContainer}>
 
-          <View style={{
-            backgroundColor: Colors.background,
-            elevation: 2,
-            flex: 1,
-            borderRadius: wp('2%'),
-            overflow: 'hidden',
-            paddingBottom: hp('3%'),
-          }}
-          >
+          <View style={styles.sectionContainer}>
             <Image
               resizeMode="cover"
               style={{
@@ -66,29 +77,29 @@ class Profile extends Component {
               }}
               source={require('../../Assets/Images/child.jpeg')}
             />
-            <View style={{ padding: wp('2%') }}>
-              <View style={{ paddingHorizontal: wp('2%') }}>
-                <Text size="h2" font="medium" color="dark">Melinda Gates</Text>
-                <Text size="h3" color="mediumDark">CTO at Microsoft</Text>
+            <View style={styles.userInfo}>
+              <View style={styles.nameDetail}>
+                <Text style={ApplicationStyles.headline3}>Melinda Gates</Text>
+                <Text style={ApplicationStyles.info1}>CTO at Microsoft</Text>
               </View>
               <View style={{ flexWrap: 'wrap', flex: 1, flexDirection: 'row' }}>
-                <Text style={{ padding: wp('1%'), margin: wp('1%') }} size="h2" color="dark">
+                <Text style={{ padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 }}>
                   <Icon size={wp('4%')} name="md-female" color={Colors.mediumDarkFont} />
                   {' '}
                       Female
 
                 </Text>
 
-                <Text style={{ padding: wp('1%'), margin: wp('1%') }} size="h2" color="dark">
+                <Text style={{ padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 }}>
                   <Icon size={wp('4%')} name="md-pin" color={Colors.mediumDarkFont} />
                   {' '}
                       #123, Gold Street, USA
 
                 </Text>
-                <Text style={{ padding: wp('1%'), margin: wp('1%') }} size="h2" color="dark">
+                <Text style={{ padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 }}>
                      melinda@gates.com
                 </Text>
-                <Text style={{ padding: wp('1%'), margin: wp('1%') }} size="h2" color="dark">
+                <Text style={{ padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 }}>
                      +9392992929
                 </Text>
               </View>
@@ -103,7 +114,7 @@ class Profile extends Component {
             alignContent: 'center',
           }}
           >
-            <Text style={{ }} size="h3" font="regular" color="dark">
+            <Text style={{ ...ApplicationStyles.avatarTitle }}>
                      MY POSTS
             </Text>
             <Button
@@ -112,7 +123,7 @@ class Profile extends Component {
                 alignSelf: 'flex-end',
                 paddingHorizontal: wp('1%'),
               }}
-              titleStyle={{ color: Colors.primary, fontSize: FontSizes.h3, fontFamily: Fonts.medium }}
+              titleStyle={{ ...ApplicationStyles.link }}
               onPress={() => navigation.navigate('HomePage')}
               title="See all"
             />
@@ -143,7 +154,7 @@ class Profile extends Component {
 
 
                 </View>
-                <Text color="mediumDark" style={{ textAlign: 'center' }}>Why do we do?</Text>
+                <Text style={{ textAlign: 'center', ...ApplicationStyles.info3 }}>Why do we do?</Text>
               </View>
 
             )}
@@ -151,7 +162,6 @@ class Profile extends Component {
           />
           <Button
             style={styles.loginContainer}
-            titleStyle={styles.loginTitle}
             onPress={() => navigation.navigate('HomePage')}
             title="MY DONATIONS"
           />
@@ -161,5 +171,6 @@ class Profile extends Component {
     );
   }
 }
-
-export default Profile;
+export default connect(
+  ({ user }) => ({ user }), null,
+)(Profile);

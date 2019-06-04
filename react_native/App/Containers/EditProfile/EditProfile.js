@@ -35,20 +35,27 @@ class EditProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: null,
-      password: '',
-      checked: false,
+      errors: {},
     };
+    this.updateProfile = this.updateProfile.bind(this);
+    this.emailRef = React.createRef();
+    this.passwordRef = React.createRef();
+    this.confirmPasswordRef = React.createRef();
+    this.usernameRef = React.createRef();
   }
+
+  updateProfile() {
+
+  }
+
 
   render() {
     const { navigation } = this.props;
+    const { errors } = this.state;
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} title="Edit Profile" containerStyle={{ paddingHorizontal: wp('2%') }} />
-
         <ScrollView style={styles.subContainer}>
-
           <FlatList
             data={[{ empty: true }, { a: 3 }, { a: 3 }, { a: 3 }, { a: 3 }]}
             style={{ flex: 1 }}
@@ -125,15 +132,53 @@ class EditProfile extends Component {
             )}
             horizontal
           />
-          <TextInput label="Email" />
-          <TextInput label="Phone" />
-          <TextInput label="Address" />
-          <TextInput label="Password" secureTextEntry />
+
+          <TextInput
+            error={errors.fullName}
+            label="Full Name"
+            returnKeyType="next"
+            onChangeText={text => this.updateTextInput('fullName', text)}
+            onSubmitEditing={() => this.emailRef.current.focus()}
+          />
+
+          <TextInput
+            error={errors.email}
+            label="Email"
+            returnKeyType="next"
+            textInputRef={this.emailRef}
+            onChangeText={text => this.updateTextInput('email', text)}
+            onSubmitEditing={() => this.usernameRef.current.focus()}
+          />
+          <TextInput
+            error={errors.username}
+            label="Username"
+            returnKeyType="next"
+            textInputRef={this.usernameRef}
+            onChangeText={text => this.updateTextInput('username', text)}
+            onSubmitEditing={() => this.passwordRef.current.focus()}
+          />
+          <TextInput
+            error={errors.password}
+            label="Password"
+            returnKeyType="next"
+            textInputRef={this.passwordRef}
+            secureTextEntry
+            onChangeText={text => this.updateTextInput('password', text)}
+            onSubmitEditing={() => this.confirmPasswordRef.current.focus()}
+          />
+          <TextInput
+            error={errors.confirmPassword}
+            label="Confirm Password"
+            returnKeyType="done"
+            secureTextEntry
+            textInputRef={this.confirmPasswordRef}
+            onChangeText={text => this.updateTextInput('confirmPassword', text)}
+            onSubmitEditing={() => this.signUpInit()}
+          />
 
           <Button
             style={styles.loginContainer}
-            titleStyle={styles.loginTitle}
-            onPress={() => navigation.navigate('HomePage')}
+            onPress={() => this.updateProfile()}
             title="UPDATE"
           />
 
