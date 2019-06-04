@@ -15,7 +15,7 @@ module.exports = {
   // POST /v1/post
   createPost: {
     body: {
-      file: Joi.string().required(),
+      files: Joi.array().required(),
       title: Joi.string().required().max(50),
       description: Joi.string().max(128),
       location: Joi.string(),
@@ -24,7 +24,6 @@ module.exports = {
 
   updatePost: {
     body: {
-      file: Joi.string(),
       title: Joi.string().max(50),
       description: Joi.string().max(128),
       location: Joi.string(),

@@ -12,6 +12,8 @@ const strategies = require('./passport');
 const error = require('../api/middlewares/error');
 const { whitelist } = require('./vars');
 const _expressLogs = require('express-server-logs');
+const busboy = require('connect-busboy');
+
 
 // const ddosInstance = new Ddos(ddosConfig);
 const corsOptions = {
@@ -40,8 +42,8 @@ const xlogs = new _expressLogs(false);
 
 
 // parse body params and attache them to req.body
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(xlogs.logger);
 
@@ -61,7 +63,9 @@ app.use(cors(corsOptions));
 
 // enable authentication
 app.use(passport.initialize());
-
+app.use(busboy({
+  highWaterMark: 2 * 1024 * 1024, // Set 2MiB buffer
+}));
 
 passport.use('jwt', strategies.jwt);
 passport.use('facebook', strategies.facebook);

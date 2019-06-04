@@ -5,6 +5,7 @@ const { handler: errorHandler } = require('../../middlewares/error');
 const APIError = require('../../utils/APIError');
 const { sendMail } = require('../../services/mailProviders');
 const uuidv4 = require('uuid/v4');
+const { sendGridForgotPassword } = require('../../../config/vars');
 
 
 /**
@@ -126,7 +127,10 @@ exports.forgotPassword = async (req, res, next) => {
     const user = await User.getUser({ email });
 
     const forgotPasswordKey = uuidv4();
-    await sendMail({ email });
+    const dynamic_template_data = {
+      reset: `${'our domain address' + 'Reset?id='}${forgotPasswordKey}`,
+    };
+    await sendMail({ email, dynamic_template_data, sendGridForgotPassword });
     user.forgotPasswordKey = forgotPasswordKey;
     await user.save();
     res.status(httpStatus.NO_CONTENT).end();

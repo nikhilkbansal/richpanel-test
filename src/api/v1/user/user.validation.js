@@ -21,6 +21,7 @@ module.exports = {
       password: Joi.string().min(6).max(128).required(),
       name: Joi.string().max(128),
       role: Joi.string().valid(User.roles),
+      files: Joi.array(),
     },
   },
 
@@ -44,7 +45,7 @@ module.exports = {
       password: Joi.string().min(6).max(128),
       oldPassword: Joi.string().min(6).max(128),
       name: Joi.string().max(128),
-      picture: Joi.string(),
+      files: Joi.array(),
       // role: Joi.string().valid(User.roles),
     },
     params: {
