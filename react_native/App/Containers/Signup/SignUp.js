@@ -58,9 +58,10 @@ class SignUpScreen extends Component {
       errors: {},
     };
     this.updateTextInput = this.updateTextInput.bind(this);
+    this.emailRef = React.createRef();
     this.passwordRef = React.createRef();
     this.confirmPasswordRef = React.createRef();
-    this.usernameRef = React.createRef();
+    this.userNameRef = React.createRef();
   }
 
   updateTextInput(key, value) {
@@ -90,14 +91,18 @@ class SignUpScreen extends Component {
 
   signUpInit() {
     const { registerInit } = this.props;
-    const { email, password, username } = this.state;
-    const validateForm = TextInput.validateForm(['password', 'confirmPassword', 'email', 'username'], this.state);
+    const {
+      email, password, userName, name,
+    } = this.state;
+    const validateForm = TextInput.validateForm(['name', 'password', 'confirmPassword', 'email', 'userName'], this.state);
     if (validateForm) {
       this.setState({ errors: validateForm });
       return false;
     }
 
-    registerInit({ email, password, username });
+    registerInit({
+      email, password, userName, name,
+    });
     return true;
   }
 
@@ -133,25 +138,26 @@ class SignUpScreen extends Component {
               />
             </View>
             <TextInput
-              error={errors.fullName}
+              error={errors.name}
               label="Full Name"
               returnKeyType="next"
-              onChangeText={text => this.updateTextInput('fullName', text)}
-              onSubmitEditing={() => this.usernameRef.current.focus()}
+              onChangeText={text => this.updateTextInput('name', text)}
+              onSubmitEditing={() => this.emailRef.current.focus()}
             />
             <TextInput
               error={errors.email}
               label="Email"
+              textInputRef={this.emailRef}
               returnKeyType="next"
               onChangeText={text => this.updateTextInput('email', text)}
-              onSubmitEditing={() => this.usernameRef.current.focus()}
+              onSubmitEditing={() => this.userNameRef.current.focus()}
             />
             <TextInput
-              error={errors.username}
+              error={errors.userName}
               label="Username"
               returnKeyType="next"
-              textInputRef={this.usernameRef}
-              onChangeText={text => this.updateTextInput('username', text)}
+              textInputRef={this.userNameRef}
+              onChangeText={text => this.updateTextInput('userName', text)}
               onSubmitEditing={() => this.passwordRef.current.focus()}
             />
             <TextInput

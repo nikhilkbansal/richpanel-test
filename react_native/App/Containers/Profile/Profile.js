@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
-import CheckBox from 'react-native-checkbox';
+import UserActions from 'App/Stores/User/Actions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import {
@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
 
   },
-  nameDetail: { paddingHorizontal: wp('2%') },
+  nameDetail: { paddingHorizontal: wp('2%'), flex: 1, flexDirection: 'row' },
+  info: { padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 },
 });
 
 class Profile extends Component {
@@ -60,14 +61,14 @@ class Profile extends Component {
     };
   }
 
+
   render() {
-    const { navigation, user } = this.props;
+    const { navigation, profile, logoutInit } = this.props;
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('EditProfile')} showLeftSection={false} showRightSection rightIcon="md-create" title="Profile" containerStyle={{ paddingHorizontal: wp('2%') }} />
-
+        {profile && (
         <ScrollView style={styles.subContainer}>
-
           <View style={styles.sectionContainer}>
             <Image
               resizeMode="cover"
@@ -79,30 +80,48 @@ class Profile extends Component {
             />
             <View style={styles.userInfo}>
               <View style={styles.nameDetail}>
-                <Text style={ApplicationStyles.headline3}>Melinda Gates</Text>
-                <Text style={ApplicationStyles.info1}>CTO at Microsoft</Text>
+                <View style={{ flex: 2 }}>
+                  <Text style={ApplicationStyles.headline3}>{profile.name}</Text>
+                  <Text style={ApplicationStyles.info1}>
+                    @
+                    {profile.userName}
+                  </Text>
+                </View>
+                <View style={{ flex: 1, alignContent: 'flex-start', justifyContent: 'flex-start' }}>
+                  <Button
+                    buttonWrapperStyle={{
+                      borderRadius: wp('2%'),
+                      alignSelf: 'flex-end',
+                      padding: wp('1%'),
+                    }}
+                    titleStyle={{ ...ApplicationStyles.link }}
+                    onPress={logoutInit}
+                    title="Logout"
+                  />
+                </View>
               </View>
               <View style={{ flexWrap: 'wrap', flex: 1, flexDirection: 'row' }}>
-                <Text style={{ padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 }}>
+                {/* <Text style={styles.info}>
                   <Icon size={wp('4%')} name="md-female" color={Colors.mediumDarkFont} />
                   {' '}
                       Female
 
-                </Text>
+                </Text> */}
 
-                <Text style={{ padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 }}>
+                {/* <Text style={styles.info}>
                   <Icon size={wp('4%')} name="md-pin" color={Colors.mediumDarkFont} />
                   {' '}
                       #123, Gold Street, USA
 
+                </Text> */}
+                <Text style={styles.info}>
+                  {profile.email}
                 </Text>
-                <Text style={{ padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 }}>
-                     melinda@gates.com
-                </Text>
-                <Text style={{ padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 }}>
+                {/* <Text style={styles.info}>
                      +9392992929
-                </Text>
+                </Text> */}
               </View>
+
             </View>
           </View>
 
@@ -167,10 +186,14 @@ class Profile extends Component {
           />
 
         </ScrollView>
+        )}
+
       </View>
     );
   }
 }
 export default connect(
-  ({ user }) => ({ user }), null,
+  ({ user: { profile } }) => ({ profile }), {
+    logoutInit: UserActions.logoutInit,
+  },
 )(Profile);

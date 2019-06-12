@@ -14,16 +14,21 @@ import { Validations } from '../Utils';
 class TextInput extends React.Component {
   static validateForm(keys = [], state) {
     const {
-      email, password, confirmPassword, username, usernameOrEmail,
+      email, password, confirmPassword, userName, usernameOrEmail, name,
     } = state;
     let errors = {};
+
+
+    if (keys.includes('name') && !name) {
+      errors = { ...errors, usernameOrEmail: 'Enter a valid name' };
+    }
 
     if (keys.includes('usernameOrEmail') && !usernameOrEmail) {
       errors = { ...errors, usernameOrEmail: 'Enter a valid username or email' };
     }
 
-    if (keys.includes('username') && !username) {
-      errors = { ...errors, username: 'Enter a valid username' };
+    if (keys.includes('userName') && !userName) {
+      errors = { ...errors, userName: 'Enter a valid username' };
     }
 
     if (keys.includes('email') && !Validations.validateEmail(email)) {

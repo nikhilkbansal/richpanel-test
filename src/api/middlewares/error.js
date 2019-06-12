@@ -32,8 +32,13 @@ exports.converter = (err, req, res, next) => {
   let convertedError = err;
 
   if (err instanceof expressValidation.ValidationError) {
+    let customMsg = '';
+    err.errors.forEach((element) => {
+      customMsg += `${element.field}, `;
+    });
+    customMsg = customMsg.substring(0, customMsg.length - 2);
     convertedError = new APIError({
-      message: 'Validation Error',
+      message: `Please enter valid ${customMsg.toLowerCase()}`,
       errors: err.errors,
       status: err.status,
       stack: err.stack,

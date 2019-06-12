@@ -31,6 +31,9 @@ export default {
   disabledColor: {
     color: Colors.font.shadyLady,
   },
+  darkColor: {
+    color: Colors.icon.nero,
+  },
   lightColor: {
     color: Colors.font.white,
   },

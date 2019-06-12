@@ -5,6 +5,7 @@ const moment = require('moment-timezone');
 const { jwtExpirationInterval } = require('../../../config/vars');
 const { googleAuthInit, googleAuthGetToken } = require('../../services/googleProviders');
 const { google } = require('../../services/authProviders');
+const APIError = require('../../utils/APIError');
 
 /**
  * @async
@@ -37,11 +38,20 @@ async function generateTokenResponse(user, accessToken, refreshObjectId = null) 
  */
 exports.register = async (req, res, next) => {
   try {
+    const { email, userName } = req.body;
+    const isEmailExisted = await User.findOne({ email });
+    if (isEmailExisted) {
+      throw new APIError({ message: 'The email you entered is already registered' });
+    }
+    const isUserNameExisted = await User.findOne({ userName });
+    if (isUserNameExisted) {
+      throw new APIError({ message: 'The username you entered is already registered' });
+    }
     const user = await (new User(req.body)).save();
     const userTransformed = user.transform();
     const token = await generateTokenResponse(user, user.token());
     res.status(httpStatus.CREATED);
-    return res.json({ token, user: userTransformed });
+    return res.json({ token, profile: { ...userTransformed, pictures: [] } });
   } catch (error) {
     return next(User.checkDuplicateEmail(error));
   }
@@ -67,7 +77,7 @@ exports.login = async (req, res, next) => {
     );
     console.log('tokenObject', tokenObject);
     const userTransformed = user.transform();
-    return res.json({ token: tokenObject, user: userTransformed });
+    return res.json({ token: tokenObject, profile: { ...userTransformed, pictures: [] } });
   } catch (error) {
     return next(error);
   }
@@ -112,7 +122,7 @@ exports.googleAuthVerify = async (req, res, next) => {
       const accessToken = user.token();
       const token = await generateTokenResponse(user, accessToken);
       const userTransformed = user.transform();
-      return res.json({ token, user: userTransformed });
+      return res.json({ token, profile: { ...userTransformed, pictures: [] } });
     } catch (error) {
       return next(error);
     }
@@ -137,7 +147,7 @@ exports.oAuth = async (req, res, next) => {
     const accessToken = user.token();
     const token = await generateTokenResponse(user, accessToken);
     const userTransformed = user.transform();
-    return res.json({ token, user: userTransformed });
+    return res.json({ token, profile: { ...userTransformed, pictures: [] } });
   } catch (error) {
     return next(error);
   }

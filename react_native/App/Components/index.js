@@ -3,6 +3,7 @@ import Text from './Text';
 import Button from './Button';
 import TextInput from './TextInput';
 import NotificationUi from './NotificationUi';
+import ProgressiveImage from './ProgressiveImage';
 
 export {
   Button,
@@ -10,4 +11,5 @@ export {
   NavigationBar,
   NotificationUi,
   TextInput,
+  ProgressiveImage,
 };

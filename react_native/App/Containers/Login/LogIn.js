@@ -89,7 +89,7 @@ class LoginScreen extends Component {
       return false;
     }
 
-    loginInit({ email: usernameOrEmail, password, isRememberMe });
+    loginInit({ userName: usernameOrEmail, password, isRememberMe });
   }
 
 

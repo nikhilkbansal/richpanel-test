@@ -34,6 +34,7 @@
     "react-native-check-box": "^2.1.7",
     "react-native-checkbox": "^2.0.0",
     "react-native-code-push": "^5.5.2",
+    "react-native-image-picker": "^0.28.1",
     "react-native-item-checkbox": "^1.0.6",
     "react-native-keyboard-aware-scroll-view": "^0.8.0",
     "react-native-loading-spinner-overlay": "^1.0.1",

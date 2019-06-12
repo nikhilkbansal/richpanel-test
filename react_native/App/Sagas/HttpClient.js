@@ -19,16 +19,16 @@ import AxiosInstance from '../Services/AxiosService';
  * @throws If response status is not between 200-300 or any error come inside try block
  */
 function* httpClient(payload, access = 'default', isLoader = true, timeout = false) {
-  const headers = {};
-  // const { token } = yield select(({ user: { token: x } }) => ({ token: x }));
+  let headers = {};
+  const { token } = yield select(({ user: { token: x } }) => ({ token: x }));
 
-  // if (token && ['default', 'private'].includes(access)) {
-  //   if (Date.parse(token.expiresIn) - Date.now() < 60000) {
-  //     yield put(refreshToken());
-  //     yield take(GOT_REFRESH_TOKEN);
-  //   }
-  //   headers = { Authorization: `${token.tokenType} ${token.accessToken}` };
-  // }
+  if (token && ['default', 'private'].includes(access)) {
+    if (Date.parse(token.expiresIn) - Date.now() < 60000) {
+      // yield put(refreshToken());
+      // yield take(GOT_REFRESH_TOKEN);
+    }
+    headers = { Authorization: `${token.tokenType} ${token.accessToken}` };
+  }
   const timeoutCoundition = timeout ? { timeout } : {};
   const data = {
     ...payload,

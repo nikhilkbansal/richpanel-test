@@ -60,7 +60,14 @@ function navigateAndReset(routeName, params) {
   );
 }
 
+function goBack() {
+  navigator.dispatch(
+    StackActions.pop(),
+  );
+}
+
 export default {
+  goBack,
   navigate,
   navigateAndReset,
   setTopLevelNavigator,

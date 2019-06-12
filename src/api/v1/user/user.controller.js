@@ -63,7 +63,7 @@ exports.replace = async (req, res, next) => {
     await user.update(newUserObject, { override: true, upsert: true });
     const savedUser = await User.findById(user._id);
 
-    res.json(savedUser.transform());
+    res.json({ ...savedUser.transform(), pictures: [] });
   } catch (error) {
     next(User.checkDuplicateEmail(error));
   }
@@ -85,7 +85,7 @@ exports.update = async (req, res, next) => {
     const user = Object.assign(req.locals.user, updatedUser);
 
     user.save()
-      .then(savedUser => res.json(savedUser.transform()))
+      .then(savedUser => res.json({ ...savedUser.transform(), pictures: [] }))
       .catch(e => next(User.checkDuplicateEmail(e)));
   } catch (error) {
     next(error);

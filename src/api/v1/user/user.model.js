@@ -58,9 +58,9 @@ const userSchema = new mongoose.Schema({
     enum: roles,
     default: 'user',
   },
-  files: {
-    type: Array,
-    default: [],
+  picture: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Files',
   },
   googleAuth: {
     access_token: String,
@@ -104,7 +104,7 @@ userSchema.pre('save', async function save(next) {
 userSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['id', 'name', 'email', 'picture', 'role', 'createdAt'];
+    const fields = ['id', 'name', 'email', 'userName', 'picture', 'role', 'createdAt'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
