@@ -127,10 +127,10 @@ exports.forgotPassword = async (req, res, next) => {
     const user = await User.getUser({ email });
 
     const forgotPasswordKey = uuidv4();
-    const dynamic_template_data = {
-      reset: `${'our domain address' + 'Reset?id='}${forgotPasswordKey}`,
+    const dynamicTemplateData = {
+      reset: `${'our domain address Reset?id='}${forgotPasswordKey}`,
     };
-    await sendMail({ email, dynamic_template_data, sendGridForgotPassword });
+    await sendMail({ email, dynamicTemplateData, sendGridForgotPassword });
     user.forgotPasswordKey = forgotPasswordKey;
     await user.save();
     res.status(httpStatus.NO_CONTENT).end();

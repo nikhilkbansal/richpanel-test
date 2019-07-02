@@ -46,7 +46,7 @@ const AppNav = createStackNavigator(
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'LogIn',
+    initialRouteName: 'AddPost',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },

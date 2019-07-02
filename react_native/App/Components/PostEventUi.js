@@ -10,7 +10,8 @@ import {
 } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Text, Button } from './index';
+import Text from './Text';
+import Button from './Button';
 import { Colors, ApplicationStyles } from '../Theme';
 import ProgressiveImage from './ProgressiveImage';
 
@@ -91,11 +92,17 @@ const styles = StyleSheet.create({
     borderRadius: wp('10%') / 2,
     overflow: 'hidden',
   },
-  body: { ...ApplicationStyles.body2, marginBottom: hp('2%') },
+  body: { ...ApplicationStyles.body3, marginBottom: hp('2%') },
+  moreStyle: { ...ApplicationStyles.body3, color: ApplicationStyles.primaryColor.color },
   peopleRaised: { ...ApplicationStyles.bodyHeading, paddingVertical: hp('1%') },
   raisedBar: { backgroundColor: Colors.accent, flex: 1, height: hp('0.2%') },
   bar: { backgroundColor: Colors.primary, width: '56%', height: hp('0.2%') },
   subBody: { padding: wp('2%') },
+  forgetButton: {
+    ...ApplicationStyles.body,
+
+  },
+  forgetButtonContainer: { alignSelf: 'center' },
   totalRaised: {
     flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingVertical: hp('1%'),
   },
@@ -176,9 +183,34 @@ function PostEventUi({
           style={styles.heart}
           buttonWrapperStyle={styles.heartWrapperStyle}
         />
-        <Button style={styles.subBody}>
-          <Text style={styles.body}>We are raising funds to build a smart "Digi-Lab", equipped with cameras, tabs and computers that will help the girls living in the slums of Uttam Nagar (East) in New Delhi get access to technology for education and information access. </Text>
-          <Text style={styles.peopleRaised}>10 PEOPLE RAISED</Text>
+        <View style={{ paddingHorizontal: wp('2%'), paddingTop: wp('2%') }}>
+          <View style={{ paddingVertical: hp('2.5%') }}>
+            <Text style={ApplicationStyles.headline2}>Help the poor children and give them clothes </Text>
+          </View>
+          <View style={{ backgroundColor: Colors.accent, height: hp('0.2%') }}>
+            <View style={{ backgroundColor: Colors.primary, width: '56%', height: hp('0.2%') }} />
+          </View>
+
+
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingVertical: hp('1%'),
+          }}
+          >
+            <Text style={ApplicationStyles.bodySubHeading}>TOTAL RAISED</Text>
+            <Text style={styles.raisedMoney}>
+            $1000
+              <Text style={ApplicationStyles.primaryInfo}> $1500</Text>
+            </Text>
+          </View>
+        </View>
+        <View style={styles.subBody}>
+          <Text style={styles.body}>
+            We are raising funds to build a smart "Digi-Lab", equipped with cameras, tabs and computers that will help the girls living
+            <Text style={styles.moreStyle}> more</Text>
+          </Text>
+          {/* <Text style={styles.peopleRaised}>10 PEOPLE RAISED</Text>
           <View style={styles.raisedBar}>
             <View style={styles.bar} />
           </View>
@@ -188,8 +220,8 @@ function PostEventUi({
             $1000
               <Text style={ApplicationStyles.primaryInfo}> $1500</Text>
             </Text>
-          </View>
-        </Button>
+          </View> */}
+        </View>
       </View>
     </View>
   );

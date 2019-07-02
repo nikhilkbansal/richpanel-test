@@ -9,7 +9,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import ActionButton from 'react-native-action-button';
 import defaultStyle from '../../Theme/ApplicationStyles';
-import PostEventUi from '../../Components/PostEventUi';
+import {PostEventUi, NavigationBar} from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import Icon from 'react-native-vector-icons/Ionicons';
 const styles = StyleSheet.create({
@@ -43,22 +43,23 @@ class LoginScreen extends Component {
     console.log('propsprops',this.props);
 
     const { email, password, checked } = this.state;
-    const { theme, navigation: { navigate }  } = this.props;
+    const { theme, navigation  } = this.props;
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles.lightBackgkround.color}}>
+        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={false} showRightSection rightIcon="md-add" title="Home" containerStyle={{ paddingHorizontal: wp('2%') }} />
 
         <FlatList
           data={[{a:3},{a:3},{a:3},{a:3}]} 
           renderItem={this._renderItem}
         />
-          <ActionButton buttonColor={Colors.primary}>
+          {/* <ActionButton buttonColor={Colors.primary}>
           <ActionButton.Item buttonColor='#9b59b6' title="Add new Post" onPress={() => console.log("notes tapped!")}>
             <Icon name="md-create" style={styles.actionButtonIcon} />
           </ActionButton.Item>
           <ActionButton.Item buttonColor='#1abc9c' title="Add new Event" onPress={() => {}}>
             <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
           </ActionButton.Item>
-        </ActionButton>
+        </ActionButton> */}
       </View>
     );
   }

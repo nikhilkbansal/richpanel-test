@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
-import { Colors, FontSizes } from '../../Theme';
+import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   loginTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
 });
 
-class EditProfile extends Component {
+class AddPost extends Component {
   static get propTypes() {
     return {
       navigation: PropTypes.func.isRequired,
@@ -67,9 +67,9 @@ class EditProfile extends Component {
             onChangeText={text => this.updateTextInput('description', text)}
             onSubmitEditing={() => this.passwordRef.current.focus()}
           />
-          <Text size="h3" color="mediumDark">Add images or videos</Text>
+          <Text style={ApplicationStyles.textInputLabel}>Add images or videos</Text>
           <FlatList
-            data={[{ empty: true }, { a: 3 }, { a: 3 }, { a: 3 }, { a: 3 }]}
+            data={[{ empty: true }, { a: 3 }]}
             style={{ flex: 1 }}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => (
@@ -85,8 +85,6 @@ class EditProfile extends Component {
                   marginVertical: wp('2%'),
                 }}
                 >
-
-
                   {!item.empty ? (
                     <Image
                       resizeMode="cover"
@@ -157,4 +155,4 @@ class EditProfile extends Component {
   }
 }
 
-export default EditProfile;
+export default AddPost;

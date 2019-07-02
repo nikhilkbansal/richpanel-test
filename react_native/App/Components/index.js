@@ -4,6 +4,7 @@ import Button from './Button';
 import TextInput from './TextInput';
 import NotificationUi from './NotificationUi';
 import ProgressiveImage from './ProgressiveImage';
+import PostEventUi from './PostEventUi';
 
 export {
   Button,
@@ -12,4 +13,5 @@ export {
   NotificationUi,
   TextInput,
   ProgressiveImage,
+  PostEventUi,
 };
