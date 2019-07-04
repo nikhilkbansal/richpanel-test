@@ -41,7 +41,6 @@ const userSchema = new mongoose.Schema({
   forgotPasswordKey: {
     type: String,
     default: '',
-
   },
   name: {
     type: String,
@@ -70,6 +69,10 @@ const userSchema = new mongoose.Schema({
     expiry_date: Number,
   },
   preferences: {
+    type: Array,
+    default: [],
+  },
+  causeSupported: {
     type: Array,
     default: [],
   },
@@ -253,6 +256,11 @@ userSchema.statics = {
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
+      .exec();
+  },
+
+  getNGOByCause(causeSupported) {
+    return this.find({ causeSupported: { $in: causeSupported } }).sort({ createdAt: -1 })
       .exec();
   },
 

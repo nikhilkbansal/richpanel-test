@@ -1,10 +1,7 @@
 const httpStatus = require('http-status');
-// const { omit } = require('lodash');
 const Event = require('./event.model');
+const Follow = require('../follow/follow.model');
 const { handler: errorHandler } = require('../../middlewares/error');
-// const APIError = require('../../utils/APIError');
-// const { sendMail } = require('../../services/mailProviders');
-// const uuidv4 = require('uuid/v4');
 
 /**
  * Load Event and append to req.
@@ -45,6 +42,24 @@ exports.update = async (req, res, next) => {
     const newEvent = Object.assign(req.locals.event, req.body);
     const savedEvent = await newEvent.save();
     res.json(savedEvent);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+/**
+ * Get home page post
+ * @public
+ */
+exports.getHomePageEvents = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { page, perPage } = req.query;
+    const followers = Follow.getFollowers(user.id);
+    const followeeIds = followers.map(o => o.followeeId);
+    const events = Event.list({ userId: { $in: followeeIds }, page, perPage });
+    res.json(events);
   } catch (error) {
     next(error);
   }

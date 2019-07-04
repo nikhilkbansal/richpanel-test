@@ -1,6 +1,8 @@
 const httpStatus = require('http-status');
 // const { omit } = require('lodash');
 const Post = require('./post.model');
+const Follow = require('../follow/follow.model');
+const User = require('../user/user.model');
 const { handler: errorHandler } = require('../../middlewares/error');
 // const APIError = require('../../utils/APIError');
 // const { sendMail } = require('../../services/mailProviders');
@@ -49,6 +51,48 @@ exports.update = async (req, res, next) => {
     next(error);
   }
 };
+
+
+/**
+ * Get preferenced posts
+ * @public
+ */
+exports.getPreferencedPosts = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { page, perPage } = req.query;
+    let posts;
+    if (user.preferences.length > 0) {
+      const users = User.getNGOByCause(user.preferences);
+      const userIds = users.map(o => o.id);
+
+      posts = Post.list({ userId: { $in: userIds }, page, perPage });
+    } else {
+      posts = Post.list({ page, perPage });
+    }
+    res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get home page post
+ * @public
+ */
+exports.getHomePagePosts = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { page, perPage } = req.query;
+    const followers = Follow.getFollowers(user.id);
+    const followeeIds = followers.map(o => o.followeeId);
+    const posts = Post.list({ userId: { $in: followeeIds }, page, perPage });
+    res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 exports.remove = (req, res, next) => {
   const { post } = req.locals;
