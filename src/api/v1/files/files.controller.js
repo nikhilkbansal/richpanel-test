@@ -89,8 +89,9 @@ exports.getImage = async (req, res, next) => {
   try {
     const { query: { width, height, format } } = req;
     const { params: { _id } } = req;
-
     const file = await Files.findOne({ _id });
+    console.log('format', format);
+    const { fileType } = file;
     console.log('file********** & format', file, format, width, height);
     const imagePath = `../../../../cdn/${file.userId}/${file._id}${file.fileExtension}`;
 
@@ -99,7 +100,10 @@ exports.getImage = async (req, res, next) => {
 
     const filePath = path.join(__dirname, imagePath);
     // Get the re sized image
-    universalFunctions.resizeImage(filePath, format, Number(width), Number(height)).pipe(res);
+    universalFunctions.resizeImage(
+      filePath,
+      fileType, format, Number(width), Number(height),
+    ).pipe(res);
   } catch (e) {
     next(e);
   }
