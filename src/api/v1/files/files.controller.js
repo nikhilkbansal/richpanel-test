@@ -4,9 +4,11 @@ const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
 const universalFunctions = require('../../utils/universalFunctions');
+
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffmpeg = require('fluent-ffmpeg');
 
-const command = ffmpeg();
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 
 const asyncFsMkdir = Promise.promisify(fs.mkdir);
@@ -26,8 +28,9 @@ async function mkDir(folderPath) {
 exports.create = async (req, res, next) => {
   try {
     const { busboy, user: { id } } = req;
-    console.log('req.body', req.body);
+    const recommendVideoExtension = '.mp4';
     let fileType;
+
     req.pipe(busboy); // Pipe it through busboy
     req.busboy.on('field', (fieldName, value) => {
       console.log('req.body fieldName', fieldName, value);
@@ -46,10 +49,12 @@ exports.create = async (req, res, next) => {
 
       await mkDir(path.join(__dirname, '../../../../cdn/')); // make cdn folder if not exists
       await mkDir(folderPath); // make user id based folder in cdn folder if not exist
+
       const filePath = path.join(folderPath, customeFileName);
+      const recommendVideoPath = path.join(folderPath, mongoObjectId + recommendVideoExtension);
       // Create a write` stream of the new file
-      let fstream = fs.createWriteStream(filePath);
-      console.log('fstream before compressing', fstream, fileType);
+      const fstream = fs.createWriteStream(filePath);
+      // console.log('fstream before compressing', fstream, fileType);
 
       // Pipe it trough
       file.pipe(fstream);
@@ -57,9 +62,18 @@ exports.create = async (req, res, next) => {
       // On finish of the upload
       fstream.on('close', async () => {
         if (fileType === 'video') {
-          fstream = command.input(filePath);
-          console.log('fstream after compressing', fstream);
+          ffmpeg(filePath)
+            .size('720x480')
+            .on('error', (err) => {
+              console.log(`An error occurred: ${err.message}`);
+            })
+            .on('end', () => {
+              fs.unlinkSync(filePath);
+              console.log('Processing finished !');
+            })
+            .save(recommendVideoPath);
         }
+
         console.log(`'${filename}' is successfully uploaded as ${customeFileName} in ${folderPath}`);
 
         const addFile = new Files({
@@ -71,7 +85,7 @@ exports.create = async (req, res, next) => {
           fileType,
           fileSize: 0,
           fileMimeType: mimetype,
-          fileExtension: extension,
+          fileExtension: fileType === 'video' ? recommendVideoExtension : extension,
           isVideo: false,
         });
         await addFile.save();
@@ -85,22 +99,115 @@ exports.create = async (req, res, next) => {
   }
 };
 
-exports.getImage = async (req, res, next) => {
+exports.getFile = async (req, res, next) => {
   try {
     const { query: { width, height, format } } = req;
     const { params: { _id } } = req;
 
     const file = await Files.findOne({ _id });
-    console.log('file********** & format', file, format, width, height);
-    const imagePath = `../../../../cdn/${file.userId}/${file._id}${file.fileExtension}`;
+    const fileFolderWithPath = `../../../../cdn/${file.userId}/${file._id}${file.fileExtension}`;
+    const filePath = path.join(__dirname, fileFolderWithPath);
 
-    // Set the content-type of the response
-    res.type(`image/${format || 'png'}`);
+    if (file.fileType === 'image') {
+      // Set the content-type of the response
+      res.type(`image/${format || 'png'}`);
 
-    const filePath = path.join(__dirname, imagePath);
-    // Get the re sized image
-    universalFunctions.resizeImage(filePath, format, Number(width), Number(height)).pipe(res);
+      // Get the re sized image
+      universalFunctions.resizeImage(filePath, format, Number(width), Number(height)).pipe(res);
+    } else { // handle video. see here to know more https://medium.com/@daspinola/video-stream-with-node-js-and-html5-320b3191a6b6
+      const stat = fs.statSync(filePath);
+      const fileSize = stat.size;
+      const { range } = req.headers;
+      console.log('range', range);
+      if (range) {
+        const parts = range.replace(/bytes=/, '').split('-');
+        const start = parseInt(parts[0], 10);
+        const end = parts[1]
+          ? parseInt(parts[1], 10)
+          : fileSize - 1;
+
+        const chunksize = (end - start) + 1;
+        const fileStream = fs.createReadStream(filePath, { start, end });
+        const head = {
+          'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+          'Accept-Ranges': 'bytes',
+          'Content-Length': chunksize,
+          'Content-Type': 'video/mp4',
+        };
+
+        res.writeHead(206, head);
+        fileStream.pipe(res);
+      } else { // first time
+        const head = {
+          'Content-Length': fileSize,
+          'Content-Type': 'video/mp4',
+        };
+        res.writeHead(200, head);
+        fs.createReadStream(filePath).pipe(res);
+      }
+    }
   } catch (e) {
     next(e);
   }
 };
+
+
+exports.getVideo = async (req, res, next) => {
+  try {
+    const { query: { width, height, format } } = req;
+    const { params: { _id } } = req;
+
+    // const file = await Files.findOne({ _id });
+    // console.log('file********** & format', file, format, width, height);
+    // const imagePath = `../../../../cdn/${file.userId}/${file._id}${file.fileExtension}`;
+
+    // // Set the content-type of the response
+    // res.type(`image/${format || 'png'}`);
+
+    // const filePath = path.join(__dirname, imagePath);
+    // // Get the re sized image
+    // universalFunctions.resizeImage(filePath, format, Number(width), Number(height)).pipe(res);
+
+    const video = await Files.findOne({ _id });
+    const videoPath = `../../../../cdn/${video.userId}/${video._id}${video.fileExtension}`;
+    console.log('videoPath', videoPath);
+    const filePath = path.join(__dirname, videoPath);
+
+    const stat = fs.statSync(filePath);
+    const fileSize = stat.size;
+    const { range } = req.headers;
+    console.log('range', range);
+    if (range) {
+      console.log('running if');
+
+      const parts = range.replace(/bytes=/, '').split('-');
+      const start = parseInt(parts[0], 10);
+      const end = parts[1]
+        ? parseInt(parts[1], 10)
+        : fileSize - 1;
+
+      const chunksize = (end - start) + 1;
+      const file = fs.createReadStream(filePath, { start, end });
+      const head = {
+        'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunksize,
+        'Content-Type': 'video/mp4',
+      };
+
+      res.writeHead(206, head);
+      file.pipe(res);
+    } else {
+      console.log('running else');
+      const head = {
+        'Content-Length': fileSize,
+        'Content-Type': 'video/mp4',
+      };
+      res.writeHead(200, head);
+      fs.createReadStream(filePath).pipe(res);
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+

@@ -52,10 +52,10 @@ const postSchema = new mongoose.Schema({
 
 postSchema.statistics = {
   async list({
-    page = 1, perPage = 30, _id, userId,
+    page = 1, perPage = 30, _id, userId, title,
   }) {
     const options = omitBy({
-      _id, userId,
+      _id, userId, title,
     }, isNil);
     return this.find(options).sort({ createdAt: -1 })
       .skip(perPage * (page - 1))

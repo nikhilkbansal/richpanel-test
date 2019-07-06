@@ -45,7 +45,7 @@ const xlogs = new _expressLogs(false);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(xlogs.logger);
+// app.use(xlogs.logger);
 
 
 // gzip compression

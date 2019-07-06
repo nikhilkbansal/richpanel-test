@@ -43,6 +43,6 @@ router
    * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users can create the data
    * @apiError (Forbidden 403)     Forbidden        Only admins can create the data
    */
-  .get(controller.getImage);
+  .get(controller.getFile);
 
 module.exports = router;
