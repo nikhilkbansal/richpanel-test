@@ -1,9 +1,9 @@
 import { createActions } from 'reduxsauce';
 
+
 const { Types, Creators } = createActions({
-  isLoading: ['isLoading'],
-  startUp: null,
+  postCreate: ['payload'],
 });
 
-export const AppTypes = Types;
+export const PostTypes = Types;
 export default Creators;

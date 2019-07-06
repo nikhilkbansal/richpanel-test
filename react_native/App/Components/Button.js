@@ -9,7 +9,9 @@ import Text from './Text';
 import { ApplicationStyles, Colors, Fonts } from '../Theme';
 
 const styles = StyleSheet.create({
-  buttonStyle: { alignContent: 'center', justifyContent: 'center', flex: 1 },
+  buttonStyle: {
+    alignContent: 'center', justifyContent: 'center', flex: 1,
+  },
 });
 
 function Button({

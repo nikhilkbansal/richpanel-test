@@ -16,9 +16,10 @@ import SplashScreen from 'App/Containers/SplashScreen/SplashScreen';
 import StyleGuide from 'App/Containers/StyleGuide/StyleGuide';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-// import StartupActions from 'App/Stores/Startup/Actions';
+
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import AppActions from 'App/Stores/App/Actions';
 import Loader from '../../Components/Loader';
 import styles from './RootScreenStyle';
 import Colors from '../../Theme/Colors';
@@ -45,7 +46,7 @@ const AppNav = createStackNavigator(
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'LogIn',
+    initialRouteName: 'AddPost',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },
@@ -71,8 +72,8 @@ const theme = {
 class RootScreen extends Component {
   componentDidMount() {
     // Run the startup saga when the application is starting
-    // const { startup } = this.props;
-    // startup();
+    const { startUp } = this.props;
+    startUp();
   }
 
   render() {
@@ -95,16 +96,14 @@ class RootScreen extends Component {
 
 const mapStateToProps = state => ({});
 
-// const mapDispatchToProps = dispatch => ({
-//   startup: () => dispatch(StartupActions.startup()),
-// });
-
 
 RootScreen.propTypes = {
-  // startup: PropTypes.arrayOf(PropTypes.object).isRequired,
+  startUp: PropTypes.PropTypes.func.isRequired,
 };
 
 export default connect(
   mapStateToProps,
-  null,
+  {
+    startUp: AppActions.startUp,
+  },
 )(RootScreen);

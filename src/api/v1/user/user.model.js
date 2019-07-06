@@ -41,7 +41,6 @@ const userSchema = new mongoose.Schema({
   forgotPasswordKey: {
     type: String,
     default: '',
-
   },
   name: {
     type: String,
@@ -58,9 +57,9 @@ const userSchema = new mongoose.Schema({
     enum: roles,
     default: 'user',
   },
-  files: {
-    type: Array,
-    default: [],
+  picture: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Files',
   },
   googleAuth: {
     access_token: String,
@@ -70,6 +69,10 @@ const userSchema = new mongoose.Schema({
     expiry_date: Number,
   },
   preferences: {
+    type: Array,
+    default: [],
+  },
+  causeSupported: {
     type: Array,
     default: [],
   },
@@ -104,7 +107,7 @@ userSchema.pre('save', async function save(next) {
 userSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['id', 'name', 'email', 'picture', 'role', 'createdAt'];
+    const fields = ['id', 'name', 'email', 'userName', 'picture', 'role', 'createdAt'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -253,6 +256,11 @@ userSchema.statics = {
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
+      .exec();
+  },
+
+  getNGOByCause(causeSupported) {
+    return this.find({ causeSupported: { $in: causeSupported } }).sort({ createdAt: -1 })
       .exec();
   },
 

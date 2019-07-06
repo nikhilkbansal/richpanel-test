@@ -4,12 +4,15 @@ import {
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
-import CheckBox from 'react-native-checkbox';
+import UserActions from 'App/Stores/User/Actions';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
 import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
-import { Colors, FontSizes, Fonts } from '../../Theme';
+import {
+  Colors, FontSizes, Fonts, ApplicationStyles,
+} from '../../Theme';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.accent },
@@ -23,6 +26,23 @@ const styles = StyleSheet.create({
     height: hp('7%'),
   },
   loginTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
+  sectionContainer: {
+    backgroundColor: Colors.background,
+    elevation: 2,
+    flex: 1,
+    borderRadius: wp('2%'),
+    overflow: 'hidden',
+    paddingBottom: hp('3%'),
+  },
+  userInfo: {
+    padding: wp('2%'),
+    borderRadius: wp('2%'),
+    marginTop: -hp('1%'),
+    backgroundColor: Colors.background,
+
+  },
+  nameDetail: { paddingHorizontal: wp('2%'), flex: 1, flexDirection: 'row' },
+  info: { padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 },
 });
 
 class Profile extends Component {
@@ -41,23 +61,15 @@ class Profile extends Component {
     };
   }
 
+
   render() {
-    const { navigation } = this.props;
+    const { navigation, profile, logoutInit } = this.props;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} showLeftSection={false} showRightSection rightIcon="md-create" title="Profile" containerStyle={{ paddingHorizontal: wp('2%') }} />
-
+        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('EditProfile')} showLeftSection={false} showRightSection rightIcon="md-create" title="Profile" containerStyle={{ paddingHorizontal: wp('2%') }} />
+        {profile && (
         <ScrollView style={styles.subContainer}>
-
-          <View style={{
-            backgroundColor: Colors.background,
-            elevation: 2,
-            flex: 1,
-            borderRadius: wp('2%'),
-            overflow: 'hidden',
-            paddingBottom: hp('3%'),
-          }}
-          >
+          <View style={styles.sectionContainer}>
             <Image
               resizeMode="cover"
               style={{
@@ -66,32 +78,50 @@ class Profile extends Component {
               }}
               source={require('../../Assets/Images/child.jpeg')}
             />
-            <View style={{ padding: wp('2%') }}>
-              <View style={{ paddingHorizontal: wp('2%') }}>
-                <Text size="h2" font="medium" color="dark">Melinda Gates</Text>
-                <Text size="h3" color="mediumDark">CTO at Microsoft</Text>
+            <View style={styles.userInfo}>
+              <View style={styles.nameDetail}>
+                <View style={{ flex: 2 }}>
+                  <Text style={ApplicationStyles.headline3}>{profile.name}</Text>
+                  <Text style={ApplicationStyles.info1}>
+                    @
+                    {profile.userName}
+                  </Text>
+                </View>
+                <View style={{ flex: 1, alignContent: 'flex-start', justifyContent: 'flex-start' }}>
+                  <Button
+                    buttonWrapperStyle={{
+                      borderRadius: wp('2%'),
+                      alignSelf: 'flex-end',
+                      padding: wp('1%'),
+                    }}
+                    titleStyle={{ ...ApplicationStyles.link }}
+                    onPress={logoutInit}
+                    title="Logout"
+                  />
+                </View>
               </View>
               <View style={{ flexWrap: 'wrap', flex: 1, flexDirection: 'row' }}>
-                <Text style={{ padding: wp('1%'), margin: wp('1%') }} size="h2" color="dark">
+                {/* <Text style={styles.info}>
                   <Icon size={wp('4%')} name="md-female" color={Colors.mediumDarkFont} />
                   {' '}
                       Female
 
-                </Text>
+                </Text> */}
 
-                <Text style={{ padding: wp('1%'), margin: wp('1%') }} size="h2" color="dark">
+                {/* <Text style={styles.info}>
                   <Icon size={wp('4%')} name="md-pin" color={Colors.mediumDarkFont} />
                   {' '}
                       #123, Gold Street, USA
 
+                </Text> */}
+                <Text style={styles.info}>
+                  {profile.email}
                 </Text>
-                <Text style={{ padding: wp('1%'), margin: wp('1%') }} size="h2" color="dark">
-                     melinda@gates.com
-                </Text>
-                <Text style={{ padding: wp('1%'), margin: wp('1%') }} size="h2" color="dark">
+                {/* <Text style={styles.info}>
                      +9392992929
-                </Text>
+                </Text> */}
               </View>
+
             </View>
           </View>
 
@@ -103,7 +133,7 @@ class Profile extends Component {
             alignContent: 'center',
           }}
           >
-            <Text style={{ }} size="h3" font="regular" color="dark">
+            <Text style={{ ...ApplicationStyles.avatarTitle }}>
                      MY POSTS
             </Text>
             <Button
@@ -112,7 +142,7 @@ class Profile extends Component {
                 alignSelf: 'flex-end',
                 paddingHorizontal: wp('1%'),
               }}
-              titleStyle={{ color: Colors.primary, fontSize: FontSizes.h3, fontFamily: Fonts.medium }}
+              titleStyle={{ ...ApplicationStyles.link }}
               onPress={() => navigation.navigate('HomePage')}
               title="See all"
             />
@@ -143,7 +173,7 @@ class Profile extends Component {
 
 
                 </View>
-                <Text color="mediumDark" style={{ textAlign: 'center' }}>Why do we do?</Text>
+                <Text style={{ textAlign: 'center', ...ApplicationStyles.info3 }}>Why do we do?</Text>
               </View>
 
             )}
@@ -151,15 +181,19 @@ class Profile extends Component {
           />
           <Button
             style={styles.loginContainer}
-            titleStyle={styles.loginTitle}
             onPress={() => navigation.navigate('HomePage')}
             title="MY DONATIONS"
           />
 
         </ScrollView>
+        )}
+
       </View>
     );
   }
 }
-
-export default Profile;
+export default connect(
+  ({ user: { profile } }) => ({ profile }), {
+    logoutInit: UserActions.logoutInit,
+  },
+)(Profile);

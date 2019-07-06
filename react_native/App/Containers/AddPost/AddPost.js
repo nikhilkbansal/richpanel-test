@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
-import { Colors, FontSizes } from '../../Theme';
+import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   loginTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
 });
 
-class EditProfile extends Component {
+class AddPost extends Component {
   static get propTypes() {
     return {
       navigation: PropTypes.func.isRequired,
@@ -35,29 +35,41 @@ class EditProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: null,
-      password: '',
-      checked: false,
+      errors: {},
     };
+    this.descriptionRef = React.createRef();
   }
 
   render() {
     const { navigation } = this.props;
+
+    const { errors } = this.state;
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} statusBarColor={Colors.background} title="ADD POST" containerStyle={{ paddingHorizontal: wp('2%') }} />
-
         <ScrollView style={styles.subContainer}>
-          <TextInput label="title" />
           <TextInput
+            error={errors.title}
+            multiline
+            numberOfLines={2}
+            label="Title"
+            returnKeyType="next"
+            onChangeText={text => this.updateTextInput('title', text)}
+            onSubmitEditing={() => this.descriptionRef.current.focus()}
+          />
+          <TextInput
+            error={errors.description}
             multiline
             numberOfLines={4}
             label="Description"
+            textInputRef={this.descriptionRef}
+            returnKeyType="next"
+            onChangeText={text => this.updateTextInput('description', text)}
+            onSubmitEditing={() => this.passwordRef.current.focus()}
           />
-          <Text size="h3" color="mediumDark">Add images or videos</Text>
-
+          <Text style={ApplicationStyles.textInputLabel}>Add images or videos</Text>
           <FlatList
-            data={[{ empty: true }, { a: 3 }, { a: 3 }, { a: 3 }, { a: 3 }]}
+            data={[{ empty: true }, { a: 3 }]}
             style={{ flex: 1 }}
             showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => (
@@ -73,8 +85,6 @@ class EditProfile extends Component {
                   marginVertical: wp('2%'),
                 }}
                 >
-
-
                   {!item.empty ? (
                     <Image
                       resizeMode="cover"
@@ -135,7 +145,6 @@ class EditProfile extends Component {
 
           <Button
             style={styles.loginContainer}
-            titleStyle={styles.loginTitle}
             onPress={() => navigation.navigate('HomePage')}
             title="ADD"
           />
@@ -146,4 +155,4 @@ class EditProfile extends Component {
   }
 }
 
-export default EditProfile;
+export default AddPost;

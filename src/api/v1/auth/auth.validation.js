@@ -7,6 +7,7 @@ module.exports = {
       email: Joi.string().email().required(),
       password: Joi.string().required().min(6).max(128),
       userName: Joi.string().required(),
+      name: Joi.string().required(),
       clientType: Joi.string().valid('browser', 'ios', 'android').optional(),
       deviceToken: Joi.string().optional(),
     },

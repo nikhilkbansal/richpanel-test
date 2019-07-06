@@ -7,23 +7,20 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 // import CheckBox from 'react-native-checkbox';
 import CheckBox from 'react-native-check-box';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
 import {
   Colors, FontSizes, Fonts, FontStyles, ApplicationStyles,
 } from '../../Theme';
-// const ItemCheckbox = require('react-native-item-checkbox');
-import AppActions from '../../Stores/App/Actions';
 import UserActions from '../../Stores/User/Actions';
-import Toast from '../../Services/ToastService';
-import { Validations } from '../../Utils';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
   subContainer: { flex: 1, paddingHorizontal: wp('7%') },
   firstSection: { flex: 1 },
-  secondSection: { flex: 4, marginTop: hp('4%') },
+  secondSection: { flex: 4, marginTop: hp('5%') },
   remeberPassContainer: {
     marginVertical: hp('1%'),
     flexDirection: 'row',
@@ -39,7 +36,7 @@ const styles = StyleSheet.create({
   forgetButtonContainer: { alignSelf: 'center' },
   loginContainer: {
     marginTop: hp('5%'),
-    backgroundColor: Colors.primary,
+    backgroundColor: ApplicationStyles.primaryColor.color,
     borderRadius: ApplicationStyles.commonBorderRadius(wp('80%')),
     width: wp('80%'),
     alignSelf: 'center',
@@ -65,45 +62,58 @@ class LoginScreen extends Component {
 
   constructor(props) {
     super(props);
+    const { user: { rememberMe } } = props;
+    console.log('remeerdfdf', rememberMe);
     this.state = {
-      email: null,
-      password: '',
-      isChecked: false,
+      usernameOrEmail: rememberMe ? rememberMe.usernameOrEmail : null,
+      password: rememberMe ? rememberMe.password : null,
+      isRememberMe: !!rememberMe,
       errors: {},
     };
     this.loginInit = this.loginInit.bind(this);
-    TextInput.validateForm = TextInput.validateForm.bind(this);
-    TextInput.updateTextInput = TextInput.updateTextInput.bind(this);
+    this.updateTextInput = this.updateTextInput.bind(this);
     this.passwordRef = React.createRef();
+  }
+
+  updateTextInput(key, value) {
+    this.setState({ [key]: value });
   }
 
 
   loginInit() {
     const { loginInit } = this.props;
-    const { email, password } = this.state;
-    if (!TextInput.validateForm(['password'])) return false;
+    const { usernameOrEmail, password, isRememberMe } = this.state;
+    const validateForm = TextInput.validateForm(['usernameOrEmail', 'password'], this.state);
+    if (validateForm) {
+      this.setState({ errors: validateForm });
+      return false;
+    }
 
-    loginInit({ email, password });
+    loginInit({ userName: usernameOrEmail, password, isRememberMe });
   }
 
 
   render() {
+    console.log('this.props', this.props);
     const { navigation } = this.props;
-    const { errors, isChecked } = this.state;
+    const {
+      errors, isRememberMe, usernameOrEmail, password,
+    } = this.state;
     return (
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <NavigationBar {...navigation} showLeftSection />
-        <View style={styles.subContainer}>
+        <KeyboardAwareScrollView style={styles.subContainer}>
           <View style={styles.firstSection}>
             <Text style={ApplicationStyles.headline}>Login</Text>
             <Text style={ApplicationStyles.subHeadline}>Get started with your journey</Text>
           </View>
           <View style={styles.secondSection}>
             <TextInput
-              error={errors.email}
+              error={errors.usernameOrEmail}
               label="Username or Email"
               returnKeyType="next"
-              onChangeText={text => TextInput.updateTextInput('email', text)}
+              value={usernameOrEmail}
+              onChangeText={text => this.updateTextInput('usernameOrEmail', text)}
               onSubmitEditing={() => this.passwordRef.current.focus()}
             />
             <TextInput
@@ -112,8 +122,9 @@ class LoginScreen extends Component {
               textInputRef={this.passwordRef}
               returnKeyType="done"
               secureTextEntry
+              value={password}
               onSubmitEditing={this.loginInit}
-              onChangeText={text => TextInput.updateTextInput('password', text)}
+              onChangeText={text => this.updateTextInput('password', text)}
               placeholder="Enter between 6 to 18 characters"
             />
             <View style={styles.remeberPassContainer}>
@@ -121,16 +132,15 @@ class LoginScreen extends Component {
                 style={{ flex: 1 }}
                 onClick={() => {
                   this.setState({
-                    isChecked: !isChecked,
+                    isRememberMe: !isRememberMe,
                   });
                 }}
-                isChecked={isChecked}
-                rightText="Remember Password"
+                isChecked={isRememberMe}
+                rightText="Remember me"
                 rightTextStyle={{ ...ApplicationStyles.body, textAlign: 'left' }}
                 checkBoxColor={ApplicationStyles.primaryColor.color}
                 uncheckedCheckBoxColor={ApplicationStyles.disabledColor.color}
               />
-
               <Button
                 style={styles.forgetButtonContainer}
                 titleStyle={styles.forgetButton}
@@ -154,12 +164,14 @@ class LoginScreen extends Component {
               />
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </KeyboardAwareScrollView>
+      </View>
     );
   }
 }
 
-export default connect(null, {
-  loginInit: UserActions.loginInit,
-})(LoginScreen);
+export default connect(
+  ({ user }) => ({ user }), {
+    loginInit: UserActions.loginInit,
+  },
+)(LoginScreen);

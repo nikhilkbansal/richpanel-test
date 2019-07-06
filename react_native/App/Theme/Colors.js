@@ -40,6 +40,7 @@ export default {
     white: '#fff',
     shadyLady: '#979797',
     sunflower: '#e6bd17',
+    nero: '#222222' /** '#1e1e1e' */,
     nepal: '#9eb5c1',
     summerSky: '#179ce1',
   },

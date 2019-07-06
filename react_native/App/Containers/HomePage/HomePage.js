@@ -11,7 +11,7 @@ import Post from '../Post/Post';
 import Notification from '../Notification/Notification';
 import SearchPage from '../SearchPage/SearchPage';
 import Profile from '../Profile/Profile';
-import { Colors } from '../../Theme';
+import { Colors, ApplicationStyles } from '../../Theme';
 
 // const RecentsRoute = () => <Text>Recents</Text>;
 //  class HomePage extends React.Component {
@@ -155,8 +155,8 @@ const TabNavigator = createBottomTabNavigator({
   }),
   tabBarOptions: {
     showLabel: false,
-    activeTintColor: Colors.primary,
-    inactiveTintColor: Colors.darkFont,
+    activeTintColor: ApplicationStyles.primaryColor.color,
+    inactiveTintColor: ApplicationStyles.darkColor.color,
   },
 });
 export default TabNavigator;

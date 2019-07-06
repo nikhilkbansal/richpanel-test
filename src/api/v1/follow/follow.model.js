@@ -1,13 +1,4 @@
 const mongoose = require('mongoose');
-// const httpStatus = require('http-status');
-// const { omitBy, isNil } = require('lodash');
-// const bcrypt = require('bcryptjs');
-// const moment = require('moment-timezone');
-// const jwt = require('jwt-simple');
-// const uuidv4 = require('uuid/v4');
-// const APIError = require('../../utils/APIError');
-// const { env, jwtSecret, jwtExpirationInterval } = require('../../../config/vars');
-
 
 /**
  * follow Schema
@@ -34,6 +25,8 @@ const followSchema = new mongoose.Schema({
   timestamps: true,
 
 });
+
+
 followSchema.statics = {
 
   /**
@@ -56,5 +49,11 @@ followSchema.statics = {
     }
     return this.create(newrelation);
   },
+
+  getFollowers(followerId) {
+    return this.find({ followerId }).sort({ createdAt: -1 });
+  },
+
+
 };
 module.exports = mongoose.model('Follow', followSchema);

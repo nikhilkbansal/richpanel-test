@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const { omitBy, isNil } = require('lodash');
+
 // const httpStatus = require('http-status');
 // const { omitBy, isNil } = require('lodash');
 // const bcrypt = require('bcryptjs');
@@ -54,5 +56,22 @@ const eventSchema = new mongoose.Schema({
 }, {
   timestamps: true,
 });
+
+
+eventSchema.statistics = {
+  async list({
+    page = 1, perPage = 30, _id, userId,
+  }) {
+    const options = omitBy({
+      _id, userId,
+    }, isNil);
+    return this.find(options).sort({ createdAt: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage)
+      .exec();
+  },
+
+};
+
 
 module.exports = mongoose.model('Event', eventSchema);

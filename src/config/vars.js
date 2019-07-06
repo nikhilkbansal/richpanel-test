@@ -15,7 +15,7 @@ const defaultConfig = {
   jwtSecret: 'bA2xcjpf8y5aSUFsNB2qN5yymUBSs6es3qHoFpGkec75RCeBb8cpKauGefw5qy4',
   jwtExpirationInterval: 1440,
   whitelist: ['http://example1.com', 'http://example2.com'],
-  mongo: { uri: 'mongodb://localhost:27017/video-spy' },
+  mongo: { uri: 'mongodb://localhost:27017/help_db' },
   logs: 'dev',
   ddosConfig: {
     burst: 100, limit: 100,
@@ -61,7 +61,7 @@ const devConfig = {
 /** Test config variable */
 const testConfig = {
   whitelist: null,
-  mongo: { uri: 'mongodb://localhost:27017/video-spy' },
+  mongo: { uri: 'mongodb://localhost:27017/help_db' },
 };
 
 /** Production config variable */

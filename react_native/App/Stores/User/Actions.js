@@ -22,6 +22,13 @@ const { Types, Creators } = createActions({
   loginInit: ['payload'],
   forgotPasswordInit: ['payload'],
   registerInit: ['payload'],
+  logoutInit: null,
+  logoutSuccess: null,
+  putUserInfo: ['payload'],
+  patchUserInfo: ['payload'],
+  updateUserInit: ['payload'],
+  uploadProfilePic: ['payload'],
+  manageRememberMe: ['payload'],
   // The operation has started and is loading
   fetchTemperatureLoading: null,
   // The temperature was successfully fetched
