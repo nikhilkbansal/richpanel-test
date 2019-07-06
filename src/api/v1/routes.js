@@ -7,6 +7,7 @@ const followRoutes = require('./follow/follow.route');
 const fileRoutes = require('./files/files.route');
 const commentRoutes = require('./comment/comment.route');
 const reactionRoutes = require('./reaction/reaction.route');
+const payURoutes = require('./payment/payUMoney/payU.route');
 
 
 const router = express.Router();
@@ -34,6 +35,7 @@ router.use('/follow', followRoutes);
 router.use('/files', fileRoutes);
 router.use('/comment', commentRoutes);
 router.use('/reaction', reactionRoutes);
+router.use('/payU', payURoutes);
 
 
 module.exports = router;

@@ -42,6 +42,15 @@ const defaultConfig = {
       'https://mail.google.com/',
     ],
   },
+  payUConfig: {
+    mode: 'test',
+    credentials: {
+      key: '1DmpQjHT', // will be provided by payumoney
+      salt: 'Hbz1yBWuI3', // will be provided by payumoney
+      service_provider: 'payu_paisa', // do not modify
+    },
+
+  },
 };
 
 /** Development config variable */

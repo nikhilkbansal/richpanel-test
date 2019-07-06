@@ -103,7 +103,6 @@ exports.getFile = async (req, res, next) => {
   try {
     const { query: { width, height, format } } = req;
     const { params: { _id } } = req;
-
     const file = await Files.findOne({ _id });
     const fileFolderWithPath = `../../../../cdn/${file.userId}/${file._id}${file.fileExtension}`;
     const filePath = path.join(__dirname, fileFolderWithPath);
