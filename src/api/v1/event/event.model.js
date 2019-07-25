@@ -44,6 +44,10 @@ const eventSchema = new mongoose.Schema({
   location: {
     type: String,
   },
+  interestedIn: {
+    type: Number,
+    default: 0,
+  },
   startTime: {
     type: Date,
     required: true,

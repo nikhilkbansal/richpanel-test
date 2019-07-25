@@ -6,6 +6,7 @@ const authRoutes = require('./auth/auth.route');
 const followRoutes = require('./follow/follow.route');
 const fileRoutes = require('./files/files.route');
 const commentRoutes = require('./comment/comment.route');
+const searchRoutes = require('./search/search.route');
 const reactionRoutes = require('./reaction/reaction.route');
 const payURoutes = require('./payment/payUMoney/payU.route');
 
@@ -35,7 +36,8 @@ router.use('/follow', followRoutes);
 router.use('/files', fileRoutes);
 router.use('/comment', commentRoutes);
 router.use('/reaction', reactionRoutes);
-router.use('/payU', payURoutes);
+router.use('/payment/payU', payURoutes);
+router.use('/search', searchRoutes);
 
 
 module.exports = router;

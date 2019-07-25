@@ -12,6 +12,10 @@ import defaultStyle from '../../Theme/ApplicationStyles';
 import {PostEventUi, NavigationBar} from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Dialog, { DialogContent,SlideAnimation } from 'react-native-popup-dialog';
+import { Button, Text } from 'react-native'
+
+
 const styles = StyleSheet.create({
   actionButtonIcon: {
     fontSize: 20,
@@ -47,7 +51,27 @@ class LoginScreen extends Component {
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles.lightBackgkround.color}}>
         <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={false} showRightSection rightIcon="md-add" title="Home" containerStyle={{ paddingHorizontal: wp('2%') }} />
-
+        <View style={styles.container}>
+  <Button
+    title="Show Dialog"
+    onPress={() => {
+      this.setState({ visible: true });
+    }}
+  />
+  <Dialog
+    visible={this.state.visible} 
+    dialogAnimation={new SlideAnimation({
+      slideFrom: 'bottom',
+    })}
+    onTouchOutside={() => {
+      this.setState({ visible: false });
+    }}
+  >
+    <DialogContent style={{width: wp('80%'), height:hp('80%'),}}>
+    <PostEventUi />
+    </DialogContent>
+  </Dialog>
+</View> 
         <FlatList
           data={[{a:3},{a:3},{a:3},{a:3}]} 
           renderItem={this._renderItem}

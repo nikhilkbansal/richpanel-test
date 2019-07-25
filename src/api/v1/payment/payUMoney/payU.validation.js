@@ -8,10 +8,10 @@ module.exports = {
   makePayment: {
     body: {
       email: Joi.string().email().required(),
-      amount: Joi.string().required(),
+      amount: Joi.number().required(),
       productinfo: Joi.string().required(),
       firstname: Joi.string().required(),
-      phoneno: Joi.string().required(),
+      phone: Joi.string().required(),
       lastname: Joi.string(),
 
     },

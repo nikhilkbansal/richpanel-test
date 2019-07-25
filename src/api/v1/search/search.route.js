@@ -10,7 +10,6 @@ const {
 
 const router = express.Router();
 
-router.param('postId', controller.load);
 
 router
   .route('/')
@@ -27,7 +26,7 @@ router
    * @apiParam  {Number{1-}}         [page=1]     List page
    * @apiParam  {Number{1-100}}      [perPage=1]  Per page
    * @apiParam  {String}             [term]       Search term
-   * @apiParam  {String}             [type=]      type
+   * @apiParam  {String}             [type=post,event,ngo]      type
    *
    * @apiSuccess {Object[]} users List of searched items.
    *
@@ -35,3 +34,5 @@ router
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
   .get(authorize(), validate(getSearch), controller.getSearch);
+
+module.exports = router;

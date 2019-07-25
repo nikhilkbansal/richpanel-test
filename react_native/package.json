@@ -40,6 +40,8 @@
     "react-native-loading-spinner-overlay": "^1.0.1",
     "react-native-material-bottom-navigation": "^1.0.3",
     "react-native-paper": "^2.6.3",
+    "react-native-payumoney": "0.0.3",
+    "react-native-popup-dialog": "^0.18.2",
     "react-native-responsive-fontsize": "^0.1.7",
     "react-native-responsive-screen": "^1.1.10",
     "react-native-svg": "^9.4.0",

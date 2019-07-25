@@ -44,10 +44,16 @@ const defaultConfig = {
   },
   payUConfig: {
     mode: 'test',
+    isProduction: false,
+    urls: {
+      surl: 'http://localhost:3000/payu/success',
+      furl: 'http://localhost:3000/payu/fail',
+    },
     credentials: {
       key: '1DmpQjHT', // will be provided by payumoney
       salt: 'Hbz1yBWuI3', // will be provided by payumoney
       service_provider: 'payu_paisa', // do not modify
+      authHeader: 'bNdF3AvBiWsYTROpAAHXVQ7W48CkR5pKdQQhKYuRm40',
     },
 
   },

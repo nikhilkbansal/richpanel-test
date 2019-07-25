@@ -3,6 +3,7 @@ package com.boilerplate;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import superinfotech.suraj.reactnativepayumoney.PayumoneyPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.horcrux.svg.SvgPackage;
@@ -36,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new PayumoneyPackage(),
             new ImagePickerPackage(),
             new ReactVideoPackage(),
             new SvgPackage(),

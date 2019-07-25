@@ -6,10 +6,39 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import CheckBox from 'react-native-checkbox';
 import Icon from 'react-native-vector-icons/Ionicons';
+import PayuMoney from 'react-native-payumoney';
 import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
+
+
+const amount = 99.9;
+const txid = `${new Date().getTime()}`;
+const productId = 'product101';
+const name = 'asdf';
+const email = 'hello@world.com';
+const phone = '1231231231';
+const surl = 'https://www.example.com/payu-validate.php'; // can be different for Succes
+const furl = 'https://www.example.com/payu-validate.php'; // can be different for Failed
+const id = 'XXXXX'; // Your Merchant ID here
+const key = 'XXXXX'; // Your Key Here
+const sandbox = true; // Make sure to set false on production or you will get error
+
+const options = {
+  amount,
+  txid,
+  productId,
+  name,
+  email,
+  phone,
+  id,
+  key,
+  surl,
+  furl,
+  sandbox,
+  hash: '678',
+};
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
@@ -38,6 +67,13 @@ class AddPost extends Component {
       errors: {},
     };
     this.descriptionRef = React.createRef();
+  }
+
+  componentDidMount() {
+    console.log(options);
+    // setTimeout(() => {
+
+    // }, 3000);
   }
 
   render() {
@@ -145,7 +181,14 @@ class AddPost extends Component {
 
           <Button
             style={styles.loginContainer}
-            onPress={() => navigation.navigate('HomePage')}
+            onPress={() => {
+              PayuMoney.pay(options).then((d) => {
+                console.log(d); // WIll get a Success response with verification hash
+              }).catch((e) => {
+                console.log(e); // In case of failture
+              });
+              // navigation.navigate('HomePage')
+            }}
             title="ADD"
           />
 
