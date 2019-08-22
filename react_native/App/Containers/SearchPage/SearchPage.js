@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { Appbar } from 'react-native-paper';
 import defaultStyle from '../../Theme/ApplicationStyles';
 import { Searchbar, } from 'react-native-paper';
-import PostEventUi from '../../Components/PostEventUi'; 
+import PostUi from '../../Components/PostUi'; 
 class SearchPage extends Component { 
   static get propTypes() {
     return {
@@ -46,7 +46,7 @@ class SearchPage extends Component {
     
 }; 
 
-_renderItemPosts = ({item}) =><PostEventUi />;
+_renderItemPosts = ({item}) =><PostUi />;
 
   render() { 
     const { email, password, checked } = this.state;

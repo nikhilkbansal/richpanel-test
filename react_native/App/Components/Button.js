@@ -15,7 +15,8 @@ const styles = StyleSheet.create({
 });
 
 function Button({
-  onPress, title, icon, style, titleStyle, iconSize, buttonWrapperStyle, iconColor, children,
+  onPress, title, icon, style, titleStyle, iconSize,
+  buttonWrapperStyle, iconColor, children, ...props
 }) {
   const Content = () => (
     <Fragment>
@@ -39,6 +40,7 @@ function Button({
             onPress={onPress}
             useForeground
             background={TouchableNativeFeedback.SelectableBackground()}
+            {...props}
           >
             <View style={[styles.buttonStyle, buttonWrapperStyle]}>
               <Content />

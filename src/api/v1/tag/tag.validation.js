@@ -3,11 +3,18 @@ const Joi = require('joi');
 
 module.exports = {
 
-
-  // POST /v1/follow
-  followUnfollow: {
+  // POST /v1/tag
+  add: {
     body: {
-      followeeId: Joi.string().required(),
+      tag: Joi.string().required(),
+
+    },
+  },
+
+  // GET /v1/tag
+  list: {
+    query: {
+      tag: Joi.string().required(),
 
     },
   },

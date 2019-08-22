@@ -3,6 +3,8 @@ import rootSaga from 'App/Sagas';
 import configureStore from './CreateStore';
 import { reducer as userReducer } from './User/Reducers';
 import { reducer as appReducer } from './App/Reducers';
+import { reducer as postReducer } from './Post/Reducers';
+import { reducer as paymentReducer } from './Payment/Reducers';
 
 export default () => {
   const rootReducer = combineReducers({
@@ -12,6 +14,8 @@ export default () => {
      */
     app: appReducer,
     user: userReducer,
+    post: postReducer,
+    payment: paymentReducer,
   });
 
   return configureStore(rootReducer, rootSaga);

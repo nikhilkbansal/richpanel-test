@@ -35,7 +35,7 @@ function* httpClient(payload, access = 'default', isLoader = true, timeout = fal
     headers,
     ...timeoutCoundition,
   };
-
+  console.log('API: ', payload);
   try {
     if (isLoader) { yield put(AppActions.isLoading(true)); }
     // yield call(delay, 1000);

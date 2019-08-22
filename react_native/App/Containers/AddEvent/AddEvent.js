@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 
 import PostActions from 'App/Stores/Post/Actions';
 import {
-  Text, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, FileSelector,
+  Text, NavigationBar, TextInput, Button, HrLine, DatePicker,
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   loginTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
 });
 
-class AddPost extends Component {
+class AddEvent extends Component {
   static get propTypes() {
     return {
       navigation: PropTypes.func.isRequired,
@@ -39,20 +39,15 @@ class AddPost extends Component {
     super(props);
     this.state = {
       errors: {},
-      title: '',
-      description: '',
-      files: [],
     };
     this.addPost = this.addPost.bind(this);
     this.descriptionRef = React.createRef();
   }
 
   addPost() {
-    const {
-      errors, title, description, files,
-    } = this.state;
+    const { errors } = this.state;
     const { postCreate } = this.props;
-    postCreate({ title, description, files });
+    postCreate({});
   }
 
   updateTextInput(key, value) {
@@ -78,6 +73,7 @@ class AddPost extends Component {
             onChangeText={text => this.updateTextInput('title', text)}
             onSubmitEditing={() => this.descriptionRef.current.focus()}
           />
+
           <TextInput
             error={errors.description}
             multiline
@@ -89,7 +85,82 @@ class AddPost extends Component {
             onChangeText={text => this.updateTextInput('description', text)}
             onSubmitEditing={() => this.passwordRef.current.focus()}
           />
-          <FileSelector label="Add images and videos" onChange={files => this.updateTextInput('files', files)} />
+          <Text style={ApplicationStyles.textInputLabel}>Add images or videos</Text>
+          <FlatList
+            data={[{ empty: true }, { a: 3 }]}
+            style={{ flex: 1 }}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <View style={{ marginHorizontal: wp('1%') }}>
+                <View style={{
+                  width: wp('25%'),
+                  height: wp('25%'),
+                  borderRadius: wp('1.1%'),
+                  overflow: 'hidden',
+                  borderColor: Colors.primary,
+                  borderWidth: item.empty ? 1 : 0,
+                  justifyContent: 'center',
+                  marginVertical: wp('2%'),
+                }}
+                >
+                  {!item.empty ? (
+                    <Image
+                      resizeMode="cover"
+                      style={{
+                      }}
+                      source={require('../../Assets/Images/child.jpeg')}
+                    />
+                  )
+                    : (
+                      <Button
+                        style={{
+                          backgroundColor: 'red',
+                          borderColor: Colors.background,
+                          borderRadius: wp('5%') / 2,
+                          borderWidth: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                        onPress={() => navigation.navigate('HomePage')}
+                        icon="md-add"
+                        iconColor={Colors.primary}
+                        iconSize={23}
+                      />
+
+                    )}
+
+
+                </View>
+                {!item.empty && (
+                <Button
+                  style={{
+                    backgroundColor: 'red',
+                    width: wp('5%'),
+                    height: wp('5%'),
+                    borderColor: Colors.background,
+                    borderRadius: wp('5%') / 2,
+                    borderWidth: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    elevation: 5,
+                    position: 'absolute',
+                    top: 0,
+                    padding: wp('1%'),
+                    right: -wp('1%'),
+                  }}
+                  onPress={() => navigation.navigate('HomePage')}
+                  icon="md-remove"
+                  iconColor={Colors.lightFont}
+                  iconSize={23}
+                />
+                )
+                }
+              </View>
+
+            )}
+            horizontal
+          />
+
           <HrLine />
           <Text style={{ ...ApplicationStyles.info3 }}>Fill below section if you are creating a campaign </Text>
           <TextInput
@@ -106,7 +177,6 @@ class AddPost extends Component {
           />
           <DatePicker label="Campaign Starts from" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('starts', text)} />
           <DatePicker label="Campaign Ends on" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('starts', text)} />
-          <LocationSelector label="Location" placeholder="Select location" onChange={text => this.updateTextInput('starts', text)} />
           <Button
             style={styles.loginContainer}
             onPress={this.addPost}
@@ -121,4 +191,4 @@ class AddPost extends Component {
 
 export default connect(null, {
   postCreate: PostActions.postCreate,
-})(AddPost);
+})(AddEvent);

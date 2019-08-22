@@ -4,10 +4,13 @@ import { PersistGate } from 'redux-persist/lib/integration/react';
 import codePush from 'react-native-code-push';
 import createStore from 'App/Stores';
 import RootScreen from './Containers/Root/RootScreen';
+import { setStoreRef } from './Services/HttpRequestService';
 
 const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME };
 
 const { store, persistor } = createStore();
+
+setStoreRef(store);
 
 const myApp = function myApp() {
   return (

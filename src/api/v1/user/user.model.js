@@ -219,45 +219,14 @@ userSchema.statics = {
     throw new APIError(err);
   },
 
-  /**
-   * List users in descending order of 'createdAt' timestamp.
-   *
-   * @param {number} skip - Number of users to be skipped.
-   * @param {number} limit - Limit number of users to be returned.
-   * @returns {Promise<User[]>} array of users
-   */
-  list({
-    page = 1, perPage = 30, name, email, role,
-  }) {
-    const options = omitBy({ name, email, role }, isNil);
 
-    return this.aggregate([{
-      $match: options,
-    },
-    {
-      $lookup: {
-        from: 'youtubechannels',
-        let: { id: '$_id' }, // $_id is from users collection
-        pipeline: [
-          {
-            $match: {
-              $expr: { $eq: ['$$id', '$userId'] }, // $$id is let variable and $userId is from youtubechannels collection
-            },
-          },
-          { $count: 'count' },
-        ],
-        as: 'channelsCount',
-      },
-    },
-    {
-      $addFields: {
-        channelsCount: { $sum: '$channelsCount.count' },
-      },
-    },
-    {
-      $project: { password: 0 },
-    }])
-      .sort({ createdAt: -1 })
+  async list({
+    page = 1, perPage = 30, _id, $text, causeSupported,
+  }) {
+    const options = omitBy({
+      _id, $text, causeSupported,
+    }, isNil);
+    return this.find(options).sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();

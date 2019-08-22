@@ -72,12 +72,13 @@ class TextInput extends React.Component {
     const {
       label, numberOfLines, multiline, secureTextEntry, error,
       placeholder, onChangeText, returnKeyType, textInputRef, onSubmitEditing,
-      value,
+      value, ...props
     } = this.props;
     return (
       <View style={{ marginTop: hp('1%'), marginBottom: !error ? hp('1%') : 0 }}>
         <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>{label}</Text>
         <RNTextInput
+          {...props}
           multiline={multiline}
           numberOfLines={numberOfLines}
           placeholder={placeholder}
@@ -110,18 +111,6 @@ class TextInput extends React.Component {
   }
 }
 
-// const TextInput = ({ secureTextEntry, label }) => (
-//   <View style={{ marginVertical: hp('2%') }}>
-//     <Text size="h3" color="mediumDark">{label}</Text>
-//     <RNTextInput
-//       secureTextEntry={secureTextEntry}
-//       style={{ paddingHorizontal: 0, margin: 0 }}
-//       underlineColorAndroid={Colors.primary}
-//     />
-//     {secureTextEntry && <Icon style={{ position: 'absolute', right: 0, top: hp('3%') }} name="ios-eye" size={ApplicationStyles.iconSize} color={Colors.mediumDarkFont} />}
-
-//   </View>
-// );
 
 TextInput.propTypes = {
   secureTextEntry: PropTypes.bool,

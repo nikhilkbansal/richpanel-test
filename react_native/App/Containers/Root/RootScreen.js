@@ -12,6 +12,7 @@ import PostDetail from 'App/Containers/PostDetail/PostDetail';
 import EditProfile from 'App/Containers/EditProfile/EditProfile';
 import MyDonations from 'App/Containers/MyDonations/MyDonations';
 import AddPost from 'App/Containers/AddPost/AddPost';
+import Payment from 'App/Containers/Payment/Payment';
 import SplashScreen from 'App/Containers/SplashScreen/SplashScreen';
 import StyleGuide from 'App/Containers/StyleGuide/StyleGuide';
 import { connect } from 'react-redux';
@@ -43,6 +44,7 @@ const AppNav = createStackNavigator(
     MyDonations,
     AddPost,
     StyleGuide,
+    Payment,
   },
   {
     // By default the application will show the this screen

@@ -14,6 +14,7 @@ import Text from './Text';
 import Button from './Button';
 import { Colors, ApplicationStyles } from '../Theme';
 import ProgressiveImage from './ProgressiveImage';
+import Reaction from './Reaction';
 
 console.log('Avatar', Avatar);
 
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
   raisedMoney: { ...ApplicationStyles.info2, alignContent: 'center', justifyContent: 'center' },
 });
 
-function PostEventUi({
+function EventUi({
   title, onPress, containerStyle, theme,
 }) {
   return (
@@ -176,34 +177,25 @@ function PostEventUi({
               resizeMode="cover"
             />
           )}
-        <Button
+        {/* <Button
           icon="md-heart-empty"
           iconColor={Colors.accent}
           iconSize={25}
           style={styles.heart}
           buttonWrapperStyle={styles.heartWrapperStyle}
-        />
+        /> */}
         <View style={{ paddingHorizontal: wp('2%'), paddingTop: wp('2%') }}>
-          <View style={{ paddingVertical: hp('2.5%') }}>
-            <Text style={ApplicationStyles.headline2}>Help the poor children and give them clothes </Text>
-          </View>
-          <View style={{ backgroundColor: Colors.accent, height: hp('0.2%') }}>
-            <View style={{ backgroundColor: Colors.primary, width: '56%', height: hp('0.2%') }} />
-          </View>
-
-
           <View style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingVertical: hp('1%'),
+            flex: 1, flexDirection: 'row', elevation: 2,
           }}
           >
-            <Text style={ApplicationStyles.bodySubHeading}>TOTAL RAISED</Text>
-            <Text style={styles.raisedMoney}>
-            $1000
-              <Text style={ApplicationStyles.primaryInfo}> $1500</Text>
-            </Text>
+            <Reaction />
+            <Button icon="md-share" style={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
           </View>
+          <View style={{ paddingVertical: hp('2.5%') }}>
+            <Text style={ApplicationStyles.headline2}>300m Marathan for education of poor kids</Text>
+          </View>
+
         </View>
         <View style={styles.subBody}>
           <Text style={styles.body}>
@@ -228,17 +220,17 @@ function PostEventUi({
 }
 
 
-PostEventUi.propTypes = {
+EventUi.propTypes = {
   title: PropTypes.string.isRequired,
   onPress: PropTypes.func,
   containerStyle: PropTypes.object,
   theme: PropTypes.object.isRequired,
 };
 
-PostEventUi.defaultProps = {
+EventUi.defaultProps = {
   onPress: () => {},
   containerStyle: {},
 };
 
 
-export default withTheme(PostEventUi);
+export default withTheme(EventUi);

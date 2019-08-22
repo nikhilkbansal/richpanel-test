@@ -19,13 +19,12 @@ const router = express.Router();
  * @apiGroup payment
  * @apiPermission user
  *
- * @apiParam  {String}  name              Name of user
- * @apiParam  {String}  [description]     description
- * @apiParam  {String}  brandId           brandId
- * @apiParam  {String}  startDate         start date in unix timestamp
- * @apiParam  {String}  endDate           End date in unix timestamp
- * @apiParam  {String}  budget            Budget
- * @apiParam  {String}  [noOfAdvertisement]  no of advertisement
+ * @apiParam  {String}  email      Email
+ * @apiParam  {Number}  amount     Amount to dedect
+ * @apiParam  {String}  firstname    First name
+ * @apiParam  {String}  [lastname]     last name
+ * @apiParam  {String}  phone           phone number
+ * @apiParam  {String}  productinfo      product description
  *
  * @apiSuccess {Object}  campaign     Created compaign
  *

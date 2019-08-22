@@ -8,6 +8,7 @@ import { withTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import Post from '../Post/Post';
+import Event from '../Event/Event';
 import Notification from '../Notification/Notification';
 import SearchPage from '../SearchPage/SearchPage';
 import Profile from '../Profile/Profile';
@@ -126,8 +127,8 @@ import { Colors, ApplicationStyles } from '../../Theme';
 
 const TabNavigator = createBottomTabNavigator({
   Post,
+  Event,
   Search: SearchPage,
-  Fav: Notification,
   Notification,
   Profile,
 }, {
@@ -141,8 +142,8 @@ const TabNavigator = createBottomTabNavigator({
         iconName = 'md-search';
       } else if (routeName === 'Notification') {
         iconName = 'md-notifications';
-      } else if (routeName === 'Fav') {
-        iconName = 'md-heart';
+      } else if (routeName === 'Event') {
+        iconName = 'md-time';
       } else if (routeName === 'Profile') {
         iconName = 'md-person';
       }

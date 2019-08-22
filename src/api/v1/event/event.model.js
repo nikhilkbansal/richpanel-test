@@ -61,13 +61,14 @@ const eventSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+eventSchema.index({ title: 'text', description: 'text' });
 
 eventSchema.statistics = {
   async list({
-    page = 1, perPage = 30, _id, userId, title,
+    page = 1, perPage = 30, _id, userId, title, $text,
   }) {
     const options = omitBy({
-      _id, userId, title,
+      _id, userId, title, $text,
     }, isNil);
     return this.find(options).sort({ createdAt: -1 })
       .skip(perPage * (page - 1))

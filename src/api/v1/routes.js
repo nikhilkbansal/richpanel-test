@@ -9,6 +9,7 @@ const commentRoutes = require('./comment/comment.route');
 const searchRoutes = require('./search/search.route');
 const reactionRoutes = require('./reaction/reaction.route');
 const payURoutes = require('./payment/payUMoney/payU.route');
+const tagRoutes = require('./tag/tag.route');
 
 
 const router = express.Router();
@@ -38,6 +39,6 @@ router.use('/comment', commentRoutes);
 router.use('/reaction', reactionRoutes);
 router.use('/payment/payU', payURoutes);
 router.use('/search', searchRoutes);
-
+router.use('/tag', tagRoutes);
 
 module.exports = router;

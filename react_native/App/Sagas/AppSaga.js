@@ -10,7 +10,7 @@ export function* startUp() {
   const isUserLoggedIn = yield select(({ user: { isLoggedIn } }) => isLoggedIn);
 
   if (isUserLoggedIn) {
-    NavigationService.navigate('HomePage');
+    // NavigationService.navigate('HomePage');
   }
 }
 

@@ -1,7 +1,18 @@
 import { Platform } from 'react-native';
 import { Config } from '../Config';
+import HttpClient from '../Sagas/HttpClient';
 
 export default {
+  httpClient: HttpClient,
+  getPaddedZero(num) {
+    return num < 10 ? `0${num}` : num;
+  },
+
+  getHoursIn12(num) {
+    const hours = num > 12 ? num - 12 : num;
+    return { hours, noonStatus: num > 12 ? 'PM' : 'AM' };
+  },
+
   getFile(id) {
     console.log(`${Config.API_URL}files/${id}`);
     return `${Config.API_URL}files/${id}`;

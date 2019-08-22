@@ -8,7 +8,7 @@ module.exports = {
       page: Joi.number().min(1),
       perPage: Joi.number().min(1).max(100),
       term: Joi.string(),
-      type: Joi.string().valid(['ngo', 'post', 'event']).default('post'),
+      type: Joi.string().valid(['all', 'ngo', 'post', 'event']).default('post'),
     },
   },
 };

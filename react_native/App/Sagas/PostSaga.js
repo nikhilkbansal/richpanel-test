@@ -2,31 +2,42 @@ import {
   all, call, put, takeLatest,
 } from 'redux-saga/effects';
 
-import userActions, { UserTypes } from '../Stores/User/Actions';
+import postActions, { PostTypes } from '../Stores/Post/Actions';
 import NavigationService from '../Services/NavigationService';
 import httpClient from './HttpClient';
+import { CommonFunctions } from '../Utils';
 
+
+function* uploadFile({ payload }) {
+  const formData = yield call(CommonFunctions.createFormData, payload.file, 'file', payload.body);
+  const profileData = yield select(({ user: { profile } }) => profile);
+
+  try {
+    const payloadData = {
+      method: 'post',
+      data: formData,
+      url: 'files',
+    };
+    const data = yield call(httpClient, payloadData);
+    console.log('data', data);
+    yield put(userActions.patchUserInfo({ profile: { ...profileData, pictures: [data._id, ...profileData.pictures] } }));
+  } catch (e) {
+    console.log(e);
+  }
+}
 
 export function* createPost({ payload }) {
   try {
-    if (!payload.isRememberMe) {
-      yield put(userActions.manageRememberMe(null));
-    }
-
     const payloadData = {
       method: 'post',
       data: {
         ...payload,
       },
-      url: 'auth/login',
+      url: 'post',
     };
     const data = yield call(httpClient, payloadData);
-    NavigationService.navigate('HomePage');
-    yield put(userActions.putUserInfo({ ...data, isLoggedIn: true }));
-
-    if (payload.isRememberMe) {
-      yield put(userActions.manageRememberMe(payload));
-    }
+    // NavigationService.navigate('HomePage');
+    // yield put(userActions.putUserInfo({ ...data, isLoggedIn: true }));
   } catch (e) {
     console.log('eee', e);
     // catch errors here
@@ -37,7 +48,7 @@ export function* createPost({ payload }) {
 function* User() {
   yield all(
     [
-      takeLatest(UserTypes.CREATE_POST, createPost),
+      takeLatest(PostTypes.POST_CREATE, createPost),
 
     ],
   );
