@@ -30,7 +30,8 @@ exports.create = async (req, res, next) => {
     const { busboy, user: { id } } = req;
     const recommendVideoExtension = '.mp4';
     let fileType;
-
+    const files = [];
+    let currentUploadingFile;
     req.pipe(busboy); // Pipe it through busboy
     req.busboy.on('field', (fieldName, value) => {
       console.log('req.body fieldName', fieldName, value);
@@ -38,13 +39,16 @@ exports.create = async (req, res, next) => {
         fileType = value;
       }
     });
+
     busboy.on('file', async (fieldname, file, filename, encoding, mimetype) => {
       const userData = req.user;
       const folderPath = path.join(__dirname, `../../../../cdn/${userData.id}`);
       console.log('filename', filename);
       let extension = path.extname(filename); // i.e. .png
       extension = extension || '.png';
-      const mongoObjectId = mongoose.Types.ObjectId();
+      const mongoObjectId = `${mongoose.Types.ObjectId()}__${fileType === 'video' ? 'vv' : 'ii'}`;
+      currentUploadingFile = mongoObjectId;
+
       const customeFileName = mongoObjectId + extension;
 
       await mkDir(path.join(__dirname, '../../../../cdn/')); // make cdn folder if not exists
@@ -61,6 +65,8 @@ exports.create = async (req, res, next) => {
 
       // On finish of the upload
       fstream.on('close', async () => {
+        console.log('fstream close event has been called');
+
         if (fileType === 'video') {
           ffmpeg(filePath)
             .size('720x480')
@@ -89,10 +95,21 @@ exports.create = async (req, res, next) => {
           isVideo: false,
         });
         await addFile.save();
+        files.push(addFile);
 
-        res.status(httpStatus.CREATED);
-        res.json(addFile);
+        // should be run after last file precessed
+        if (currentUploadingFile === mongoObjectId) {
+          res.status(httpStatus.CREATED);
+          res.json(files);
+        }
       });
+
+
+      // busboy.on('finish', () => {
+      //   console.log('finish event has been called');
+      //   res.status(httpStatus.CREATED);
+      //   res.json(files);
+      // });
     });
   } catch (e) {
     next(e);
@@ -104,45 +121,57 @@ exports.getFile = async (req, res, next) => {
     const { query: { width, height, format } } = req;
     const { params: { _id } } = req;
     const file = await Files.findOne({ _id });
-    const fileFolderWithPath = `../../../../cdn/${file.userId}/${file._id}${file.fileExtension}`;
-    const filePath = path.join(__dirname, fileFolderWithPath);
+    if (!file) {
+      res.type('image/png');
+      fs.createReadStream(path.join(__dirname, '../../../../assets/default/notFound.jpg')).pipe(res);
+    } else {
+      const fileFolderWithPath = `../../../../cdn/${file.userId}/${file._id}${file.fileExtension}`;
+      const filePath = path.join(__dirname, fileFolderWithPath);
 
-    if (file.fileType === 'image') {
+      if (!fs.existsSync(filePath)) {
+        res.type('image/png');
+        fs.createReadStream(path.join(__dirname, '../../../../assets/default/notFound.jpg')).pipe(res);
+        return;
+      }
+
+      if (file.fileType === 'image') {
       // Set the content-type of the response
-      res.type(`image/${format || 'png'}`);
+        res.type(`image/${format || 'png'}`);
 
-      // Get the re sized image
-      universalFunctions.resizeImage(filePath, format, Number(width), Number(height)).pipe(res);
-    } else { // handle video. see here to know more https://medium.com/@daspinola/video-stream-with-node-js-and-html5-320b3191a6b6
-      const stat = fs.statSync(filePath);
-      const fileSize = stat.size;
-      const { range } = req.headers;
-      console.log('range', range);
-      if (range) {
-        const parts = range.replace(/bytes=/, '').split('-');
-        const start = parseInt(parts[0], 10);
-        const end = parts[1]
-          ? parseInt(parts[1], 10)
-          : fileSize - 1;
+        // Get the re sized image
+        universalFunctions.resizeImage(filePath, format, Number(width), Number(height)).pipe(res);
+      } else {
+      // handle video. see here to know more https://medium.com/@daspinola/video-stream-with-node-js-and-html5-320b3191a6b6
+        const stat = fs.statSync(filePath);
+        const fileSize = stat.size;
+        const { range } = req.headers;
+        console.log('range', range);
+        if (range) {
+          const parts = range.replace(/bytes=/, '').split('-');
+          const start = parseInt(parts[0], 10);
+          const end = parts[1]
+            ? parseInt(parts[1], 10)
+            : fileSize - 1;
 
-        const chunksize = (end - start) + 1;
-        const fileStream = fs.createReadStream(filePath, { start, end });
-        const head = {
-          'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-          'Accept-Ranges': 'bytes',
-          'Content-Length': chunksize,
-          'Content-Type': 'video/mp4',
-        };
+          const chunksize = (end - start) + 1;
+          const fileStream = fs.createReadStream(filePath, { start, end });
+          const head = {
+            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+            'Accept-Ranges': 'bytes',
+            'Content-Length': chunksize,
+            'Content-Type': 'video/mp4',
+          };
 
-        res.writeHead(206, head);
-        fileStream.pipe(res);
-      } else { // first time
-        const head = {
-          'Content-Length': fileSize,
-          'Content-Type': 'video/mp4',
-        };
-        res.writeHead(200, head);
-        fs.createReadStream(filePath).pipe(res);
+          res.writeHead(206, head);
+          fileStream.pipe(res);
+        } else { // first time
+          const head = {
+            'Content-Length': fileSize,
+            'Content-Type': 'video/mp4',
+          };
+          res.writeHead(200, head);
+          fs.createReadStream(filePath).pipe(res);
+        }
       }
     }
   } catch (e) {

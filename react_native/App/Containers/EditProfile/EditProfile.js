@@ -6,14 +6,15 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import UserActions from 'App/Stores/User/Actions';
 import { connect } from 'react-redux';
-import ImagePicker from 'react-native-image-picker';
-
+// import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
   Text, NavigationBar, TextInput, Button, ProgressiveImage,
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import { CommonFunctions } from '../../Utils';
+import UploadFiles from '../../Services/UploadFilesService';
 
 const options = {
   title: 'Select Profile Pic',
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
   imageButton: {
     width: wp('20%'),
     height: wp('20%'),
-    borderRadius: wp('2.1%'),
+    borderRadius: wp('20%') / 2,
     overflow: 'hidden',
     borderColor: Colors.primary,
     justifyContent: 'center',
@@ -61,6 +62,7 @@ class EditProfile extends Component {
     this.state = {
       errors: {},
       selectedProfilePic: {},
+      picture: null,
       ...profile,
     };
     this.updateProfile = this.updateProfile.bind(this);
@@ -73,110 +75,20 @@ class EditProfile extends Component {
   }
 
 
-  selectImage(item) {
-    const { uploadProfilePic } = this.props;
-    if (item.empty) {
-      ImagePicker.showImagePicker(options, (response) => {
-        console.log('Response = ', response);
-
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-        } else if (response.customButton) {
-          console.log('User tapped custom button: ', response.customButton);
-        } else {
-          uploadProfilePic({ file: response, body: { fileType: 'image' } });
-        }
-      });
-    } else {
-      this.setState({ picture: item });
-    }
+  selectImage() {
+    ImagePicker.openPicker({
+      // cropping: true,
+    }).then((images) => {
+      this.setState({ picture: images });
+    });
   }
 
-  imageItem(item) {
-    const { picture } = this.state;
-    return (
-      <View style={styles.imageItemContainer}>
-        <Button
-          onPress={() => this.selectImage(item)}
-          style={[styles.imageButton, { borderWidth: item.empty ? 1 : 0 }]}
-        >
-          {!item.empty && item === picture ? (
-            <Icon
-              style={{
-                position: 'absolute',
-                elevation: 3,
-                alignSelf: 'center',
-              }}
-              name="md-checkmark"
-              color={Colors.primary}
-              size={30}
-            />) : null}
-
-          {!item.empty ? (
-            <ProgressiveImage
-              resizeMode="cover"
-              style={{
-                elevation: 1,
-                width: wp('22%'),
-                height: wp('22%'),
-              }}
-              source={{ uri: CommonFunctions.getFile(item) }}
-            />
-          )
-            : (
-              <Icon
-                style={{
-                  borderColor: Colors.background,
-                  borderRadius: wp('5%') / 2,
-                  borderWidth: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                }}
-                name="md-add"
-                color={Colors.primary}
-                size={30}
-              />
-
-            )}
-
-
-        </Button>
-        {!item.empty && (
-        <Button
-          style={{
-            backgroundColor: 'red',
-            width: wp('5%'),
-            height: wp('5%'),
-            borderColor: Colors.background,
-            borderRadius: wp('5%') / 2,
-            borderWidth: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            elevation: 5,
-            position: 'absolute',
-            top: 0,
-            padding: wp('1%'),
-            right: -wp('1%'),
-          }}
-          onPress={() => navigation.navigate('HomePage')}
-          icon="md-remove"
-          iconColor={Colors.lightFont}
-          iconSize={23}
-        />
-        )
-    }
-      </View>
-    );
-  }
 
   updateTextInput(key, value) {
     this.setState({ [key]: value });
   }
 
-  updateProfile() {
+  async updateProfile() {
     const { updateUserInit } = this.props;
     const {
       email, password, userName, name, picture,
@@ -190,28 +102,65 @@ class EditProfile extends Component {
 
     const isPasswordGivenObject = password ? { password } : {};
 
+    let pictureCondition;
+    if (picture) {
+      const filesUploaded = await UploadFiles([picture], { fileType: 'image' });
+      const filesIds = filesUploaded.map(o => o._id);
+      pictureCondition = { picture: filesIds[0] };
+    }
+
     updateUserInit({
-      email, ...isPasswordGivenObject, userName, name, picture,
+      email, ...isPasswordGivenObject, userName, name, ...pictureCondition,
     });
   }
 
 
   render() {
     const { navigation, profile } = this.props;
+    console.log('CommonFunctions.getFile(profile.picture, true)', CommonFunctions.getFile(profile.picture, true));
     const {
-      errors, name, email, userName,
+      errors, name, email, userName, picture,
     } = this.state;
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} title="Edit Profile" containerStyle={{ paddingHorizontal: wp('2%') }} />
         <ScrollView style={styles.subContainer}>
-          <FlatList
-            data={[{ empty: true }, ...profile.pictures]}
-            style={{ flex: 1 }}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => this.imageItem(item)}
-            horizontal
-          />
+          <View style={{
+            flex: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center',
+          }}
+          >
+            <Button
+              onPress={() => this.selectImage()}
+              style={[styles.imageButton, { justifyContent: 'center', alignContent: 'center', alignItems: 'center' }]}
+            >
+              <ProgressiveImage
+                resizeMode="cover"
+                style={{
+                  elevation: 1,
+                  width: wp('22%'),
+                  height: wp('22%'),
+                }}
+                source={{ uri: picture && picture.path ? picture.path : CommonFunctions.getFile(profile.picture, 'avatar', true) }}
+              />
+              <Icon
+                name="md-create"
+                size={ApplicationStyles.iconSize}
+                color={ApplicationStyles.darkColor.color}
+                style={{
+                  position: 'absolute',
+                  top: hp('6.5%'),
+                  left: 0,
+                  backgroundColor: ApplicationStyles.lightBackgkround.color,
+                  opacity: 0.7,
+                  bottom: 0,
+                  right: 0,
+                  alignSelf: 'center',
+                  textAlign: 'center',
+                }}
+              />
+            </Button>
+          </View>
+
 
           <TextInput
             error={errors.fullName}

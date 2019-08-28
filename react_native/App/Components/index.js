@@ -11,6 +11,7 @@ import DatePicker from './DatePicker';
 import Reaction from './Reaction';
 import LocationSelector from './LocationSelector';
 import FileSelector from './FileSelector';
+import Dropdown from './Dropdown';
 
 export {
   Button,
@@ -26,4 +27,5 @@ export {
   FileSelector,
   ProgressiveImage,
   LocationSelector,
+  Dropdown,
 };

@@ -1,10 +1,13 @@
 import * as React from 'react';
 import {
-  View, DatePickerAndroid, TimePickerAndroid, StyleSheet, FlatList,
+  View, DatePickerAndroid, TimePickerAndroid, StyleSheet, FlatList, TouchableOpacity,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import ImagePicker from 'react-native-image-picker';
+// import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
+
+import DraggableFlatList from 'react-native-draggable-flatlist';
 import Button from './Button';
 import Text from './Text';
 import Image from './ProgressiveImage';
@@ -46,22 +49,30 @@ class FileSelector extends React.Component {
   selectImage() {
     const { files } = this.state;
     const { onChange } = this.props;
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        console.log('response', response);
-        files.push(response);
-        onChange(files);
-        this.setState({ files });
-      }
+    ImagePicker.openPicker({
+      multiple: true,
+    }).then((images) => {
+      const newFiles = [...files, ...images];
+      onChange(newFiles);
+      this.setState({ files: newFiles });
     });
+
+    // ImagePicker.showImagePicker(options, (response) => {
+    //   console.log('Response = ', response);
+
+    //   if (response.didCancel) {
+    //     console.log('User cancelled image picker');
+    //   } else if (response.error) {
+    //     console.log('ImagePicker Error: ', response.error);
+    //   } else if (response.customButton) {
+    //     console.log('User tapped custom button: ', response.customButton);
+    //   } else {
+    //     console.log('response', response);
+    //     files.push(response);
+    //     onChange(files);
+    //     this.setState({ files });
+    //   }
+    // });
   }
 
   removeFile(fileIndex) {
@@ -118,31 +129,39 @@ class FileSelector extends React.Component {
 
 
           </View>
-          <FlatList
+          <DraggableFlatList
             data={files}
             style={{ flex: 1, marginLeft: wp('1%') }}
             showsHorizontalScrollIndicator={false}
-            renderItem={({ item, index }) => (
+            renderItem={({
+              item, index, move, moveEnd, isActive,
+            }) => (
               <View>
-                <View style={{
-                  width: wp('25%'),
-                  height: wp('25%'),
-                  borderRadius: wp('2%'),
-                  overflow: 'hidden',
-                  justifyContent: 'center',
-                  marginVertical: wp('2%'),
-                  margin: wp('01%'),
-                }}
+                <TouchableOpacity
+                  style={{
+                    // height: 100,
+                    backgroundColor: isActive ? 'blue' : 'red',
+                    width: wp('25%'),
+                    height: wp('25%'),
+                    borderRadius: wp('2%'),
+                    overflow: 'hidden',
+                    justifyContent: 'center',
+                    marginVertical: wp('2%'),
+                    margin: wp('01%'),
+                  }}
+                  onLongPress={move}
+                  onPressOut={moveEnd}
                 >
+
                   <Image
                     resizeMode="cover"
                     style={{
                       width: '100%',
                       height: '100%',
                     }}
-                    source={{ uri: item.uri }}
+                    source={{ uri: item.path }}
                   />
-                </View>
+                </TouchableOpacity>
                 <Button
                   style={{
                     backgroundColor: 'red',

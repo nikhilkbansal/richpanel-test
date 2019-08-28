@@ -6,29 +6,19 @@ const ffmpeg = require('fluent-ffmpeg');
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
-const resizeImage = (path, fileType, format, width, height) => {
-  console.log('file format', format);
-  console.log('path', path);
+const resizeImage = (path, format, width, height) => {
   const readStream = fs.createReadStream(path);
-  const command = ffmpeg();
-  if (fileType === 'video') {
-    console.log('entered fileType video');
-    const output1 = command.input(path);
-    const output = readStream.pipe(output1);
-    return output;
+  let transform = sharp();
+
+  if (format) {
+    transform = transform.toFormat(format);
   }
-  // let transform = sharp();
-  // console.log('entered fileType video');
 
-  // if (format) {
-  //   transform = transform.toFormat(format);
-  // }
+  if (width || height) {
+    transform = transform.resize(width, height);
+  }
 
-  // if (width || height) {
-  //   transform = transform.resize(width, height);
-  // }
-
-  // return readStream.pipe(transform);
+  return readStream.pipe(transform);
 };
 
 

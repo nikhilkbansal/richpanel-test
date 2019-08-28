@@ -1,9 +1,11 @@
 import { Platform } from 'react-native';
 import { Config } from '../Config';
-import HttpClient from '../Sagas/HttpClient';
+
+const getFileNameFromUrl = url => url.substring(url.lastIndexOf('/') + 1);
 
 export default {
-  httpClient: HttpClient,
+  getFileNameFromUrl,
+  isFileVideo: name => name.includes('__vv'),
   getPaddedZero(num) {
     return num < 10 ? `0${num}` : num;
   },
@@ -13,19 +15,48 @@ export default {
     return { hours, noonStatus: num > 12 ? 'PM' : 'AM' };
   },
 
-  getFile(id) {
-    console.log(`${Config.API_URL}files/${id}`);
-    return `${Config.API_URL}files/${id}`;
+  getFile(id, type = '', forceRefresh = false) {
+    let params = '';
+    switch (type) {
+      case 'avatar':
+        params = 'width=200&height=200';
+        break;
+
+      default:
+        break;
+    }
+
+    console.log(encodeURI(`${Config.API_URL}files/${id}`));
+    if (forceRefresh) {
+      return encodeURI(`${Config.API_URL}files/${id}?${params}&r=${Math.random() * 100 * Math.random()}`);
+    }
+    return encodeURI(`${Config.API_URL}files/${id}?${params}`);
   },
+
   createFormData(photo, fileKeyName, body) {
     const data = new FormData();
 
-    data.append(fileKeyName, {
-      name: photo.fileName,
-      type: photo.type,
-      uri:
-        Platform.OS === 'android' ? photo.uri : photo.uri.replace('file://', ''),
-    });
+    // For multiple files
+    if (Array.isArray(photo)) {
+      photo.forEach((item) => {
+        // [] = For making it for multiple files upload
+        data.append(`${fileKeyName}[]`, {
+          name: getFileNameFromUrl(item.path),
+          type: item.mime,
+          uri:
+            Platform.OS === 'android' ? item.path : item.path.replace('file://', ''),
+        });
+      });
+
+    // For single file
+    } else {
+      data.append(fileKeyName, {
+        name: getFileNameFromUrl(photo.path),
+        type: photo.mime,
+        uri:
+          Platform.OS === 'android' ? photo.path : photo.path.replace('file://', ''),
+      });
+    }
 
     Object.keys(body).forEach((key) => {
       data.append(key, body[key]);

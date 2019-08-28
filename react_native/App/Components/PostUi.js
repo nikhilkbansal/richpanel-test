@@ -1,20 +1,22 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
   Image, View, Share, Slider, StyleSheet, FlatList, ScrollView,
 } from 'react-native';
 import Video from 'react-native-video';
-
 import {
   Avatar, IconButton, Card, withTheme,
 } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
+import moment from 'moment';
 import Text from './Text';
 import Button from './Button';
 import { Colors, ApplicationStyles } from '../Theme';
 import ProgressiveImage from './ProgressiveImage';
 import Reaction from './Reaction';
+import Swiper from './Swiper';
+import { CommonFunctions } from '../Utils';
 
 console.log('Avatar', Avatar);
 
@@ -111,31 +113,29 @@ const styles = StyleSheet.create({
 });
 
 function PostUi({
-  title, onPress, containerStyle, theme,
+  title, description, files, userName, userPicture, createdAt, onPress, containerStyle, theme, onDonatePress,
 }) {
   return (
     <View style={styles.container}>
-      <View style={styles.subContainer}>
-
+      <View style={[styles.subContainer]}>
         <Image
           style={styles.avatarImage}
-          source={require('../Assets/Images/child.jpeg')}
+          source={{ uri: CommonFunctions.getFile(userPicture, 'avatar', true) }}
         />
-
-        <View style={styles.avatarContainer}>
+        <View style={[styles.avatarContainer]}>
           <View style={{ flexDirection: 'row', flex: 3 }}>
             <Text style={ApplicationStyles.avatarTitle}>
-              Goonj
+              {userName}
             </Text>
-            <Text style={[styles.medal]}>
+            {/* <Text style={[styles.medal]}>
               <Icon name="md-medal" size={wp('4%')} color={Colors.golden} style={{ paddingHorizontal: wp('2%') }} />
               {' '}
             200
-            </Text>
+            </Text> */}
           </View>
           <View style={styles.agoContainer}>
             <Text style={styles.ago}>
-            2 hours ago
+              { moment(createdAt).fromNow()}
             </Text>
           </View>
 
@@ -150,99 +150,48 @@ function PostUi({
         </View>
       </View>
       <View style={styles.imageContainer}>
-        { (Math.random() > Math.random())
-          ? (
-            <Video
-              source={{ uri: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4' }} // Can be a URL or a local file.
-              ref={(ref) => {
-                this.player = ref;
-              }} // Store reference
-
-              style={{
-                height: hp('30%'),
-                width: null,
-                flex: 1,
-                justifyContent: 'center',
-                backgroundColor: 'black',
-              }}
-              controls
-              resizeMode="cover"
-            />
-          )
-          : (
-            <ProgressiveImage
-              thumbnailSource={{ uri: `https://images.pexels.com/photos/671557/pexels-photo-671557.jpeg?w=50&buster=${Math.random()}` }}
-              source={{ uri: `https://images.pexels.com/photos/671557/pexels-photo-671557.jpeg?w=${400 * 2}&buster=${Math.random()}` }}
-              style={styles.mainImage}
-              resizeMode="cover"
-            />
-          )}
-        {/* <Button
-          icon="md-heart-empty"
-          iconColor={Colors.accent}
-          iconSize={25}
-          style={styles.heart}
-          buttonWrapperStyle={styles.heartWrapperStyle}
-        /> */}
+        <Swiper files={files} />
         <View style={{ paddingHorizontal: wp('2%'), paddingTop: wp('2%') }}>
           <View style={{
             flex: 1, flexDirection: 'row', elevation: 2,
           }}
           >
             <Reaction />
-            <Button
-              title="DONATE"
-              titleStyle={{ ...ApplicationStyles.body2 }}
-              buttonWrapperStyle={{
-                borderWidth: StyleSheet.hairlineWidth, borderColor: 'black', marginVertical: 2, marginHorizontal: 4, paddingHorizontal: 3,
-              }}
-              onPress={() => alert('shortPress')}
-            />
             <Button icon="md-share" style={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
           </View>
-          <View style={{ paddingVertical: hp('2.5%') }}>
-            <Text style={ApplicationStyles.headline2}>Help the poor children and give them clothes </Text>
+          <View style={{ paddingTop: hp('2.5%'), paddingBottom: hp('0%') }}>
+            <Text style={ApplicationStyles.headline2}>{title}</Text>
           </View>
-          <ScrollView style={{ height: 100 }}>
-            {
-              [2, 3, 4, 5, 6, 3, 4, 5, 6, 3, 4, 5, 6].map(() => <Text>sdf</Text>)
-            }
-          </ScrollView>
-          <View style={{ backgroundColor: Colors.accent, height: hp('0.2%') }}>
-            <View style={{ backgroundColor: Colors.primary, width: '56%', height: hp('0.2%') }} />
-          </View>
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingVertical: hp('1%'),
-          }}
-          >
-            <Text style={ApplicationStyles.bodySubHeading}>TOTAL RAISED</Text>
-            <Text style={styles.raisedMoney}>
+          {(Math.random() > Math.random())
+          && (
+          <Fragment>
+            <Button title="DONATE" containerStyle={{ paddingVertical: 0 }} titleStyle={{ ...ApplicationStyles.primaryInfo, fontSize: 13, textAlign: 'right' }} onPress={onDonatePress} />
+
+            <View style={{ backgroundColor: Colors.accent, height: hp('0.2%') }}>
+
+              <View style={{ backgroundColor: Colors.primary, width: '56%', height: hp('0.2%') }} />
+            </View>
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingVertical: hp('1%'),
+            }}
+            >
+              <Text style={ApplicationStyles.bodySubHeading}>TOTAL RAISED</Text>
+              <Text style={styles.raisedMoney}>
             $1000
-              <Text style={ApplicationStyles.primaryInfo}> $1500</Text>
-            </Text>
-          </View>
+                <Text style={ApplicationStyles.primaryInfo}> $1500</Text>
+              </Text>
+            </View>
+          </Fragment>
+          )
+          }
         </View>
         <View style={styles.subBody}>
           <Text style={styles.body}>
-            We are raising funds to build a smart "Digi-Lab",
-            equipped with cameras, tabs and computers that will help the girls living
-            equipped with cameras, tabs and computers that will help the girls living
-            equipped with cameras, tabs and computers that will help the girls living
+            {description}
             <Text style={styles.moreStyle}> more</Text>
           </Text>
-          {/* <Text style={styles.peopleRaised}>10 PEOPLE RAISED</Text>
-          <View style={styles.raisedBar}>
-            <View style={styles.bar} />
-          </View>
-          <View style={styles.totalRaised}>
-            <Text style={ApplicationStyles.bodySubHeading}>TOTAL RAISED</Text>
-            <Text style={styles.raisedMoney}>
-            $1000
-              <Text style={ApplicationStyles.primaryInfo}> $1500</Text>
-            </Text>
-          </View> */}
         </View>
       </View>
     </View>

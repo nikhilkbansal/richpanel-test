@@ -6,13 +6,12 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
-
 import PostActions from 'App/Stores/Post/Actions';
+import UploadFiles from '../../Services/UploadFilesService';
 import {
   Text, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, FileSelector,
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
-
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
@@ -47,18 +46,33 @@ class AddPost extends Component {
     this.descriptionRef = React.createRef();
   }
 
-  addPost() {
+
+  async addPost() {
     const {
-      errors, title, description, files,
+      errors,
+      title,
+      description,
+      files,
+      campaignGoal,
+      campaignStartDate,
+      campaignEndDate,
     } = this.state;
     const { postCreate } = this.props;
-    postCreate({ title, description, files });
+    const filesUploaded = await UploadFiles(files, { fileType: 'image' });
+    const filesIds = filesUploaded.map(o => o._id);
+    postCreate({
+      title,
+      description,
+      files: filesIds,
+      campaignGoal,
+      campaignStartDate,
+      campaignEndDate,
+    });
   }
 
   updateTextInput(key, value) {
     this.setState({ [key]: value });
   }
-
 
   render() {
     const { navigation } = this.props;
@@ -101,11 +115,11 @@ class AddPost extends Component {
             keyboardType="number-pad"
             textInputRef={this.descriptionRef}
             returnKeyType="next"
-            onChangeText={text => this.updateTextInput('description', text)}
+            onChangeText={text => this.updateTextInput('campaignGoal', text)}
             onSubmitEditing={() => this.passwordRef.current.focus()}
           />
-          <DatePicker label="Campaign Starts from" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('starts', text)} />
-          <DatePicker label="Campaign Ends on" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('starts', text)} />
+          <DatePicker label="Campaign Starts from" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('campaignStartDate', text)} />
+          <DatePicker label="Campaign Ends on" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('campaignEndDate', text)} />
           <LocationSelector label="Location" placeholder="Select location" onChange={text => this.updateTextInput('starts', text)} />
           <Button
             style={styles.loginContainer}

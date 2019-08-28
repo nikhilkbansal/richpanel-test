@@ -63,9 +63,8 @@ class LoginScreen extends Component {
   constructor(props) {
     super(props);
     const { user: { rememberMe } } = props;
-    console.log('remeerdfdf', rememberMe);
     this.state = {
-      usernameOrEmail: rememberMe ? rememberMe.usernameOrEmail : null,
+      usernameOrEmail: rememberMe ? rememberMe.userName : null,
       password: rememberMe ? rememberMe.password : null,
       isRememberMe: !!rememberMe,
       errors: {},

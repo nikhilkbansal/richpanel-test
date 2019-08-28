@@ -36,10 +36,12 @@ const postSchema = new mongoose.Schema({
     required: true,
     maxlength: 128,
   },
+  campaignGoal: String,
+  campaignStartDate: Date,
+  campaignEndDate: Date,
   files: {
     type: Array,
     default: [],
-
   },
   location: {
     type: String,
@@ -51,7 +53,7 @@ const postSchema = new mongoose.Schema({
 
 postSchema.index({ title: 'text', description: 'text' });
 
-postSchema.statistics = {
+postSchema.statics = {
   async list({
     page = 1, perPage = 30, _id, userId, title, $text,
   }) {
@@ -61,6 +63,7 @@ postSchema.statistics = {
     return this.find(options).sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
+      .populate('userId', 'name _id picture')
       .exec();
   },
 

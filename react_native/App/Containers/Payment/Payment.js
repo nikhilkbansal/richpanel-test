@@ -89,6 +89,7 @@ class Payment extends Component {
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} statusBarColor={Colors.background} title="Donate" containerStyle={{ paddingHorizontal: wp('2%') }} />
+        {!!uri && (
         <WebView
           source={{ uri }}
           onNavigationStateChange={(q) => {
@@ -97,6 +98,7 @@ class Payment extends Component {
             }
           }}
         />
+        )}
       </View>
     );
   }

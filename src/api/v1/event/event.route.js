@@ -13,7 +13,7 @@ const router = express.Router();
 router.param('eventId', controller.load);
 
 router
-  .route('/homepagePosts')
+  .route('/homepageEvents')
   /**
    * @api {get} v1/posts/homepagePosts List homepage events
    * @apiDescription Get a list of homepage events

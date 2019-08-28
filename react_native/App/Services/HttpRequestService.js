@@ -52,6 +52,8 @@ function httpClient(payload, access = 'default', isLoader = true, timeout = fals
 
       resolve(result.data);
     } catch (error) {
+      console.log('error', error);
+
       store.dispatch(AppActions.isLoading(false));
       Toast(error.message);
       // if (error && error.code == 401) {

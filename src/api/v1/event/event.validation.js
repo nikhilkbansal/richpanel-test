@@ -15,7 +15,7 @@ module.exports = {
   // POST /v1/event
   createEvent: {
     body: {
-      file: Joi.string().required(),
+      files: Joi.array().required(),
       title: Joi.string().required().max(50),
       description: Joi.string().max(128),
       location: Joi.string(),

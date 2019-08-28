@@ -16,11 +16,11 @@ const styles = StyleSheet.create({
 
 function Button({
   onPress, title, icon, style, titleStyle, iconSize,
-  buttonWrapperStyle, iconColor, children, ...props
+  buttonWrapperStyle, iconColor, children, iconStyle, ...props
 }) {
   const Content = () => (
     <Fragment>
-      {!!icon && <Icon name={icon} size={iconSize || ApplicationStyles.iconSize} color={iconColor} />}
+      {!!icon && <Icon name={icon} size={iconSize || ApplicationStyles.iconSize} color={iconColor} style={iconStyle} />}
       {!!title && <Text style={[{ ...ApplicationStyles.button }, titleStyle]}>{ title }</Text>}
       {!!children && children }
     </Fragment>
@@ -57,6 +57,7 @@ Button.propTypes = {
   icon: PropTypes.string,
   title: PropTypes.string,
   onPress: PropTypes.func,
+  iconStyle: PropTypes.object,
   titleStyle: PropTypes.object,
   style: PropTypes.object,
   iconSize: PropTypes.number,
@@ -70,6 +71,7 @@ Button.defaultProps = {
   title: '',
   titleStyle: {},
   style: {},
+  iconStyle: {},
   buttonWrapperStyle: {},
   children: null,
   iconSize: null,

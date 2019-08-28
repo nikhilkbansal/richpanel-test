@@ -8,11 +8,12 @@ import UserActions from 'App/Stores/User/Actions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import {
-  Text, NavigationBar, TextInput, Button,
+  Text, NavigationBar, TextInput, Button, ProgressiveImage,
 } from '../../Components';
 import {
   Colors, FontSizes, Fonts, ApplicationStyles,
 } from '../../Theme';
+import CommonFunctions from '../../Utils/CommonFunctions';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.accent },
@@ -40,6 +41,16 @@ const styles = StyleSheet.create({
     marginTop: -hp('1%'),
     backgroundColor: Colors.background,
 
+  },
+  imageButton: {
+    width: wp('20%'),
+    height: wp('20%'),
+    borderRadius: wp('20%') / 2,
+    overflow: 'hidden',
+    borderColor: Colors.primary,
+    marginLeft: wp('4%'),
+    justifyContent: 'center',
+    marginVertical: wp('2%'),
   },
   nameDetail: { paddingHorizontal: wp('2%'), flex: 1, flexDirection: 'row' },
   info: { padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 },
@@ -70,14 +81,27 @@ class Profile extends Component {
         {profile && (
         <ScrollView style={styles.subContainer}>
           <View style={styles.sectionContainer}>
-            <Image
+            {/* <Image
               resizeMode="cover"
               style={{
                 width: '100%',
                 height: hp('35%'),
               }}
-              source={require('../../Assets/Images/child.jpeg')}
-            />
+              source={ require('../../Assets/Images/child.jpeg')}
+            /> */}
+            <View
+              style={[styles.imageButton, { justifyContent: 'center', alignContent: 'center', alignItems: 'center' }]}
+            >
+              <ProgressiveImage
+                resizeMode="cover"
+                style={{
+                  elevation: 1,
+                  width: wp('22%'),
+                  height: wp('22%'),
+                }}
+                source={{ uri: CommonFunctions.getFile(profile.picture, 'avatar', true) }}
+              />
+            </View>
             <View style={styles.userInfo}>
               <View style={styles.nameDetail}>
                 <View style={{ flex: 2 }}>
@@ -124,7 +148,16 @@ class Profile extends Component {
 
             </View>
           </View>
-
+          {/* <View style={[styles.sectionContainer, { marginTop: 10 }]}>
+            <Button
+              style={{
+                borderRadius: wp('2%'),
+                paddingHorizontal: wp('1%'),
+              }}
+              onPress={() => navigation.navigate('HomePage')}
+              title="My Donations"
+            />
+          </View> */}
           <View style={{
             paddingTop: hp('3%'),
             flex: 1,

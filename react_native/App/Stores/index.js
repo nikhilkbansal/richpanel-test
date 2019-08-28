@@ -5,6 +5,7 @@ import { reducer as userReducer } from './User/Reducers';
 import { reducer as appReducer } from './App/Reducers';
 import { reducer as postReducer } from './Post/Reducers';
 import { reducer as paymentReducer } from './Payment/Reducers';
+import { reducer as eventReducer } from './Event/Reducers';
 
 export default () => {
   const rootReducer = combineReducers({
@@ -16,6 +17,7 @@ export default () => {
     user: userReducer,
     post: postReducer,
     payment: paymentReducer,
+    event: eventReducer,
   });
 
   return configureStore(rootReducer, rootSaga);

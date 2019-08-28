@@ -7,8 +7,16 @@ import {
 } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
+import ActionButton from 'react-native-action-button';
+import defaultStyle from '../../Theme/ApplicationStyles';
 import {EventUi, NavigationBar} from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
+import Icon from 'react-native-vector-icons/Ionicons';
+import Dialog, { DialogContent,SlideAnimation } from 'react-native-popup-dialog';
+import { Button, Text } from 'react-native'
+import { connect } from 'react-redux';
+import EventActions from '../../Stores/Event/Actions';
+
 
 const styles = StyleSheet.create({
   actionButtonIcon: {
@@ -18,7 +26,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class EventScreen extends Component {
+class Event extends Component {
   static get propTypes() {
     return {
       theme: PropTypes.object.isRequired,
@@ -33,20 +41,29 @@ class EventScreen extends Component {
       password: '',
       checked: false,
     };
+    this._renderItem = this._renderItem.bind(this);
   }
 
-  _renderItem = ({item}) =><EventUi />;
+  componentDidMount(){
+    const { getHomeEvents } = this.props;
+    getHomeEvents();
+  }
+
+  _renderItem = ({item}) =><EventUi 
+    userName={item.userId.name}
+    userPicture={item.userId.picture}
+    onDonatePress={()=>this.props.navigation.navigate('Donate')}
+    {...item}
+    />;
 
   render() {
-    console.log('propsprops',this.props);
 
-    const { email, password, checked } = this.state;
-    const { theme, navigation  } = this.props;
+    const { navigation, homeEvents  } = this.props;
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles.lightBackgkround.color}}>
-        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={false} showRightSection rightIcon="md-add" title="Events" containerStyle={{ paddingHorizontal: wp('2%') }} />
+        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddEvent')} showLeftSection={false} showRightSection rightIcon="md-add" title="Events" containerStyle={{ paddingHorizontal: wp('2%') }} />
         <FlatList
-          data={[{a:3},{a:3},{a:3},{a:3}]} 
+          data={homeEvents} 
           renderItem={this._renderItem}
         />
       </View>
@@ -54,4 +71,8 @@ class EventScreen extends Component {
   }
 }
 
-export default withTheme(EventScreen);
+export default connect(
+  ({ event: { homeEvents } }) => ({ homeEvents }), {
+    getHomeEvents: EventActions.getHomeEvents,
+  },
+)(Event);

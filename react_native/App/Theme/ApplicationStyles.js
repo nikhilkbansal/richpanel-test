@@ -19,7 +19,7 @@ export default {
   },
 
   // new
-  iconSize: 35,
+  iconSize: wp('7%'),
 
   commonBorderRadius: width => width / 33,
   primaryColor: {

@@ -12,7 +12,10 @@ import PostDetail from 'App/Containers/PostDetail/PostDetail';
 import EditProfile from 'App/Containers/EditProfile/EditProfile';
 import MyDonations from 'App/Containers/MyDonations/MyDonations';
 import AddPost from 'App/Containers/AddPost/AddPost';
+import AddEvent from 'App/Containers/AddEvent/AddEvent';
 import Payment from 'App/Containers/Payment/Payment';
+import Donate from 'App/Containers/Donate/Donate';
+import SeeAllSearch from 'App/Containers/SeeAllSearch/SeeAllSearch';
 import SplashScreen from 'App/Containers/SplashScreen/SplashScreen';
 import StyleGuide from 'App/Containers/StyleGuide/StyleGuide';
 import { connect } from 'react-redux';
@@ -43,12 +46,15 @@ const AppNav = createStackNavigator(
     EditProfile,
     MyDonations,
     AddPost,
+    AddEvent,
     StyleGuide,
     Payment,
+    Donate,
+    SeeAllSearch,
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'HomePage',
+    initialRouteName: 'LogIn',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },

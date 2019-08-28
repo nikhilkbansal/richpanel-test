@@ -47,7 +47,7 @@ class DatePicker extends React.Component {
         });
         if (timeAction !== TimePickerAndroid.dismissedAction) {
           const formattedDateTime = `${year}/${CommonFunctions.getPaddedZero(month)}/${CommonFunctions.getPaddedZero(day)} ${CommonFunctions.getPaddedZero(CommonFunctions.getHoursIn12(hour).hours)}:${CommonFunctions.getPaddedZero(minute)} ${CommonFunctions.getHoursIn12(hour).noonStatus}`;
-          onChange(formattedDateTime);
+          onChange(new Date(year, month, day, hour, minute));
           this.setState({
             dateTime: formattedDateTime,
           });

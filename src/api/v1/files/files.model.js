@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
  * @private
  */
 const filesSchema = new mongoose.Schema({
+  _id: { type: String },
   userId: { type: String, ref: 'User' },
   isTemp: { type: Boolean, default: false },
   tempLocation: { type: String },

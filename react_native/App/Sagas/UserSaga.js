@@ -1,7 +1,8 @@
 import {
-  all, call, put, takeLatest, select, take,
+  all, call, put, takeLatest, select,
 } from 'redux-saga/effects';
 
+import { delay } from 'redux-saga';
 import userActions, { UserTypes } from '../Stores/User/Actions';
 import { INITIAL_STATE } from '../Stores/User/InitialState';
 import NavigationService from '../Services/NavigationService';
@@ -23,12 +24,12 @@ export function* login({ payload }) {
       url: 'auth/login',
     };
     const data = yield call(httpClient, payloadData);
-    NavigationService.navigate('HomePage');
     yield put(userActions.putUserInfo({ ...data, isLoggedIn: true }));
-
     if (payload.isRememberMe) {
       yield put(userActions.manageRememberMe(payload));
     }
+    yield call(delay, 500);
+    NavigationService.navigate('HomePage');
   } catch (e) {
     console.log('eee', e);
     // catch errors here
@@ -115,7 +116,7 @@ export function* uploadProfilePic({ payload }) {
     };
     const data = yield call(httpClient, payloadData);
     console.log('data', data);
-    yield put(userActions.patchUserInfo({ profile: { ...profileData, pictures: [data._id, ...profileData.pictures] } }));
+    yield put(userActions.patchUserInfo({ profile: { ...profileData, picture: data[0]._id } }));
   } catch (e) {
     console.log(e);
   }

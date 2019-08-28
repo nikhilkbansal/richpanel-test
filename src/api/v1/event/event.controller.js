@@ -56,9 +56,10 @@ exports.getHomePageEvents = async (req, res, next) => {
   try {
     const { user } = req;
     const { page, perPage } = req.query;
-    const followers = Follow.getFollowers(user.id);
-    const followeeIds = followers.map(o => o.followeeId);
-    const events = Event.list({ userId: { $in: followeeIds }, page, perPage });
+    // const followers = Follow.getFollowers(user.id);
+    // const followeeIds = followers.map(o => o.followeeId);
+    // const events = Event.list({ userId: { $in: followeeIds }, page, perPage });
+    const events = await Event.list({ page, perPage });
     res.json(events);
   } catch (error) {
     next(error);

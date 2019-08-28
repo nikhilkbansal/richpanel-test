@@ -10,12 +10,12 @@ export function* startUp() {
   const isUserLoggedIn = yield select(({ user: { isLoggedIn } }) => isLoggedIn);
 
   if (isUserLoggedIn) {
-    // NavigationService.navigate('HomePage');
+    NavigationService.navigate('HomePage');
   }
 }
 
 
-function* User() {
+function* Saga() {
   yield all(
     [
       takeLatest(AppTypes.START_UP, startUp),
@@ -23,4 +23,4 @@ function* User() {
   );
 }
 
-export default User;
+export default Saga;

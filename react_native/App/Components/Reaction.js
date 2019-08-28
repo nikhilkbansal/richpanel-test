@@ -17,8 +17,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flex: 1,
     flexDirection: 'row',
-    top: -hp('7%'),
-    left: 0,
+    top: -hp('0.8%'),
+    left: wp('8%'),
     backgroundColor: ApplicationStyles.lightColor.color,
     paddingVertical: wp('1%'),
     paddingHorizontal: wp('4%'),
@@ -26,7 +26,10 @@ const styles = StyleSheet.create({
     borderRadius: wp('1%'),
   },
   reaction: {
-    padding: wp('1%'),
+    paddingHorizontal: wp('1.8%'),
+    paddingVertical: wp('1.5%'),
+    width: wp('10%'),
+    height: wp('10%'),
   },
 });
 
@@ -81,10 +84,10 @@ class Reaction extends React.Component {
       <View style={[styles.container]}>
         {showReactions && (
         <View style={styles.overlay}>
-          <Button icon="md-thumbs-up" style={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
-          <Button icon="md-thumbs-up" style={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
-          <Button icon="md-thumbs-up" style={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
-          <Button icon="md-thumbs-up" style={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
+          <Button icon="ios-heart" buttonWrapperStyle={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
+          <Button icon="md-happy" buttonWrapperStyle={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
+          <Button icon="md-bulb" buttonWrapperStyle={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
+          <Button icon="ios-sad" buttonWrapperStyle={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
 
         </View>
         )}

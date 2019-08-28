@@ -4,7 +4,7 @@ import {
   Image, View, Share, Slider, StyleSheet,
 } from 'react-native';
 import Video from 'react-native-video';
-
+import moment from 'moment';
 import {
   Avatar, IconButton, Card, withTheme,
 } from 'react-native-paper';
@@ -15,6 +15,8 @@ import Button from './Button';
 import { Colors, ApplicationStyles } from '../Theme';
 import ProgressiveImage from './ProgressiveImage';
 import Reaction from './Reaction';
+import Swiper from './Swiper';
+import { CommonFunctions } from '../Utils';
 
 console.log('Avatar', Avatar);
 
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
   peopleRaised: { ...ApplicationStyles.bodyHeading, paddingVertical: hp('1%') },
   raisedBar: { backgroundColor: Colors.accent, flex: 1, height: hp('0.2%') },
   bar: { backgroundColor: Colors.primary, width: '56%', height: hp('0.2%') },
-  subBody: { padding: wp('2%') },
+  subBody: { padding: wp('2%'), paddingTop: 0 },
   forgetButton: {
     ...ApplicationStyles.body,
 
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
 });
 
 function EventUi({
-  title, onPress, containerStyle, theme,
+  title, description, files, userName, userPicture, createdAt, onPress, containerStyle, theme,
 }) {
   return (
     <View style={styles.container}>
@@ -119,23 +121,23 @@ function EventUi({
 
         <Image
           style={styles.avatarImage}
-          source={require('../Assets/Images/child.jpeg')}
+          source={{ uri: CommonFunctions.getFile(userPicture, 'avatar', true) }}
         />
 
         <View style={styles.avatarContainer}>
           <View style={{ flexDirection: 'row', flex: 3 }}>
             <Text style={ApplicationStyles.avatarTitle}>
-              Goonj
+              {userName}
             </Text>
-            <Text style={[styles.medal]}>
-              <Icon name="md-medal" size={wp('4%')} color={Colors.golden} style={{ paddingHorizontal: wp('2%') }} />
-              {' '}
-            200
-            </Text>
+            {/* <Text style={[styles.medal]}>
+      <Icon name="md-medal" size={wp('4%')} color={Colors.golden} style={{ paddingHorizontal: wp('2%') }} />
+      {' '}
+    200
+    </Text> */}
           </View>
           <View style={styles.agoContainer}>
             <Text style={styles.ago}>
-            2 hours ago
+              { moment(createdAt).fromNow()}
             </Text>
           </View>
 
@@ -150,40 +152,21 @@ function EventUi({
         </View>
       </View>
       <View style={styles.imageContainer}>
-        { (Math.random() > Math.random())
-          ? (
-            <Video
-              source={{ uri: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4' }} // Can be a URL or a local file.
-              ref={(ref) => {
-                this.player = ref;
-              }} // Store reference
+        <Swiper files={files} />
 
-              style={{
-                height: hp('30%'),
-                width: null,
-                flex: 1,
-                justifyContent: 'center',
-                backgroundColor: 'black',
-              }}
-              controls
-              resizeMode="cover"
-            />
-          )
-          : (
-            <ProgressiveImage
-              thumbnailSource={{ uri: `https://images.pexels.com/photos/671557/pexels-photo-671557.jpeg?w=50&buster=${Math.random()}` }}
-              source={{ uri: `https://images.pexels.com/photos/671557/pexels-photo-671557.jpeg?w=${400 * 2}&buster=${Math.random()}` }}
-              style={styles.mainImage}
-              resizeMode="cover"
-            />
-          )}
-        {/* <Button
-          icon="md-heart-empty"
-          iconColor={Colors.accent}
-          iconSize={25}
-          style={styles.heart}
-          buttonWrapperStyle={styles.heartWrapperStyle}
-        /> */}
+        {/* <View style={{
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'absolute',
+          top: hp('1%'),
+          alignContent: 'center',
+          backgroundColor: 'rgba(255,255,255,0.3)',
+        }}
+        >
+          <Text style={{ ...ApplicationStyles.info1, flex: 1, textAlign: 'center' }}>12th Dec 10:00 PM to 15th Dec 11:00 AM</Text>
+        </View> */}
         <View style={{ paddingHorizontal: wp('2%'), paddingTop: wp('2%') }}>
           <View style={{
             flex: 1, flexDirection: 'row', elevation: 2,
@@ -192,14 +175,18 @@ function EventUi({
             <Reaction />
             <Button icon="md-share" style={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
           </View>
-          <View style={{ paddingVertical: hp('2.5%') }}>
+          <View style={{ paddingTop: hp('2.5%') }}>
             <Text style={ApplicationStyles.headline2}>300m Marathan for education of poor kids</Text>
           </View>
-
+          <View style={{ paddingVertical: 0 }}>
+            <Button iconSize={wp('3.5%')} icon="md-pin" iconStyle={{ alignSelf: 'center', paddingHorizontal: wp('0.5%') }} buttonWrapperStyle={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'flex-end' }}>
+              <Text style={{ ...ApplicationStyles.avatarSubtitle }}>JWT Marriot, Chandigarh</Text>
+            </Button>
+          </View>
         </View>
         <View style={styles.subBody}>
           <Text style={styles.body}>
-            We are raising funds to build a smart "Digi-Lab", equipped with cameras, tabs and computers that will help the girls living
+            {description}
             <Text style={styles.moreStyle}> more</Text>
           </Text>
           {/* <Text style={styles.peopleRaised}>10 PEOPLE RAISED</Text>

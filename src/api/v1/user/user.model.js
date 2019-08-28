@@ -58,8 +58,7 @@ const userSchema = new mongoose.Schema({
     default: 'user',
   },
   picture: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Files',
+    type: String,
   },
   googleAuth: {
     access_token: String,

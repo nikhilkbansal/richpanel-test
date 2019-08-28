@@ -5,8 +5,11 @@ import {
 import PropTypes from 'prop-types';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Dialog, { DialogContent, SlideAnimation } from 'react-native-popup-dialog';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Button from './Button';
 import Text from './Text';
+import { Config } from '../Config';
+
 import {
   Colors, ApplicationStyles,
 } from '../Theme';
@@ -24,6 +27,9 @@ const styles = StyleSheet.create({
 });
 
 
+const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } } };
+const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } } };
+
 class LocationSelector extends React.Component {
   constructor(props) {
     super(props);
@@ -36,7 +42,7 @@ class LocationSelector extends React.Component {
   }
 
   async openLocationSelector() {
-
+    this.setState({ visibleDialog: true });
   }
 
   render() {
@@ -55,7 +61,92 @@ class LocationSelector extends React.Component {
             this.setState({ visibleDialog: false });
           }}
         >
-          <DialogContent style={{ width: wp('80%'), height: hp('80%') }} />
+          <DialogContent style={{ width: wp('90%'), height: hp('50%') }}>
+            <GooglePlacesAutocomplete
+              placeholder="Type address here"
+              minLength={2} // minimum length of text to search
+              returnKeyType="search" // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+              keyboardAppearance="light" // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
+              listViewDisplayed="auto" // true/false/undefined
+              fetchDetails
+              renderDescription={row => row.description} // custom description render
+              onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+                console.log(data, details);
+              }}
+
+              getDefaultValue={() => ''}
+
+              query={{
+              // available options: https://developers.google.com/places/web-service/autocomplete
+                key: Config.GOOGLE_PLACE_API_KEY,
+                language: 'en', // language of the results
+                types: '(cities)', // default: 'geocode'
+              }}
+              suppressDefaultStyles
+              styles={{
+                container: {
+                  marginTop: hp('1.5%'),
+                },
+                textInput: {
+                  ...ApplicationStyles.textInputValue,
+                  paddingHorizontal: 0,
+                  paddingTop: hp('0.5%'),
+                  paddingBottom: hp('1.5%'),
+                  borderColor: 'transparent',
+                  margin: 0,
+                  borderBottomColor: Colors.mediumDarkFont,
+                  borderWidth: StyleSheet.hairlineWidth * 2,
+                },
+                textInputContainer: {
+                  width: '100%',
+                  padding: 0,
+                  margin: 0,
+                },
+                description: {
+                  ...ApplicationStyles.bodyHeading,
+                  fontWeight: 'bold',
+                  paddingVertical: hp('0.7%'),
+                  borderColor: 'transparent',
+
+                  borderBottomColor: Colors.mediumDarkFont,
+                  borderWidth: StyleSheet.hairlineWidth,
+                },
+                predefinedPlacesDescription: {
+                  ...ApplicationStyles.bodyHeading,
+                  paddingVertical: hp('0.7%'),
+
+                  color: ApplicationStyles.primaryColor.color,
+                },
+                poweredContainer: {
+                  marginTop: hp('1%'),
+                },
+              }}
+
+              currentLocation // Will add a 'Current location' button at the top of the predefined places list
+              currentLocationLabel="Current location"
+              nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+              GoogleReverseGeocodingQuery={{
+              // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+              }}
+              GooglePlacesSearchQuery={{
+              // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                rankby: 'distance',
+                type: 'cafe',
+              }}
+
+              GooglePlacesDetailsQuery={{
+              // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
+                fields: 'formatted_address',
+              }}
+
+              filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+              predefinedPlaces={[homePlace, workPlace]}
+
+              debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+              // renderLeftButton={() => <Image source={require('path/custom/left-icon')} />}
+              // renderRightButton={() => <Text>Custom text after the input</Text>}
+            />
+          </DialogContent>
         </Dialog>
         <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>
           {label}

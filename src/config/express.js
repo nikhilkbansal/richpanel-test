@@ -63,10 +63,7 @@ app.use(cors(corsOptions));
 
 // enable authentication
 app.use(passport.initialize());
-app.use(busboy({
-  highWaterMark: 2 * 1024 * 1024, // Set 2MiB buffer
-}));
-
+app.use(busboy());
 passport.use('jwt', strategies.jwt);
 passport.use('facebook', strategies.facebook);
 passport.use('google', strategies.google);

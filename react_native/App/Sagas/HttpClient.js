@@ -43,6 +43,8 @@ function* httpClient(payload, access = 'default', isLoader = true, timeout = fal
 
     yield put(AppActions.isLoading(false));
 
+    console.log('API RESULT: ', result);
+
     return result.data;
   } catch (error) {
     yield put(AppActions.isLoading(false));

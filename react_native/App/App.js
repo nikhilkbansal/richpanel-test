@@ -12,6 +12,8 @@ const { store, persistor } = createStore();
 
 setStoreRef(store);
 
+console.disableYellowBox = true;
+
 const myApp = function myApp() {
   return (
   /**

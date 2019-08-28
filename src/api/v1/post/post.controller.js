@@ -85,8 +85,12 @@ exports.getHomePagePosts = async (req, res, next) => {
     const { user } = req;
     const { page, perPage } = req.query;
     const followers = Follow.getFollowers(user.id);
-    const followeeIds = followers.map(o => o.followeeId);
-    const posts = Post.list({ userId: { $in: followeeIds }, page, perPage });
+    // if(!followers || followers.length ===0){
+    //   res.json([]);
+    // }
+    // const followeeIds = followers.map(o => o.followeeId);
+    // const posts = Post.list({ userId: { $in: followeeIds }, page, perPage });
+    const posts = await Post.list({ page, perPage });
     res.json(posts);
   } catch (error) {
     next(error);

@@ -14,6 +14,8 @@ import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Dialog, { DialogContent,SlideAnimation } from 'react-native-popup-dialog';
 import { Button, Text } from 'react-native'
+import { connect } from 'react-redux';
+import PostActions from '../../Stores/Post/Actions';
 
 
 const styles = StyleSheet.create({
@@ -24,7 +26,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class LoginScreen extends Component {
+class Post extends Component {
   static get propTypes() {
     return {
       theme: PropTypes.object.isRequired,
@@ -39,54 +41,39 @@ class LoginScreen extends Component {
       password: '',
       checked: false,
     };
+    this._renderItem = this._renderItem.bind(this);
   }
 
-  _renderItem = ({item}) =><PostUi />;
+  componentDidMount(){
+    const { getHomePosts } = this.props;
+    getHomePosts();
+  }
+
+  _renderItem = ({item}) =><PostUi 
+  userName={item.userId.name}
+  userPicture={item.userId.picture}
+  onDonatePress={()=>this.props.navigation.navigate('Donate')}
+  {...item}
+  />;
 
   render() {
-    console.log('propsprops',this.props);
 
-    const { email, password, checked } = this.state;
-    const { theme, navigation  } = this.props;
+    const {  navigation, homePosts  } = this.props;
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles.lightBackgkround.color}}>
         <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={false} showRightSection rightIcon="md-add" title="Home" containerStyle={{ paddingHorizontal: wp('2%') }} />
-        {/* <View style={styles.container}>
-  <Button
-    title="Show Dialog"
-    onPress={() => {
-      this.setState({ visible: true });
-    }}
-  />
-  <Dialog
-    visible={this.state.visible} 
-    dialogAnimation={new SlideAnimation({
-      slideFrom: 'bottom',
-    })}
-    onTouchOutside={() => {
-      this.setState({ visible: false });
-    }}
-  >
-    <DialogContent style={{width: wp('80%'), height:hp('80%'),}}>
-    <PostUi />
-    </DialogContent>
-  </Dialog>
-</View>  */}
+    
         <FlatList
-          data={[{a:3},{a:3},{a:3},{a:3}]} 
+          data={homePosts} 
           renderItem={this._renderItem}
         />
-          {/* <ActionButton buttonColor={Colors.primary}>
-          <ActionButton.Item buttonColor='#9b59b6' title="Add new Post" onPress={() => console.log("notes tapped!")}>
-            <Icon name="md-create" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-          <ActionButton.Item buttonColor='#1abc9c' title="Add new Event" onPress={() => {}}>
-            <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-        </ActionButton> */}
       </View>
     );
   }
 }
 
-export default withTheme(LoginScreen);
+export default connect(
+  ({ post: { homePosts } }) => ({ homePosts }), {
+    getHomePosts: PostActions.getHomePosts,
+  },
+)(Post);

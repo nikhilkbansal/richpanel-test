@@ -1,17 +1,56 @@
 import React, { Component } from 'react';
 import {
-  FlatList, View, StatusBar
+  FlatList, View, ScrollView, StyleSheet, Image,
 } from 'react-native';
-import {
-  Button, ToggleButton, TouchableRipple, withTheme, Text, Card, Title, Paragraph
-} from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
 import { Appbar } from 'react-native-paper';
+import { Searchbar } from 'react-native-paper';
 import defaultStyle from '../../Theme/ApplicationStyles';
-import { Searchbar, } from 'react-native-paper';
-import PostUi from '../../Components/PostUi'; 
-class SearchPage extends Component { 
+import { TextInput, Text, Button } from '../../Components';
+import ApplicationStyles from '../../Theme/ApplicationStyles';
+import CommonFunctions from '../../Utils/CommonFunctions';
+
+const styles = StyleSheet.create({
+  subContainer: { flex: 1, flexDirection: 'row', paddingVertical: hp('0.5%') },
+  avatarImage: {
+    width: wp('12%'), height: wp('12%'), borderRadius: wp('7.5%'), alignSelf: 'center',
+  },
+  avatarContainer: {
+    flex: 5, paddingHorizontal: wp('2%'), justifyContent: 'space-around', flexDirection: 'column',
+  },
+  medal: { ...ApplicationStyles.avatarSubtitle, paddingHorizontal: wp('2%'), alignItems: 'center' },
+  agoContainer: {
+    flex: 1,
+    alignSelf: 'flex-start',
+    height: hp('3%'),
+    alignContent: 'center',
+    borderRadius: wp('10%'),
+    justifyContent: 'center',
+  },
+  ago: {
+    ...ApplicationStyles.avatarSubtitle,
+    paddingHorizontal: wp('1%'),
+  },
+  moreContainer: { flex: 1, justifyContent: 'center' },
+  moreStyle: {
+
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  moreWrapperStyle: {
+    width: wp('10%'),
+    height: wp('10%'),
+    backgroundColor: ApplicationStyles.grayishBackground.color,
+    borderRadius: wp('10%') / 2,
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+});
+
+
+class SearchPage extends Component {
   static get propTypes() {
     return {
       theme: PropTypes.object.isRequired,
@@ -26,85 +65,101 @@ class SearchPage extends Component {
       password: '',
       checked: false,
       selectedCategories: [],
-      status:false
+      status: false,
     };
-    this._renderItem = this._renderItem.bind(this);
+    this.searchSection = this.searchSection.bind(this);
+    this._renderPostItem = this._renderPostItem.bind(this);
   }
 
-  _renderItem = ({item}) =>{
-  const { theme} = this.props;
-  const {selectedCategories} = this.state;
-  const isActive = selectedCategories.includes(item.a);
-  return  <TouchableRipple
-      borderless
-      onPress={() => {const cats = [...this.state.selectedCategories]; cats.push(item.a); this.setState({ selectedCategories: cats})}}
-    >
-    <Card style={{ padding:wp('1%'), marginHorizontal:wp('0.3%'), width: wp('24%'),height: wp('19%'),}}>
-      <Card.Cover style={{flex:1}} source={require('../../Assets/Images/child.jpeg')} />
-      <Text style={isActive ? {textAlign:'center', fontFamily: theme.fonts.thin, color: theme.colors.accent ,backgroundColor:theme.colors.primary}:{textAlign:'center', fontFamily: theme.fonts.thin, color: theme.colors.primary ,backgrounColor:theme.colors.primary}}>{item.a}</Text>
-    </Card></TouchableRipple>
-    
-}; 
+  _renderItem() {
+    return (
+      <View style={[styles.subContainer]}>
+        <Image
+          style={styles.avatarImage}
+          source={{ uri: CommonFunctions.getFile('userPicture', 'avatar', true) }}
+        />
+        <View style={[styles.avatarContainer]}>
+          <View style={{ flexDirection: 'row', flex: 3 }}>
+            <Text style={ApplicationStyles.avatarTitle}>
+            Lorem ipsum
+            </Text>
+          </View>
+          <View style={styles.agoContainer}>
+            <Text style={styles.ago}>
+12M Followers
+            </Text>
+          </View>
 
-_renderItemPosts = ({item}) =><PostUi />;
+        </View>
+      </View>
+    );
+  }
 
-  render() { 
+
+  _renderPostItem() {
+    const { navigation } = this.props;
+    return (
+      <Button buttonWrapperStyle={[styles.subContainer]} onPress={() => navigation.navigate('SeeAllSearch')}>
+        <Image
+          style={styles.avatarImage}
+          source={{ uri: CommonFunctions.getFile('userPicture', 'avatar', true) }}
+        />
+        <View style={[styles.avatarContainer]}>
+          <View style={{ flexDirection: 'row', flex: 3 }}>
+            <Text style={ApplicationStyles.avatarTitle}>
+            Helping kids to get education
+            </Text>
+          </View>
+          <View style={styles.agoContainer}>
+            <Text style={styles.ago}>
+              By Goonj @goonj
+            </Text>
+          </View>
+
+        </View>
+      </Button>
+    );
+  }
+
+
+  searchSection(title) {
+    return (
+      <View>
+        <Text style={[ApplicationStyles.subHeadline, { textAlign: 'left', paddingHorizontal: wp('2%') }]}>{title}</Text>
+        <FlatList
+          data={[1, 2, 3]}
+          renderItem={this._renderPostItem}
+        />
+        <Button title="See all" buttonWrapperStyle={{ textAlign: 'center' }} titleStyle={{ ...ApplicationStyles.primaryColor }} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
+      </View>
+    );
+  }
+
+  render() {
     const { email, password, checked } = this.state;
     const { theme } = this.props;
     return (
-      <View style={[{flex:1, marginTop:hp('1%'), marginHorizontal: defaultStyle.viewMarginHorizontal}]}>
-        <Searchbar
-          placeholder="Search"
-          />
-          <View style={{
-           flexDirection:'row',
-           justifyContent:'flex-end'
-           }}>
-            <TouchableRipple
-              borderless
-              onPress={()=>{}}
-            >
-              <Card style={{ padding:wp('1%'), marginHorizontal:wp('0.3%'),}}>
-                <Text style={!"isActive" ? {textAlign:'center', fontFamily: theme.fonts.thin, color: theme.colors.accent ,backgroundColor:theme.colors.primary}:{textAlign:'center', fontFamily: theme.fonts.thin, color: theme.colors.primary ,backgrounColor:theme.colors.primary}}>Posts</Text>
-              </Card>
-            </TouchableRipple>
-            <TouchableRipple
-            borderless
-            onPress={()=>{}}
-
-          >
-            <Card style={{ padding:wp('1%'), marginHorizontal:wp('0.3%'),}}>
-              <Text style={!"isActive" ? {textAlign:'center', fontFamily: theme.fonts.thin, color: theme.colors.accent ,backgroundColor:theme.colors.primary}:{textAlign:'center', fontFamily: theme.fonts.thin, color: theme.colors.primary ,backgrounColor:theme.colors.primary}}>Events</Text>
-            </Card>
-          </TouchableRipple>
-          <TouchableRipple
-            borderless
-            onPress={()=>{}}
-
-          >
-            <Card style={{ padding:wp('1%'), marginHorizontal:wp('0.3%'),}}>
-              <Text style={!"isActive" ? {textAlign:'center', fontFamily: theme.fonts.thin, color: theme.colors.accent ,backgroundColor:theme.colors.primary}:{textAlign:'center', fontFamily: theme.fonts.thin, color: theme.colors.primary ,backgrounColor:theme.colors.primary}}>NGOs</Text>
-            </Card>
-          </TouchableRipple>
-          </View>
-        <FlatList
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          data={[{a:'All'},{a:"Child"},{a:'Education'},{a:'House'} ,{a:'Environment'},{a:'Rivers'},{a:"Child"},{a:'Education'},{a:'House'},{a:'Environment'},{a:'Rivers'}]} 
-          contentContainerStyle={{ marginTop:hp('1%'),height: wp('29%')}}
-          renderItem={this._renderItem}
+      <View style={[{ flex: 1, marginTop: hp('1%'), marginHorizontal: defaultStyle.viewMarginHorizontal }]}>
+        <TextInput
+          placeholder="Search ngos, events, campaign, posts ..."
+          numberOfLines={1}
+          label="Search"
+          returnKeyType="search"
         />
-        <FlatList 
-          data={[{a:3},{a:3},{a:3},{a:3}]} 
-          style={{marginTop:hp('1%')}}
-          renderItem={this._renderItemPosts}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-        />
+        <ScrollView style={{
+          backgroundColor: ApplicationStyles.lightColor.color,
+          padding: wp('1%'),
+          elevation: 1,
+          marginBottom: hp('2%'),
+        }}
+        >
+          {this.searchSection('Posts')}
+          {this.searchSection('Events')}
+          {this.searchSection('NGOs')}
+        </ScrollView>
       </View>
     );
   }
 }
 
-export default withTheme(SearchPage);
+export default SearchPage;

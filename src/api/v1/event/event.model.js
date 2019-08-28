@@ -36,17 +36,12 @@ const eventSchema = new mongoose.Schema({
     required: true,
     maxlength: 128,
   },
-  uploads: {
-    type: String,
-    default: '',
-
+  files: {
+    type: Array,
+    default: [],
   },
   location: {
     type: String,
-  },
-  interestedIn: {
-    type: Number,
-    default: 0,
   },
   startTime: {
     type: Date,
@@ -63,7 +58,7 @@ const eventSchema = new mongoose.Schema({
 
 eventSchema.index({ title: 'text', description: 'text' });
 
-eventSchema.statistics = {
+eventSchema.statics = {
   async list({
     page = 1, perPage = 30, _id, userId, title, $text,
   }) {
@@ -73,6 +68,7 @@ eventSchema.statistics = {
     return this.find(options).sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
+      .populate('userId', 'name _id picture')
       .exec();
   },
 
