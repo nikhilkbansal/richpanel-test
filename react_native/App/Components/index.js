@@ -12,6 +12,7 @@ import Reaction from './Reaction';
 import LocationSelector from './LocationSelector';
 import FileSelector from './FileSelector';
 import Dropdown from './Dropdown';
+import MenuDropdown from './MenuDropdown';
 
 export {
   Button,
@@ -28,4 +29,5 @@ export {
   ProgressiveImage,
   LocationSelector,
   Dropdown,
+  MenuDropdown,
 };

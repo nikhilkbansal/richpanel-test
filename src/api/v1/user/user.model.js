@@ -83,6 +83,9 @@ const userSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+
+userSchema.index({ name: 'text', tags: 'text', userName: 'text' });
+
 /**
  * Add your
  * - pre-save hooks

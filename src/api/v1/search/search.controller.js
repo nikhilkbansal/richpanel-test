@@ -18,7 +18,7 @@ exports.getSearch = async (req, res, next) => {
     const {
       term, type, page, perPage, filterCauseSupported,
     } = req.query;
-    let all = [];
+    const all = [];
     let posts = [];
     let events = [];
     let ngos = [];
@@ -33,29 +33,29 @@ exports.getSearch = async (req, res, next) => {
 
     switch (type) {
       case 'all':
-        posts = Post.list({
+        posts = await Post.list({
           $text: { $search: term }, ...filteredCauseSupported, page, perPage, score: { $meta: 'textScore' },
         });
-        events = Event.list({
+        events = await Event.list({
           $text: { $search: term }, ...filteredCauseSupported, page, perPage, score: { $meta: 'textScore' },
         });
         if (filterCauseSupported && type !== 'ngo') {
           filteredCauseSupported = { causeSupported: filterCauseSupported };
         }
-        ngos = User.list({
+        ngos = await User.list({
           role: 'ngo', $text: { $search: term }, page, perPage, ...filteredCauseSupported, score: { $meta: 'textScore' },
         });
-        all = [...posts, ...events, ...ngos].sort((a, b) => a.textScore - b.textScore);
+
         break;
 
       case 'post':
-        posts = Post.list({
+        posts = await Post.list({
           $text: { $search: term }, ...filteredCauseSupported, page, perPage, score: { $meta: 'textScore' },
         });
         break;
 
       case 'event':
-        events = Event.list({
+        events = await Event.list({
           $text: { $search: term }, ...filteredCauseSupported, page, perPage, score: { $meta: 'textScore' },
         });
         break;
@@ -64,7 +64,7 @@ exports.getSearch = async (req, res, next) => {
         if (filterCauseSupported && type !== 'ngo') {
           filteredCauseSupported = { causeSupported: filterCauseSupported };
         }
-        ngos = User.list({
+        ngos = await User.list({
           role: 'ngo', $text: { $search: term }, page, perPage, ...filteredCauseSupported, score: { $meta: 'textScore' },
         });
         break;
@@ -73,7 +73,7 @@ exports.getSearch = async (req, res, next) => {
     }
 
     res.json({
-      all, posts, events, ngos,
+      posts, events, ngos,
     });
   } catch (error) {
     next(error);

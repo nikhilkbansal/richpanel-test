@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  FlatList, View, StyleSheet
+  FlatList, View, StyleSheet, ScrollView
 } from 'react-native';
 import { 
   withTheme
@@ -9,10 +9,9 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import ActionButton from 'react-native-action-button';
 import defaultStyle from '../../Theme/ApplicationStyles';
-import {PostUi, NavigationBar} from '../../Components';
+import {PostUi, NavigationBar, MenuDropdown} from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Dialog, { DialogContent,SlideAnimation } from 'react-native-popup-dialog';
 import { Button, Text } from 'react-native'
 import { connect } from 'react-redux';
 import PostActions from '../../Stores/Post/Actions';
@@ -62,7 +61,6 @@ class Post extends Component {
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles.lightBackgkround.color}}>
         <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={false} showRightSection rightIcon="md-add" title="Home" containerStyle={{ paddingHorizontal: wp('2%') }} />
-    
         <FlatList
           data={homePosts} 
           renderItem={this._renderItem}

@@ -6,6 +6,8 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import { Appbar } from 'react-native-paper';
 import { Searchbar } from 'react-native-paper';
+import SearchActions from 'App/Stores/Search/Actions';
+import { connect } from 'react-redux';
 import defaultStyle from '../../Theme/ApplicationStyles';
 import { TextInput, Text, Button } from '../../Components';
 import ApplicationStyles from '../../Theme/ApplicationStyles';
@@ -53,7 +55,6 @@ const styles = StyleSheet.create({
 class SearchPage extends Component {
   static get propTypes() {
     return {
-      theme: PropTypes.object.isRequired,
       navigation: PropTypes.func.isRequired,
     };
   }
@@ -61,58 +62,72 @@ class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: null,
-      password: '',
-      checked: false,
-      selectedCategories: [],
-      status: false,
+      term: '',
     };
     this.searchSection = this.searchSection.bind(this);
-    this._renderPostItem = this._renderPostItem.bind(this);
+    this.renderPostItem = this.renderPostItem.bind(this);
+    this.getSearch = this.getSearch.bind(this);
+    this.openSeeAllScreen = this.openSeeAllScreen.bind(this);
+    this.renderItem = this.renderItem.bind(this);
   }
 
-  _renderItem() {
-    return (
-      <View style={[styles.subContainer]}>
-        <Image
-          style={styles.avatarImage}
-          source={{ uri: CommonFunctions.getFile('userPicture', 'avatar', true) }}
-        />
-        <View style={[styles.avatarContainer]}>
-          <View style={{ flexDirection: 'row', flex: 3 }}>
-            <Text style={ApplicationStyles.avatarTitle}>
-            Lorem ipsum
-            </Text>
-          </View>
-          <View style={styles.agoContainer}>
-            <Text style={styles.ago}>
-12M Followers
-            </Text>
-          </View>
+  componentDidMount() {
+    const { putAutoCompleteResults } = this.props;
+    const { term } = this.state;
+    if (term.length === 0) { putAutoCompleteResults([]); }
+  }
 
-        </View>
+  getSearch(term) {
+    const { getSearch, putAutoCompleteResults } = this.props;
+    this.setState({ term });
+    if (term.length > 1) {
+      getSearch({ term, type: 'all' });
+    } else {
+      putAutoCompleteResults([]);
+    }
+  }
+
+
+  searchSection(title, type, items) {
+    return (
+      <View>
+        <Text style={[ApplicationStyles.subHeadline, { textAlign: 'left', paddingHorizontal: wp('2%') }]}>{title}</Text>
+        <FlatList
+          data={items}
+          renderItem={type === 'ngo' ? this.renderItem : this.renderPostItem}
+        />
+        <Button title="See all" buttonWrapperStyle={{ textAlign: 'center' }} titleStyle={{ ...ApplicationStyles.primaryColor }} onPress={() => this.openSeeAllScreen(type)} />
       </View>
     );
   }
 
 
-  _renderPostItem() {
+  openSeeAllScreen(type) {
+    const { navigation } = this.props;
+    const { term } = this.state;
+    navigation.navigate('SeeAllSearch', { term, type });
+  }
+
+
+  renderPostItem({ item }) {
     const { navigation } = this.props;
     return (
-      <Button buttonWrapperStyle={[styles.subContainer]} onPress={() => navigation.navigate('SeeAllSearch')}>
+      <Button buttonWrapperStyle={[styles.subContainer]}>
         <Image
           style={styles.avatarImage}
-          source={{ uri: CommonFunctions.getFile('userPicture', 'avatar', true) }}
+          source={{ uri: CommonFunctions.getFile(item.userId.picture, 'avatar', true) }}
         />
         <View style={[styles.avatarContainer]}>
           <View style={{ flexDirection: 'row', flex: 3 }}>
             <Text style={ApplicationStyles.avatarTitle}>
-            Helping kids to get education
+              {item.title}
             </Text>
           </View>
           <View style={styles.agoContainer}>
             <Text style={styles.ago}>
-              By Goonj @goonj
+              By
+              {' '}
+              { item.userId.name }
             </Text>
           </View>
 
@@ -121,23 +136,37 @@ class SearchPage extends Component {
     );
   }
 
+  renderItem({ item }) {
+    const { navigation } = this.props;
 
-  searchSection(title) {
     return (
-      <View>
-        <Text style={[ApplicationStyles.subHeadline, { textAlign: 'left', paddingHorizontal: wp('2%') }]}>{title}</Text>
-        <FlatList
-          data={[1, 2, 3]}
-          renderItem={this._renderPostItem}
+      <Button buttonWrapperStyle={[styles.subContainer]}>
+        <Image
+          style={styles.avatarImage}
+          source={{ uri: CommonFunctions.getFile(item.picture, 'avatar', true) }}
         />
-        <Button title="See all" buttonWrapperStyle={{ textAlign: 'center' }} titleStyle={{ ...ApplicationStyles.primaryColor }} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
-      </View>
+        <View style={[styles.avatarContainer]}>
+          <View style={{ flexDirection: 'row', flex: 3 }}>
+            <Text style={ApplicationStyles.avatarTitle}>
+              {item.name}
+            </Text>
+          </View>
+          <View style={styles.agoContainer}>
+            <Text style={styles.ago}>
+              12M Followers
+            </Text>
+          </View>
+        </View>
+      </Button>
     );
   }
 
+
   render() {
-    const { email, password, checked } = this.state;
-    const { theme } = this.props;
+    const { autoComplete } = this.props;
+    const searchResultExist = (autoComplete.posts && autoComplete.posts.length > 0)
+    || (autoComplete.events && autoComplete.events.length > 0)
+    || (autoComplete.ngos && autoComplete.ngos.length > 0);
     return (
       <View style={[{ flex: 1, marginTop: hp('1%'), marginHorizontal: defaultStyle.viewMarginHorizontal }]}>
         <TextInput
@@ -145,21 +174,36 @@ class SearchPage extends Component {
           numberOfLines={1}
           label="Search"
           returnKeyType="search"
+          onChangeText={text => this.getSearch(text)}
         />
         <ScrollView style={{
-          backgroundColor: ApplicationStyles.lightColor.color,
-          padding: wp('1%'),
-          elevation: 1,
-          marginBottom: hp('2%'),
+          marginTop: -hp('1%'),
         }}
         >
-          {this.searchSection('Posts')}
-          {this.searchSection('Events')}
-          {this.searchSection('NGOs')}
+          {searchResultExist && (
+          <View style={{
+            backgroundColor: ApplicationStyles.lightColor.color,
+            padding: wp('1%'),
+            elevation: 1,
+            marginBottom: hp('2%'),
+          }}
+          >
+            {autoComplete.ngos && autoComplete.ngos.length > 0 && this.searchSection('NGOs', 'ngo', autoComplete.ngos)}
+            {autoComplete.posts && autoComplete.posts.length > 0 && this.searchSection('Posts', 'post', autoComplete.posts)}
+            {autoComplete.events && autoComplete.events.length > 0 && this.searchSection('Events', 'event', autoComplete.events)}
+          </View>
+          )
+          }
+
         </ScrollView>
       </View>
     );
   }
 }
 
-export default SearchPage;
+export default connect(
+  ({ search: { autoComplete } }) => ({ autoComplete }), {
+    getSearch: SearchActions.getSearch,
+    putAutoCompleteResults: SearchActions.putAutoCompleteResults,
+  },
+)(SearchPage);

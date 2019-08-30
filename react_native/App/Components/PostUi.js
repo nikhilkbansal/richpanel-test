@@ -11,6 +11,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import Text from './Text';
+import MenuDropdown from './MenuDropdown';
 import Button from './Button';
 import { Colors, ApplicationStyles } from '../Theme';
 import ProgressiveImage from './ProgressiveImage';
@@ -66,6 +67,7 @@ const styles = StyleSheet.create({
   moreWrapperStyle: {
     width: wp('10%'),
     height: wp('10%'),
+    flex: 0,
     backgroundColor: ApplicationStyles.grayishBackground.color,
     borderRadius: wp('10%') / 2,
     alignItems: 'center',
@@ -141,12 +143,18 @@ function PostUi({
 
         </View>
         <View style={styles.moreContainer}>
-          <Button
-            icon="md-more"
-            iconSize={25}
-            style={styles.moreStyle}
-            buttonWrapperStyle={styles.moreWrapperStyle}
-          />
+          <MenuDropdown
+            menuTitle="Goong NGO"
+            buttonStyle={[styles.moreWrapperStyle]}
+            menus={[
+              { label: 'Unfollow', func: () => {} },
+              { label: 'Copy Link', func: () => {} },
+              { label: 'Report', func: () => {} },
+              { label: 'Share', func: () => {} } ]}
+          >
+            <Icon name="md-more" size={25} />
+          </MenuDropdown>
+
         </View>
       </View>
       <View style={styles.imageContainer}>
