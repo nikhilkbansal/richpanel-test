@@ -167,7 +167,7 @@ function EventUi({
         >
           <Text style={{ ...ApplicationStyles.info1, flex: 1, textAlign: 'center' }}>12th Dec 10:00 PM to 15th Dec 11:00 AM</Text>
         </View> */}
-        <View style={{ paddingHorizontal: wp('2%'), paddingTop: wp('2%') }}>
+        <View style={{ paddingHorizontal: wp('3%'), paddingTop: wp('2%') }}>
           <View style={{
             flex: 1, flexDirection: 'row', elevation: 2,
           }}

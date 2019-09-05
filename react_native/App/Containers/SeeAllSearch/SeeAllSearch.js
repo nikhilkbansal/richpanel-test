@@ -98,12 +98,12 @@ class Post extends Component {
   _renderNgo = ({item}) =>(<View style={[styles.subContainer]}>
   <Image
     style={styles.avatarImage}
-    source={{ uri: CommonFunctions.getFile(item.userId.picture, 'avatar', true) }}
+    source={{ uri: CommonFunctions.getFile(item.picture, 'avatar', true) }}
   />
   <View style={[styles.avatarContainer]}>
     <View style={{ flexDirection: 'row', flex: 3 }}>
       <Text style={ApplicationStyles.avatarTitle}>
-      {item.userId.name}
+      {item.name}
       </Text>
     </View>
     <View style={styles.agoContainer}>
@@ -151,8 +151,8 @@ class Post extends Component {
 
     const {  navigation, navigation: { state: { params: { term } } }  } = this.props;
     return (
-      <View style={{flex: 1, backgroundColor: ApplicationStyles.lightBackgkround.color}}>
-        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={true}  rightIcon="md-add" title={'Search: ' +term} containerStyle={{ paddingHorizontal: wp('2%') }} />
+      <View style={{flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color}}>
+        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={true}  rightIcon="md-add" title={'Search: ' +term}  />
         <View style={{flex:1, }}>
         <FlatList
           data={this.getData() } 

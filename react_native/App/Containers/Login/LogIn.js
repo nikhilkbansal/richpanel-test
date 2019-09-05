@@ -12,12 +12,12 @@ import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
 import {
-  Colors, FontSizes, Fonts, FontStyles, ApplicationStyles,
+  Colors, FontSizes, Fonts, ApplicationStyles,
 } from '../../Theme';
 import UserActions from '../../Stores/User/Actions';
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
+  container: { flex: 1, backgroundColor: ApplicationStyles.lightBackground.color },
   subContainer: { flex: 1, paddingHorizontal: wp('7%') },
   firstSection: { flex: 1 },
   secondSection: { flex: 4, marginTop: hp('5%') },
@@ -100,10 +100,10 @@ class LoginScreen extends Component {
     } = this.state;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} showLeftSection />
+        <NavigationBar {...navigation} showLeftSection iconsColor={ApplicationStyles.darkColor.color} containerStyle={{ backgroundColor: ApplicationStyles.lightBackground.color, elevation: 0 }} statusBarColor={ApplicationStyles.lightBackground.color} statusBarStyle="dark-content" />
         <KeyboardAwareScrollView style={styles.subContainer}>
           <View style={styles.firstSection}>
-            <Text style={ApplicationStyles.headline}>Login</Text>
+            <Text style={[ApplicationStyles.headline]}>Login</Text>
             <Text style={ApplicationStyles.subHeadline}>Get started with your journey</Text>
           </View>
           <View style={styles.secondSection}>

@@ -83,7 +83,7 @@ class Donate extends Component {
     const { errors, donate } = this.state;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} statusBarColor={Colors.background} title="Donate" containerStyle={{ paddingHorizontal: wp('2%') }} />
+        <NavigationBar {...navigation} title="Donate" />
         <KeyboardAwareScrollView style={styles.subContainer}>
           <Dropdown dropDownLabel="Donate" default={donateOptions[0]} placeholder="Donate" options={donateOptions} onValueChange={(label, value) => this.setState({ donate: value })} />
           {donate !== 'once' && <Dropdown dropDownLabel="Frequency" default={frequencyOptions[0]} placeholder="Donate" options={frequencyOptions} />}

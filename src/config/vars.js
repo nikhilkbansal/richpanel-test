@@ -13,7 +13,7 @@ const defaultConfig = {
   sendGridFromMail: 'help@vidspy.com',
   sendGridToken: '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',
   jwtSecret: 'bA2xcjpf8y5aSUFsNB2qN5yymUBSs6es3qHoFpGkec75RCeBb8cpKauGefw5qy4',
-  jwtExpirationInterval: 1440,
+  jwtExpirationInterval: 2440,
   whitelist: ['http://example1.com', 'http://example2.com'],
   mongo: { uri: 'mongodb://localhost:27017/help_db' },
   logs: 'dev',

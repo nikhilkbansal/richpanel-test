@@ -156,6 +156,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-linear-gradient')
     compile project(':react-native-image-crop-picker')
     compile project(':react-native-payumoney')
     compile project(':react-native-image-picker')

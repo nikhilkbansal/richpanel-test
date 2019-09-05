@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  FlatList, View, ScrollView, StyleSheet, Image,
+  FlatList, View, ScrollView, StyleSheet, Image, StatusBar,
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
@@ -75,7 +75,16 @@ class SearchPage extends Component {
     const { putAutoCompleteResults } = this.props;
     const { term } = this.state;
     if (term.length === 0) { putAutoCompleteResults([]); }
+    this.navListener = this.props.navigation.addListener('didFocus', () => {
+      StatusBar.setBarStyle('dark-content');
+      StatusBar.setBackgroundColor(ApplicationStyles. smokeBackground.color);
+    });
   }
+
+  componentWillUnmount() {
+    this.navListener.remove();
+  }
+
 
   getSearch(term) {
     const { getSearch, putAutoCompleteResults } = this.props;
@@ -168,12 +177,30 @@ class SearchPage extends Component {
     || (autoComplete.events && autoComplete.events.length > 0)
     || (autoComplete.ngos && autoComplete.ngos.length > 0);
     return (
-      <View style={[{ flex: 1, marginTop: hp('1%'), marginHorizontal: defaultStyle.viewMarginHorizontal }]}>
+      <View style={[{
+        flex: 1,
+        paddingTop: hp('5%'),
+        backgroundColor: ApplicationStyles. smokeBackground.color,
+      }]}
+      >
+
         <TextInput
           placeholder="Search ngos, events, campaign, posts ..."
           numberOfLines={1}
-          label="Search"
           returnKeyType="search"
+          containerStyle={{
+            paddingHorizontal: wp('5%'),
+            paddingBottom: hp('2%'),
+            borderColor: ApplicationStyles.grayishBackground.color,
+            borderBottomWidth: 1,
+          }}
+          inputStyle={{
+            backgroundColor: ApplicationStyles.grayishBackground.color,
+            borderWidth: 0,
+            verticalAlign: 'center',
+            paddingHorizontal: wp('2%'),
+            ...ApplicationStyles.avatarTitle,
+          }}
           onChangeText={text => this.getSearch(text)}
         />
         <ScrollView style={{

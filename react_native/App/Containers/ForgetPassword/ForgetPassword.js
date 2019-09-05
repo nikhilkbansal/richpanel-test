@@ -14,7 +14,7 @@ import UserActions from '../../Stores/User/Actions';
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
+  container: { flex: 1, backgroundColor: ApplicationStyles.lightBackground.color },
   subContainer: { flex: 1, paddingHorizontal: wp('7%') },
   firstSection: { flex: 1 },
   secondSection: { flex: 4, marginTop: hp('5%') },
@@ -72,7 +72,7 @@ class ForgetPassword extends Component {
     const { navigation } = this.props;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} />
+        <NavigationBar {...navigation} showLeftSection iconsColor={ApplicationStyles.darkColor.color} containerStyle={{ backgroundColor: ApplicationStyles.lightBackground.color, elevation: 0 }} statusBarColor={ApplicationStyles.lightBackground .color} statusBarStyle='dark-content' />
         <KeyboardAwareScrollView style={styles.subContainer}>
           <View style={styles.firstSection}>
             <Text style={ApplicationStyles.headline}>Forgot Password?</Text>

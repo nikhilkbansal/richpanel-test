@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  FlatList, View, StyleSheet
+  FlatList, View, StyleSheet, StatusBar
 } from 'react-native';
 import { 
   withTheme
@@ -47,6 +47,14 @@ class Event extends Component {
   componentDidMount(){
     const { getHomeEvents } = this.props;
     getHomeEvents();
+    this.navListener = this.props.navigation.addListener('didFocus', () => {
+      StatusBar.setBarStyle('light-content');
+      StatusBar.setBackgroundColor(ApplicationStyles.primaryColor.color);
+    });
+  }
+
+  componentWillUnmount() {
+    this.navListener.remove();
   }
 
   _renderItem = ({item}) =><EventUi 
@@ -60,8 +68,8 @@ class Event extends Component {
 
     const { navigation, homeEvents  } = this.props;
     return (
-      <View style={{flex: 1, backgroundColor: ApplicationStyles.lightBackgkround.color}}>
-        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddEvent')} showLeftSection={false} showRightSection rightIcon="md-add" title="Events" containerStyle={{ paddingHorizontal: wp('2%') }} />
+      <View style={{flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color}}>
+        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddEvent')} showLeftSection={false} showRightSection rightIcon="md-add" title="Events"  />
         <FlatList
           data={homeEvents} 
           renderItem={this._renderItem}

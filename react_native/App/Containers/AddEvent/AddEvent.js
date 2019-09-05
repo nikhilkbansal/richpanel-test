@@ -14,7 +14,7 @@ import {
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
+  container: { flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color },
   subContainer: { flex: 1, paddingHorizontal: wp('5%') },
   loginContainer: {
     marginVertical: hp('4%'),
@@ -79,7 +79,7 @@ class AddEvent extends Component {
     const { errors } = this.state;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} statusBarColor={Colors.background} title="ADD EVENT" containerStyle={{ paddingHorizontal: wp('2%') }} />
+        <NavigationBar {...navigation} statusBarColor={Colors.background} title="Add Event" />
         <KeyboardAwareScrollView style={styles.subContainer}>
           <TextInput
             error={errors.title}

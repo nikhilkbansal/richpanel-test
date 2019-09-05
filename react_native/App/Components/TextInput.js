@@ -7,7 +7,7 @@ import { flush } from 'redux-saga/effects';
 import Button from './Button';
 import Text from './Text';
 import {
-  Colors, ApplicationStyles, Fonts, FontSizes, FontStyles,
+  Colors, ApplicationStyles, Fonts, FontSizes,
 } from '../Theme';
 import { Validations } from '../Utils';
 
@@ -72,11 +72,13 @@ class TextInput extends React.Component {
     const {
       label, numberOfLines, multiline, secureTextEntry, error,
       placeholder, onChangeText, returnKeyType, textInputRef, onSubmitEditing,
+      containerStyle, inputStyle,
       value, ...props
     } = this.props;
     return (
-      <View style={{ marginTop: hp('1%'), marginBottom: !error ? hp('1%') : 0 }}>
-        <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>{label}</Text>
+      <View style={[{ marginTop: hp('1%'), marginBottom: !error ? hp('1%') : 0 }, containerStyle]}>
+        {label
+        && <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>{label}</Text>}
         <RNTextInput
           {...props}
           multiline={multiline}
@@ -89,7 +91,7 @@ class TextInput extends React.Component {
           ref={textInputRef}
           value={value || undefined}
           onSubmitEditing={onSubmitEditing}
-          style={{
+          style={[{
             ...ApplicationStyles.textInputValue,
             paddingHorizontal: 0,
             paddingTop: hp('0.5%'),
@@ -98,7 +100,7 @@ class TextInput extends React.Component {
             margin: 0,
             borderBottomColor: Colors.mediumDarkFont,
             borderWidth: StyleSheet.hairlineWidth * 2,
-          }}
+          }, inputStyle]}
           underlineColorAndroid="transparent"
         />
         {error && <Text style={[{ ...ApplicationStyles.textInputLabel }, { ...ApplicationStyles.warningColor }]}>{error}</Text>}
@@ -124,11 +126,13 @@ TextInput.propTypes = {
   textInputRef: PropTypes.func,
   onSubmitEditing: PropTypes.func,
   value: PropTypes.any,
+  containerStyle: PropTypes.object,
+  inputStyle: PropTypes.object,
 };
 
 TextInput.defaultProps = {
   secureTextEntry: false,
-  label: '',
+  label: null,
   numberOfLines: 1,
   multiline: false,
   value: '',
@@ -138,6 +142,8 @@ TextInput.defaultProps = {
   returnKeyType: '',
   textInputRef: 'input',
   onSubmitEditing: Function,
+  containerStyle: {},
+  inputStyle: {},
 };
 
 export default TextInput;

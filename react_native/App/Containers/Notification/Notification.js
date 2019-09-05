@@ -1,21 +1,11 @@
 import React, { Component } from 'react';
 import {
-  FlatList, View, StatusBar
+  FlatList, View, StatusBar,
 } from 'react-native';
-import {
-  Button, HelperText, Divider, withTheme, Text
-} from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
-import Container from '../../Components/Container';
-import TextInput from '../../Components/TextInput';
-import images from '../../Theme/Images';
-import SmallButton from '../../Components/SmallButton';
-import SpaceBar from '../../Components/SpaceBar';
-import commonStyle from '../../Theme/ApplicationStyles';
-import { Card, Title, Paragraph,Chip } from 'react-native-paper';
-import { Appbar } from 'react-native-paper';
-import defaultStyle from '../../Theme/ApplicationStyles';
+
+import { ApplicationStyles } from '../../Theme';
 import {NotificationUi, NavigationBar} from '../../Components';
 class Notification extends Component {
   static get propTypes() {
@@ -32,6 +22,17 @@ class Notification extends Component {
       password: '',
       checked: false,
     };
+  }
+
+  componentDidMount() {
+    this.navListener = this.props.navigation.addListener('didFocus', () => {
+      StatusBar.setBarStyle('light-content');
+      StatusBar.setBackgroundColor(ApplicationStyles.primaryColor.color);
+    });
+  }
+
+  componentWillUnmount() {
+    this.navListener.remove();
   }
 
   _renderItem = ({item}) =><NotificationUi />;

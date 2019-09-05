@@ -122,7 +122,7 @@ class LocationSelector extends React.Component {
                 },
               }}
 
-              currentLocation // Will add a 'Current location' button at the top of the predefined places list
+              // currentLocation // Will add a 'Current location' button at the top of the predefined places list
               currentLocationLabel="Current location"
               nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
               GoogleReverseGeocodingQuery={{
@@ -140,7 +140,7 @@ class LocationSelector extends React.Component {
               }}
 
               filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-              predefinedPlaces={[homePlace, workPlace]}
+              // predefinedPlaces={[homePlace, workPlace]}
 
               debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
               // renderLeftButton={() => <Image source={require('path/custom/left-icon')} />}

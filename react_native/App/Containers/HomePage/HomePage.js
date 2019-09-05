@@ -1,18 +1,14 @@
 import * as React from 'react';
-import { Text } from 'react-native-paper';
-import { View } from 'react-native';
-import BottomNavigation, {
-  FullTab, IconTab,
-} from 'react-native-material-bottom-navigation';
-import { withTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Post from '../Post/Post';
 import Event from '../Event/Event';
 import Notification from '../Notification/Notification';
 import SearchPage from '../SearchPage/SearchPage';
 import Profile from '../Profile/Profile';
 import { Colors, ApplicationStyles } from '../../Theme';
+import { Text } from '../../Components';
 
 // const RecentsRoute = () => <Text>Recents</Text>;
 //  class HomePage extends React.Component {
@@ -151,13 +147,42 @@ const TabNavigator = createBottomTabNavigator({
 
       // You can return any component that you like here! We usually use an
       // icon component from react-native-vector-icons
-      return <Icon name={iconName} size={horizontal ? 20 : 25} color={tintColor} />;
+      return <Icon name={iconName} size={28} color={tintColor} />;
+    },
+    tabBarLabel: ({ focused, tintColor }) => {
+      const { routeName } = navigation.state;
+      let title;
+      if (routeName === 'Post') {
+        title = 'Posts';
+      } else if (routeName === 'Search') {
+        title = 'Search';
+      } else if (routeName === 'Notification') {
+        title = 'Notifications';
+      } else if (routeName === 'Event') {
+        title = 'Events';
+      } else if (routeName === 'Profile') {
+        title = 'Profile';
+      }
+
+      return (
+        <Text style={{
+          ...ApplicationStyles.tabLabelStyle, marginTop: -hp('1%'), textAlign: 'center', color: focused ? tintColor : ApplicationStyles.disabledColor.color,
+        }}
+        >
+          {title}
+
+        </Text>
+      );
     },
   }),
   tabBarOptions: {
-    showLabel: false,
+    style: {
+      height: hp('8%'), paddingVertical: hp('1%'), borderTopWidth: 0, elevation: 10,
+    },
+    tabStyle: { paddingTop: 0 },
+    showLabel: true,
     activeTintColor: ApplicationStyles.primaryColor.color,
-    inactiveTintColor: ApplicationStyles.darkColor.color,
+    inactiveTintColor: ApplicationStyles.disabledColor.color,
   },
 });
 export default TabNavigator;

@@ -150,7 +150,7 @@ function PostUi({
               { label: 'Unfollow', func: () => {} },
               { label: 'Copy Link', func: () => {} },
               { label: 'Report', func: () => {} },
-              { label: 'Share', func: () => {} } ]}
+              { label: 'Share', func: () => {} }]}
           >
             <Icon name="md-more" size={25} />
           </MenuDropdown>
@@ -159,7 +159,7 @@ function PostUi({
       </View>
       <View style={styles.imageContainer}>
         <Swiper files={files} />
-        <View style={{ paddingHorizontal: wp('2%'), paddingTop: wp('2%') }}>
+        <View style={{ paddingHorizontal: wp('3%'), paddingTop: wp('2%') }}>
           <View style={{
             flex: 1, flexDirection: 'row', elevation: 2,
           }}

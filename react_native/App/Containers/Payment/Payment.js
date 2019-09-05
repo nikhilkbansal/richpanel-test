@@ -88,7 +88,7 @@ class Payment extends Component {
     const { errors, uri } = this.state;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} statusBarColor={Colors.background} title="Donate" containerStyle={{ paddingHorizontal: wp('2%') }} />
+        <NavigationBar {...navigation} statusBarColor={Colors.background} title="Donate"  />
         {!!uri && (
         <WebView
           source={{ uri }}

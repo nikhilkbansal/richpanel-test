@@ -59,7 +59,7 @@ class EditProfile extends Component {
     };
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} title="My Donations" containerStyle={{ paddingHorizontal: wp('2%') }} />
+        <NavigationBar {...navigation} title="My Donations" />
         <ScrollView style={styles.subContainer}>
           <BarChart
             data={data}

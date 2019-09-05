@@ -16,6 +16,7 @@ import AddEvent from 'App/Containers/AddEvent/AddEvent';
 import Payment from 'App/Containers/Payment/Payment';
 import Donate from 'App/Containers/Donate/Donate';
 import SeeAllSearch from 'App/Containers/SeeAllSearch/SeeAllSearch';
+import NgoProfile from 'App/Containers/NgoProfile/NgoProfile';
 import SplashScreen from 'App/Containers/SplashScreen/SplashScreen';
 import StyleGuide from 'App/Containers/StyleGuide/StyleGuide';
 import { connect } from 'react-redux';
@@ -51,10 +52,11 @@ const AppNav = createStackNavigator(
     Payment,
     Donate,
     SeeAllSearch,
+    NgoProfile,
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'LogIn',
+    initialRouteName: 'NgoProfile',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },
@@ -88,7 +90,7 @@ class RootScreen extends Component {
     return (
       <PaperProvider theme={theme}>
         <View style={styles.container}>
-          <StatusBar barStyle="dark-content" />
+          <StatusBar barStyle="light-content" />
           <Loader />
           <AppNav
           // Initialize the NavigationService (see https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html)

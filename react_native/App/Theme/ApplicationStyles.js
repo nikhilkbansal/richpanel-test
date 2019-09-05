@@ -37,8 +37,11 @@ export default {
   lightColor: {
     color: Colors.font.white,
   },
-  lightBackgkround: {
+  smokeBackground: {
     color: Colors.backgkround.whiteSmoke,
+  },
+  lightBackground: {
+    color: Colors.backgkround.white,
   },
   grayishBackground: {// 2 hours ago, md-more
     color: Colors.backgkround.grayish,
@@ -152,5 +155,15 @@ export default {
     fontSize: FontSizes.h9,
     color: Colors.font.slateGrey,
     fontFamily: Fonts.light,
+  },
+  bodySubHeading2: {
+    fontSize: FontSizes.h9,
+    color: Colors.font.black,
+    fontFamily: Fonts.light,
+  },
+  tabLabelStyle: {
+    fontSize: FontSizes.h14,
+    color: Colors.font.slateGrey,
+    fontFamily: Fonts.medium,
   },
 };

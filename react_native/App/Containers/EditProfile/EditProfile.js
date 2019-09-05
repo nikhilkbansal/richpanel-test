@@ -123,7 +123,7 @@ class EditProfile extends Component {
     } = this.state;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} title="Edit Profile" containerStyle={{ paddingHorizontal: wp('2%') }} />
+        <NavigationBar {...navigation} title="Edit Profile"  />
         <ScrollView style={styles.subContainer}>
           <View style={{
             flex: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center',
@@ -150,7 +150,7 @@ class EditProfile extends Component {
                   position: 'absolute',
                   top: hp('6.5%'),
                   left: 0,
-                  backgroundColor: ApplicationStyles.lightBackgkround.color,
+                  backgroundColor: ApplicationStyles. smokeBackground.color,
                   opacity: 0.7,
                   bottom: 0,
                   right: 0,

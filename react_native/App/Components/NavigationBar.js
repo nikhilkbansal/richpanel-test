@@ -6,12 +6,14 @@ import {
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Button from './Button';
 import Text from './Text';
-import { Colors } from '../Theme';
+import { Colors, ApplicationStyles } from '../Theme';
 
 const styles = StyleSheet.create({
   container: {
     width: wp('100%'),
-    height: hp('9%'),
+    height: hp('6%'),
+    backgroundColor: ApplicationStyles.primaryColor.color,
+    elevation: 2,
   },
   subContainer: {
     flex: 1,
@@ -41,24 +43,25 @@ const styles = StyleSheet.create({
 
 
 function NavigationBar({
-  title, showRightSection, goBack, containerStyle, showLeftSection, rightIcon, statusBarColor, rightButtonAction,
+  title, showRightSection, goBack, containerStyle, showLeftSection, rightIcon, statusBarColor, rightButtonAction, iconsColor, statusBarStyle
 }) {
   return (
     <View style={[styles.container, containerStyle]}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={statusBarStyle || "light-content"} backgroundColor={statusBarColor || ApplicationStyles.primaryColor.color} />
       <View style={styles.subContainer}>
         <View style={styles.leftArea}>
           {showLeftSection && (
           <Button
             onPress={() => goBack()}
             style={{ }}
-            buttonWrapperStyle={{ paddingHorizontal: wp('7%') }}
+            iconColor={iconsColor || ApplicationStyles.lightColor.color}
+            buttonWrapperStyle={{ paddingHorizontal: wp('7%'), }}
             icon="ios-arrow-round-back"
           />
           )}
         </View>
         <View style={styles.centerArea}>
-          <Text size="h2" color="dark" font="medium" style={styles.label}>
+          <Text style={[styles.label, ApplicationStyles.headline3, { color: ApplicationStyles.lightColor.color }]}>
             {title}
           </Text>
         </View>
@@ -67,7 +70,7 @@ function NavigationBar({
           <Button
             onPress={rightButtonAction}
             icon={rightIcon}
-            style={{ }}
+            iconColor={iconsColor || ApplicationStyles.lightColor.color}
             buttonWrapperStyle={{ paddingHorizontal: wp('7%') }}
             iconSize={wp('6%')}
           />
@@ -88,6 +91,8 @@ NavigationBar.propTypes = {
   rightButtonAction: PropTypes.func,
   statusBarColor: PropTypes.string,
   showLeftSection: PropTypes.bool,
+  iconsColor: PropTypes.string,
+  statusBarStyle: PropTypes.string,
 };
 
 NavigationBar.defaultProps = {
@@ -98,7 +103,9 @@ NavigationBar.defaultProps = {
   showLeftSection: true,
   rightButtonAction: Function,
   rightIcon: 'md-create',
-  statusBarColor: Colors.accent,
+  iconsColor: null,
+  statusBarColor: null,
+  statusBarStyle: null
 };
 
 

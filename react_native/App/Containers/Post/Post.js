@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  FlatList, View, StyleSheet, ScrollView
+  FlatList, View, StyleSheet, StatusBar
 } from 'react-native';
 import { 
   withTheme
@@ -46,7 +46,16 @@ class Post extends Component {
   componentDidMount(){
     const { getHomePosts } = this.props;
     getHomePosts();
+    this.navListener = this.props.navigation.addListener('didFocus', () => {
+      StatusBar.setBarStyle('light-content');
+      StatusBar.setBackgroundColor(ApplicationStyles.primaryColor.color);
+    });
   }
+
+  componentWillUnmount() {
+    this.navListener.remove();
+  }
+
 
   _renderItem = ({item}) =><PostUi 
   userName={item.userId.name}
@@ -59,8 +68,8 @@ class Post extends Component {
 
     const {  navigation, homePosts  } = this.props;
     return (
-      <View style={{flex: 1, backgroundColor: ApplicationStyles.lightBackgkround.color}}>
-        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={false} showRightSection rightIcon="md-add" title="Home" containerStyle={{ paddingHorizontal: wp('2%') }} />
+      <View style={{flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color}}>
+        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={false} showRightSection rightIcon="md-add" title="Home"/>
         <FlatList
           data={homePosts} 
           renderItem={this._renderItem}

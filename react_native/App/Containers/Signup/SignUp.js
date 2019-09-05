@@ -13,7 +13,7 @@ import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import UserActions from '../../Stores/User/Actions';
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
+  container: { flex: 1, backgroundColor: ApplicationStyles.lightBackground.color },
   subContainer: { flex: 1, paddingHorizontal: wp('7%') },
   firstSection: { flex: 1 },
   secondSection: { flex: 4, marginTop: hp('5%') },
@@ -72,7 +72,7 @@ class SignUpScreen extends Component {
   tabButtonsStyle(renderedUserType) {
     const { userType } = this.state;
     const activeStyle = { backgroundColor: ApplicationStyles.primaryColor.color };
-    const deactiveStyle = { backgroundColor: ApplicationStyles.lightBackgkround.color };
+    const deactiveStyle = { backgroundColor: ApplicationStyles. smokeBackground.color };
     const activeTitleStyle = { color: ApplicationStyles.lightColor.color };
     const deactiveTitleStyle = { color: Colors.darkFont };
     switch (renderedUserType) {
@@ -115,8 +115,7 @@ class SignUpScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} />
-
+        <NavigationBar {...navigation} showLeftSection iconsColor={ApplicationStyles.darkColor.color} containerStyle={{ backgroundColor: ApplicationStyles.lightBackground.color, elevation: 0 }} statusBarColor={ApplicationStyles.lightBackground .color} statusBarStyle='dark-content' />
         <KeyboardAwareScrollView style={styles.subContainer}>
           <View style={styles.firstSection}>
             <Text style={ApplicationStyles.headline}>Signup</Text>
