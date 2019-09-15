@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 
 import PaymentActions from 'App/Stores/Payment/Actions';
 import { call, put } from 'redux-saga/effects';
+import CashfreePG from 'cashfreereactnativepg';
 import {
   Text, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, FileSelector,
 } from '../../Components';
@@ -38,6 +39,7 @@ class Payment extends Component {
     };
   }
 
+
   constructor(props) {
     super(props);
     this.state = {
@@ -50,6 +52,7 @@ class Payment extends Component {
     this.addPost = this.addPost.bind(this);
     this.descriptionRef = React.createRef();
   }
+
 
   async componentDidMount() {
     const data = await AxiosRequest({
@@ -77,6 +80,7 @@ class Payment extends Component {
     postCreate({ title, description, files });
   }
 
+
   updateTextInput(key, value) {
     this.setState({ [key]: value });
   }
@@ -88,7 +92,31 @@ class Payment extends Component {
     const { errors, uri } = this.state;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} statusBarColor={Colors.background} title="Donate"  />
+        <NavigationBar {...navigation} statusBarColor={Colors.background} title="Donate" />
+        {/*
+        <CashfreePG
+          appId="275432e3853bd165afbf5272"
+          orderId="Order0003987654321Order0003987654321"
+          orderAmount="1"
+          orderCurrency="INR"
+          orderNote="This is an order note"
+          source="reactsdk"
+          customerName="John"
+          customerEmail="abc@email.com"
+          customerPhone="1234561234"
+          notifyUrl="http://localhost:3000"
+          paymentModes=""
+          env="test" // blank for prod
+          tokenData="Yj9JCN4MzUIJiOicGbhJCLiQ1VKJiOiAXe0Jye.ZB9JSYwADNkRmZ2UTM3QWNiojI0xWYz9lIsUjM5ADMzAzN1EjOiAHelJCLiIlTJJiOik3YuVmcyV3QyVGZy9mIsEjOiQnb19WbBJXZkJ3biwiIxIzM0UjN3gTOzADMwIXZkJ3TxIzM0UjN3gTOzADMwIXZkJ3TiojIklkclRmcvJye.tBz_0Wd9voi25g1E-wx2WJ9bjuXeWvmAbfLbw-tLxXza7hsv4joXZSJxvKYF5rZjA9"
+          callback={(eventData) => {
+            console.log('eventsdata', eventData);
+            /*
+                callback function that will be executed once the transaction has been completed
+                */
+          }
+        {/* }
+        /> */}
+
         {!!uri && (
         <WebView
           source={{ uri }}

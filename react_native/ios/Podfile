@@ -4,3 +4,9 @@
 pod 'GooglePlacePicker', '= 2.0.1'
 pod 'GooglePlaces', '= 2.0.1'
 pod 'GoogleMaps', '= 2.0.1'
+
+
+
+# Add new pods below this line
+pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+

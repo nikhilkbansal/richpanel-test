@@ -6,10 +6,11 @@ import PropTypes from 'prop-types';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Dialog, { DialogContent, SlideAnimation } from 'react-native-popup-dialog';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import MapView, { Marker } from 'react-native-maps';
 import Button from './Button';
 import Text from './Text';
+import TextInput from './TextInput';
 import { Config } from '../Config';
-
 import {
   Colors, ApplicationStyles,
 } from '../Theme';
@@ -23,6 +24,14 @@ const styles = StyleSheet.create({
     flex: 1,
     borderBottomWidth: StyleSheet.hairlineWidth * 2,
     borderBottomColor: Colors.mediumDarkFont,
+  },
+  loginContainer: {
+    marginVertical: hp('4%'),
+    backgroundColor: ApplicationStyles.primaryColor.color,
+    borderRadius: wp('2%'),
+    width: wp('80%'),
+    alignSelf: 'center',
+    height: hp('7%'),
   },
 });
 
@@ -61,7 +70,7 @@ class LocationSelector extends React.Component {
             this.setState({ visibleDialog: false });
           }}
         >
-          <DialogContent style={{ width: wp('90%'), height: hp('50%') }}>
+          <DialogContent style={{ width: wp('90%'), height: hp('70%') }}>
             <GooglePlacesAutocomplete
               placeholder="Type address here"
               minLength={2} // minimum length of text to search
@@ -145,6 +154,28 @@ class LocationSelector extends React.Component {
               debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
               // renderLeftButton={() => <Image source={require('path/custom/left-icon')} />}
               // renderRightButton={() => <Text>Custom text after the input</Text>}
+            />
+            <MapView
+              style={{ width: '100%', height: hp('30%'), backgroundColor: 'red' }}
+              initialRegion={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            />
+            <TextInput
+            // error={errors.title}
+              multiline
+              numberOfLines={1}
+              label="Flat no./Landmark"
+              placeholder="e.g. #123, Near Wall Street"
+              returnKeyType="next"
+            />
+            <Button
+              title="Submit"
+              style={styles.loginContainer}
+
             />
           </DialogContent>
         </Dialog>

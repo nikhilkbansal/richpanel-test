@@ -3,8 +3,8 @@ import React, { Fragment } from 'react';
 import {
   View, TouchableOpacity, TouchableNativeFeedback, Platform, StyleSheet,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { heightPercentageToDP } from 'react-native-responsive-screen';
+import { heightPercentageToDP, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import Icon from './Icon';
 import Text from './Text';
 import { ApplicationStyles, Colors, Fonts } from '../Theme';
 
@@ -16,11 +16,11 @@ const styles = StyleSheet.create({
 
 function Button({
   onPress, title, icon, style, titleStyle, iconSize,
-  buttonWrapperStyle, iconColor, children, iconStyle, ...props
+  buttonWrapperStyle, iconColor, iconFamily, children, iconStyle, ...props
 }) {
   const Content = () => (
     <Fragment>
-      {!!icon && <Icon name={icon} size={iconSize || ApplicationStyles.iconSize} color={iconColor} style={iconStyle} />}
+      {!!icon && <Icon name={icon} iconFamily={iconFamily} size={iconSize || ApplicationStyles.iconSize} color={iconColor} style={iconStyle} />}
       {!!title && <Text style={[{ ...ApplicationStyles.button }, titleStyle]}>{ title }</Text>}
       {!!children && children }
     </Fragment>
@@ -39,6 +39,7 @@ function Button({
           <TouchableNativeFeedback
             onPress={onPress}
             useForeground
+            touchSoundDisabled={false}
             background={TouchableNativeFeedback.SelectableBackground()}
             {...props}
           >
@@ -63,6 +64,7 @@ Button.propTypes = {
   iconSize: PropTypes.number,
   buttonWrapperStyle: PropTypes.object,
   iconColor: PropTypes.string,
+  iconFamily: PropTypes.string,
   children: PropTypes.any,
 };
 
@@ -75,6 +77,7 @@ Button.defaultProps = {
   buttonWrapperStyle: {},
   children: null,
   iconSize: null,
+  iconFamily: null,
   onPress: () => alert('Its working'),
   iconColor: Colors.darkFont,
 };

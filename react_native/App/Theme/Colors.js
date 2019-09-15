@@ -35,13 +35,11 @@ export default {
     nightRider: '#333333'/** '#343434' '#1e1e1e' */,
     blackRussian: '#27282b',
     cinnabar: '#D93842',
-  },
-  icon: {
-    white: '#fff',
-    shadyLady: '#979797',
     sunflower: '#e6bd17',
-    nero: '#222222' /** '#1e1e1e' */,
     nepal: '#9eb5c1',
-    summerSky: '#179ce1',
+    ronchi: '#EFCA4B',
+    sunsetOrange: '#F6404C',
+    tide: '#B7B4AB',
+    persianPlum: '#6B1A2B',
   },
 };

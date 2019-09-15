@@ -86,12 +86,12 @@ class NgoProfile extends Component {
   postItem({ item }) {
     return (
       <View style={{
-        marginVertical: wp('2%'), marginHorizontal: wp('0.4%'), width: wp('28%'), padding: wp('0.5%'),
+        marginVertical: wp('2%'), marginHorizontal: wp('0.9%'), width: wp('35%'), padding: wp('0.5%'),
       }}
       >
         <View style={{
           width: '100%',
-          height: wp('27%'),
+          height: wp('34%'),
           borderRadius: wp('1.5%'),
           elevation: 2,
           overflow: 'hidden',
@@ -164,20 +164,7 @@ class NgoProfile extends Component {
                   </Text>
                 </View>
               </View>
-              <View style={{
-                flex: 1,
-                paddingVertical: hp('0.4%'),
-                alignItems: 'center',
-                justifyContent: 'center',
-                justifyItems: 'center',
-                flexDirection: 'row',
-              }}
-              >
-                <Button iconSize={wp('5%')} buttonWrapperStyle={{ paddingHorizontal: wp('2%') }} icon="logo-facebook" />
-                <Button iconSize={wp('5%')} buttonWrapperStyle={{ paddingHorizontal: wp('2%') }} icon="logo-instagram" />
-                <Button iconSize={wp('5%')} buttonWrapperStyle={{ paddingHorizontal: wp('2%') }} icon="logo-twitter" />
-                <Button iconSize={wp('5%')} buttonWrapperStyle={{ paddingHorizontal: wp('2%') }} icon="logo-youtube" />
-              </View>
+
               <View style={{ flexWrap: 'wrap', flex: 1, flexDirection: 'row' }}>
                 {/* <Text style={styles.info}>
                   <Icon size={wp('4%')} name="md-female" color={Colors.mediumDarkFont} />
@@ -276,7 +263,26 @@ class NgoProfile extends Component {
             <Text style={{ ...ApplicationStyles.tabLabelStyle, color: ApplicationStyles.lightBackground.color }}>3 ways</Text>
           </Button>
 
-          <View style={styles.sectionContainer} />
+          <View style={styles.sectionContainer}>
+            <Button
+              title="Jobs"
+              titleStyle={{
+                ...ApplicationStyles.info3,
+                paddingVertical: hp('1%'),
+                paddingHorizontal: hp('2%'),
+              }}
+              buttonWrapperStyle={{ alignItems: 'flex-start' }}
+            />
+            <Button
+              title="Jobs"
+              titleStyle={{
+                ...ApplicationStyles.info3,
+                paddingVertical: hp('1%'),
+                paddingHorizontal: hp('2%'),
+              }}
+              buttonWrapperStyle={{ alignItems: 'flex-start' }}
+            />
+          </View>
         </ScrollView>
 
 

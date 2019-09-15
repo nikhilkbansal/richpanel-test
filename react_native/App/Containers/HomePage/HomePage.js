@@ -1,14 +1,14 @@
 import * as React from 'react';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Post from '../Post/Post';
 import Event from '../Event/Event';
 import Notification from '../Notification/Notification';
 import SearchPage from '../SearchPage/SearchPage';
 import Profile from '../Profile/Profile';
 import { Colors, ApplicationStyles } from '../../Theme';
-import { Text } from '../../Components';
+import { Text, Icon } from '../../Components';
+
 
 // const RecentsRoute = () => <Text>Recents</Text>;
 //  class HomePage extends React.Component {
@@ -131,23 +131,29 @@ const TabNavigator = createBottomTabNavigator({
   navigationOptions: ({ navigation }) => ({
     tabBarIcon: ({ focused, horizontal, tintColor }) => {
       const { routeName } = navigation.state;
-      let iconName;
+      let iconName,
+        iconFamily,
+        iconSize = wp('7%');
       if (routeName === 'Post') {
         iconName = 'md-list';
       } else if (routeName === 'Search') {
         iconName = 'md-search';
       } else if (routeName === 'Notification') {
-        iconName = 'md-notifications';
+        iconName = 'bell';
+        iconFamily = 'Feather';
+        iconSize = wp('6.4%');
       } else if (routeName === 'Event') {
         iconName = 'md-time';
       } else if (routeName === 'Profile') {
-        iconName = 'md-person';
+        iconFamily = 'MaterialCommunityIcons';
+        iconSize = wp('6.1%');
+        iconName = 'face-profile';
       }
 
 
       // You can return any component that you like here! We usually use an
       // icon component from react-native-vector-icons
-      return <Icon name={iconName} size={28} color={tintColor} />;
+      return <Icon name={iconName} size={iconSize} iconFamily={iconFamily} color={tintColor} />;
     },
     tabBarLabel: ({ focused, tintColor }) => {
       const { routeName } = navigation.state;

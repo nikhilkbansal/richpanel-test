@@ -16,11 +16,14 @@ import ProgressiveImage from './ProgressiveImage';
 
 const styles = StyleSheet.create({
   wrapper: {
+    elevation: 1,
     flex: 1,
     height: hp('30%'),
   },
   slide: {
+    elevation: 1,
     flex: 1,
+    height: '100%',
   },
   text: {
     color: '#fff',
@@ -28,9 +31,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   mainImage: {
-    height: hp('30%'),
     width: null,
-    flex: 1,
+    height: '100%',
+    paddingBottom: 0,
+    paddingTop: 0,
     justifyContent: 'center',
   },
 });
@@ -77,7 +81,7 @@ class SwiperPage extends React.Component {
                   thumbnailSource={{ uri: `${CommonFunctions.getFile(o)}?width=50&height=50` }}
                   source={{ uri: CommonFunctions.getFile(o) }}
                   style={styles.mainImage}
-                  resizeMode="contain"
+                  resizeMode="cover"
                 />
               )}
           </View>

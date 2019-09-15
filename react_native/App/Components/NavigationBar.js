@@ -43,11 +43,11 @@ const styles = StyleSheet.create({
 
 
 function NavigationBar({
-  title, showRightSection, goBack, containerStyle, showLeftSection, rightIcon, statusBarColor, rightButtonAction, iconsColor, statusBarStyle
+  title, showRightSection, goBack, containerStyle, showLeftSection, rightIcon, statusBarColor, rightButtonAction, iconsColor, statusBarStyle,
 }) {
   return (
     <View style={[styles.container, containerStyle]}>
-      <StatusBar barStyle={statusBarStyle || "light-content"} backgroundColor={statusBarColor || ApplicationStyles.primaryColor.color} />
+      <StatusBar barStyle={statusBarStyle || 'light-content'} backgroundColor={statusBarColor || ApplicationStyles.primaryColor.color} />
       <View style={styles.subContainer}>
         <View style={styles.leftArea}>
           {showLeftSection && (
@@ -55,7 +55,7 @@ function NavigationBar({
             onPress={() => goBack()}
             style={{ }}
             iconColor={iconsColor || ApplicationStyles.lightColor.color}
-            buttonWrapperStyle={{ paddingHorizontal: wp('7%'), }}
+            buttonWrapperStyle={{ paddingHorizontal: wp('7%') }}
             icon="ios-arrow-round-back"
           />
           )}
@@ -105,7 +105,7 @@ NavigationBar.defaultProps = {
   rightIcon: 'md-create',
   iconsColor: null,
   statusBarColor: null,
-  statusBarStyle: null
+  statusBarStyle: null,
 };
 
 

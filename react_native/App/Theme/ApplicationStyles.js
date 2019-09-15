@@ -22,6 +22,8 @@ export default {
   iconSize: wp('7%'),
 
   commonBorderRadius: width => width / 33,
+
+  // Font/icons colors
   primaryColor: {
     color: Colors.font.summerSky,
   },
@@ -32,11 +34,27 @@ export default {
     color: Colors.font.shadyLady,
   },
   darkColor: {
-    color: Colors.icon.nero,
+    color: Colors.font.nero,
   },
+
   lightColor: {
     color: Colors.font.white,
   },
+  loveColor: {
+    color: Colors.font.sunsetOrange,
+  },
+  celebrateColor: {
+    color: Colors.font.persianPlum,
+  },
+  insightFulColor: {
+    color: Colors.font.ronchi,
+  },
+  sadColor: {
+    color: Colors.font.tide,
+  },
+
+
+  // Background colors
   smokeBackground: {
     color: Colors.backgkround.whiteSmoke,
   },
@@ -46,6 +64,8 @@ export default {
   grayishBackground: {// 2 hours ago, md-more
     color: Colors.backgkround.grayish,
   },
+
+
   headline: {
     color: Colors.font.blackRussian,
     fontSize: FontSizes.h1,

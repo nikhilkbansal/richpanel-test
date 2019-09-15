@@ -13,6 +13,7 @@ import LocationSelector from './LocationSelector';
 import FileSelector from './FileSelector';
 import Dropdown from './Dropdown';
 import MenuDropdown from './MenuDropdown';
+import Icon from './Icon';
 
 export {
   Button,
@@ -29,5 +30,6 @@ export {
   ProgressiveImage,
   LocationSelector,
   Dropdown,
+  Icon,
   MenuDropdown,
 };

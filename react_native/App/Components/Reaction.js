@@ -1,9 +1,11 @@
 import * as React from 'react';
 import {
-  View, DatePickerAndroid, TimePickerAndroid, StyleSheet,
+  View, DatePickerAndroid, TimePickerAndroid, StyleSheet, Animated,
+  Easing,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import Dialog, { DialogContent, SlideAnimation, DialogTitle } from 'react-native-popup-dialog';
 import Button from './Button';
 import Text from './Text';
 import {
@@ -12,24 +14,29 @@ import {
 import { CommonFunctions } from '../Utils';
 
 const styles = StyleSheet.create({
-  container: { flex: 1, marginTop: hp('1%') },
+
+  container: { flex: 1, marginTop: hp('1%'), backgroundColor: 'red' },
   overlay: {
-    position: 'absolute',
+    // position: 'absolute',
+    // marginTop: 20,
     flex: 1,
     flexDirection: 'row',
-    top: -hp('0.8%'),
-    left: wp('8%'),
+    // top: -hp('8.5%'),
+    // left: wp('-1%'),
+    height: hp('5.5%'),
     backgroundColor: ApplicationStyles.lightColor.color,
-    paddingVertical: wp('1%'),
-    paddingHorizontal: wp('4%'),
-    elevation: 3,
-    borderRadius: wp('1%'),
+    // elevation: 2,
+    // borderRadius: wp('1%'),
+    // zIndex: 9999,
+
   },
   reaction: {
-    paddingHorizontal: wp('1.8%'),
-    paddingVertical: wp('1.5%'),
-    width: wp('10%'),
-    height: wp('10%'),
+    padding: wp('1%'),
+    paddingTop: hp('0.4%'),
+    paddingBottom: 0,
+    flex: 1,
+    marginBottom: 0,
+    alignSelf: 'center',
   },
 });
 
@@ -38,60 +45,103 @@ class Reaction extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showReactions: false,
+      modalVisible: false,
     };
-
-    this.openDatePicker = this.openDatePicker.bind(this);
+    this.spinValue = new Animated.Value(0);
+    this.spin = this.spin.bind(this);
     this.toggleReactions = this.toggleReactions.bind(this);
   }
 
-  async openDatePicker() {
-    const { onChange } = this.props;
-    try {
-      const {
-        action, year, month, day,
-      } = await DatePickerAndroid.open();
-      if (action !== DatePickerAndroid.dismissedAction) {
-        const { action: timeAction, hour, minute } = await TimePickerAndroid.open({
-          hour: 14,
-          minute: 0,
-          is24Hour: true, // Will display '2 PM'
-        });
-        if (timeAction !== TimePickerAndroid.dismissedAction) {
-          const formattedDateTime = `${year}/${CommonFunctions.getPaddedZero(month)}/${CommonFunctions.getPaddedZero(day)} ${CommonFunctions.getPaddedZero(CommonFunctions.getHoursIn12(hour).hours)}:${CommonFunctions.getPaddedZero(minute)} ${CommonFunctions.getHoursIn12(hour).noonStatus}`;
-          onChange(formattedDateTime);
-          this.setState({
-            dateTime: formattedDateTime,
-          });
-        }
-      }
-    } catch ({ code, message }) {
-      console.warn('Cannot open date picker', message);
-    }
-  }
 
   toggleReactions() {
-    const { showReactions } = this.state;
-    this.setState({ showReactions: !showReactions });
+    const { modalVisible } = this.state;
+    this.setState({ modalVisible: !modalVisible }, () => {
+      if (!modalVisible) {
+        this.spin();
+      }
+    });
+  }
+
+
+  spin() {
+    this.spinValue.setValue(0.2);
+    Animated.timing(
+      this.spinValue,
+      {
+        toValue: 1,
+        duration: 500,
+        easing: Easing.in,
+        delay: 900,
+        useNativeDriver: true,
+      },
+    ).start();
+  }
+
+  buttonWithTitle(title, icon, iconFamily, iconColor) {
+    const scale = this.spinValue.interpolate({
+      inputRange: [0, 0.5, 1],
+      outputRange: [1, 1.2, 1],
+    });
+    return (
+      <Animated.View style={{
+        flex: 1,
+        flexDirection: 'column',
+        transform: [{ scale }],
+      }}
+      >
+        <Button iconSize={wp('6%')} style={{ flex: 1 }} iconColor={iconColor} iconFamily={iconFamily} icon={icon} buttonWrapperStyle={styles.reaction} onPress={this.toggleReactions} />
+        <Text style={{
+          ...ApplicationStyles.tabLabelStyle,
+          color: iconColor,
+          textAlign: 'center',
+        }}
+        >
+          {title}
+        </Text>
+      </Animated.View>
+    );
   }
 
   render() {
-    const { showReactions } = this.state;
+    const { modalVisible } = this.state;
     const {
       label, placeholder,
     } = this.props;
-    return (
-      <View style={[styles.container]}>
-        {showReactions && (
-        <View style={styles.overlay}>
-          <Button icon="ios-heart" buttonWrapperStyle={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
-          <Button icon="md-happy" buttonWrapperStyle={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
-          <Button icon="md-bulb" buttonWrapperStyle={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
-          <Button icon="ios-sad" buttonWrapperStyle={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
 
-        </View>
-        )}
-        <Button icon="md-thumbs-up" onLongPress={this.toggleReactions} onPress={() => alert('shortPress')} />
+    return (
+      <View>
+        <Dialog
+          visible={modalVisible}
+          dialogAnimation={new SlideAnimation({
+            slideFrom: 'bottom',
+          })}
+          onTouchOutside={this.toggleReactions}
+        >
+          <DialogContent style={{
+            width: wp('70%'),
+            minHeight: hp('8%'),
+            flexDirection: 'row',
+            alignContent: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            justifyItems: 'center',
+            padding: 0,
+            paddingLeft: 0,
+            paddingRight: 0,
+            paddingBottom: 0,
+
+          }}
+          >
+            <View style={styles.overlay}>
+              { this.buttonWithTitle('Like', 'like2', 'AntDesign', ApplicationStyles.primaryColor.color) }
+              { this.buttonWithTitle('Love', 'hearto', 'AntDesign', ApplicationStyles.loveColor.color) }
+              { this.buttonWithTitle('Celebrate', 'ios-wine', '', ApplicationStyles.celebrateColor.color) }
+              { this.buttonWithTitle('Insightful', 'lightbulb', 'FontAwesome5', ApplicationStyles.insightFulColor.color) }
+              { this.buttonWithTitle('Sad', 'emoji-sad', 'Entypo', ApplicationStyles.sadColor.color) }
+            </View>
+          </DialogContent>
+        </Dialog>
+        <Button iconFamily="AntDesign" iconSize={wp('5.5%')} icon="like2" onLongPress={this.toggleReactions} />
       </View>
     );
   }
