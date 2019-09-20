@@ -39,14 +39,19 @@ class ReactionsGot extends React.Component {
 
 
   render() {
+    const { reactionsCount, topThreeReactions } = this.props;
     return (
       <View style={[styles.container]}>
-        <Icon iconFamily="AntDesign" name="like1" size={wp('2.7%')} color={ApplicationStyles.primaryColor.color} style={styles.iconStyle} />
-        <Icon iconFamily="AntDesign" name="heart" size={wp('2.7%')} color={ApplicationStyles.loveColor.color} style={styles.iconStyle} />
-        <Icon iconFamily="" name="ios-wine" solid size={wp('2.7%')} color={ApplicationStyles.celebrateColor.color} style={styles.iconStyle} />
-        {/* <Icon iconFamily="FontAwesome5" name="lightbulb" solid size={wp('2.4%')} color={ApplicationStyles.insightFulColor.color} style={styles.iconStyle} />
-        <Icon iconFamily="Entypo" name="emoji-sad" size={wp('2.5%')} color={ApplicationStyles.sadColor.color} style={styles.iconStyle} /> */}
-        <Text style={{ ...ApplicationStyles.bodySubHeading2 }}> 12K</Text>
+        { topThreeReactions.includes('like') && <Icon iconFamily="AntDesign" name="like1" size={wp('2.7%')} color={ApplicationStyles.primaryColor.color} style={styles.iconStyle} />}
+        { topThreeReactions.includes('love') && <Icon iconFamily="AntDesign" name="heart" size={wp('2.7%')} color={ApplicationStyles.loveColor.color} style={styles.iconStyle} />}
+        { topThreeReactions.includes('celebrate') && <Icon iconFamily="" name="ios-wine" solid size={wp('2.7%')} color={ApplicationStyles.celebrateColor.color} style={styles.iconStyle} />}
+        { topThreeReactions.includes('insightFul') && <Icon iconFamily="FontAwesome5" name="lightbulb" solid size={wp('2.4%')} color={ApplicationStyles.insightFulColor.color} style={styles.iconStyle} />}
+        { topThreeReactions.includes('sad') && <Icon iconFamily="Entypo" name="emoji-sad" size={wp('2.5%')} color={ApplicationStyles.sadColor.color} style={styles.iconStyle} />}
+        {reactionsCount > 0 && (
+        <Text style={{ ...ApplicationStyles.bodySubHeading2, paddingHorizontal: wp('0.4%') }}>
+          {CommonFunctions.numberToReadable(reactionsCount) }
+        </Text>
+        )}
       </View>
     );
   }
@@ -54,14 +59,13 @@ class ReactionsGot extends React.Component {
 
 
 ReactionsGot.propTypes = {
-  label: PropTypes.string.isRequired,
-  placeholder: PropTypes.string,
-  onChange: PropTypes.func,
+  reactionsCount: PropTypes.number,
+  topThreeReactions: PropTypes.array,
 };
 
 ReactionsGot.defaultProps = {
-  placeholder: '',
-  onChange: () => {},
+  reactionsCount: 0,
+  topThreeReactions: [],
 };
 
 export default ReactionsGot;

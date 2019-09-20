@@ -29,6 +29,7 @@
     "cashfreereactnativepg": "^3.1.0",
     "idx": "^2.5.6",
     "immutable": "^3.8.2",
+    "lodash": "^4.17.15",
     "lottie-react-native": "^2.5.10",
     "moment": "^2.24.0",
     "or": "^0.2.0",

@@ -14,8 +14,8 @@ import { CommonFunctions } from '../Utils';
 const styles = StyleSheet.create({
   container: { flex: 1, marginTop: hp('1%') },
   button: {
-    paddingTop: hp('0.4%'),
-    paddingBottom: hp('1%'),
+    paddingTop: hp('0.5%'),
+    paddingBottom: hp('1.5%'),
     flex: 1,
     borderBottomWidth: StyleSheet.hairlineWidth * 2,
     borderBottomColor: Colors.mediumDarkFont,

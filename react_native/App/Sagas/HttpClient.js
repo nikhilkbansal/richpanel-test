@@ -4,10 +4,11 @@ import {
 import { delay } from 'redux-saga';
 import Idx from 'idx';
 import AppActions from '../Stores/App/Actions';
+import UserActions from '../Stores/User/Actions';
 import Toast from '../Services/ToastService';
 // import { showLoader, hideLoader } from '../actions/app-action-types';
-// import { refreshToken, logOutSuccess, GOT_REFRESH_TOKEN } from '../actions/user-actions-types';
 import AxiosInstance from '../Services/AxiosService';
+import NavigationService from '../Services/NavigationService';
 
 /**
  * Common HTTP client function to handle common scenerios
@@ -49,9 +50,9 @@ function* httpClient(payload, access = 'default', isLoader = true, timeout = fal
   } catch (error) {
     yield put(AppActions.isLoading(false));
     Toast(error.message);
-    if (error && error.code == 401) {
-      // yield put(logOutSuccess());
-      // yield put(push({ pathname: '/' }));
+    if (error && error.code === 401) {
+      yield put(UserActions.logoutSuccess());
+      NavigationService.navigate('LogIn');
     }
     throw error;
   }

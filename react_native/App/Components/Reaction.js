@@ -49,6 +49,7 @@ class Reaction extends React.Component {
     };
     this.spinValue = new Animated.Value(0);
     this.spin = this.spin.bind(this);
+    this.postCustomReaction = this.postCustomReaction.bind(this);
     this.toggleReactions = this.toggleReactions.bind(this);
   }
 
@@ -77,7 +78,13 @@ class Reaction extends React.Component {
     ).start();
   }
 
-  buttonWithTitle(title, icon, iconFamily, iconColor) {
+  postCustomReaction(reaction) {
+    const { onReactionPress } = this.props;
+    onReactionPress(reaction);
+    this.setState({ modalVisible: false });
+  }
+
+  buttonWithTitle(title, value, icon, iconFamily, iconColor) {
     const scale = this.spinValue.interpolate({
       inputRange: [0, 0.5, 1],
       outputRange: [1, 1.2, 1],
@@ -89,7 +96,15 @@ class Reaction extends React.Component {
         transform: [{ scale }],
       }}
       >
-        <Button iconSize={wp('6%')} style={{ flex: 1 }} iconColor={iconColor} iconFamily={iconFamily} icon={icon} buttonWrapperStyle={styles.reaction} onPress={this.toggleReactions} />
+        <Button
+          iconSize={wp('6%')}
+          style={{ flex: 1 }}
+          iconColor={iconColor}
+          iconFamily={iconFamily}
+          icon={icon}
+          buttonWrapperStyle={styles.reaction}
+          onPress={() => this.postCustomReaction(value)}
+        />
         <Text style={{
           ...ApplicationStyles.tabLabelStyle,
           color: iconColor,
@@ -105,9 +120,10 @@ class Reaction extends React.Component {
   render() {
     const { modalVisible } = this.state;
     const {
-      label, placeholder,
+      label, placeholder, active, onReactionPress, onReactionRemovePress,
     } = this.props;
-
+    const iconName = active ? 'like1' : 'like2';
+    const iconColor = active ? ApplicationStyles.primaryColor.color : ApplicationStyles.darkColor.color;
     return (
       <View>
         <Dialog
@@ -133,15 +149,22 @@ class Reaction extends React.Component {
           }}
           >
             <View style={styles.overlay}>
-              { this.buttonWithTitle('Like', 'like2', 'AntDesign', ApplicationStyles.primaryColor.color) }
-              { this.buttonWithTitle('Love', 'hearto', 'AntDesign', ApplicationStyles.loveColor.color) }
-              { this.buttonWithTitle('Celebrate', 'ios-wine', '', ApplicationStyles.celebrateColor.color) }
-              { this.buttonWithTitle('Insightful', 'lightbulb', 'FontAwesome5', ApplicationStyles.insightFulColor.color) }
-              { this.buttonWithTitle('Sad', 'emoji-sad', 'Entypo', ApplicationStyles.sadColor.color) }
+              { this.buttonWithTitle('Like', 'like', 'like2', 'AntDesign', ApplicationStyles.primaryColor.color) }
+              { this.buttonWithTitle('Love', 'love', 'hearto', 'AntDesign', ApplicationStyles.loveColor.color) }
+              { this.buttonWithTitle('Celebrate', 'celebrate', 'ios-wine', '', ApplicationStyles.celebrateColor.color) }
+              { this.buttonWithTitle('Insightful', 'insightFul', 'lightbulb', 'FontAwesome5', ApplicationStyles.insightFulColor.color) }
+              { this.buttonWithTitle('Sad', 'sad', 'emoji-sad', 'Entypo', ApplicationStyles.sadColor.color) }
             </View>
           </DialogContent>
         </Dialog>
-        <Button iconFamily="AntDesign" iconSize={wp('5.5%')} icon="like2" onLongPress={this.toggleReactions} />
+        <Button
+          iconFamily="AntDesign"
+          iconSize={wp('5.5%')}
+          icon={iconName}
+          iconColor={iconColor}
+          onPress={() => (active ? onReactionRemovePress() : onReactionPress('like'))}
+          onLongPress={this.toggleReactions}
+        />
       </View>
     );
   }
@@ -151,12 +174,14 @@ class Reaction extends React.Component {
 Reaction.propTypes = {
   label: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
-  onChange: PropTypes.func,
+  onReactionPress: PropTypes.func,
+  onReactionRemovePress: PropTypes.func,
 };
 
 Reaction.defaultProps = {
   placeholder: '',
-  onChange: () => {},
+  onReactionPress: () => {},
+  onReactionRemovePress: () => {},
 };
 
 export default Reaction;

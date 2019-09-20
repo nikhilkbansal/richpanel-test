@@ -2,9 +2,41 @@ import { Platform } from 'react-native';
 import { Config } from '../Config';
 
 const getFileNameFromUrl = url => url.substring(url.lastIndexOf('/') + 1);
+const toFixTwoIfNeeds = num => Math.round(num * 100) / 100;
 
 export default {
   getFileNameFromUrl,
+  topThreeReactions(allReactions) {
+    const sortedAllReactions = Object.keys(allReactions).sort((a, b) => allReactions[a] - allReactions[b]);
+    const topThreeReactions = [];
+    sortedAllReactions.forEach((o) => {
+      if (allReactions[o] !== 0 && topThreeReactions.length < 3) {
+        topThreeReactions.push(o.replace('Count', ''));
+      }
+    });
+    return topThreeReactions;
+  },
+  numberToReadable(labelValue) {
+    if (!labelValue) {
+      return 0;
+    }
+    // Nine Zeroes for Billions
+    if (Math.abs(Number(labelValue)) >= 1.0e+9) {
+      return `${toFixTwoIfNeeds(Math.abs(Number(labelValue)) / 1.0e+9)}B`;
+    }
+
+    // Six Zeroes for Millions
+    if (Math.abs(Number(labelValue)) >= 1.0e+6) {
+      return `${toFixTwoIfNeeds(Math.abs(Number(labelValue)) / 1.0e+6)}M`;
+    }
+
+    // Three Zeroes for Thousands
+    if (Math.abs(Number(labelValue)) >= 1.0e+3) {
+      return `${toFixTwoIfNeeds(Math.abs(Number(labelValue)) / 1.0e+3)}K`;
+    }
+
+    return toFixTwoIfNeeds(Math.abs(Number(labelValue)));
+  },
   isFileVideo: name => name.includes('__vv'),
   getPaddedZero(num) {
     return num < 10 ? `0${num}` : num;

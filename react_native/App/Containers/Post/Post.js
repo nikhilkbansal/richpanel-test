@@ -56,13 +56,20 @@ class Post extends Component {
     this.navListener.remove();
   }
 
+  onReactionPress = ()=>{
+
+
+  }
+
 
   _renderItem = ({item}) =><PostUi 
-  userName={item.userId.name}
-  userPicture={item.userId.picture}
-  onDonatePress={()=>this.props.navigation.navigate('Donate')}
-  {...item}
-  />;
+    userName={item.userId.name}
+    onReactionPress={this.props.postReaction}
+    onReactionRemovePress={this.props.removeReaction}
+    userPicture={item.userId.picture}
+    onDonatePress={()=>this.props.navigation.navigate('Donate')}
+    {...item}
+    />;
 
   render() {
 
@@ -82,5 +89,7 @@ class Post extends Component {
 export default connect(
   ({ post: { homePosts } }) => ({ homePosts }), {
     getHomePosts: PostActions.getHomePosts,
+    postReaction: PostActions.postReaction,
+    removeReaction: PostActions.removeReaction
   },
 )(Post);

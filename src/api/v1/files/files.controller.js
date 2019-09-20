@@ -123,14 +123,14 @@ exports.getFile = async (req, res, next) => {
     const file = await Files.findOne({ _id });
     if (!file) {
       res.type('image/png');
-      fs.createReadStream(path.join(__dirname, '../../../../assets/default/notFound.jpg')).pipe(res);
+      fs.createReadStream(path.join(__dirname, '../../../../assets/default/default.png')).pipe(res);
     } else {
       const fileFolderWithPath = `../../../../cdn/${file.userId}/${file._id}${file.fileExtension}`;
       const filePath = path.join(__dirname, fileFolderWithPath);
 
       if (!fs.existsSync(filePath)) {
         res.type('image/png');
-        fs.createReadStream(path.join(__dirname, '../../../../assets/default/notFound.jpg')).pipe(res);
+        fs.createReadStream(path.join(__dirname, '../../../../assets/default/default.png')).pipe(res);
         return;
       }
 

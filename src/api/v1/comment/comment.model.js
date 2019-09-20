@@ -42,7 +42,7 @@ const commentSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-commentSchema.statistics = {
+commentSchema.statics = {
   async list({
     page = 1, perPage = 30, _id, postId,
   }) {

@@ -13,7 +13,7 @@ const Reaction = require('./reaction.model');
 exports.post = async (req, res, next) => {
   try {
     const { user } = req;
-    const postReaction = Reaction.addReaction({ ...req.body, userId: user._id });
+    const postReaction = await Reaction.addReaction({ ...req.body, userId: user._id });
     res.status(httpStatus.CREATED);
     res.json(postReaction);
   } catch (error) {
@@ -21,10 +21,11 @@ exports.post = async (req, res, next) => {
   }
 };
 
+
 exports.remove = async (req, res, next) => {
-  const { commentId } = req.query;
-  const comment = await Reaction.findById(commentId);
-  comment.remove()
+  const { user } = req;
+
+  Reaction.removeReaction({ ...req.body, userId: user._id })
     .then(() => res.status(httpStatus.NO_CONTENT).end())
     .catch(error => next(error));
 };

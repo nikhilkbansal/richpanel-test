@@ -3,6 +3,7 @@ const httpStatus = require('http-status');
 const Post = require('./post.model');
 const Follow = require('../follow/follow.model');
 const User = require('../user/user.model');
+const Reaction = require('../reaction/reaction.model');
 const { handler: errorHandler } = require('../../middlewares/error');
 // const APIError = require('../../utils/APIError');
 // const { sendMail } = require('../../services/mailProviders');
@@ -91,7 +92,12 @@ exports.getHomePagePosts = async (req, res, next) => {
     // const followeeIds = followers.map(o => o.followeeId);
     // const posts = Post.list({ userId: { $in: followeeIds }, page, perPage });
     const posts = await Post.list({ page, perPage });
-    res.json(posts);
+    const resultedPosts = await Promise.map(posts, async (post, index) => {
+      const postsCount = await Reaction.findReactionsCounts(post._id);
+      const howUserReacted = await Reaction.howUserReacted(user._id, post._id);
+      return { ...post.toObject(), ...postsCount, howUserReacted };
+    });
+    res.json(resultedPosts);
   } catch (error) {
     next(error);
   }

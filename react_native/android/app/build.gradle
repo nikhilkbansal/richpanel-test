@@ -169,6 +169,8 @@ dependencies {
     compile project(':react-native-photo-view')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:26.0.1"
+    compile "com.google.android.gms:play-services-base:16.1.0"
+    compile "com.google.android.gms:play-services-maps:16.1.0"
     compile "com.facebook.react:react-native:+"  // From node_modules
 }
 

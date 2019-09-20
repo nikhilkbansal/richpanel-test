@@ -14,6 +14,7 @@ import FileSelector from './FileSelector';
 import Dropdown from './Dropdown';
 import MenuDropdown from './MenuDropdown';
 import Icon from './Icon';
+import Swiper from './Swiper';
 
 export {
   Button,
@@ -31,5 +32,6 @@ export {
   LocationSelector,
   Dropdown,
   Icon,
+  Swiper,
   MenuDropdown,
 };

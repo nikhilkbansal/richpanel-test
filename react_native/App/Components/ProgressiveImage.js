@@ -36,11 +36,12 @@ class ProgressiveImage extends React.Component {
       thumbnailSource,
       source,
       style,
+      containerStyle,
       ...props
     } = this.props;
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, containerStyle]}>
         <Animated.Image
           {...props}
           source={thumbnailSource}

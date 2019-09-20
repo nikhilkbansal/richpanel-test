@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
 });
 
 function PostUi({
-  title, description, files, userName, userPicture, createdAt, campaignGoal, onPress, containerStyle, theme, onDonatePress,
+  _id, title, description, files, userName, userPicture, onReactionRemovePress, onReactionPress, reactionsCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
 }) {
   return (
     <View style={styles.container}>
@@ -146,12 +146,12 @@ function PostUi({
       <View style={styles.imageContainer}>
         <Swiper files={files} />
         <View style={styles.userFeedBack}>
-          <ReactionsGot />
+          <ReactionsGot reactionsCount={reactionsCount} topThreeReactions={topThreeReactions} />
           <Text style={{ ...ApplicationStyles.bodySubHeading2 }}>12M Shares</Text>
         </View>
         <View style={styles.subContainerSecond}>
           <View style={styles.userActions}>
-            <Reaction />
+            <Reaction active={howUserReacted} onReactionRemovePress={() => onReactionRemovePress({ _id })} onReactionPress={(reaction = 'like') => onReactionPress({ _id, reaction })} />
             <Button icon="share" iconSize={wp('5.3%')} iconFamily="SimpleLineIcons" style={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
           </View>
           <View style={styles.titleContainer}>

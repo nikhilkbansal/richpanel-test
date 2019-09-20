@@ -8,7 +8,7 @@ import UserActions from 'App/Stores/User/Actions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import {
-  Text, NavigationBar, TextInput, Button, ProgressiveImage,
+  Text, NavigationBar, TextInput, Button, ProgressiveImage, Swiper,
 } from '../../Components';
 import {
   Colors, FontSizes, Fonts, ApplicationStyles,
@@ -40,19 +40,16 @@ const styles = StyleSheet.create({
   userInfo: {
     padding: wp('2%'),
     borderRadius: wp('1%'),
-    marginTop: -hp('2%'),
     backgroundColor: ApplicationStyles.lightBackground.color,
   },
   imageButton: {
     width: wp('20%'),
     height: wp('20%'),
     borderRadius: wp('20%') / 2,
-    overflow: 'hidden',
     borderColor: Colors.primary,
     justifyContent: 'center',
-    marginVertical: wp('2%'),
   },
-  nameDetail: { paddingHorizontal: wp('2%'), flex: 1, flexDirection: 'row' },
+  nameDetail: { paddingHorizontal: wp('3%'), flex: 1, flexDirection: 'row' },
   info: { padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 },
 });
 
@@ -124,46 +121,98 @@ class NgoProfile extends Component {
 
         <ScrollView style={styles.subContainer}>
           <View style={styles.sectionContainer}>
-            <Image
-              resizeMode="cover"
-              style={{
-                width: '100%',
-                height: hp('20%'),
-              }}
-              source={require('../../Assets/Images/child.jpeg')}
-            />
-            <View
-              style={[styles.imageButton, {
-                backgroundColor: 'red',
+            <Swiper files={['aasa', 'asaa']} />
+            <View style={{
+              flex: 1,
+              flexDirection: 'row',
+              paddingHorizontal: wp('4%'),
+              marginTop: hp('2%'),
+            }}
+            >
+              <View style={{
+                flex: 1,
                 justifyContent: 'center',
                 alignContent: 'center',
                 alignItems: 'center',
                 // marginTop: -hp('5.5'),
-                alignSelf: 'center',
-                elevation: 1,
-                position: 'absolute',
-                top: hp('7.4%'),
-              }]}
-            >
-              <ProgressiveImage
-                resizeMode="cover"
+                justifyItems: 'center',
+              }}
+              >
+                <ProgressiveImage
+                  resizeMode="cover"
+                  containerStyle={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: wp('20%'),
+                    overflow: 'hidden',
+                  }}
+                  style={{
+                    elevation: 1,
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  source={{ uri: CommonFunctions.getFile('profile.picture', 'avatar', true) }}
+                />
+              </View>
+              <View style={{ flex: 3.5, alignItems: 'center' }}>
+                <View style={[styles.nameDetail]}>
+                  <View style={{
+                    flex: 1,
+                    alignItems: 'flex-start',
+                    justifyItems: 'center',
+                  }}
+                  >
+                    <Text style={[ApplicationStyles.headline3, { flex: 1 }]}>Goonj</Text>
+                    <Text style={[ApplicationStyles.info1, { flex: 1 }]}>
+                      @goonj12
+                    </Text>
+                    <Text style={[ApplicationStyles.info3, { flex: 1 }]}>
+                      12M Followers
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+
+            </View>
+
+            <View style={[styles.userInfo, { flexDirection: 'row' }]}>
+              <Button
+                title="Follow"
                 style={{
-                  elevation: 1,
-                  width: wp('22%'),
-                  height: wp('22%'),
+                  paddingHorizontal: wp('1%'),
+                  flex: 1,
                 }}
-                source={{ uri: CommonFunctions.getFile(profile.picture, 'avatar', true) }}
+                containerStyle={{ flex: 1 }}
+                buttonWrapperStyle={{
+                  flex: 1,
+                  paddingVertical: hp('0.7%'),
+                  borderRadius: wp('2%'),
+                  borderColor: ApplicationStyles.primaryColor.color,
+                  borderWidth: StyleSheet.hairlineWidth * 2,
+                }}
+                titleStyle={{ ...ApplicationStyles.link }}
+              />
+              <Button
+                title="Donate"
+                style={{
+                  paddingHorizontal: wp('1%'),
+                  flex: 1,
+
+                }}
+                containerStyle={{ flex: 1 }}
+                buttonWrapperStyle={{
+                  flex: 1,
+                  borderRadius: wp('2%'),
+                  paddingVertical: hp('0.7%'),
+                  borderColor: ApplicationStyles.primaryColor.color,
+                  borderWidth: StyleSheet.hairlineWidth * 2,
+                }}
+                titleStyle={{ ...ApplicationStyles.link }}
               />
             </View>
             <View style={[styles.userInfo, { paddingTop: hp('2%') }]}>
-              <View style={styles.nameDetail}>
-                <View style={{ flex: 1, alignItems: 'center', justifyItems: 'center' }}>
-                  <Text style={[ApplicationStyles.headline3]}>Goonj</Text>
-                  <Text style={ApplicationStyles.info1}>
-                    @goonj12
-                  </Text>
-                </View>
-              </View>
+
 
               <View style={{ flexWrap: 'wrap', flex: 1, flexDirection: 'row' }}>
                 {/* <Text style={styles.info}>
@@ -180,7 +229,7 @@ class NgoProfile extends Component {
                      +9392992929
                 </Text> */}
               </View>
-              <Text style={[ApplicationStyles.bodySubHeading2, { paddingHorizontal: wp('2%') }]}>
+              <Text style={[ApplicationStyles.body3, { paddingHorizontal: wp('2%') }]}>
               We are a non-profit organization trying to channelize the urban surplus to support the rural needy. We have been collecting resource material that is not in use by individuals or organizations such as old clothes, discarded computers, waste paper, newspapers etc.
               We dispatch approx. 70 tons of material every month to various parts of the country depending on the requirements we receive from our partner organizations.
               We have been called India's Largest Non-Monetary Resource Mobilization firm.
@@ -249,7 +298,7 @@ class NgoProfile extends Component {
             renderItem={this.postItem}
             horizontal
           />
-          <Button
+          {/* <Button
             style={styles.loginContainer}
             onPress={() => navigation.navigate('HomePage')}
             buttonWrapperStyle={{
@@ -261,9 +310,9 @@ class NgoProfile extends Component {
           >
             <Text style={{ ...ApplicationStyles.button }}>Help Goonj</Text>
             <Text style={{ ...ApplicationStyles.tabLabelStyle, color: ApplicationStyles.lightBackground.color }}>3 ways</Text>
-          </Button>
+          </Button> */}
 
-          <View style={styles.sectionContainer}>
+          {/* <View style={styles.sectionContainer}>
             <Button
               title="Jobs"
               titleStyle={{
@@ -282,7 +331,7 @@ class NgoProfile extends Component {
               }}
               buttonWrapperStyle={{ alignItems: 'flex-start' }}
             />
-          </View>
+          </View> */}
         </ScrollView>
 
 

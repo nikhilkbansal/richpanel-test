@@ -36,12 +36,51 @@ export function* getHomePosts() {
   }
 }
 
+export function* postReaction({ payload }) {
+  try {
+    const payloadData = {
+      method: 'post',
+      url: 'reaction',
+      data: {
+        ...payload,
+        postId: payload._id,
+
+      },
+    };
+    yield call(httpClient, payloadData, 'default', 'false');
+    yield put(postActions.postReactionSuccess(payload));
+  } catch (e) {
+    console.log('eee', e);
+    // catch errors here
+  }
+}
+
+
+export function* removeReaction({ payload }) {
+  try {
+    const payloadData = {
+      method: 'delete',
+      url: 'reaction',
+      data: {
+        ...payload,
+        postId: payload._id,
+      },
+    };
+    yield call(httpClient, payloadData, 'default', 'false');
+    yield put(postActions.removeReactionSuccess(payload));
+  } catch (e) {
+    console.log('eee', e);
+    // catch errors here
+  }
+}
 
 function* User() {
   yield all(
     [
       takeLatest(PostTypes.POST_CREATE, createPost),
       takeLatest(PostTypes.GET_HOME_POSTS, getHomePosts),
+      takeLatest(PostTypes.POST_REACTION, postReaction),
+      takeLatest(PostTypes.REMOVE_REACTION, removeReaction),
 
     ],
   );

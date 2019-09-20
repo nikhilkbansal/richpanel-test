@@ -7,6 +7,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Dialog, { DialogContent, SlideAnimation } from 'react-native-popup-dialog';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { Marker } from 'react-native-maps';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Button from './Button';
 import Text from './Text';
 import TextInput from './TextInput';
@@ -19,8 +20,8 @@ import { CommonFunctions } from '../Utils';
 const styles = StyleSheet.create({
   container: { flex: 1, marginTop: hp('1%') },
   button: {
-    paddingTop: hp('0.4%'),
-    paddingBottom: hp('1%'),
+    paddingTop: hp('0.5%'),
+    paddingBottom: hp('1.5%'),
     flex: 1,
     borderBottomWidth: StyleSheet.hairlineWidth * 2,
     borderBottomColor: Colors.mediumDarkFont,
@@ -71,112 +72,118 @@ class LocationSelector extends React.Component {
           }}
         >
           <DialogContent style={{ width: wp('90%'), height: hp('70%') }}>
-            <GooglePlacesAutocomplete
-              placeholder="Type address here"
-              minLength={2} // minimum length of text to search
-              returnKeyType="search" // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-              keyboardAppearance="light" // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-              listViewDisplayed="auto" // true/false/undefined
-              fetchDetails
-              renderDescription={row => row.description} // custom description render
-              onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                console.log(data, details);
-              }}
+            <KeyboardAwareScrollView>
+              <GooglePlacesAutocomplete
+                placeholder="Type address here"
+                minLength={2} // minimum length of text to search
+                returnKeyType="search" // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+                keyboardAppearance="light" // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
+                listViewDisplayed="auto" // true/false/undefined
+                fetchDetails
+                renderDescription={row => row.description} // custom description render
+                onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+                  console.log(data, details);
+                }}
 
-              getDefaultValue={() => ''}
+                getDefaultValue={() => ''}
 
-              query={{
-              // available options: https://developers.google.com/places/web-service/autocomplete
-                key: Config.GOOGLE_PLACE_API_KEY,
-                language: 'en', // language of the results
-                types: '(cities)', // default: 'geocode'
-              }}
-              suppressDefaultStyles
-              styles={{
-                container: {
-                  marginTop: hp('1.5%'),
-                },
-                textInput: {
-                  ...ApplicationStyles.textInputValue,
-                  paddingHorizontal: 0,
-                  paddingTop: hp('0.5%'),
-                  paddingBottom: hp('1.5%'),
-                  borderColor: 'transparent',
-                  margin: 0,
-                  borderBottomColor: Colors.mediumDarkFont,
-                  borderWidth: StyleSheet.hairlineWidth * 2,
-                },
-                textInputContainer: {
-                  width: '100%',
-                  padding: 0,
-                  margin: 0,
-                },
-                description: {
-                  ...ApplicationStyles.bodyHeading,
-                  fontWeight: 'bold',
-                  paddingVertical: hp('0.7%'),
-                  borderColor: 'transparent',
+                query={{
+                  // available options: https://developers.google.com/places/web-service/autocomplete
+                  key: Config.GOOGLE_PLACE_API_KEY,
+                  language: 'en', // language of the results
+                  types: '(cities)', // default: 'geocode'
+                }}
+                suppressDefaultStyles
+                styles={{
+                  container: {
+                    marginTop: hp('1.5%'),
+                  },
+                  textInput: {
+                    ...ApplicationStyles.textInputValue,
+                    paddingHorizontal: 0,
+                    paddingTop: hp('0.5%'),
+                    paddingBottom: hp('1.5%'),
+                    borderColor: 'transparent',
+                    margin: 0,
+                    borderBottomColor: Colors.mediumDarkFont,
+                    borderWidth: StyleSheet.hairlineWidth * 2,
+                  },
+                  textInputContainer: {
+                    width: '100%',
+                    padding: 0,
+                    margin: 0,
+                  },
+                  listView: {
+                    position: 'absolute',
+                    top: hp('5.7%'),
+                    elevation: 2,
+                    paddingVertical: hp('0.8%'),
+                    zIndex: 10,
+                    backgroundColor: ApplicationStyles.lightBackground.color,
+                  },
+                  description: {
+                    ...ApplicationStyles.bodyHeading,
+                    fontWeight: 'bold',
+                    paddingVertical: hp('1%'),
+                    borderColor: 'transparent',
 
-                  borderBottomColor: Colors.mediumDarkFont,
-                  borderWidth: StyleSheet.hairlineWidth,
-                },
-                predefinedPlacesDescription: {
-                  ...ApplicationStyles.bodyHeading,
-                  paddingVertical: hp('0.7%'),
+                    borderBottomColor: Colors.mediumDarkFont,
+                    borderWidth: StyleSheet.hairlineWidth,
+                  },
+                  predefinedPlacesDescription: {
+                    ...ApplicationStyles.bodyHeading,
+                    paddingVertical: hp('0.7%'),
 
-                  color: ApplicationStyles.primaryColor.color,
-                },
-                poweredContainer: {
-                  marginTop: hp('1%'),
-                },
-              }}
+                    color: ApplicationStyles.primaryColor.color,
+                  },
+                  poweredContainer: {
+                    marginTop: hp('1%'),
+                  },
+                }}
 
               // currentLocation // Will add a 'Current location' button at the top of the predefined places list
-              currentLocationLabel="Current location"
-              nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-              GoogleReverseGeocodingQuery={{
-              // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-              }}
-              GooglePlacesSearchQuery={{
-              // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                rankby: 'distance',
-                type: 'cafe',
-              }}
+                currentLocationLabel="Current location"
+                nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                GoogleReverseGeocodingQuery={{
+                  // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                }}
+                GooglePlacesSearchQuery={{
+                  // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                  rankby: 'distance',
+                  type: 'cafe',
+                }}
 
-              GooglePlacesDetailsQuery={{
-              // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-                fields: 'formatted_address',
-              }}
+                GooglePlacesDetailsQuery={{
+                  // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
+                  fields: 'formatted_address',
+                }}
 
-              filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
               // predefinedPlaces={[homePlace, workPlace]}
-
-              debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-              // renderLeftButton={() => <Image source={require('path/custom/left-icon')} />}
-              // renderRightButton={() => <Text>Custom text after the input</Text>}
-            />
-            <MapView
-              style={{ width: '100%', height: hp('30%'), backgroundColor: 'red' }}
-              initialRegion={{
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-            />
-            <TextInput
+                debounce={200}
+              />
+              <MapView
+                style={{ width: '100%', height: hp('30%') }}
+                initialRegion={{
+                  latitude: 37.78825,
+                  longitude: -122.4324,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }}
+              />
+              <TextInput
             // error={errors.title}
-              multiline
-              numberOfLines={1}
-              label="Flat no./Landmark"
-              placeholder="e.g. #123, Near Wall Street"
-              returnKeyType="next"
-            />
-            <Button
-              title="Submit"
-              style={styles.loginContainer}
-
-            />
+                multiline
+                numberOfLines={1}
+                label="Flat no./Landmark"
+                placeholder="e.g. #123, Near Wall Street"
+                returnKeyType="next"
+              />
+              <Button
+                title="Submit"
+                style={styles.loginContainer}
+              />
+            </KeyboardAwareScrollView>
           </DialogContent>
         </Dialog>
         <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>

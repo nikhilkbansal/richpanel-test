@@ -4,7 +4,7 @@ const controller = require('./reaction.controller');
 const { authorize } = require('../../middlewares/auth');
 // const { admin: ADMIN, loggedInUser: LOGGED_USER } = require('../../../config/vars');
 const {
-  postReaction,
+  postReaction, removeReaction,
 
 } = require('./reaction.validation');
 
@@ -15,11 +15,11 @@ router
   .route('/')
 
   /**
-   * @api {post} v1/comment Create comment
-   * @apiDescription Create a new comment
+   * @api {post} v1/reaction Create reaction
+   * @apiDescription Create a new reaction
    * @apiVersion 1.0.0
-   * @apiName Createcomment
-   * @apiGroup User
+   * @apiName CreateReaction
+   * @apiGroup Reaction
    * @apiPermission User
    *
    * @apiHeader {String} Authorization   User's access token
@@ -33,7 +33,8 @@ router
    * @apiError (Bad Request 400)   ValidationError  Some parameters may contain invalid values
    * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users can create the data
    */
-  .post(authorize(), validate(postReaction), controller.post);
+  .post(authorize(), validate(postReaction), controller.post)
+  .delete(authorize(), validate(removeReaction), controller.remove);
 
 
 module.exports = router;
