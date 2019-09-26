@@ -10,6 +10,7 @@ const searchRoutes = require('./search/search.route');
 const reactionRoutes = require('./reaction/reaction.route');
 const payURoutes = require('./payment/payUMoney/payU.route');
 const tagRoutes = require('./tag/tag.route');
+const shareRoutes = require('./share/share.route');
 
 
 const router = express.Router();
@@ -30,6 +31,7 @@ router.get(
 router.use('/docs', express.static('docs'));
 
 router.use('/users', userRoutes);
+router.use('/share', shareRoutes);
 router.use('/auth', authRoutes);
 router.use('/post', postRoutes);
 router.use('/event', eventRoutes);

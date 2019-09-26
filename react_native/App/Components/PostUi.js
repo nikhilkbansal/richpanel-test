@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     borderBottomWidth: StyleSheet.hairlineWidth,
     flex: 1,
+    minHeight: hp('3.8%'),
     paddingVertical: hp('1%'),
     flexDirection: 'row',
   },
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
 });
 
 function PostUi({
-  _id, title, description, files, userName, userPicture, onReactionRemovePress, onReactionPress, reactionsCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
+  _id, title, description, isFollowed, files, userId, userName, userPicture, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
 }) {
   return (
     <View style={styles.container}>
@@ -131,13 +132,12 @@ function PostUi({
         </View>
         <View style={styles.moreContainer}>
           <MenuDropdown
-            menuTitle="Goong NGO"
+            menuTitle={userName}
             buttonStyle={[styles.moreWrapperStyle]}
             menus={[
-              { label: 'Unfollow', func: () => {} },
+              { label: isFollowed ? 'Unfollow' : 'Follow', func: () => followUnfollow({ type: 'homePagePosts', isFollowed, followeeId: userId._id }) },
               { label: 'Copy Link', func: () => {} },
-              { label: 'Report', func: () => {} },
-              { label: 'Share', func: () => {} }]}
+              { label: 'Report This Post', func: () => {} }]}
           >
             <Icon name="md-more" size={25} color={ApplicationStyles.darkColor.color} />
           </MenuDropdown>
@@ -147,12 +147,18 @@ function PostUi({
         <Swiper files={files} />
         <View style={styles.userFeedBack}>
           <ReactionsGot reactionsCount={reactionsCount} topThreeReactions={topThreeReactions} />
-          <Text style={{ ...ApplicationStyles.bodySubHeading2 }}>12M Shares</Text>
+          {sharesCount > 0 && (
+          <Text style={{ ...ApplicationStyles.bodySubHeading2 }}>
+            {CommonFunctions.numberToReadable(sharesCount)}
+            {' '}
+            Shares
+          </Text>
+          )}
         </View>
         <View style={styles.subContainerSecond}>
           <View style={styles.userActions}>
             <Reaction active={howUserReacted} onReactionRemovePress={() => onReactionRemovePress({ _id })} onReactionPress={(reaction = 'like') => onReactionPress({ _id, reaction })} />
-            <Button icon="share" iconSize={wp('5.3%')} iconFamily="SimpleLineIcons" style={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
+            <Button icon="share" iconSize={wp('5.3%')} iconFamily="SimpleLineIcons" style={styles.reaction} onPress={onSharePress} />
           </View>
           <View style={styles.titleContainer}>
             <Text style={ApplicationStyles.headline2}>{title}</Text>

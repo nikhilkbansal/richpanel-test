@@ -8,7 +8,6 @@ module.exports = {
   followUnfollow: {
     body: {
       followeeId: Joi.string().required(),
-
     },
   },
 

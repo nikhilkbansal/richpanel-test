@@ -1,12 +1,8 @@
-// const httpStatus = require('http-status');
-// const { omit } = require('lodash');
+const httpStatus = require('http-status');
 const User = require('../user/user.model');
 const follow = require('./follow.model');
 
 const { handler: errorHandler } = require('../../middlewares/error');
-// const APIError = require('../../utils/APIError');
-// const { sendMail } = require('../../services/mailProviders');
-// const uuidv4 = require('uuid/v4');
 
 
 /**
@@ -30,10 +26,11 @@ exports.load = async (req, res, next, id) => {
 exports.follow = async (req, res, next) => {
   try {
     const { followeeId } = req.body;
-    const { user } = req.locals;
+    const { user } = req;
     const followerId = user._id;
-    const followUnfollow = await follow.add(followeeId, followerId);
-    res.json(followUnfollow);
+    await follow.add(followeeId, followerId);
+    res.status(httpStatus.CREATED);
+    res.json();
   } catch (error) {
     next(error);
   }

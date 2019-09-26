@@ -12,9 +12,18 @@ import { CommonFunctions } from '../../Utils';
 
 export const putHomePosts = (state, { payload }) => ({ ...state, homePosts: [...payload] });
 export const logoutSuccess = (state, data) => ({ ...INITIAL_STATE });
+
+export const addShareCount = (state, { payload }) => {
+  const posts = [...state.homePosts];
+  const postIndex = posts.findIndex(o => o._id === payload.itemId);
+  posts[postIndex].sharesCount += 1;
+
+  return { ...state, homePosts: [...posts] };
+};
+
+
 export const postReaction = (state, { payload }) => {
   const posts = [...state.homePosts];
-  console.log('poststs', posts, payload);
   const postIndex = posts.findIndex(o => o._id === payload._id);
   // if already have some reaction
   if (posts[postIndex].howUserReacted) {
@@ -33,6 +42,8 @@ export const postReaction = (state, { payload }) => {
   );
   return { ...state, homePosts: [...posts] };
 };
+
+
 export const removeReaction = (state, { payload }) => {
   const posts = [...state.homePosts];
   const postIndex = posts.findIndex(o => o._id === payload._id);
@@ -46,6 +57,21 @@ export const removeReaction = (state, { payload }) => {
   return { ...state, homePosts: [...posts] };
 };
 
+
+export const followUnfollow = (state, { payload }) => {
+  let posts = [...state.homePosts];
+  posts = posts.map((o) => {
+    if (payload.followeeId === o.userId._id) {
+      // eslint-disable-next-line no-param-reassign
+      o.isFollowed = !payload.isFollowed;
+    }
+    return o;
+  });
+
+  return { ...state, homePosts: [...posts] };
+};
+
+
 /**
  * @see https://github.com/infinitered/reduxsauce#createreducer
  */
@@ -54,4 +80,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [UserTypes.LOGOUT_SUCCESS]: logoutSuccess,
   [PostTypes.POST_REACTION_SUCCESS]: postReaction,
   [PostTypes.REMOVE_REACTION_SUCCESS]: removeReaction,
+  [PostTypes.ADD_SHARE_COUNT]: addShareCount,
+  [PostTypes.FOLLOW_UNFOLLOW]: followUnfollow,
 });

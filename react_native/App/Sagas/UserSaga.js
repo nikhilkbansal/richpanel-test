@@ -4,6 +4,7 @@ import {
 
 import { delay } from 'redux-saga';
 import userActions, { UserTypes } from '../Stores/User/Actions';
+import postActions from '../Stores/Post/Actions';
 import { INITIAL_STATE } from '../Stores/User/InitialState';
 import NavigationService from '../Services/NavigationService';
 import httpClient from './HttpClient';
@@ -63,6 +64,23 @@ export function* register({ payload }) {
     const data = yield call(httpClient, payloadData);
     NavigationService.navigate('HomePage');
     yield put(userActions.putUserInfo({ ...data, isLoggedIn: true }));
+  } catch (e) {
+  }
+}
+
+export function* followUnFollow({ payload }) {
+  try {
+    const payloadData = {
+      method: 'post',
+      data: {
+        ...payload,
+      },
+      url: 'follow',
+    };
+    yield call(httpClient, payloadData);
+    if (payload.type === 'homePosts') {
+      yield put(postActions.followUnfollow(payload));
+    }
   } catch (e) {
   }
 }
@@ -132,6 +150,8 @@ function* User() {
       takeLatest(UserTypes.UPDATE_USER_INIT, updateUser),
       takeLatest(UserTypes.LOGOUT_INIT, logoutInit),
       takeLatest(UserTypes.UPLOAD_PROFILE_PIC, uploadProfilePic),
+      takeLatest(UserTypes.FOLLOW_UNFOLLOW, followUnFollow),
+
 
     ],
   );

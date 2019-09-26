@@ -55,6 +55,7 @@
     "react-native-popup-dialog": "^0.18.2",
     "react-native-responsive-fontsize": "^0.2.1",
     "react-native-responsive-screen": "^1.1.10",
+    "react-native-share": "^1.2.1",
     "react-native-svg": "^9.4.0",
     "react-native-swiper": "^1.5.14",
     "react-native-textinput-effects": "^0.4.2",

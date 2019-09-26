@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import {
-  FlatList, View, StyleSheet, StatusBar
+  FlatList, View, StyleSheet, StatusBar,
+
 } from 'react-native';
 import { 
   withTheme
 } from 'react-native-paper';
+import Share from 'react-native-share';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
 import ActionButton from 'react-native-action-button';
@@ -15,6 +17,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Button, Text } from 'react-native'
 import { connect } from 'react-redux';
 import PostActions from '../../Stores/Post/Actions';
+import UserActions from '../../Stores/User/Actions';
 
 
 const styles = StyleSheet.create({
@@ -43,6 +46,19 @@ class Post extends Component {
     this._renderItem = this._renderItem.bind(this);
   }
 
+  onShare = async (item) => {
+    const { profile, sharePost } = this.props;
+      Share.open( {
+        message:  profile.name+ ' wants you see this post: ' + item.title+'. Use Help App to make to world a better place for everyone like '+ profile.name +' is doing',
+        url: 'com.helpapp/'+item.title.replace(' ', ''),
+    })
+    .then((res) => {
+       console.log(res)
+       sharePost({ itemId: item._id, itemType: 'post'})
+    })
+    .catch((err) => { err && console.log(err); });
+  };
+
   componentDidMount(){
     const { getHomePosts } = this.props;
     getHomePosts();
@@ -56,14 +72,12 @@ class Post extends Component {
     this.navListener.remove();
   }
 
-  onReactionPress = ()=>{
-
-
-  }
-
+  
 
   _renderItem = ({item}) =><PostUi 
     userName={item.userId.name}
+    followUnfollow={this.props.followUnfollow}
+    onSharePress={()=>this.onShare(item)}
     onReactionPress={this.props.postReaction}
     onReactionRemovePress={this.props.removeReaction}
     userPicture={item.userId.picture}
@@ -87,9 +101,11 @@ class Post extends Component {
 }
 
 export default connect(
-  ({ post: { homePosts } }) => ({ homePosts }), {
+  ({ post: { homePosts }, user: {profile} }) => ({ homePosts, profile }), {
     getHomePosts: PostActions.getHomePosts,
     postReaction: PostActions.postReaction,
-    removeReaction: PostActions.removeReaction
+    removeReaction: PostActions.removeReaction,
+    sharePost: PostActions.sharePost,
+    followUnfollow: UserActions.followUnfollow 
   },
 )(Post);

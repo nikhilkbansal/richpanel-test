@@ -8,5 +8,7 @@ pod 'GoogleMaps', '= 2.0.1'
 
 
 # Add new pods below this line
+pod 'RNShare', :path => '../node_modules/react-native-share'
+
 pod 'react-native-maps', :path => '../node_modules/react-native-maps'
 

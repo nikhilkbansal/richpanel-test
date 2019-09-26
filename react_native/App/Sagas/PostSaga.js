@@ -43,8 +43,8 @@ export function* postReaction({ payload }) {
       url: 'reaction',
       data: {
         ...payload,
-        postId: payload._id,
-
+        itemId: payload._id,
+        itemType: 'post',
       },
     };
     yield call(httpClient, payloadData, 'default', 'false');
@@ -56,14 +56,30 @@ export function* postReaction({ payload }) {
 }
 
 
+export function* share({ payload }) {
+  try {
+    const payloadData = {
+      method: 'post',
+      url: 'share',
+      data: {
+        ...payload,
+      },
+    };
+    yield call(httpClient, payloadData, 'default', 'false');
+    yield put(postActions.addShareCount(payload));
+  } catch (e) {
+    // catch errors here
+  }
+}
+
+
 export function* removeReaction({ payload }) {
   try {
     const payloadData = {
       method: 'delete',
       url: 'reaction',
       data: {
-        ...payload,
-        postId: payload._id,
+        itemId: payload._id,
       },
     };
     yield call(httpClient, payloadData, 'default', 'false');
@@ -81,6 +97,7 @@ function* User() {
       takeLatest(PostTypes.GET_HOME_POSTS, getHomePosts),
       takeLatest(PostTypes.POST_REACTION, postReaction),
       takeLatest(PostTypes.REMOVE_REACTION, removeReaction),
+      takeLatest(PostTypes.SHARE_POST, share),
 
     ],
   );

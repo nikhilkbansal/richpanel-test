@@ -35,6 +35,7 @@ const { Types, Creators } = createActions({
   fetchTemperatureSuccess: ['temperature'],
   // An error occurred
   fetchTemperatureFailure: ['errorMessage'],
+  followUnfollow: ['payload'],
 });
 
 export const UserTypes = Types;

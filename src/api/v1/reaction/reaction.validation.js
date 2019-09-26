@@ -7,13 +7,14 @@ module.exports = {
   postReaction: {
     body: {
       reaction: Joi.string().required().valid(Reaction.reactionsEnum),
-      postId: Joi.string().required(),
+      itemId: Joi.string().required(),
+      itemType: Joi.string().required().valid(Reaction.itemType),
     },
   },
 
   removeReaction: {
     body: {
-      postId: Joi.string().required(),
+      itemId: Joi.string().required(),
     },
   },
 

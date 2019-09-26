@@ -17,28 +17,21 @@ const router = express.Router();
 router.param('userId', controller.load);
 
 router
-  .route('/:userId')
+  .route('/')
 
   /**
    * @api {post} v1/follow follow/unfollow User
    * @apiDescription follow or unfollow any user
    * @apiVersion 1.0.0
    * @apiName follow/unfollow User
-   * @apiGroup User
+   * @apiGroup Follow
    * @apiPermission user
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}             email     User's email
-   * @apiParam  {String{6..128}}     password  User's password
-   * @apiParam  {String{..128}}      [name]    User's name
-   * @apiParam  {String=user,admin}  [userId]    ID of user to be followed  or unfollowed
+   * @apiParam  {String}         followeeId     followeeId
    *
-   * @apiSuccess (Created 201) {String}  id         User's id
-   * @apiSuccess (Created 201) {String}  name       User's name
-   * @apiSuccess (Created 201) {String}  email      User's email
-   * @apiSuccess (Created 201) {String}  role       User's role
-   * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
+   * @apiSuccess (Created 201)
    *
    * @apiError (Bad Request 400)   ValidationError  Some parameters may contain invalid values
    * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users can create the data

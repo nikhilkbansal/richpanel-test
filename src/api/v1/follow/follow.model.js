@@ -41,9 +41,10 @@ followSchema.statics = {
     const newrelation = {
       followeeId,
       followerId,
-      isActive: !existingrelation.isActive,
+      isActive: true,
     };
     if (existingrelation) {
+      newrelation.isActive = !existingrelation.isActive;
       existingrelation = Object.assign(existingrelation, newrelation);
       return existingrelation.save();
     }

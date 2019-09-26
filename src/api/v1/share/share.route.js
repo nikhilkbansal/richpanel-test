@@ -1,12 +1,12 @@
 const express = require('express');
 const validate = require('express-validation');
-const controller = require('./reaction.controller');
+const controller = require('./share.controller');
 const { authorize } = require('../../middlewares/auth');
 // const { admin: ADMIN, loggedInUser: LOGGED_USER } = require('../../../config/vars');
 const {
-  postReaction, removeReaction,
+  add,
 
-} = require('./reaction.validation');
+} = require('./share.validation');
 
 const router = express.Router();
 
@@ -15,26 +15,24 @@ router
   .route('/')
 
   /**
-   * @api {post} v1/reaction Create reaction
-   * @apiDescription Create a new reaction
+   * @api {post} v1/share Create share
+   * @apiDescription Create a new share
    * @apiVersion 1.0.0
-   * @apiName CreateReaction
-   * @apiGroup Reaction
+   * @apiName AddShare
+   * @apiGroup Share
    * @apiPermission User
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String=event,post}   itemType    itemType
-   * @apiParam  {String{6..128}}     reaction    reaction
-   * @apiParam  {String{..128}}      itemId     id of a specific post
+   * @apiParam  {String=ngo,event,post}        itemType item type
+   * @apiParam  {String         itemId   id of a specific post
    *
-   * @apiSuccess (Created 201)
+   * @apiSuccess (Created 201) {String}  comment/list of comments
    *
    * @apiError (Bad Request 400)   ValidationError  Some parameters may contain invalid values
    * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users can create the data
    */
-  .post(authorize(), validate(postReaction), controller.post)
-  .delete(authorize(), validate(removeReaction), controller.remove);
+  .post(authorize(), validate(add), controller.add);
 
 
 module.exports = router;

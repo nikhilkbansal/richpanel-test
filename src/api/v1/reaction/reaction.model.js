@@ -17,7 +17,7 @@ const mongoose = require('mongoose');
  * @private
  */
 const reactionsEnum = ['love', 'like', 'insightFul', 'sad', 'celebrate'];
-
+const itemType = ['event', 'post'];
 
 const reactionSchema = new mongoose.Schema({
   userId: {
@@ -25,10 +25,14 @@ const reactionSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  postId: {
+  itemId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Post',
     required: true,
+  },
+  itemType: {
+    type: String,
+    enum: itemType,
   },
   reaction: {
     type: String,
@@ -44,19 +48,20 @@ const reactionSchema = new mongoose.Schema({
 
 reactionSchema.statics = {
   reactionsEnum,
+  itemType,
   async removeReaction({
-    userId, postId,
+    userId, itemId,
   }) {
     const options = {
-      userId, postId,
+      userId, itemId,
     };
     return this.updateOne(options, { status: 'inActive' });
   },
   async addReaction({
-    reaction, userId, postId,
+    reaction, userId, itemId,
   }) {
     const options = {
-      userId, postId,
+      userId, itemId,
     };
     const pastReaction = await this.findOne(options);
     console.log('pastReaction', pastReaction);
@@ -70,20 +75,20 @@ reactionSchema.statics = {
       return pastReaction.save();
     }
     return this.create({
-      userId, postId, reaction, status: 'active',
+      userId, itemId, reaction, status: 'active',
     });
   },
 
-  async howUserReacted(userId, postId) {
-    const reactions = await this.findOne({ userId, postId, status: 'active' });
+  async howUserReacted(userId, itemId) {
+    const reactions = await this.findOne({ userId, itemId, status: 'active' });
     if (reactions) {
       return reactions.reaction;
     }
     return false;
   },
 
-  async findReactionsCounts(postId) {
-    const reactions = await this.find({ postId, status: 'active' });
+  async findReactionsCounts(itemId) {
+    const reactions = await this.find({ itemId, status: 'active' });
     const likeCount = reactions.filter(o => o.reaction === 'like').length;
     const loveCount = reactions.filter(o => o.reaction === 'love').length;
     const celebrateCount = reactions.filter(o => o.reaction === 'celebrate').length;

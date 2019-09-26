@@ -83,7 +83,7 @@ class MenuDropdown extends React.Component {
               { menus && [...menus, ...defaultMenus].map(o => (
                 <Button
                   title={o.label}
-                  onPress={o.func}
+                  onPress={() => { this.closePicker(); o.func(); }}
                   titleStyle={{ ...ApplicationStyles.bodyHeading, ...styles.button }}
                 />
               ))}
