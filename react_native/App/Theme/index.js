@@ -1,9 +1,9 @@
 import Colors from './Colors';
 import Fonts from './Fonts';
-import Images from './Images';
+import Files from './Files';
 import ApplicationStyles from './ApplicationStyles';
 import FontSizes from './FontSizes';
 
 export {
-  Colors, Fonts, Images, ApplicationStyles, FontSizes,
+  Colors, Fonts, Files, ApplicationStyles, FontSizes,
 };

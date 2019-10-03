@@ -32,7 +32,9 @@ function Button({
       { Platform.OS === 'ios'
         ? (
           <TouchableOpacity onPress={onPress}>
-            <Content />
+            <View style={[styles.buttonStyle, buttonWrapperStyle]}>
+              <Content />
+            </View>
           </TouchableOpacity>
         )
         : (

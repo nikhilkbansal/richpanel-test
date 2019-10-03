@@ -29,7 +29,7 @@ export function* login({ payload }) {
     if (payload.isRememberMe) {
       yield put(userActions.manageRememberMe(payload));
     }
-    yield call(delay, 500);
+    yield call(delay, 1000);
     NavigationService.navigate('HomePage');
   } catch (e) {
     console.log('eee', e);

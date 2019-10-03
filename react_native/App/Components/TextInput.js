@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { flush } from 'redux-saga/effects';
+import TextInputMask from 'react-native-text-input-mask';
 import Button from './Button';
 import Text from './Text';
 import {
@@ -73,38 +74,70 @@ class TextInput extends React.Component {
       label, numberOfLines, multiline, secureTextEntry, error,
       placeholder, onChangeText, returnKeyType, textInputRef, onSubmitEditing,
       containerStyle, inputStyle,
+      mask,
       value, ...props
     } = this.props;
     return (
       <View style={[{ marginTop: hp('1%'), marginBottom: !error ? hp('1%') : 0 }, containerStyle]}>
         {label
         && <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>{label}</Text>}
-        <RNTextInput
-          {...props}
-          multiline={multiline}
-          numberOfLines={numberOfLines}
-          placeholder={placeholder}
-          secureTextEntry={secureTextEntry}
-          onChangeText={onChangeText}
-          returnKeyType={returnKeyType}
-          enablesReturnKeyAutomatically
-          ref={textInputRef}
-          value={value || undefined}
-          onSubmitEditing={onSubmitEditing}
-          style={[{
-            ...ApplicationStyles.textInputValue,
-            paddingHorizontal: 0,
-            paddingTop: hp('0.5%'),
-            paddingBottom: hp('1.5%'),
-            borderColor: 'transparent',
-            margin: 0,
-            borderBottomColor: Colors.mediumDarkFont,
-            borderWidth: StyleSheet.hairlineWidth * 2,
-          }, inputStyle]}
-          underlineColorAndroid="transparent"
-        />
-        {error && <Text style={[{ ...ApplicationStyles.textInputLabel }, { ...ApplicationStyles.warningColor }]}>{error}</Text>}
+        {mask
+          ? (
+            <TextInputMask
+              {...props}
+              multiline={multiline}
+              numberOfLines={numberOfLines}
+              placeholder={placeholder}
+              secureTextEntry={secureTextEntry}
+              onChangeText={onChangeText}
+              returnKeyType={returnKeyType}
+              enablesReturnKeyAutomatically
+              ref={textInputRef}
+              value={value || undefined}
+              onSubmitEditing={onSubmitEditing}
+              style={[{
+                ...ApplicationStyles.textInputValue,
+                paddingHorizontal: 0,
+                paddingTop: hp('0.5%'),
+                paddingBottom: hp('1.5%'),
+                borderColor: 'transparent',
+                margin: 0,
+                borderBottomColor: Colors.mediumDarkFont,
+                borderWidth: StyleSheet.hairlineWidth * 2,
+              }, inputStyle]}
+              underlineColorAndroid="transparent"
 
+              mask={mask}
+            />
+          )
+
+          : (
+            <RNTextInput
+              {...props}
+              multiline={multiline}
+              numberOfLines={numberOfLines}
+              placeholder={placeholder}
+              secureTextEntry={secureTextEntry}
+              onChangeText={onChangeText}
+              returnKeyType={returnKeyType}
+              enablesReturnKeyAutomatically
+              ref={textInputRef}
+              value={value || undefined}
+              onSubmitEditing={onSubmitEditing}
+              style={[{
+                ...ApplicationStyles.textInputValue,
+                paddingHorizontal: 0,
+                paddingTop: hp('0.5%'),
+                paddingBottom: hp('1.5%'),
+                borderColor: 'transparent',
+                margin: 0,
+                borderBottomColor: Colors.mediumDarkFont,
+                borderWidth: StyleSheet.hairlineWidth * 2,
+              }, inputStyle]}
+              underlineColorAndroid="transparent"
+            />
+          )}
+        {error && <Text style={[{ ...ApplicationStyles.textInputLabel }, { ...ApplicationStyles.warningColor }]}>{error}</Text>}
         {false && showEyeIcon && secureTextEntry && this.eyeButton('ios-eye') }
         {false && showEyeIcon && secureTextEntry && this.eyeButton('ios-eye-off') }
 
@@ -128,6 +161,7 @@ TextInput.propTypes = {
   value: PropTypes.any,
   containerStyle: PropTypes.object,
   inputStyle: PropTypes.object,
+  mask: PropTypes.string,
 };
 
 TextInput.defaultProps = {
@@ -144,6 +178,7 @@ TextInput.defaultProps = {
   onSubmitEditing: Function,
   containerStyle: {},
   inputStyle: {},
+  mask: null,
 };
 
 export default TextInput;

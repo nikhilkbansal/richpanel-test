@@ -36,3 +36,11 @@ LGBT
 Soldiers
 Skill Development
 Healthcare
+
+
+
+curl -XPOST -H 'Content-Type: application/json' -H 'x-client-id: 275432e3853bd165afbf5272' -H 'x-client-secret: 2279c0ffb9550ad0f9e0652741c8d06a49409517' -d '{
+  "orderId": "Orderw8fw8efu8d222d2dss2s777ufss21",
+  "orderAmount":1,
+  "orderCurrency":"INR"
+}' 'https://test.cashfree.com/api/v2/cftoken/order'

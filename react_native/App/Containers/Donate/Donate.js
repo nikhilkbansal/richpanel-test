@@ -59,6 +59,7 @@ class Donate extends Component {
       description: '',
       donate: 'once',
       files: [],
+      amount: 0,
     };
     this.addPost = this.addPost.bind(this);
     this.descriptionRef = React.createRef();
@@ -80,7 +81,7 @@ class Donate extends Component {
   render() {
     const { navigation } = this.props;
 
-    const { errors, donate } = this.state;
+    const { errors, donate, amount } = this.state;
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} title="Donate" />
@@ -94,13 +95,14 @@ class Donate extends Component {
             label="Amount"
             placeholder="e.g. 500"
             returnKeyType="next"
-            onChangeText={text => this.updateTextInput('title', text)}
+            onChangeText={text => this.updateTextInput('amount', text)}
             onSubmitEditing={() => this.descriptionRef.current.focus()}
           />
           <Button
             style={styles.loginContainer}
             onPress={() => {
-              navigation.navigate('Payment');
+              const { paymentMeta } = navigation.state.params;
+              navigation.navigate('SelectPaymentMethod', { amount, paymentMeta });
             }}
             title="NEXT"
           />

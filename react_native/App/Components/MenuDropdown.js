@@ -53,7 +53,7 @@ class MenuDropdown extends React.Component {
     const { modalVisible, label } = this.state;
     const defaultMenus = [{ label: 'Cancel', func: this.closePicker }];
     const {
-      placeholder, menus, menuTitle, children, containerStyle, buttonStyle,
+      placeholder, menus, menuTitle, children, containerStyle, buttonStyle, modalStyle, menuItemStyle,
     } = this.props;
     return (
       <View style={[styles.container, containerStyle]}>
@@ -75,16 +75,16 @@ class MenuDropdown extends React.Component {
           }}
           dialogTitle={<DialogTitle title={menuTitle} textStyle={{ ...ApplicationStyles.textInputLabel }} />}
         >
-          <DialogContent style={{
+          <DialogContent style={[{
             width: wp('50%'), maxHeight: hp('50%'), paddingTop: hp('2%'), paddingHorizontal: 0,
-          }}
+          }, modalStyle]}
           >
             <ScrollView>
               { menus && [...menus, ...defaultMenus].map(o => (
                 <Button
                   title={o.label}
                   onPress={() => { this.closePicker(); o.func(); }}
-                  titleStyle={{ ...ApplicationStyles.bodyHeading, ...styles.button }}
+                  titleStyle={{ ...ApplicationStyles.bodyHeading, ...styles.button, ...menuItemStyle }}
                 />
               ))}
             </ScrollView>
@@ -102,11 +102,15 @@ MenuDropdown.propTypes = {
   default: PropTypes.object,
   menus: PropTypes.array.isRequired,
   onValueChange: PropTypes.func,
+  modalStyle: PropTypes.object,
+  menuItemStyle: PropTypes.object,
 };
 
 MenuDropdown.defaultProps = {
   placeholder: '',
   default: {},
+  modalStyle: {},
+  menuItemStyle: {},
   onValueChange: () => {},
 };
 

@@ -14,11 +14,14 @@ import MyDonations from 'App/Containers/MyDonations/MyDonations';
 import AddPost from 'App/Containers/AddPost/AddPost';
 import AddEvent from 'App/Containers/AddEvent/AddEvent';
 import Payment from 'App/Containers/Payment/Payment';
+import SelectPaymentMethod from 'App/Containers/Payment/SelectPaymentMethod';
 import Donate from 'App/Containers/Donate/Donate';
 import SeeAllSearch from 'App/Containers/SeeAllSearch/SeeAllSearch';
 import NgoProfile from 'App/Containers/NgoProfile/NgoProfile';
 import SplashScreen from 'App/Containers/SplashScreen/SplashScreen';
 import StyleGuide from 'App/Containers/StyleGuide/StyleGuide';
+import AdditionalPayment from 'App/Containers/Payment/AdditionalPayment';
+
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -50,13 +53,15 @@ const AppNav = createStackNavigator(
     AddEvent,
     StyleGuide,
     Payment,
+    AdditionalPayment,
+    SelectPaymentMethod,
     Donate,
     SeeAllSearch,
     NgoProfile,
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'LogIn',
+    initialRouteName: 'HomePage',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },
@@ -83,7 +88,7 @@ class RootScreen extends Component {
   componentDidMount() {
     // Run the startup saga when the application is starting
     const { startUp } = this.props;
-    startUp();
+    // startUp();
   }
 
   render() {

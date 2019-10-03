@@ -72,8 +72,6 @@ class Post extends Component {
     this.navListener.remove();
   }
 
-  
-
   _renderItem = ({item}) =><PostUi 
     userName={item.userId.name}
     followUnfollow={this.props.followUnfollow}
@@ -81,7 +79,7 @@ class Post extends Component {
     onReactionPress={this.props.postReaction}
     onReactionRemovePress={this.props.removeReaction}
     userPicture={item.userId.picture}
-    onDonatePress={()=>this.props.navigation.navigate('Donate')}
+    onDonatePress={()=>this.props.navigation.navigate('Donate',{paymentMeta:{_id:item._id, txType:'userToPOCampaign'}})}
     {...item}
     />;
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { View, Image } from 'react-native';
 import PropTypes from 'prop-types';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -9,7 +10,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
-import { ApplicationStyles } from '../Theme';
+import { ApplicationStyles, Files } from '../Theme';
 
 
 /**
@@ -35,15 +36,29 @@ const iconFamilies = {
 function Icon({
   iconFamily, name, size, color, style, ...props
 }) {
-  const IconComponent = iconFamily ? iconFamilies[iconFamily] : Ionicons;
+  console.log('namee', name, Files, Files[name]);
+  const IconComponent = iconFamily && iconFamily !== 'customSvg' ? iconFamilies[iconFamily] : Ionicons;
+  const iconSize = size || ApplicationStyles.iconSize;
   return (
-    <IconComponent
-      {...props}
-      name={name}
-      size={size || ApplicationStyles.iconSize}
-      color={color}
-      style={style}
-    />
+    iconFamily === 'custom' ? (
+
+      <Image
+        source={Files[name]}
+        style={{
+          width: size,
+          height: size,
+        }}
+      />
+    )
+      : (
+        <IconComponent
+          {...props}
+          name={name}
+          size={iconSize}
+          color={color}
+          style={style}
+        />
+      )
   );
 }
 

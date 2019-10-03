@@ -6,14 +6,19 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
-
+import CheckBox from 'react-native-check-box';
+import Dialog, { DialogContent, SlideAnimation, DialogTitle } from 'react-native-popup-dialog';
 import PaymentActions from 'App/Stores/Payment/Actions';
 import { call, put } from 'redux-saga/effects';
 import CashfreePG from 'cashfreereactnativepg';
+import Toast from '../../Services/ToastService';
 import {
-  Text, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, FileSelector,
+  Text, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, FileSelector, Icon,
 } from '../../Components';
-import { Colors, FontSizes } from '../../Theme';
+import { Config } from '../../Config';
+import {
+  Colors, FontSizes, ApplicationStyles, Files,
+} from '../../Theme';
 import { CommonFunctions } from '../../Utils';
 import AxiosRequest from '../../Services/HttpRequestService';
 
@@ -21,14 +26,37 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.background },
   subContainer: { flex: 1, paddingHorizontal: wp('5%') },
   loginContainer: {
-    marginVertical: hp('4%'),
-    backgroundColor: Colors.primary,
+    marginVertical: hp('1%'),
+    backgroundColor: ApplicationStyles.primaryColor.color,
     borderRadius: wp('2%'),
     width: wp('80%'),
     alignSelf: 'center',
     height: hp('7%'),
   },
   loginTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
+  menuContainer: {
+    elevation: 1,
+    marginVertical: hp('0.2%'),
+    backgroundColor: ApplicationStyles.lightBackground.color,
+    paddingHorizontal: wp('4%'),
+    justifyContent: 'center',
+    // ...dynamicStyle,
+    flex: 1,
+    // height: hp('10%'),
+
+  },
+  menuSubFirst: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    height: hp('10%'),
+
+  },
+  mainMenu: { flex: 3, flexDirection: 'row', alignItems: 'center' },
+  menuLabel: { marginLeft: wp('2%'), ...ApplicationStyles.button, color: ApplicationStyles.disabledColor.color },
+  menuRightSide: {
+    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end',
+  },
+  menuRightLabel: { marginHorizontal: wp('2%'), color: ApplicationStyles.primaryColor.color },
 });
 
 
@@ -42,33 +70,94 @@ class Payment extends Component {
 
   constructor(props) {
     super(props);
+    const { orderAmount } = props.navigation.state.params.seamlessParams;
     this.state = {
       errors: {},
       title: '',
       description: '',
       files: [],
-      uri: '',
+      orderId: null,
+      cfToken: null,
+      orderAmount,
+      txSuccess: true,
+      modalVisible: false,
     };
     this.addPost = this.addPost.bind(this);
-    this.descriptionRef = React.createRef();
+    this.getCfToken = this.getCfToken.bind(this);
+    this.saveTransaction = this.saveTransaction.bind(this);
   }
 
 
-  async componentDidMount() {
-    const data = await AxiosRequest({
-      method: 'post',
-      data: {
-        email: 'rahul@gmail.com',
-        amount: 100,
-        productinfo: 'Donation - Goonj - 2323232',
-        firstname: 'Rahul',
-        phone: '919999199199',
-        lastname: 'Saini',
-      },
-      url: 'payment/payU/makePayment',
-    });
-    this.setState({ uri: data.url });
-    console.log('data', data);
+  componentDidMount() {
+    this.getCfToken();
+    // this.createAndSubscribePlan();
+    // console.log('data', data);
+  }
+
+  async getCfToken() {
+    const { orderAmount } = this.state;
+    try {
+      const data = await AxiosRequest({
+        method: 'get',
+        params: {
+          orderCurrency: 'INR',
+          orderAmount,
+        },
+        url: 'payment/cashFree/getCfToken',
+      });
+
+      this.setState({ ...data });
+    } catch (e) {
+      Toast('Some error occured. Please try again later');
+    }
+  }
+
+
+  async saveTransaction() {
+    const { orderId, orderAmount } = this.state;
+    const { navigation: { state: { params: { paymentMeta } } } } = this.props;
+    try {
+      const data = await AxiosRequest({
+        method: 'post',
+        data: {
+          postId: paymentMeta._id,
+          amount: orderAmount,
+          orderId,
+          txType: paymentMeta.txType,
+        },
+        url: 'payment/cashFree/saveTransaction',
+      });
+
+      this.setState({ ...data });
+    } catch (e) {
+      Toast('Some error occured. Please try again later');
+    }
+  }
+
+
+  async createAndSubscribePlan() {
+    const { orderAmount } = this.state;
+    try {
+      const data = await AxiosRequest({
+        method: 'post',
+        data: {
+          amount: 100,
+          intervalType: 'monthly',
+          customerEmail: 'ab@ad.com',
+          customerPhone: '+911234567890',
+          cardNumber: 4444333322221111,
+          cardExpiryMonth: '07',
+          cardExpiryYear: '23',
+          cardCvv: 123,
+          cardHolder: 'Steve',
+        },
+        url: 'payment/cashFree/createAndSubscribePlan',
+      });
+      console.log('createAndSubscribePlan', data);
+      // this.setState({ ...data });
+    } catch (e) {
+      Toast('Some error occured. Please try again later');
+    }
   }
 
 
@@ -81,23 +170,62 @@ class Payment extends Component {
   }
 
 
-  updateTextInput(key, value) {
-    this.setState({ [key]: value });
-  }
-
-
   render() {
-    const { navigation } = this.props;
+    const { navigation, navigation: { state: { params } } } = this.props;
 
-    const { errors, uri } = this.state;
+    const {
+      orderId, orderAmount, cfToken, txSuccess, modalVisible,
+    } = this.state;
+    console.log('orderId, orderAmount, cfToken', orderId, orderAmount, cfToken);
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} statusBarColor={Colors.background} title="Donate" />
-        {/*
+        <NavigationBar {...navigation} statusBarColor={ApplicationStyles.primaryColor.color} title="Donate" />
+        <Dialog
+          visible={modalVisible}
+          dialogAnimation={new SlideAnimation({
+            slideFrom: 'bottom',
+          })}
+          onTouchOutside={() => {
+            this.setState({ modalVisible: false }, () => navigation.navigate('HomePage'));
+          }}
+        >
+          <DialogContent style={{
+            width: wp('50%'),
+            maxHeight: hp('30%'),
+            justifyContent: 'center',
+            alignItems: 'center',
+            justifyItems: 'center',
+            alignContent: 'center',
+            paddingTop: hp('3%'),
+          }}
+          >
+            <Icon iconFamily="SimpleLineIcons" name="check" size={wp('20%')} color={ApplicationStyles.primaryColor.color} />
+            <Text style={{ ...ApplicationStyles.button, marginTop: hp('1%'), ...ApplicationStyles.primaryColor }}>Payment Successful</Text>
+            <Text style={{ ...ApplicationStyles.bodySubHeading, textAlign: 'center' }}>Thank you for helping the needies</Text>
+          </DialogContent>
+        </Dialog>
+        {!txSuccess && (
+        <View>
+          <Button
+            style={[styles.loginContainer, { marginTop: hp('27%') }]}
+            titleStyle={styles.loginTitle}
+            onPress={() => navigation.goBack()}
+            title="Go Back"
+          />
+          <Button
+            style={styles.loginContainer}
+            titleStyle={styles.loginTitle}
+            onPress={() => navigation.navigate('HomePage')}
+            title="Go to Home"
+          />
+        </View>
+        )}
+
+        { orderId && (
         <CashfreePG
-          appId="275432e3853bd165afbf5272"
-          orderId="Order0003987654321Order0003987654321"
-          orderAmount="1"
+          appId={Config.CASHFREE_APP_ID}
+          orderId={orderId}
+          orderAmount={orderAmount}
           orderCurrency="INR"
           orderNote="This is an order note"
           source="reactsdk"
@@ -107,26 +235,27 @@ class Payment extends Component {
           notifyUrl="http://localhost:3000"
           paymentModes=""
           env="test" // blank for prod
-          tokenData="Yj9JCN4MzUIJiOicGbhJCLiQ1VKJiOiAXe0Jye.ZB9JSYwADNkRmZ2UTM3QWNiojI0xWYz9lIsUjM5ADMzAzN1EjOiAHelJCLiIlTJJiOik3YuVmcyV3QyVGZy9mIsEjOiQnb19WbBJXZkJ3biwiIxIzM0UjN3gTOzADMwIXZkJ3TxIzM0UjN3gTOzADMwIXZkJ3TiojIklkclRmcvJye.tBz_0Wd9voi25g1E-wx2WJ9bjuXeWvmAbfLbw-tLxXza7hsv4joXZSJxvKYF5rZjA9"
+          tokenData={cfToken}
+          {...params.seamlessParams}
           callback={(eventData) => {
-            console.log('eventsdata', eventData);
-            /*
-                callback function that will be executed once the transaction has been completed
-                */
-          }
-        {/* }
-        /> */}
-
-        {!!uri && (
-        <WebView
-          source={{ uri }}
-          onNavigationStateChange={(q) => {
-            if (q.url.includes('http://localhost:3000/')) {
-              alert('failed');
+            this.saveTransaction();
+            const jsonEventData = JSON.parse(eventData);
+            console.log('eventsdataeventsdata', eventData);
+            // {"orderId":"INHWMM1569925455","referenceId":"169912",
+            // "orderAmount":"100.00","txStatus":"SUCCESS",
+            // "txMsg":"Transaction Successful","txTime":"2019-10-01 15:54:18",
+            // "paymentMode":"CREDIT_CARD",
+            // "signature":"Prk5z39jbI7BJxuvZ1F3g21+4Q1HGXsyVGU17xfDmkA="}
+            if (jsonEventData.txStatus === 'SUCCESS') {
+              this.setState({ modalVisible: true });
+            } else {
+              this.setState({ txSuccess: false });
+              console.log('error came');
+              Toast(jsonEventData.txMsg);
             }
           }}
         />
-        )}
+        ) }
       </View>
     );
   }
