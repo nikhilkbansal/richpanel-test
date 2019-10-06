@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Image, View } from 'react-native';
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Text from './Text';
 import Button from './Button';
-import { Colors } from '../Theme';
+import { Colors, ApplicationStyles } from '../Theme';
 
 function NotificationUi({
   title, onPress, containerStyle, theme,
@@ -19,6 +19,7 @@ function NotificationUi({
       alignContent: 'center',
       justifyContent: 'center',
       margin: wp('1%'),
+      marginVertical: hp('1%'),
       elevation: 1,
     }}
     >
@@ -32,12 +33,10 @@ function NotificationUi({
         flex: 1, paddingHorizontal: wp('2%'), justifyContent: 'space-between',
       }}
       >
-        <Text color="dark" size="h4">
-          <Text color="dark" font="medium" size="h4">Goonj</Text>
-          {' '}
-added a new post
-          {' '}
-          <Text size="h4" color="primary">Here is new way to help poor people</Text>
+        <Text>
+          <Text style={{ ...ApplicationStyles.info, ...ApplicationStyles.primaryColor }}>Goonj</Text>
+         Rahul
+          <Text style={{ ...ApplicationStyles.info }}> replied you</Text>
         </Text>
         <Text size="h5">2 hours ago</Text>
       </View>

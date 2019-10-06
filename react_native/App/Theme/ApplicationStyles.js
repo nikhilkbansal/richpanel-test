@@ -37,6 +37,7 @@ export default {
     color: Colors.font.nero,
   },
 
+
   lightColor: {
     color: Colors.font.white,
   },

@@ -1,6 +1,10 @@
 const httpStatus = require('http-status');
 const Event = require('./event.model');
 const Follow = require('../follow/follow.model');
+const User = require('../user/user.model');
+const Share = require('../share/share.model');
+const Reaction = require('../reaction/reaction.model');
+const Comment = require('../comment/comment.model');
 const { handler: errorHandler } = require('../../middlewares/error');
 
 /**
@@ -60,7 +64,21 @@ exports.getHomePageEvents = async (req, res, next) => {
     // const followeeIds = followers.map(o => o.followeeId);
     // const events = Event.list({ userId: { $in: followeeIds }, page, perPage });
     const events = await Event.list({ page, perPage });
-    res.json(events);
+    const resultedEvents = await Promise.map(events, async (event, index) => {
+      const eventsCount = await Reaction.findReactionsCounts(event._id);
+      const howUserReacted = await Reaction.howUserReacted(user._id, event._id);
+      const comment = await Comment.list({ perPage: 1, itemId: event._id, itemType: 'event' });
+      const shares = await Share.getShares({ itemId: event._id, userId: user._id });
+      return {
+        comment,
+        ...event.toObject(),
+        ...eventsCount,
+        howUserReacted,
+        sharesCount: shares.length,
+        isFollowed: true,
+      };
+    });
+    res.json(resultedEvents);
   } catch (error) {
     next(error);
   }

@@ -17,6 +17,7 @@ const defaultConfig = {
   whitelist: ['http://example1.com', 'http://example2.com'],
   mongo: { uri: 'mongodb://localhost:27017/help_db' },
   logs: 'dev',
+  fcmServerKey: 'AAAA26wufXE:APA91bEgAInOeVAs1XMbbptVVlzANbbtmKW9X81XdOH_S3BMNC7iElIns-OIhA6lBrktfWTRp8UzPF8scIoliZgpMQaIGxlbXgJQ-x7_07Z_mbsDxdiXuJdEzwnw9fDWgQoNNNdn_fAd',
   ddosConfig: {
     burst: 100, limit: 100,
   },

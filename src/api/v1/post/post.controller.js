@@ -5,6 +5,7 @@ const Follow = require('../follow/follow.model');
 const User = require('../user/user.model');
 const Share = require('../share/share.model');
 const Reaction = require('../reaction/reaction.model');
+const Comment = require('../comment/comment.model');
 const { handler: errorHandler } = require('../../middlewares/error');
 // const APIError = require('../../utils/APIError');
 // const { sendMail } = require('../../services/mailProviders');
@@ -96,9 +97,15 @@ exports.getHomePagePosts = async (req, res, next) => {
     const resultedPosts = await Promise.map(posts, async (post, index) => {
       const postsCount = await Reaction.findReactionsCounts(post._id);
       const howUserReacted = await Reaction.howUserReacted(user._id, post._id);
+      const comment = await Comment.list({ perPage: 1, itemId: post._id, itemType: 'post' });
       const shares = await Share.getShares({ itemId: post._id, userId: user._id });
       return {
-        ...post.toObject(), ...postsCount, howUserReacted, sharesCount: shares.length, isFollowed: true,
+        comment,
+        ...post.toObject(),
+        ...postsCount,
+        howUserReacted,
+        sharesCount: shares.length,
+        isFollowed: true,
       };
     });
     res.json(resultedPosts);

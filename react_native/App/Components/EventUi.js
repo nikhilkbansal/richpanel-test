@@ -10,6 +10,7 @@ import {
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import moment from 'moment';
 import Text from './Text';
+import AvatarImage from './AvatarImage';
 import MenuDropdown from './MenuDropdown';
 import Button from './Button';
 import { Colors, ApplicationStyles } from '../Theme';
@@ -102,13 +103,12 @@ const styles = StyleSheet.create({
 });
 
 function EventUi({
-  title, description, files, userName, userPicture, createdAt, onPress, containerStyle, theme, onDonatePress,
+  title, description, comment, files, userName, userPicture, createdAt, onViewComments, onPress, containerStyle, theme, onDonatePress,
 }) {
   return (
     <View style={styles.container}>
       <View style={[styles.subContainer]}>
-        <Image
-          style={styles.avatarImage}
+        <AvatarImage
           source={{ uri: CommonFunctions.getFile(userPicture, 'avatar', true) }}
         />
         <View style={[styles.avatarContainer]}>
@@ -166,6 +166,40 @@ function EventUi({
             {description}
             <Text style={styles.moreStyle}> more</Text>
           </Text>
+        </View>
+        <View style={styles.subBody}>
+          {comment && comment.length > 0 && (
+          <View style={{
+            flexDirection: 'row',
+          }}
+          >
+            <AvatarImage
+              style={{
+                paddingRight: wp('1%'),
+                paddingTop: hp('0.57%'),
+              }}
+              size={wp('6%')}
+              source={{ uri: CommonFunctions.getFile(comment[0].userId.userPicture, 'avatar', true) }}
+            />
+
+
+            <Text style={{
+              ...ApplicationStyles.body3, flex: 1, flexWrap: 'wrap',
+            }}
+            >
+              <Text style={{ ...ApplicationStyles.info3 }}>
+                {`${comment[0].userId.name} `}
+              </Text>
+              {comment[0].comment}
+            </Text>
+
+          </View>
+          )}
+          <Button
+            title="View comments"
+            titleStyle={{ ...ApplicationStyles.body3, textAlign: 'right' }}
+            onPress={onViewComments}
+          />
         </View>
       </View>
     </View>

@@ -1,8 +1,10 @@
 const { generateOrderId } = require('../../../utils/universalFunctions');
 const CashFree = require('./../../../services/cashFreeProviders');
+const Post = require('./../../post/post.model');
 const APIError = require('../../../utils/APIError');
 const httpStatus = require('http-status');
-const Transaction = require('./transaction.model');
+const _ = require('lodash');
+const { Transaction, Beneficiary } = require('./transaction.model');
 
 exports.getCfToken = async (req, res, next) => {
   try {
@@ -29,43 +31,25 @@ exports.getCfToken = async (req, res, next) => {
 
 exports.saveTransaction = async (req, res, next) => {
   try {
+    const { user } = req;
     const {
-      postId, orderId, txType, amount,
+      postId, orderId, txType, txData,
     } = req.body;
 
+    const post = Post.findById(postId);
     const orderDetail = await CashFree.getOrderDetails({
-      orderIdss: 34,
+      orderId,
+    });
+    await Transaction.add({
+      senderId: user._id,
+      receiverId: post.userId,
+      amount: parseFloat(orderDetail.details.orderAmount),
+      txStatus: _.camelCase(orderDetail.details.orderStatus),
+      txData: JSON.parse(txData),
+      txType,
     });
 
-    console.log('order', orderDetail);
-    // details
-
-
-    // order { details:
-    //   { orderId: 'INCWYW1570021316',
-    //     orderCurrency: 'INR',
-    //     orderAmount: '500.00',
-    //     orderNote: 'This is an order note',
-    //     customerName: 'John',
-    //     customerPhone: '1234561234',
-    //     sellerPhone: '',
-    //     orderStatus: 'ACTIVE',
-    //     addedOn: '2019-10-02 18:31:58' },
-    //  status: 'OK' }
-
-
-    res.json();
-    return;
-    const transaction = await Transaction.add({
-      senderId: '',
-      receiverId: '',
-      amount,
-      txStatus: '',
-      txData: {
-
-      },
-      txType: '',
-    });
+    res.status(httpStatus.CREATED).json();
   } catch (error) {
     next(error);
   }
@@ -119,3 +103,52 @@ exports.createAndSubscribePlan = async (req, res, next) => {
   }
 };
 
+
+exports.addPayoutBeneficiary = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const {
+      name,
+      email,
+      phone,
+      bankAccount,
+      ifsc,
+      vpa,
+      cardNo,
+      address1,
+      address2,
+      city,
+      state,
+      pincode,
+    } = req.body;
+    const beneId = generateOrderId();
+    const authorizePayout = await CashFree.authorizePayout();
+    await CashFree.addBeneficiary({
+      beneId,
+      name,
+      email,
+      phone,
+      bankAccount,
+      ifsc,
+      vpa,
+      cardNo,
+      address1,
+      address2,
+      city,
+      state,
+      pincode,
+    }, {
+      Authorization: `Bearer ${authorizePayout.data.token}`,
+    });
+
+    await Beneficiary.add({
+      beneId,
+      userId: user._id,
+    });
+
+    res.status(httpStatus.CREATED).json();
+  } catch (error) {
+    console.log('error', error);
+    next(error);
+  }
+};

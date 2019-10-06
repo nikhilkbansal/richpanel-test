@@ -6,6 +6,12 @@ const toFixTwoIfNeeds = num => Math.round(num * 100) / 100;
 
 export default {
   getFileNameFromUrl,
+  getPluralString(string, number) {
+    if (number > 1) {
+      return `${string}s`;
+    }
+    return string;
+  },
   topThreeReactions(allReactions) {
     const sortedAllReactions = Object.keys(allReactions).sort((a, b) => allReactions[a] - allReactions[b]);
     const topThreeReactions = [];
@@ -58,7 +64,6 @@ export default {
         break;
     }
 
-    console.log(encodeURI(`${Config.API_URL}files/${id}`));
     if (forceRefresh) {
       return encodeURI(`${Config.API_URL}files/${id}?${params}&r=${Math.random() * 100 * Math.random()}`);
     }

@@ -1,8 +1,9 @@
-package com.boilerplate;
+package com.helpapp;
 
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.evollu.react.fcm.FIRMessagingPackage;
 import com.RNTextInputMask.RNTextInputMaskPackage;
 import com.horcrux.svg.SvgPackage;
 import cl.json.RNSharePackage;
@@ -20,6 +21,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.google.firebase.FirebaseApp;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,6 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FIRMessagingPackage(),
             new RNTextInputMaskPackage(),
             new SvgPackage(),
             new RNSharePackage(),
@@ -73,5 +76,10 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    try {
+      FirebaseApp.initializeApp(this);
+    }
+    catch (Exception e) {
+    }
   }
 }

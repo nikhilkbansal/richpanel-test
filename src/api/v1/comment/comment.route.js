@@ -7,6 +7,7 @@ const {
   postComment,
   deleteComment,
   listComments,
+  likeUnlike,
 } = require('./comment.validation');
 
 const router = express.Router();
@@ -56,6 +57,9 @@ router
    */
   .get(authorize(), validate(listComments), controller.list);
 
+
+router
+  .route('/likeUnlike').post(authorize(), validate(likeUnlike), controller.likeUnlike);
 
 router
   .route('/:commentId')

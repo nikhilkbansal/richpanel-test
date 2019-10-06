@@ -36,7 +36,6 @@ const iconFamilies = {
 function Icon({
   iconFamily, name, size, color, style, ...props
 }) {
-  console.log('namee', name, Files, Files[name]);
   const IconComponent = iconFamily && iconFamily !== 'customSvg' ? iconFamilies[iconFamily] : Ionicons;
   const iconSize = size || ApplicationStyles.iconSize;
   return (

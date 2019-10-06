@@ -7,6 +7,22 @@ const txTypes = [
   'userToPOShop', // user have sent money to shop of PO
   'platformToPO', // PO=Philanthropy Organization; our platform have sent money to ngo,npo etc
 ];
+
+const beneficiarySchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  beneId: {
+    type: String,
+    ref: 'User',
+  },
+  status: String,
+}, {
+  timestamps: true,
+});
+
+
 const transactionSchema = new mongoose.Schema({
   senderId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -41,4 +57,16 @@ transactionSchema.statics = {
   },
 };
 
-module.exports = mongoose.model('Transaction', transactionSchema);
+
+beneficiarySchema.statics = {
+  add(data) {
+    return this.create({
+      ...data,
+    });
+  },
+};
+
+module.exports = {
+  Transaction: mongoose.model('Transaction', transactionSchema),
+  Beneficiary: mongoose.model('Beneficiary', beneficiarySchema),
+};

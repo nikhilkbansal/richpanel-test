@@ -17,10 +17,12 @@ import Payment from 'App/Containers/Payment/Payment';
 import SelectPaymentMethod from 'App/Containers/Payment/SelectPaymentMethod';
 import Donate from 'App/Containers/Donate/Donate';
 import SeeAllSearch from 'App/Containers/SeeAllSearch/SeeAllSearch';
+import Comment from 'App/Containers/Comment/Comment';
 import NgoProfile from 'App/Containers/NgoProfile/NgoProfile';
 import SplashScreen from 'App/Containers/SplashScreen/SplashScreen';
 import StyleGuide from 'App/Containers/StyleGuide/StyleGuide';
 import AdditionalPayment from 'App/Containers/Payment/AdditionalPayment';
+import AddBankAccount from 'App/Containers/Payment/AddBankAccount';
 
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -54,10 +56,12 @@ const AppNav = createStackNavigator(
     StyleGuide,
     Payment,
     AdditionalPayment,
+    Comment,
     SelectPaymentMethod,
     Donate,
     SeeAllSearch,
     NgoProfile,
+    AddBankAccount,
   },
   {
     // By default the application will show the this screen

@@ -15,9 +15,11 @@ import Dropdown from './Dropdown';
 import MenuDropdown from './MenuDropdown';
 import Icon from './Icon';
 import Swiper from './Swiper';
+import AvatarImage from './AvatarImage';
 
 export {
   Button,
+  AvatarImage,
   Text,
   NavigationBar,
   NotificationUi,

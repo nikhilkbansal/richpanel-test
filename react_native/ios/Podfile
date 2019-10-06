@@ -8,6 +8,11 @@ pod 'GoogleMaps', '= 2.0.1'
 
 
 # Add new pods below this line
+pod 'react-native-fcm', :path => '../node_modules/react-native-fcm'
+
+
+
+
 pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
 pod 'RNShare', :path => '../node_modules/react-native-share'

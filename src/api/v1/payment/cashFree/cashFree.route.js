@@ -5,6 +5,7 @@ const {
   getCfToken,
   createAndSubscribePlan,
   saveTransaction,
+  addPayoutBeneficiary,
 } = require('./cashFree.validation');
 const { authorize } = require('../../../middlewares/auth');
 
@@ -12,14 +13,17 @@ const router = express.Router();
 
 
 router.route('/getCfToken')
-  .get(validate(getCfToken), controller.getCfToken);
+  .get(authorize(), validate(getCfToken), controller.getCfToken);
 
 
 router.route('/createAndSubscribePlan')
-  .post(validate(createAndSubscribePlan), controller.createAndSubscribePlan);
+  .post(authorize(), validate(createAndSubscribePlan), controller.createAndSubscribePlan);
 
 router.route('/saveTransaction')
-  .post(validate(saveTransaction), controller.saveTransaction);
+  .post(authorize(), validate(saveTransaction), controller.saveTransaction);
+
+router.route('/addPayoutBeneficiary')
+  .post(authorize(), validate(addPayoutBeneficiary), controller.addPayoutBeneficiary);
 
 
 module.exports = router;

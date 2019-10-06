@@ -13,6 +13,12 @@ import {
 import { Validations } from '../Utils';
 
 class TextInput extends React.Component {
+  // static validateForm(keys = ['email', 'password'],
+  // [['required', 'email'], ['required', 'password', 'sameAs=confirmAddress']], state) {
+
+  // }
+
+  // Deprecated
   static validateForm(keys = [], state) {
     const {
       email, password, confirmPassword, userName, usernameOrEmail, name,
@@ -43,6 +49,7 @@ class TextInput extends React.Component {
     if (keys.includes('confirmPassword') && confirmPassword !== password) {
       errors = { ...errors, confirmPassword: 'Both passwords are different' };
     }
+
     return Object.keys(errors).length === 0 ? false : errors;
   }
 
@@ -74,17 +81,22 @@ class TextInput extends React.Component {
       label, numberOfLines, multiline, secureTextEntry, error,
       placeholder, onChangeText, returnKeyType, textInputRef, onSubmitEditing,
       containerStyle, inputStyle,
-      mask,
+      mask, optional,
       value, ...props
     } = this.props;
     return (
       <View style={[{ marginTop: hp('1%'), marginBottom: !error ? hp('1%') : 0 }, containerStyle]}>
         {label
-        && <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>{label}</Text>}
+        && (
+        <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>
+          {label}
+          {' '}
+          { optional ? ' (optional)' : null}
+        </Text>
+        )}
         {mask
           ? (
             <TextInputMask
-              {...props}
               multiline={multiline}
               numberOfLines={numberOfLines}
               placeholder={placeholder}
@@ -108,6 +120,8 @@ class TextInput extends React.Component {
               underlineColorAndroid="transparent"
 
               mask={mask}
+              {...props}
+
             />
           )
 
@@ -162,6 +176,7 @@ TextInput.propTypes = {
   containerStyle: PropTypes.object,
   inputStyle: PropTypes.object,
   mask: PropTypes.string,
+  optional: PropTypes.bool,
 };
 
 TextInput.defaultProps = {
@@ -179,6 +194,7 @@ TextInput.defaultProps = {
   containerStyle: {},
   inputStyle: {},
   mask: null,
+  optional: false,
 };
 
 export default TextInput;

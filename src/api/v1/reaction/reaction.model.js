@@ -17,7 +17,7 @@ const mongoose = require('mongoose');
  * @private
  */
 const reactionsEnum = ['love', 'like', 'insightFul', 'sad', 'celebrate'];
-const itemType = ['event', 'post'];
+const itemTypes = ['event', 'post', 'comment'];
 
 const reactionSchema = new mongoose.Schema({
   userId: {
@@ -32,7 +32,7 @@ const reactionSchema = new mongoose.Schema({
   },
   itemType: {
     type: String,
-    enum: itemType,
+    enum: itemTypes,
   },
   reaction: {
     type: String,
@@ -48,7 +48,7 @@ const reactionSchema = new mongoose.Schema({
 
 reactionSchema.statics = {
   reactionsEnum,
-  itemType,
+  itemTypes,
   async removeReaction({
     userId, itemId,
   }) {
@@ -58,15 +58,14 @@ reactionSchema.statics = {
     return this.updateOne(options, { status: 'inActive' });
   },
   async addReaction({
-    reaction, userId, itemId,
+    reaction, userId, itemId, itemType,
   }) {
     const options = {
-      userId, itemId,
+      userId, itemId, itemType,
     };
     const pastReaction = await this.findOne(options);
-    console.log('pastReaction', pastReaction);
     if (pastReaction) {
-      if (pastReaction === reaction) {
+      if (pastReaction.reaction === reaction && pastReaction.status === 'active') {
         pastReaction.status = 'inActive';
       } else {
         pastReaction.status = 'active';
@@ -75,12 +74,14 @@ reactionSchema.statics = {
       return pastReaction.save();
     }
     return this.create({
-      userId, itemId, reaction, status: 'active',
+      userId, itemId, reaction, itemType, status: 'active',
     });
   },
 
-  async howUserReacted(userId, itemId) {
-    const reactions = await this.findOne({ userId, itemId, status: 'active' });
+  async howUserReacted(userId, itemId, itemType = 'post') {
+    const reactions = await this.findOne({
+      userId, itemId, itemType, status: 'active',
+    });
     if (reactions) {
       return reactions.reaction;
     }

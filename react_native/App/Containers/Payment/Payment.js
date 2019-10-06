@@ -6,20 +6,17 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
-import CheckBox from 'react-native-check-box';
 import Dialog, { DialogContent, SlideAnimation, DialogTitle } from 'react-native-popup-dialog';
 import PaymentActions from 'App/Stores/Payment/Actions';
-import { call, put } from 'redux-saga/effects';
 import CashfreePG from 'cashfreereactnativepg';
 import Toast from '../../Services/ToastService';
 import {
-  Text, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, FileSelector, Icon,
+  Text, NavigationBar, Button, Icon,
 } from '../../Components';
 import { Config } from '../../Config';
 import {
-  Colors, FontSizes, ApplicationStyles, Files,
+  Colors, FontSizes, ApplicationStyles,
 } from '../../Theme';
-import { CommonFunctions } from '../../Utils';
 import AxiosRequest from '../../Services/HttpRequestService';
 
 const styles = StyleSheet.create({
@@ -85,6 +82,7 @@ class Payment extends Component {
     this.addPost = this.addPost.bind(this);
     this.getCfToken = this.getCfToken.bind(this);
     this.saveTransaction = this.saveTransaction.bind(this);
+    this.afterPaymentDone = this.afterPaymentDone.bind(this);
   }
 
 
@@ -113,7 +111,7 @@ class Payment extends Component {
   }
 
 
-  async saveTransaction() {
+  async saveTransaction(txData) {
     const { orderId, orderAmount } = this.state;
     const { navigation: { state: { params: { paymentMeta } } } } = this.props;
     try {
@@ -123,6 +121,7 @@ class Payment extends Component {
           postId: paymentMeta._id,
           amount: orderAmount,
           orderId,
+          txData,
           txType: paymentMeta.txType,
         },
         url: 'payment/cashFree/saveTransaction',
@@ -169,6 +168,10 @@ class Payment extends Component {
     postCreate({ title, description, files });
   }
 
+  afterPaymentDone() {
+    this.setState({ modalVisible: false },
+      () => navigation.navigate('HomePage'));
+  }
 
   render() {
     const { navigation, navigation: { state: { params } } } = this.props;
@@ -185,9 +188,7 @@ class Payment extends Component {
           dialogAnimation={new SlideAnimation({
             slideFrom: 'bottom',
           })}
-          onTouchOutside={() => {
-            this.setState({ modalVisible: false }, () => navigation.navigate('HomePage'));
-          }}
+          onTouchOutside={this.afterPaymentDone}
         >
           <DialogContent style={{
             width: wp('50%'),
@@ -238,7 +239,7 @@ class Payment extends Component {
           tokenData={cfToken}
           {...params.seamlessParams}
           callback={(eventData) => {
-            this.saveTransaction();
+            this.saveTransaction(JSON.stringify(eventData));
             const jsonEventData = JSON.parse(eventData);
             console.log('eventsdataeventsdata', eventData);
             // {"orderId":"INHWMM1569925455","referenceId":"169912",
@@ -248,6 +249,7 @@ class Payment extends Component {
             // "signature":"Prk5z39jbI7BJxuvZ1F3g21+4Q1HGXsyVGU17xfDmkA="}
             if (jsonEventData.txStatus === 'SUCCESS') {
               this.setState({ modalVisible: true });
+              setTimeout(this.afterPaymentDone, 5000);
             } else {
               this.setState({ txSuccess: false });
               console.log('error came');

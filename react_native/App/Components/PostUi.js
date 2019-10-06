@@ -19,6 +19,7 @@ import ReactionsGot from './ReactionsGot';
 import Swiper from './Swiper';
 import Icon from './Icon';
 import { CommonFunctions } from '../Utils';
+import AvatarImage from './AvatarImage';
 
 console.log('Avatar', Avatar);
 
@@ -103,13 +104,12 @@ const styles = StyleSheet.create({
 });
 
 function PostUi({
-  _id, title, description, isFollowed, files, userId, userName, userPicture, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
+  _id, title, description, isFollowed, files, userId, userName, comment, userPicture, onViewComments, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
 }) {
   return (
     <View style={styles.container}>
       <View style={[styles.subContainer]}>
-        <Image
-          style={styles.avatarImage}
+        <AvatarImage
           source={{ uri: CommonFunctions.getFile(userPicture, 'avatar', true) }}
         />
         <View style={[styles.avatarContainer]}>
@@ -151,7 +151,7 @@ function PostUi({
           <Text style={{ ...ApplicationStyles.bodySubHeading2 }}>
             {CommonFunctions.numberToReadable(sharesCount)}
             {' '}
-            Shares
+            {CommonFunctions.getPluralString('Share', sharesCount)}
           </Text>
           )}
         </View>
@@ -193,6 +193,40 @@ function PostUi({
             {description}
             <Text style={styles.moreStyle}> more</Text>
           </Text>
+        </View>
+        <View style={styles.subBody}>
+          {comment.length > 0 && (
+          <View style={{
+            flexDirection: 'row',
+          }}
+          >
+            <AvatarImage
+              style={{
+                paddingRight: wp('1%'),
+                paddingTop: hp('0.57%'),
+              }}
+              size={wp('6%')}
+              source={{ uri: CommonFunctions.getFile(comment[0].userId.userPicture, 'avatar', true) }}
+            />
+
+
+            <Text style={{
+              ...ApplicationStyles.body3, flex: 1, flexWrap: 'wrap',
+            }}
+            >
+              <Text style={{ ...ApplicationStyles.info3 }}>
+                {`${comment[0].userId.name} `}
+              </Text>
+              {comment[0].comment}
+            </Text>
+
+          </View>
+          )}
+          <Button
+            title="View comments"
+            titleStyle={{ ...ApplicationStyles.body3, textAlign: 'right' }}
+            onPress={onViewComments}
+          />
         </View>
       </View>
     </View>

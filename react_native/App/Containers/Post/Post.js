@@ -79,6 +79,7 @@ class Post extends Component {
     onReactionPress={this.props.postReaction}
     onReactionRemovePress={this.props.removeReaction}
     userPicture={item.userId.picture}
+    onViewComments={()=>this.props.navigation.navigate('Comment',{itemId:item._id, itemType:'post'})}
     onDonatePress={()=>this.props.navigation.navigate('Donate',{paymentMeta:{_id:item._id, txType:'userToPOCampaign'}})}
     {...item}
     />;
@@ -90,6 +91,8 @@ class Post extends Component {
       <View style={{flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color}}>
         <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={false} showRightSection rightIcon="md-add" title="Home"/>
         <FlatList
+        onRefresh={()=>{}}
+        refreshing={false}
           data={homePosts} 
           renderItem={this._renderItem}
         />

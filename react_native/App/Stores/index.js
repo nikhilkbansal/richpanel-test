@@ -7,6 +7,8 @@ import { reducer as postReducer } from './Post/Reducers';
 import { reducer as paymentReducer } from './Payment/Reducers';
 import { reducer as eventReducer } from './Event/Reducers';
 import { reducer as searchReducer } from './Search/Reducers';
+import { reducer as commentReducer } from './Comment/Reducers';
+import { reducer as notificationReducer } from './Notification/Reducers';
 
 export default () => {
   const rootReducer = combineReducers({
@@ -20,6 +22,8 @@ export default () => {
     payment: paymentReducer,
     event: eventReducer,
     search: searchReducer,
+    comment: commentReducer,
+    notification: notificationReducer,
   });
 
   return configureStore(rootReducer, rootSaga);

@@ -8,7 +8,7 @@ module.exports = {
     body: {
       reaction: Joi.string().required().valid(Reaction.reactionsEnum),
       itemId: Joi.string().required(),
-      itemType: Joi.string().required().valid(Reaction.itemType),
+      itemType: Joi.string().required().valid(Reaction.itemTypes),
     },
   },
 

@@ -5,12 +5,14 @@ import codePush from 'react-native-code-push';
 import createStore from 'App/Stores';
 import RootScreen from './Containers/Root/RootScreen';
 import { setStoreRef } from './Services/HttpRequestService';
+import { pushNotificationInit } from './Services/NotificationService';
 
 const codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME };
 
 const { store, persistor } = createStore();
 
 setStoreRef(store);
+pushNotificationInit(store);
 
 console.disableYellowBox = true;
 

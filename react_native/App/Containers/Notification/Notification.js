@@ -4,6 +4,8 @@ import {
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
+import NotificationActions from '../../Stores/Notification/Actions';
+import { connect } from 'react-redux';
 
 import { ApplicationStyles } from '../../Theme';
 import {NotificationUi, NavigationBar} from '../../Components';
@@ -29,6 +31,8 @@ class Notification extends Component {
       StatusBar.setBarStyle('light-content');
       StatusBar.setBackgroundColor(ApplicationStyles.primaryColor.color);
     });
+
+    this.props.getNotifications();
   }
 
   componentWillUnmount() {
@@ -39,15 +43,15 @@ class Notification extends Component {
 
   render() {
     const { email, password, checked } = this.state;
-    const { navigation } = this.props;
+    const { navigation, notifications } = this.props;
     return (
       <View style={{flex:1}}>
 
-<NavigationBar {...navigation} title='Notifications' showLeftSection={false}/>
+      <NavigationBar {...navigation} title='Notifications' showLeftSection={false}/>
 
         <FlatList
           style={{paddingHorizontal: wp('3%')}}
-          data={[{a:3},{a:3},{a:3},{a:3},{a:3},{a:3},{a:3},{a:3},{a:3},{a:3},{a:3},{a:3}]} 
+          data={notifications} 
           renderItem={this._renderItem}
         />
       </View>
@@ -55,4 +59,10 @@ class Notification extends Component {
   }
 }
 
-export default Notification;
+
+
+export default connect(
+  ({ notification: { notifications } }) => ({ notifications }), {
+    getNotifications: NotificationActions.getNotifications,
+  },
+)(Notification);

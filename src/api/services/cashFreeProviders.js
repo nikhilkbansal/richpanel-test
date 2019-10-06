@@ -1,48 +1,76 @@
 const axios = require('axios');
 
-const testUrl = 'https://test.cashfree.com/';
-const productionUrl = 'https://api.cashfree.com/';
+const apiUrls = {
+  default: {
+    test: 'https://test.cashfree.com/',
+    production: 'https://api.cashfree.com/',
+  },
+  payout: {
+    test: 'https://payout-gamma.cashfree.com/',
+    production: 'https://payout-api.cashfree.com/',
+  },
+};
+
+const apiKeys = {
+  default: {
+    test: {
+      appId: '8094877b0057ceb51b00a04a4908',
+      secretKey: 'c4cee62143fa338fd67469bcfdf768a9867506c0',
+    },
+    production: {},
+  },
+  payout: {
+    test: {
+      appId: 'CF8094D8PZIC0FNQVMQEU',
+      secretKey: 'e972c25f26a10143db968b998b62970656398c17',
+    },
+    production: {},
+  },
+};
+
+
 const configAppId = '8094877b0057ceb51b00a04a4908';
 const configSecretKey = 'c4cee62143fa338fd67469bcfdf768a9867506c0';
 
 const toUrlEncoded = obj => Object.keys(obj).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`).join('&');
 
 class Cashfree {
-  constructor(appId, secretKey, testEnv, returnUrl, notifyUrl) {
-    this.appId = appId;
-    this.secretKey = secretKey;
-    this.url = testEnv === 'test' ? testUrl : productionUrl;
+  constructor(apiKeysObj, env, returnUrl, notifyUrl) {
+    this.apiKeys = apiKeysObj;
+    this.env = env;
     this.returnUrl = returnUrl;
     this.notifyUrl = notifyUrl;
   }
 
-  updateConfig(appId, secretKey, testEnv, returnUrl, notifyUrl) {
-    this.appId = appId;
-    this.secretKey = secretKey;
-    this.url = testEnv === 'test' ? testUrl : productionUrl;
+  updateConfig(newApiKeys, env, returnUrl, notifyUrl) {
+    this.apiKeys = newApiKeys;
+    this.env = env;
     this.returnUrl = returnUrl;
     this.notifyUrl = notifyUrl;
   }
 
-  async callApi(apiPath, data, headers = {}, credsPlace = 'inBody') {
+  async callApi(apiPath, data, headers = {}, credsPlace = 'inBody', apiType = 'default') {
     const inData = {};
     const inHeader = {};
     let convertData = o => o;
 
+    const apiUrl = apiUrls[apiType][this.env];
+    const apiKey = this.apiKeys[apiType][this.env];
+
     if (credsPlace === 'inBody') {
-      inData.appId = this.appId;
-      inData.secretKey = this.secretKey;
+      inData.appId = apiKey.appId;
+      inData.secretKey = apiKey.secretKey;
       convertData = toUrlEncoded;
     } else if (credsPlace === 'InHeader') {
       inHeader['Content-Type'] = 'application/json';
-      inHeader['X-Client-Id'] = this.appId;
-      inHeader['X-Client-Secret'] = this.secretKey;
+      inHeader['X-Client-Id'] = apiKey.appId;
+      inHeader['X-Client-Secret'] = apiKey.secretKey;
     }
 
     try {
       const apiCall = await axios({
         method: 'post',
-        url: this.url + apiPath,
+        url: apiUrl + apiPath,
         headers: {
           'content-type': 'application/x-www-form-urlencoded',
           ...inHeader,
@@ -53,17 +81,25 @@ class Cashfree {
           ...data,
         }),
       });
-      if (apiCall.data.status !== 'OK') {
+      if (!['SUCCESS', 'OK'].includes(apiCall.data.status)) {
         throw apiCall.data;
       }
       return apiCall.data;
     } catch (e) {
       console.log('Payment Error: ', e);
-      throw new Error('Some error occured! Please try again later');
+      if (e && e.message) {
+        throw new Error(e.message);
+      } else {
+        throw new Error('Some error occured! Please try again later');
+      }
     }
   }
 
-  // Payment Gateway
+
+  /** **************************
+   *  Cashfree Payment Gateway
+   * *********************** */
+
   orderCreate(params) {
     return this.callApi('api/v1/order/create', { ...params, returnUrl: this.returnUrl, notifyUrl: this.notifyUrl });
   }
@@ -78,21 +114,36 @@ class Cashfree {
 
   // Used with seamless payment
   createCfToken(params) {
-    return this.callApi('/api/v2/cftoken/order', { ...params }, {}, 'InHeader');
+    return this.callApi('api/v2/cftoken/order', { ...params }, {}, 'InHeader');
   }
 
-  // Subscriptions
+
+  /** **************************
+   *  Cashfree Subscriptions
+   * *********************** */
   createPlan(params) {
-    return this.callApi('/api/v2/subscription-plans', { ...params }, {}, 'InHeader');
+    return this.callApi('api/v2/subscription-plans', { ...params }, {}, 'InHeader');
   }
 
   createSubscriptions(params) {
-    return this.callApi('/api/v2/subscriptions', { ...params }, {}, 'InHeader');
+    return this.callApi('api/v2/subscriptions', { ...params }, {}, 'InHeader');
+  }
+
+
+  /** **************************
+   *  Cashfree Payouts
+   * *********************** */
+  authorizePayout(params) {
+    return this.callApi('payout/v1/authorize', { ...params }, {}, 'InHeader', 'payout');
+  }
+
+  addBeneficiary(params, headers) {
+    return this.callApi('payout/v1/addBeneficiary', { ...params }, headers, 'InHeader', 'payout');
   }
 }
 
 async function test() {
-  const cashfree = new Cashfree(configAppId, configSecretKey, 'test', 'http://locolhost:3000', 'http://locolhost:3000');
+  const cashfree = new Cashfree(apiKeys, 'test', 'http://locolhost:3000', 'http://locolhost:3000');
 
   // const data = await cashfree.orderCreate({
   //   orderId: 'xBasilxTjjjestx1',
@@ -117,4 +168,4 @@ async function test() {
 
 // test();
 
-module.exports = new Cashfree(configAppId, configSecretKey, 'test', 'http://locolhost:3000', 'http://locolhost:3000');
+module.exports = new Cashfree(apiKeys, 'test', 'http://locolhost:3000', 'http://locolhost:3000');
