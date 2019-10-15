@@ -8,7 +8,7 @@ import UserActions from 'App/Stores/User/Actions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import {
-  Text, NavigationBar, TextInput, Button, ProgressiveImage,
+  Text, NavigationBar, TextInput, Button, ProgressiveImage, MenuItem
 } from '../../Components';
 import {
   Colors, FontSizes, Fonts, ApplicationStyles,
@@ -20,21 +20,20 @@ const styles = StyleSheet.create({
   subContainer: { flex: 1, paddingHorizontal: wp('5%') },
   loginContainer: {
     marginVertical: hp('4%'),
-    backgroundColor: Colors.primary,
+    backgroundColor: ApplicationStyles.primaryColor.color,
     borderRadius: wp('2%'),
     width: wp('80%'),
     alignSelf: 'center',
     height: hp('7%'),
   },
-  loginTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
+  loginTitle: { color: ApplicationStyles.lightColor.color, textAlign: 'center', fontSize: FontSizes.h3 },
   sectionContainer: {
     backgroundColor: ApplicationStyles.lightBackground.color,
-    elevation: 2,
+    ...ApplicationStyles.elevationS,
     flex: 1,
     borderRadius: wp('2%'),
     overflow: 'hidden',
     marginTop: hp('3%'),
-    paddingBottom: hp('3%'),
   },
   userInfo: {
     padding: wp('2%'),
@@ -48,7 +47,7 @@ const styles = StyleSheet.create({
     height: wp('20%'),
     borderRadius: wp('20%') / 2,
     overflow: 'hidden',
-    borderColor: Colors.primary,
+    borderColor: ApplicationStyles.primaryColor.color,
     marginLeft: wp('4%'),
     justifyContent: 'center',
     marginVertical: wp('2%'),
@@ -107,7 +106,7 @@ class Profile extends Component {
               <ProgressiveImage
                 resizeMode="cover"
                 style={{
-                  elevation: 1,
+                  ...ApplicationStyles.elevationS,
                   width: wp('22%'),
                   height: wp('22%'),
                 }}
@@ -138,14 +137,14 @@ class Profile extends Component {
               </View>
               <View style={{ flexWrap: 'wrap', flex: 1, flexDirection: 'row' }}>
                 {/* <Text style={styles.info}>
-                  <Icon size={wp('4%')} name="md-female" color={Colors.mediumDarkFont} />
+                  <Icon size={wp('4%')} name="md-female" color={ApplicationStyles.disabledColor.color} />
                   {' '}
                       Female
 
                 </Text> */}
 
                 {/* <Text style={styles.info}>
-                  <Icon size={wp('4%')} name="md-pin" color={Colors.mediumDarkFont} />
+                  <Icon size={wp('4%')} name="md-pin" color={ApplicationStyles.disabledColor.color} />
                   {' '}
                       #123, Gold Street, USA
 
@@ -170,7 +169,23 @@ class Profile extends Component {
               title="My Donations"
             />
           </View> */}
-          <View style={{
+            <View style={[styles.sectionContainer, ]}>
+              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('Followings')} leftLabel='Following' />
+              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='My Donations' />
+              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Stats' />
+            </View>
+
+            <View style={[styles.sectionContainer, { marginBottom: hp('2%') }]}>
+              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Organization Info' />
+              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Carousel' />
+              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Posts' />
+              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Events' />
+              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Jobs' />
+              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Shop' />
+              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Stats' />
+              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Bank details' />
+            </View>
+          {/* <View style={{
             paddingTop: hp('3%'),
             flex: 1,
             flexDirection: 'row',
@@ -203,7 +218,7 @@ class Profile extends Component {
                   width: wp('30%'),
                   height: wp('30%'),
                   borderRadius: wp('3.1%'),
-                  elevation: 2,
+                  ...ApplicationStyles.elevationS,
                   overflow: 'hidden',
                   justifyContent: 'center',
                   marginVertical: wp('2%'),
@@ -228,7 +243,7 @@ class Profile extends Component {
             style={styles.loginContainer}
             onPress={() => navigation.navigate('HomePage')}
             title="MY DONATIONS"
-          />
+          /> */}
 
         </ScrollView>
         )}

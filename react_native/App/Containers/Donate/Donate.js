@@ -30,17 +30,17 @@ const frequencyOptions = [
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
+  container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
   subContainer: { flex: 1, paddingHorizontal: wp('5%') },
   loginContainer: {
     marginVertical: hp('4%'),
-    backgroundColor: Colors.primary,
+    backgroundColor: ApplicationStyles.primaryColor.color,
     borderRadius: wp('2%'),
     width: wp('80%'),
     alignSelf: 'center',
     height: hp('7%'),
   },
-  loginTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
+  loginTitle: { color: ApplicationStyles.lightColor.color, textAlign: 'center', fontSize: FontSizes.h3 },
 });
 
 

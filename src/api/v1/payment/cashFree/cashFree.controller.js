@@ -4,7 +4,7 @@ const Post = require('./../../post/post.model');
 const APIError = require('../../../utils/APIError');
 const httpStatus = require('http-status');
 const _ = require('lodash');
-const { Transaction, Beneficiary } = require('./transaction.model');
+const { Transaction, Beneficiary } = require('../transaction/transaction.model');
 
 exports.getCfToken = async (req, res, next) => {
   try {

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   secondSection: { flex: 4, marginTop: hp('5%') },
   submitContainer: {
     marginTop: hp('4%'),
-    backgroundColor: Colors.primary,
+    backgroundColor:ApplicationStyles.primaryColor.color,
     borderRadius: wp('2%'),
     width: wp('80%'),
     alignSelf: 'center',

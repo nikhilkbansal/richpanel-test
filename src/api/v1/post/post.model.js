@@ -44,7 +44,10 @@ const postSchema = new mongoose.Schema({
     default: [],
   },
   location: {
-    type: String,
+    longLat: Array,
+    landmarkFlatNo: String,
+    city: String,
+    country: String,
   },
 
 }, {

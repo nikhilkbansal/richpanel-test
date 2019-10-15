@@ -12,6 +12,7 @@ const paytmLogo = require('../Assets/Images/paytmLogo.png');
 const phonepeLogo = require('../Assets/Images/phonepeLogo.png');
 const sbiLogo = require('../Assets/Images/sbiLogo.png');
 const hdfcLogo = require('../Assets/Images/hdfcLogo.png');
+const donate = require('../Assets/Images/donate.png');
 
 export default {
   logo,
@@ -22,6 +23,7 @@ export default {
   phonepeLogo,
   sbiLogo,
   hdfcLogo,
+  donate
 
   // SVG files
 

@@ -5,18 +5,9 @@
  * That allows to change them more easily later on.
  */
 
+
+
 export default {
-  primary: '#1B8AE5',
-  background: '#F8F8F8',
-  accent: '#E9E9E9',
-  darkFont: 'black',
-  golden: '#FFDF00',
-  mediumDarkFont: '#848484',
-  slightDarkFont: '#dddbdb',
-  lightFont: '#fff',
-  backdrop: '#fff',
-  cardBackground: '#fff',
-  disabled: 'gray',
   backgkround: {
     white: '#fff',
     grayish: 'rgba(0,0,0,0.050980392156862744)' /* 3 hours ago bg on dashboard */,
@@ -31,6 +22,7 @@ export default {
     slateGrey: '#757e90',
     shadyLady: '#989898' /** '#9b9b9b' */,
     summerSky: '#179ce1' /** '#00aced' */,
+    Pelorous: '#4A9FC1',
     charcoal: '#484848',
     nightRider: '#333333'/** '#343434' '#1e1e1e' */,
     blackRussian: '#27282b',

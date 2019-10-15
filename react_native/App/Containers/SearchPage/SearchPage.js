@@ -211,7 +211,7 @@ class SearchPage extends Component {
           <View style={{
             backgroundColor: ApplicationStyles.lightColor.color,
             padding: wp('1%'),
-            elevation: 1,
+            ...ApplicationStyles.elevationS,
             marginBottom: hp('2%'),
           }}
           >

@@ -8,7 +8,6 @@ import SignUp from 'App/Containers/Signup/SignUp';
 import HomePage from 'App/Containers/HomePage/HomePage';
 import ForgetPassword from 'App/Containers/ForgetPassword/ForgetPassword';
 import GetStarted from 'App/Containers/GetStarted/GetStarted';
-import PostDetail from 'App/Containers/PostDetail/PostDetail';
 import EditProfile from 'App/Containers/EditProfile/EditProfile';
 import MyDonations from 'App/Containers/MyDonations/MyDonations';
 import AddPost from 'App/Containers/AddPost/AddPost';
@@ -23,6 +22,9 @@ import SplashScreen from 'App/Containers/SplashScreen/SplashScreen';
 import StyleGuide from 'App/Containers/StyleGuide/StyleGuide';
 import AdditionalPayment from 'App/Containers/Payment/AdditionalPayment';
 import AddBankAccount from 'App/Containers/Payment/AddBankAccount';
+import OrgInfo from 'App/Containers/PoPages/OrgInfo';
+import PoSlider from 'App/Containers/PoPages/PoSlider';
+import Followings from 'App/Containers/Followings/Followings';
 
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -48,7 +50,6 @@ const AppNav = createStackNavigator(
     ForgetPassword,
     HomePage,
     GetStarted,
-    PostDetail,
     EditProfile,
     MyDonations,
     AddPost,
@@ -62,10 +63,13 @@ const AppNav = createStackNavigator(
     SeeAllSearch,
     NgoProfile,
     AddBankAccount,
+    OrgInfo,
+    Followings,
+    PoSlider
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'HomePage',
+    initialRouteName: 'MyDonations',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },

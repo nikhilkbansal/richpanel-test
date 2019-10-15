@@ -21,19 +21,19 @@ import { CommonFunctions } from '../../Utils';
 import AxiosRequest from '../../Services/HttpRequestService';
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
+  container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
   subContainer: { flex: 1, paddingHorizontal: wp('5%') },
   loginContainer: {
     marginVertical: hp('4%'),
-    backgroundColor: Colors.primary,
+    backgroundColor:ApplicationStyles.primaryColor.color,
     borderRadius: wp('2%'),
     width: wp('80%'),
     alignSelf: 'center',
     height: hp('7%'),
   },
-  loginTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
+  loginTitle: { color: ApplicationStyles.lightColor.color, textAlign: 'center', fontSize: FontSizes.h3 },
   menuContainer: {
-    elevation: 1,
+    ...ApplicationStyles.elevationS,
     marginVertical: hp('0.2%'),
     backgroundColor: ApplicationStyles.lightBackground.color,
     paddingHorizontal: wp('4%'),
@@ -135,7 +135,7 @@ class SelectPaymentMethod extends Component {
         })}
       >
         <View style={{
-          elevation: 1,
+          ...ApplicationStyles.elevationS,
           borderRadius: wp('12%'),
           padding: wp('1%'),
           alignSelf: 'center',
@@ -145,7 +145,7 @@ class SelectPaymentMethod extends Component {
         >
           <Image style={{ width: wp('14%'), height: wp('14%') }} resizeMode="contain" source={Files[iconName]} />
         </View>
-        <Text style={{ textAlign: 'center', paddingVertical: hp('0.5%') }}>{label}</Text>
+        <Text style={{ textAlign: 'center', paddingVertical: hp('0.5%'), paddingBottom: hp('2%') }}>{label}</Text>
       </Button>
     );
   }
@@ -165,7 +165,7 @@ class SelectPaymentMethod extends Component {
               modalStyle={{
                 width: wp('65%'),
               }}
-              menuItemStyle={{ textAlign: 'left' }}
+              menuItemStyle={{ ...ApplicationStyles.body, textAlign: 'left' }}
               buttonStyle={[styles.moreWrapperStyle]}
               menus={label === 'Wallet' ? this.addPaymentFunc(wallets, 'wallets') : this.addPaymentFunc(banks, 'banks')}
             >

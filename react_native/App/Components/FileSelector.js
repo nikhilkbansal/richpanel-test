@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     paddingBottom: hp('1%'),
     flex: 1,
     borderBottomWidth: StyleSheet.hairlineWidth * 2,
-    borderBottomColor: Colors.mediumDarkFont,
+    borderBottomColor: ApplicationStyles.disabledColor.color,
   },
 });
 
@@ -102,7 +102,7 @@ class FileSelector extends React.Component {
             height: wp('25%'),
             borderRadius: wp('1.1%'),
             overflow: 'hidden',
-            borderColor: Colors.primary,
+            borderColor: ApplicationStyles.primaryColor.color,
             borderWidth: 'item'.empty ? 1 : 0,
             justifyContent: 'center',
             marginVertical: wp('2%'),
@@ -123,7 +123,7 @@ class FileSelector extends React.Component {
               }}
               onPress={this.selectImage}
               icon="md-add"
-              iconColor={Colors.primary}
+              iconColor={ApplicationStyles.primaryColor.color}
               iconSize={23}
             />
 
@@ -164,15 +164,15 @@ class FileSelector extends React.Component {
                 </TouchableOpacity>
                 <Button
                   style={{
-                    backgroundColor: 'red',
+                    backgroundColor: ApplicationStyles.warningColor.color,
                     width: wp('5%'),
                     height: wp('5%'),
-                    borderColor: Colors.background,
+                    borderColor: ApplicationStyles.lightColor.color,
                     borderRadius: wp('5%') / 2,
-                    borderWidth: 1,
+                    borderWidth: StyleSheet.hairlineWidth,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    elevation: 5,
+                    ...ApplicationStyles.elevationL,
                     position: 'absolute',
                     top: 0,
                     padding: wp('1%'),
@@ -180,7 +180,7 @@ class FileSelector extends React.Component {
                   }}
                   onPress={() => this.removeFile(index)}
                   icon="md-remove"
-                  iconColor={Colors.lightFont}
+                  iconColor={ApplicationStyles.lightColor.color}
                   iconSize={23}
                 />
               </View>

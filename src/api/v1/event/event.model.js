@@ -40,9 +40,6 @@ const eventSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
-  location: {
-    type: String,
-  },
   startTime: {
     type: Date,
     required: true,
@@ -50,6 +47,12 @@ const eventSchema = new mongoose.Schema({
   endTime: {
     type: Date,
     required: true,
+  },
+  location: {
+    longLat: Array,
+    landmarkFlatNo: String,
+    city: String,
+    country: String,
   },
 
 }, {

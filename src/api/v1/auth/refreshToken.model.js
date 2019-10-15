@@ -70,7 +70,6 @@ refreshTokenSchema.statics = {
       tokenObject = await RefreshToken.findOneAndUpdate({ _id: refreshTokenId }, {
         token, userEmail, expires,
       }, { new: true }).exec();
-      console.log('tokenObject', tokenObject);
     } else {
       tokenObject = new RefreshToken({
         token, userId, userEmail, expires, clientType: user.clientType, 'clientMeta.deviceToken': user.deviceToken,

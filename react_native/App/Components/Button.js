@@ -12,15 +12,18 @@ const styles = StyleSheet.create({
   buttonStyle: {
     alignContent: 'center', justifyContent: 'center', flex: 1,
   },
+  roundStyle: {
+    overflow:'hidden', 
+  }
 });
 
 function Button({
-  onPress, title, icon, style, titleStyle, iconSize,
+  onPress, title, icon, style, titleStyle, iconSize,iconExtraProps,
   buttonWrapperStyle, iconColor, iconFamily, children, iconStyle, ...props
 }) {
   const Content = () => (
     <Fragment>
-      {!!icon && <Icon name={icon} iconFamily={iconFamily} size={iconSize || ApplicationStyles.iconSize} color={iconColor} style={iconStyle} />}
+      {!!icon && <Icon name={icon} {...iconExtraProps} iconFamily={iconFamily} size={iconSize || ApplicationStyles.iconSize} color={iconColor} style={iconStyle} />}
       {!!title && <Text style={[{ ...ApplicationStyles.button }, titleStyle]}>{ title }</Text>}
       {!!children && children }
     </Fragment>
@@ -45,7 +48,7 @@ function Button({
             background={TouchableNativeFeedback.SelectableBackground()}
             {...props}
           >
-            <View style={[styles.buttonStyle, buttonWrapperStyle]}>
+            <View style={[styles.buttonStyle, icon ? styles.roundStyle:{}, buttonWrapperStyle]}>
               <Content />
             </View>
           </TouchableNativeFeedback>
@@ -68,6 +71,7 @@ Button.propTypes = {
   iconColor: PropTypes.string,
   iconFamily: PropTypes.string,
   children: PropTypes.any,
+  iconExtraProps: PropTypes.object
 };
 
 Button.defaultProps = {
@@ -81,7 +85,8 @@ Button.defaultProps = {
   iconSize: null,
   iconFamily: null,
   onPress: () => alert('Its working'),
-  iconColor: Colors.darkFont,
+  iconColor: ApplicationStyles.darkColor.color,
+  iconExtraProps: {}
 };
 
 

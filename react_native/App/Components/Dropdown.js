@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     paddingBottom: hp('1%'),
     flex: 1,
     borderBottomWidth: StyleSheet.hairlineWidth * 2,
-    borderBottomColor: Colors.mediumDarkFont,
+    borderBottomColor: ApplicationStyles.disabledColor.color,
   },
 });
 

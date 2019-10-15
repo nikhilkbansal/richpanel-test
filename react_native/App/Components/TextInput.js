@@ -65,7 +65,7 @@ class TextInput extends React.Component {
   eyeButton(icon = 'ios-eye') {
     return (
       <Button style={{ position: 'absolute', right: 0, top: hp('3%') }} onClick={this.toggleSecureEntry}>
-        <Icon name={icon} size={ApplicationStyles.iconSize} color={Colors.mediumDarkFont} />
+        <Icon name={icon} size={ApplicationStyles.iconSize} color={ApplicationStyles.disabledColor.color} />
       </Button>
     );
   }
@@ -114,11 +114,11 @@ class TextInput extends React.Component {
                 paddingBottom: hp('1.5%'),
                 borderColor: 'transparent',
                 margin: 0,
-                borderBottomColor: Colors.mediumDarkFont,
+                borderBottomColor: ApplicationStyles.disabledColor.color,
                 borderWidth: StyleSheet.hairlineWidth * 2,
               }, inputStyle]}
+              placeholderTextColor={ApplicationStyles.disabledColor.color}
               underlineColorAndroid="transparent"
-
               mask={mask}
               {...props}
 
@@ -145,9 +145,11 @@ class TextInput extends React.Component {
                 paddingBottom: hp('1.5%'),
                 borderColor: 'transparent',
                 margin: 0,
-                borderBottomColor: Colors.mediumDarkFont,
-                borderWidth: StyleSheet.hairlineWidth * 2,
+                borderBottomColor: ApplicationStyles.disabledColor.color,
+                borderWidth: StyleSheet.hairlineWidth ,
               }, inputStyle]}
+              placeholderTextColor={ApplicationStyles.disabledColor.color}
+
               underlineColorAndroid="transparent"
             />
           )}

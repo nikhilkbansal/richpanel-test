@@ -1,7 +1,7 @@
 
 
 const Joi = require('joi');
-const { Transaction } = require('./transaction.model');
+const { Transaction } = require('../transaction/transaction.model');
 
 module.exports = {
 

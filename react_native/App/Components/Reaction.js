@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     // left: wp('-1%'),
     height: hp('5.5%'),
     backgroundColor: ApplicationStyles.lightColor.color,
-    // elevation: 2,
+    // ...ApplicationStyles.elevationS,
     // borderRadius: wp('1%'),
     // zIndex: 9999,
 

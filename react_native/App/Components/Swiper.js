@@ -16,12 +16,12 @@ import ProgressiveImage from './ProgressiveImage';
 
 const styles = StyleSheet.create({
   wrapper: {
-    elevation: 1,
+    ...ApplicationStyles.elevationS,
     flex: 1,
     height: hp('30%'),
   },
   slide: {
-    elevation: 1,
+    ...ApplicationStyles.elevationS,
     flex: 1,
     height: '100%',
   },

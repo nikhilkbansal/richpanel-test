@@ -27,9 +27,9 @@ const styles = StyleSheet.create({
   },
   contentContainer: { flex: 1 },
   firstContainer: {
-    ...ApplicationStyles.body3, flex: 1, flexWrap: 'wrap',
+    ...ApplicationStyles.body, flex: 1, flexWrap: 'wrap',
   },
-  userName: { ...ApplicationStyles.info3 },
+  userName: { ...ApplicationStyles.avatarTitle },
   secondContainer: {
     flex: 1, flexDirection: 'row',
   },
@@ -315,7 +315,7 @@ class Comment extends Component {
           borderBottomColor: 'black',
           paddingHorizontal: wp('3%'),
           position: 'absolute',
-          bottom: hp('12.55%'),
+          bottom: hp('10%'),
           width: '100%',
         }}
         >
@@ -330,7 +330,8 @@ class Comment extends Component {
           flexDirection: 'row',
           backgroundColor: ApplicationStyles.smokeBackground.color,
           paddingHorizontal: wp('4%'),
-          minHeight: hp('10%'),
+          justifyContent: 'center',
+          height: hp('10%'),
           position: 'absolute',
           bottom: 0,
         }}

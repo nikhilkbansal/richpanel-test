@@ -1,19 +1,19 @@
 import React, { Fragment, Component } from 'react';
 import {
-  View, StyleSheet, ScrollView, Text,
+  View, StyleSheet, ScrollView, 
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
 import CheckBox from 'react-native-checkbox';
 import {
-  NavigationBar, TextInput, Button,
+  NavigationBar, TextInput, Button, Text
 } from '../../Components';
 import {
-  Colors, FontSizes, Fonts, FontStyles,
+  Colors, FontSizes, Fonts, FontStyles, ApplicationStyles,
 } from '../../Theme';
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
+  container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
   subContainer: {
     width: 100,
     height: 100,
@@ -49,69 +49,134 @@ class StyleGuide extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      backgroundColor: ApplicationStyles.lightColor.color
     };
+    this.getViewWithBgColor = this.getViewWithBgColor.bind(this);
   }
+
+  textWithStyle(style={}, label='', custom = {}){
+    return <Text style={[style, {padding: 10}, {...custom}]}>{label +":  "}A few minutes later they all marched in and took their places at the table</Text>
+  }
+
+  getViewWithBgColor(bgColor, label=''){
+  return <View style={[styles.subContainer, { backgroundColor: bgColor.color }]} >
+      <Text onPress={()=>this.setState({backgroundColor: bgColor.color})} style={[{padding: 10, }]}>{label}</Text>
+    </View>
+  }
+  
+  getCardWithBgElevation(elevationStyle, label=''){
+    return <View style={[styles.subContainer, {borderColor: 'transparent', backgroundColor: ApplicationStyles.lightBackground.color, ...elevationStyle }]} >
+        <Text   style={[{padding: 10, }]}>{label}</Text>
+      </View>
+    }
+
+  getTextWithColor(bgColor, label='',){
+    return <View style={[styles.subContainer, ]} >
+        <Text style={[{color:  bgColor.color, }]}>{label}</Text>
+      </View>
+    }
+
 
   render() {
     const { navigation } = this.props;
+    const { backgroundColor } = this.state;
     return (
-      <ScrollView style={styles.container}>
-        <NavigationBar {...navigation} showLeftSection={false} title="STYLEGUIDE" />
-        <Text>Font Colors: </Text>
-        <View style={styles.mainContainer}>
-          {
-            colors.map(o => (
-              <View style={[styles.subContainer, { backgroundColor: o }]} />
-            ))
-          }
-        </View>
+      <ScrollView style={styles.container,{backgroundColor }}>
+        <NavigationBar {...navigation} showLeftSection={false} title="Style guide" />
 
-        <Text>Icons Colors: </Text>
-        <View style={styles.mainContainer}>
-          {
-            iconsColors.map(o => (
-              <View style={[styles.subContainer, { backgroundColor: o }]} />
-            ))
-          }
-        </View>
+       
         <Text>Background Colors: </Text>
         <View style={styles.mainContainer}>
-          {
-            backgroundColors.map(o => (
-              <View style={[styles.subContainer, { backgroundColor: o }]} />
-            ))
-          }
+
+          {this.getViewWithBgColor(ApplicationStyles.smokeBackground, 'smokeBackground')}
+          {this.getViewWithBgColor(ApplicationStyles.lightBackground, 'lightBackground')}
+          {this.getViewWithBgColor(ApplicationStyles.grayishBackground, 'grayishBackground')}
+          {this.getViewWithBgColor(ApplicationStyles.primaryBackground, 'primaryBackground')}
+
         </View>
 
+       
+        <Text>Cards: </Text>
+        <View style={styles.mainContainer}>
+
+          {this.getCardWithBgElevation(ApplicationStyles.elevationS, 'elevationS')} 
+          {this.getCardWithBgElevation(ApplicationStyles.elevationM, 'elevationM')} 
+          {this.getCardWithBgElevation(ApplicationStyles.elevationL, 'elevationL')} 
+          {this.getCardWithBgElevation(ApplicationStyles.elevationXL, 'elevationXL')} 
+
+        </View>
+        
+
+
+        <Text>Font/Icons Colors: </Text>
+        <View style={styles.mainContainer}>
+        {this.getTextWithColor(ApplicationStyles.primaryColor, 'primaryColor')}
+        {this.getTextWithColor(ApplicationStyles.warningColor, 'warningColor')}
+        {this.getTextWithColor(ApplicationStyles.disabledColor, 'disabledColor')}
+        {this.getTextWithColor(ApplicationStyles.darkColor, 'darkColor')}
+        {this.getTextWithColor(ApplicationStyles.lightColor, 'lightColor')}
+
+        {this.getTextWithColor(ApplicationStyles.loveColor, 'loveColor')}
+        {this.getTextWithColor(ApplicationStyles.celebrateColor, 'celebrateColor')}
+        {this.getTextWithColor(ApplicationStyles.insightFulColor, 'insightFulColor')}
+        {this.getTextWithColor(ApplicationStyles.sadColor, 'sadColor')}
+        </View>
+
+        
+        {this.textWithStyle(ApplicationStyles.headline, 'headline')}
+        {this.textWithStyle(ApplicationStyles.headline2,'headline2')}
+
+        {this.textWithStyle(ApplicationStyles.headline3,'headline3')/** nero */}
+
+        {this.textWithStyle(ApplicationStyles.subHeadline,'subHeadline')/** Slategrey */}
+
+        {this.textWithStyle(ApplicationStyles.textInputLabel,'textInputLabel')}
+        {this.textWithStyle(ApplicationStyles.textInputValue,'textInputValue')}
+        {this.textWithStyle(ApplicationStyles.button,'button')}
+        {this.textWithStyle(ApplicationStyles.body,'body')}
+        {this.textWithStyle(ApplicationStyles.body2,'body2')}
+        {this.textWithStyle(ApplicationStyles.body3,'body3')}
+        {this.textWithStyle(ApplicationStyles.info,'info')}
+        {this.textWithStyle(ApplicationStyles.info1,'info1')}
+        {this.textWithStyle(ApplicationStyles.info2,'info2')}
+        {this.textWithStyle(ApplicationStyles.info3,'info3')}
+        {this.textWithStyle(ApplicationStyles.link,'link')}
+        {this.textWithStyle(ApplicationStyles.primaryInfo,'primaryInfo')}
+        {this.textWithStyle(ApplicationStyles.avatarTitle,'avatarTitle')}
+        {this.textWithStyle(ApplicationStyles.avatarSubtitle,'avatarSubtitle')}
+        {/* {this.textWithStyle(ApplicationStyles.bodyHeading,'bodyHeading')} */}
+        {this.textWithStyle(ApplicationStyles.bodySubHeading,'bodySubHeading')}
+        {this.textWithStyle(ApplicationStyles.bodySubHeading2,'bodySubHeading2')}
+        {this.textWithStyle(ApplicationStyles.tabLabelStyle,'tabLabelStyle')}
 
         <Text>Font Weights: </Text>
-
         <View style={{ flex: 1, flexWrap: 'wrap', height: 300 }}>
           {
-    fontWeights2.map(o => (
-      <View style={{
-        backgroundColor: '#fff',
-        width: 100,
-        margin: 2,
-        borderColor: 'black',
-        borderWidth: StyleSheet.hairlineWidth,
-        alignContent: 'center',
-        justifyContent: 'center',
-      }}
-      >
-        <Text style={{ fontFamily: o, fontSize: 23 }}>
-Text
-          {' '}
-          {o}
-        </Text>
-      </View>
-    ))
-  }
+            fontWeights2.map(o => (
+              <View style={{
+                backgroundColor: '#fff',
+                width: 100,
+                margin: 2,
+                borderColor: 'black',
+                borderWidth: StyleSheet.hairlineWidth,
+                alignContent: 'center',
+                justifyContent: 'center',
+              }}
+              >
+                <Text style={{ fontFamily: o, fontSize: 23, }}>
+                Text
+                  {' '}
+                  {o}
+                </Text>
+              </View>
+            ))
+          }
         </View>
       </ScrollView>
     );
   }
 }
+
 
 export default StyleGuide;
 

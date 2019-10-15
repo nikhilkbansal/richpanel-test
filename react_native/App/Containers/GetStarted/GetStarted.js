@@ -6,7 +6,7 @@ import CheckBox from 'react-native-checkbox';
 import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
-import { Colors, FontSizes } from '../../Theme';
+import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 
 
 class LoginScreen extends Component {
@@ -28,7 +28,7 @@ class LoginScreen extends Component {
   render() {
     const { navigation: { navigate } } = this.props;
     return (
-      <View style={{ flex: 1, backgroundColor: Colors.background }}>
+      <View style={{ flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color }}>
 
         <View style={{ flex: 1, paddingHorizontal: wp('4%') }}>
           <View style={{ flex: 1, alignItems: 'center' }}>
@@ -50,7 +50,7 @@ class LoginScreen extends Component {
                 }}
               buttonWrapperStyle={{
                   width: wp('60%'),
-                  backgroundColor: Colors.primary,
+                  backgroundColor: ApplicationStyles.primaryColor.color,
                   borderRadius: wp('10%') / 2,
                   alignItems: 'center',
                   overflow: 'hidden',

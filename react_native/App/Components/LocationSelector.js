@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
-  View, DatePickerAndroid, TimePickerAndroid, StyleSheet,
+  View, DatePickerAndroid, TimePickerAndroid, StyleSheet, ScrollView,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Dialog, { DialogContent, SlideAnimation } from 'react-native-popup-dialog';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { GoogleAutoComplete, GoogleLocationDetailResult, GoogleLocationResult } from 'react-native-google-autocomplete';
 import MapView, { Marker } from 'react-native-maps';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Button from './Button';
@@ -18,16 +18,17 @@ import {
 import { CommonFunctions } from '../Utils';
 
 const styles = StyleSheet.create({
-  container: { flex: 1, marginTop: hp('1%') },
+  container: { flex: 1, marginTop: hp('1%'),paddingBottom: hp('1%') },
   button: {
-    paddingTop: hp('0.5%'),
-    paddingBottom: hp('1.5%'),
     flex: 1,
-    borderBottomWidth: StyleSheet.hairlineWidth * 2,
-    borderBottomColor: Colors.mediumDarkFont,
+    borderBottomWidth: StyleSheet.hairlineWidth ,
+    borderBottomColor: ApplicationStyles.disabledColor.color,
+    paddingTop: hp('0.5%'),
+    paddingBottom: hp('1.9%'),
   },
   loginContainer: {
     marginVertical: hp('4%'),
+    marginBottom: hp('1%'),
     backgroundColor: ApplicationStyles.primaryColor.color,
     borderRadius: wp('2%'),
     width: wp('80%'),
@@ -37,15 +38,18 @@ const styles = StyleSheet.create({
 });
 
 
-const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } } };
-const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } } };
-
 class LocationSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       dateTime: '',
       visibleDialog: false,
+      region: {
+        latitude: 37.78825,
+        longitude: -122.4324,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
     };
 
     this.openLocationSelector = this.openLocationSelector.bind(this);
@@ -56,7 +60,7 @@ class LocationSelector extends React.Component {
   }
 
   render() {
-    const { dateTime, visibleDialog } = this.state;
+    const { dateTime, visibleDialog, region } = this.state;
     const {
       label, placeholder,
     } = this.props;
@@ -71,106 +75,82 @@ class LocationSelector extends React.Component {
             this.setState({ visibleDialog: false });
           }}
         >
-          <DialogContent style={{ width: wp('90%'), height: hp('70%') }}>
-            <KeyboardAwareScrollView>
-              <GooglePlacesAutocomplete
-                placeholder="Type address here"
-                minLength={2} // minimum length of text to search
-                returnKeyType="search" // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-                keyboardAppearance="light" // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-                listViewDisplayed="auto" // true/false/undefined
-                fetchDetails
-                renderDescription={row => row.description} // custom description render
-                onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                  console.log(data, details);
-                }}
+          <DialogContent style={{ width: wp('90%') }}>
+            <KeyboardAwareScrollView behavior="padding">
+              <View style={{ flex: 1, marginTop: hp('2%') }}>
+                <MapView
+                  style={{
+                    width: '100%', height: hp('40%'),
+                  }}
+                  showsUserLocation
+                  showsMyLocationButton
+                  initialRegion={{
+                    latitude: 37.78825,
+                    longitude: -122.4324,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                  }}
+                  region={region}
+                  onRegionChangeComplete={
+                  (data) => {
+                    this.setState({ region: data });
+                  }
+                }
+                />
+              </View>
 
-                getDefaultValue={() => ''}
+              <View style={{
+                backgroundColor: ApplicationStyles.lightBackground.color,
+                position: 'absolute',
+                top: 10,
+                width: '100%',
+              }}
+              >
+                <GoogleAutoComplete apiKey={Config.GOOGLE_PLACE_API_KEY} debounce={300}>
+                  {({
+                    inputValue, handleTextChange, locationResults, fetchDetails, clearSearchs,
+                  }) => (
+                    <React.Fragment>
+                      <TextInput
+                        style={{
+                          height: hp('10%'),
+                          width: '100%',
+                          borderWidth: 1,
+                          paddingHorizontal: 16,
+                        }}
+                        value={inputValue}
+                        onChangeText={handleTextChange}
+                        placeholder="Location..."
+                      />
+                      <ScrollView style={{ maxHeight: hp('30%') }}>
+                        {locationResults.map((el, i) => {
+                          console.log('sd', el, fetchDetails);
+                          return (
+                            <Text
+                              style={{ ...ApplicationStyles.body2 }}
+                              onPress={async () => {
+                                clearSearchs();
+                                const data = await fetchDetails(el.place_id);
+                                this.setState({
+                                  region: {
+                                    longitude: data.geometry.location.lng,
+                                    latitude: data.geometry.location.lat,
+                                    ...region,
+                                  },
+                                });
+                              }}
+                            >
+                              {el.description}
 
-                query={{
-                  // available options: https://developers.google.com/places/web-service/autocomplete
-                  key: Config.GOOGLE_PLACE_API_KEY,
-                  language: 'en', // language of the results
-                  types: '(cities)', // default: 'geocode'
-                }}
-                suppressDefaultStyles
-                styles={{
-                  container: {
-                    marginTop: hp('1.5%'),
-                  },
-                  textInput: {
-                    ...ApplicationStyles.textInputValue,
-                    paddingHorizontal: 0,
-                    paddingTop: hp('0.5%'),
-                    paddingBottom: hp('1.5%'),
-                    borderColor: 'transparent',
-                    margin: 0,
-                    borderBottomColor: Colors.mediumDarkFont,
-                    borderWidth: StyleSheet.hairlineWidth * 2,
-                  },
-                  textInputContainer: {
-                    width: '100%',
-                    padding: 0,
-                    margin: 0,
-                  },
-                  listView: {
-                    position: 'absolute',
-                    top: hp('5.7%'),
-                    elevation: 2,
-                    paddingVertical: hp('0.8%'),
-                    zIndex: 10,
-                    backgroundColor: ApplicationStyles.lightBackground.color,
-                  },
-                  description: {
-                    ...ApplicationStyles.bodyHeading,
-                    fontWeight: 'bold',
-                    paddingVertical: hp('1%'),
-                    borderColor: 'transparent',
+                            </Text>
+                          );
+                        })}
+                      </ScrollView>
+                    </React.Fragment>
+                  )}
+                </GoogleAutoComplete>
+              </View>
 
-                    borderBottomColor: Colors.mediumDarkFont,
-                    borderWidth: StyleSheet.hairlineWidth,
-                  },
-                  predefinedPlacesDescription: {
-                    ...ApplicationStyles.bodyHeading,
-                    paddingVertical: hp('0.7%'),
-
-                    color: ApplicationStyles.primaryColor.color,
-                  },
-                  poweredContainer: {
-                    marginTop: hp('1%'),
-                  },
-                }}
-
-              // currentLocation // Will add a 'Current location' button at the top of the predefined places list
-                currentLocationLabel="Current location"
-                nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                GoogleReverseGeocodingQuery={{
-                  // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                }}
-                GooglePlacesSearchQuery={{
-                  // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                  rankby: 'distance',
-                  type: 'cafe',
-                }}
-
-                GooglePlacesDetailsQuery={{
-                  // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-                  fields: 'formatted_address',
-                }}
-
-                filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-              // predefinedPlaces={[homePlace, workPlace]}
-                debounce={200}
-              />
-              <MapView
-                style={{ width: '100%', height: hp('30%') }}
-                initialRegion={{
-                  latitude: 37.78825,
-                  longitude: -122.4324,
-                  latitudeDelta: 0.0922,
-                  longitudeDelta: 0.0421,
-                }}
-              />
               <TextInput
             // error={errors.title}
                 multiline

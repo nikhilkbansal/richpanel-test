@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
-  Text, NavigationBar, TextInput, Button, ProgressiveImage,
+  Text, NavigationBar, TextInput, Button, ProgressiveImage,FileSelector, Swiper
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import { CommonFunctions } from '../../Utils';
@@ -47,9 +47,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: wp('2%'),
   },
+  sectionContainer: {
+    ...ApplicationStyles.elevationS,
+    flex: 1,
+    borderRadius: wp('2%'),
+    overflow: 'hidden',
+    marginTop: hp('3%'),
+    paddingBottom: hp('1%'),
+    backgroundColor: ApplicationStyles.lightBackground.color,
+  },
 });
 
-class EditProfile extends Component {
+class PoSlider extends Component {
   static get propTypes() {
     return {
       navigation: PropTypes.func.isRequired,
@@ -123,93 +132,14 @@ class EditProfile extends Component {
     } = this.state;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} title="Edit Profile"  />
+        <NavigationBar {...navigation} title="Carousel"  />
         <ScrollView style={styles.subContainer}>
-          <View style={{
-            flex: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center',
-          }}
-          >
-            <Button
-              onPress={() => this.selectImage()}
-              style={[styles.imageButton, { justifyContent: 'center', alignContent: 'center', alignItems: 'center' }]}
-            >
-              <ProgressiveImage
-                resizeMode="cover"
-                style={{
-                  ...ApplicationStyles.elevationS,
-                  width: wp('22%'),
-                  height: wp('22%'),
-                }}
-                source={{ uri: picture && picture.path ? picture.path : CommonFunctions.getFile(profile.picture, 'avatar', true) }}
-              />
-              <Icon
-                name="md-create"
-                size={ApplicationStyles.iconSize}
-                color={ApplicationStyles.darkColor.color}
-                style={{
-                  position: 'absolute',
-                  top: hp('6.5%'),
-                  left: 0,
-                  backgroundColor: ApplicationStyles. smokeBackground.color,
-                  opacity: 0.7,
-                  bottom: 0,
-                  right: 0,
-                  alignSelf: 'center',
-                  textAlign: 'center',
-                }}
-              />
-            </Button>
-          </View>
-
-
-          <TextInput
-            error={errors.fullName}
-            label="Full Name"
-            value={name}
-            returnKeyType="next"
-            onChangeText={text => this.updateTextInput('name', text)}
-            onSubmitEditing={() => this.emailRef.current.focus()}
-          />
-
-          <TextInput
-            error={errors.email}
-            label="Email"
-            returnKeyType="next"
-            value={email}
-            textInputRef={this.emailRef}
-            onChangeText={text => this.updateTextInput('email', text)}
-            onSubmitEditing={() => this.userNameRef.current.focus()}
-          />
-          <TextInput
-            error={errors.userName}
-            label="Username"
-            value={userName}
-            returnKeyType="next"
-            textInputRef={this.userNameRef}
-            onChangeText={text => this.updateTextInput('userName', text)}
-            onSubmitEditing={() => this.passwordRef.current.focus()}
-          />
-
-          <TextInput
-            error={errors.password}
-            label="Password"
-            returnKeyType="next"
-            placeholder="Only enter if you want to change; 6 to 18 chars"
-            textInputRef={this.passwordRef}
-            secureTextEntry
-            onChangeText={text => this.updateTextInput('password', text)}
-            onSubmitEditing={() => this.confirmPasswordRef.current.focus()}
-          />
-          <TextInput
-            error={errors.confirmPassword}
-            label="Confirm Password"
-            returnKeyType="done"
-            secureTextEntry
-            textInputRef={this.confirmPasswordRef}
-            onChangeText={text => this.updateTextInput('confirmPassword', text)}
-            onSubmitEditing={this.updateProfile}
-          />
-
+        <View style={styles.sectionContainer}>
+            <Swiper files={['sds', 'sds']} />
+            <Text style={{textAlign: 'center', paddingTop: hp('0.5%')}}>Current carousel</Text>
+            </View>
+          <FileSelector label="Add images and videos" onChange={files => this.updateTextInput('files', files)} />
+          
           <Button
             style={styles.loginContainer}
             onPress={() => this.updateProfile()}
@@ -227,4 +157,4 @@ export default connect(
     updateUserInit: UserActions.updateUserInit,
     uploadProfilePic: UserActions.uploadProfilePic,
   },
-)(EditProfile);
+)(PoSlider);

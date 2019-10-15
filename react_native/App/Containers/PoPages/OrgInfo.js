@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class EditProfile extends Component {
+class OrgInfo extends Component {
   static get propTypes() {
     return {
       navigation: PropTypes.func.isRequired,
@@ -123,93 +123,40 @@ class EditProfile extends Component {
     } = this.state;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} title="Edit Profile"  />
+        <NavigationBar {...navigation} title="Slider"  />
         <ScrollView style={styles.subContainer}>
-          <View style={{
-            flex: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center',
-          }}
-          >
-            <Button
-              onPress={() => this.selectImage()}
-              style={[styles.imageButton, { justifyContent: 'center', alignContent: 'center', alignItems: 'center' }]}
-            >
-              <ProgressiveImage
-                resizeMode="cover"
-                style={{
-                  ...ApplicationStyles.elevationS,
-                  width: wp('22%'),
-                  height: wp('22%'),
-                }}
-                source={{ uri: picture && picture.path ? picture.path : CommonFunctions.getFile(profile.picture, 'avatar', true) }}
-              />
-              <Icon
-                name="md-create"
-                size={ApplicationStyles.iconSize}
-                color={ApplicationStyles.darkColor.color}
-                style={{
-                  position: 'absolute',
-                  top: hp('6.5%'),
-                  left: 0,
-                  backgroundColor: ApplicationStyles. smokeBackground.color,
-                  opacity: 0.7,
-                  bottom: 0,
-                  right: 0,
-                  alignSelf: 'center',
-                  textAlign: 'center',
-                }}
-              />
-            </Button>
-          </View>
-
-
+          
           <TextInput
             error={errors.fullName}
-            label="Full Name"
-            value={name}
+            label="About" 
+            multiline
+            inputStyle={ApplicationStyles.body}
+            numberOfLines={3}
             returnKeyType="next"
+            placeholder='Will be shown to other users on profile page'
             onChangeText={text => this.updateTextInput('name', text)}
             onSubmitEditing={() => this.emailRef.current.focus()}
           />
 
           <TextInput
             error={errors.email}
-            label="Email"
+            label="Founded on"
             returnKeyType="next"
             value={email}
+            mask="0000"
             textInputRef={this.emailRef}
             onChangeText={text => this.updateTextInput('email', text)}
             onSubmitEditing={() => this.userNameRef.current.focus()}
           />
           <TextInput
             error={errors.userName}
-            label="Username"
+            label="Website"
             value={userName}
             returnKeyType="next"
             textInputRef={this.userNameRef}
             onChangeText={text => this.updateTextInput('userName', text)}
             onSubmitEditing={() => this.passwordRef.current.focus()}
           />
-
-          <TextInput
-            error={errors.password}
-            label="Password"
-            returnKeyType="next"
-            placeholder="Only enter if you want to change; 6 to 18 chars"
-            textInputRef={this.passwordRef}
-            secureTextEntry
-            onChangeText={text => this.updateTextInput('password', text)}
-            onSubmitEditing={() => this.confirmPasswordRef.current.focus()}
-          />
-          <TextInput
-            error={errors.confirmPassword}
-            label="Confirm Password"
-            returnKeyType="done"
-            secureTextEntry
-            textInputRef={this.confirmPasswordRef}
-            onChangeText={text => this.updateTextInput('confirmPassword', text)}
-            onSubmitEditing={this.updateProfile}
-          />
-
           <Button
             style={styles.loginContainer}
             onPress={() => this.updateProfile()}
@@ -227,4 +174,4 @@ export default connect(
     updateUserInit: UserActions.updateUserInit,
     uploadProfilePic: UserActions.uploadProfilePic,
   },
-)(EditProfile);
+)(OrgInfo);

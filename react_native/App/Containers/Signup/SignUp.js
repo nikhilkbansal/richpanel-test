@@ -74,7 +74,7 @@ class SignUpScreen extends Component {
     const activeStyle = { backgroundColor: ApplicationStyles.primaryColor.color };
     const deactiveStyle = { backgroundColor: ApplicationStyles. smokeBackground.color };
     const activeTitleStyle = { color: ApplicationStyles.lightColor.color };
-    const deactiveTitleStyle = { color: Colors.darkFont };
+    const deactiveTitleStyle = { color: ApplicationStyles.darkColor.color };
     switch (renderedUserType) {
       case 'user':
         return userType === 'user'

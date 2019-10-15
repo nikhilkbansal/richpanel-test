@@ -50,10 +50,25 @@ const transactionSchema = new mongoose.Schema({
 
 transactionSchema.statics = {
   txTypes,
+
   add(transaction) {
     return this.create({
       ...transaction,
     });
+  },
+
+  async list({
+    skip = 0, perPage = 30, _id, senderId, receiverId, postId, txStatus,
+  }, sort = { createdAt: -1 }) {
+    const options = omitBy({
+      _id, senderId, receiverId, postId, txStatus,
+    }, isNil);
+    return this.find(options).sort(sort)
+      .skip(skip)
+      .populate('senderId', 'name userName _id picture')
+      .populate('receiverId', 'name userName _id picture')
+      .limit(perPage)
+      .exec();
   },
 };
 

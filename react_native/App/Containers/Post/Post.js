@@ -79,6 +79,7 @@ class Post extends Component {
     onReactionPress={this.props.postReaction}
     onReactionRemovePress={this.props.removeReaction}
     userPicture={item.userId.picture}
+    onUserClick={()=>this.props.navigation.navigate('NgoProfile',{itemId:item._id, itemType:'post'})}
     onViewComments={()=>this.props.navigation.navigate('Comment',{itemId:item._id, itemType:'post'})}
     onDonatePress={()=>this.props.navigation.navigate('Donate',{paymentMeta:{_id:item._id, txType:'userToPOCampaign'}})}
     {...item}

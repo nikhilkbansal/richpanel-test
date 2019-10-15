@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     width: wp('100%'),
     height: hp('6%'),
     backgroundColor: ApplicationStyles.primaryColor.color,
-    elevation: 2,
+    ...ApplicationStyles.elevationS,
   },
   subContainer: {
     flex: 1,

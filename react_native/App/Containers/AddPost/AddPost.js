@@ -14,7 +14,7 @@ import {
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
+  container: { flex: 1, backgroundColor: ApplicationStyles.lightBackground.color },
   subContainer: { flex: 1, paddingHorizontal: wp('5%') },
   loginContainer: {
     marginVertical: hp('4%'),
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: hp('7%'),
   },
-  loginTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
+  loginTitle: { color: ApplicationStyles.lightColor.color, textAlign: 'center', fontSize: FontSizes.h3 },
 });
 
 class AddPost extends Component {
@@ -98,6 +98,7 @@ class AddPost extends Component {
             numberOfLines={4}
             label="Description"
             placeholder=""
+            inputStyle={ApplicationStyles.body}
             textInputRef={this.descriptionRef}
             returnKeyType="next"
             onChangeText={text => this.updateTextInput('description', text)}

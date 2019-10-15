@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { omitBy, isNil } = require('lodash');
 
 /**
  * follow Schema
@@ -56,5 +57,18 @@ followSchema.statics = {
   },
 
 
+  async list({
+    skip = 0, perPage = 30, _id, followeeId, followerId, isActive,
+  }, sort = { createdAt: -1 }) {
+    const options = omitBy({
+      _id, followeeId, followerId, isActive,
+    }, isNil);
+    return this.find(options).sort(sort)
+      .skip(skip)
+      .populate('followeeId', 'name userName _id picture')
+      .populate('followerId', 'name userName _id picture')
+      .limit(perPage)
+      .exec();
+  },
 };
 module.exports = mongoose.model('Follow', followSchema);

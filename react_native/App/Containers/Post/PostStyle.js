@@ -9,7 +9,7 @@ export default StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.primary,
+    backgroundColor: ApplicationStyles.primaryColor.color,
   },
   logo: {
     width: wp('20%'),

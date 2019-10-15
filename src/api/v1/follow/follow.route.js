@@ -5,7 +5,7 @@ const { authorize } = require('../../middlewares/auth');
 // const { admin: ADMIN, loggedInUser: LOGGED_USER } = require('../../../config/vars');
 const {
   followUnfollow,
-
+  list,
 
 } = require('./follow.validation');
 
@@ -36,6 +36,7 @@ router
    * @apiError (Bad Request 400)   ValidationError  Some parameters may contain invalid values
    * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users can create the data
    */
-  .post(authorize(), validate(followUnfollow), controller.follow);
+  .post(authorize(), validate(followUnfollow), controller.follow)
+  .get(authorize(), validate(list), controller.list);
 
 module.exports = router;

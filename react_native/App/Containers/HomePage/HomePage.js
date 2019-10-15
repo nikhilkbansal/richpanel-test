@@ -122,11 +122,13 @@ import { Text, Icon } from '../../Components';
 // }
 
 const TabNavigator = createBottomTabNavigator({
+  Profile,
+
   Post,
   Event,
   Search: SearchPage,
   Notification,
-  Profile,
+  // Profile,
 }, {
   navigationOptions: ({ navigation }) => ({
     tabBarIcon: ({ focused, horizontal, tintColor }) => {
@@ -183,7 +185,7 @@ const TabNavigator = createBottomTabNavigator({
   }),
   tabBarOptions: {
     style: {
-      height: hp('8%'), paddingVertical: hp('1%'), borderTopWidth: 0, elevation: 10,
+      height: hp('8%'), paddingVertical: hp('1%'), borderTopWidth: 0, ...ApplicationStyles.elevationM, backgroundColor: ApplicationStyles.lightBackground.color
     },
     tabStyle: { paddingTop: 0 },
     showLabel: true,

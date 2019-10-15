@@ -28,15 +28,15 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'space-between',
   },
-  remeberText: { ...ApplicationStyles.body },
+  remeberText: { ...ApplicationStyles.button2 },
   forgetButton: {
-    ...ApplicationStyles.body,
+    ...ApplicationStyles.button2,
 
   },
   forgetButtonContainer: { alignSelf: 'center' },
   loginContainer: {
     marginTop: hp('5%'),
-    backgroundColor: ApplicationStyles.primaryColor.color,
+    backgroundColor: ApplicationStyles.primaryBackground.color,
     borderRadius: ApplicationStyles.commonBorderRadius(wp('80%')),
     width: wp('80%'),
     alignSelf: 'center',
@@ -136,7 +136,7 @@ class LoginScreen extends Component {
                 }}
                 isChecked={isRememberMe}
                 rightText="Remember me"
-                rightTextStyle={{ ...ApplicationStyles.body, textAlign: 'left' }}
+                rightTextStyle={{ ...ApplicationStyles.button2, textAlign: 'left' }}
                 checkBoxColor={ApplicationStyles.primaryColor.color}
                 uncheckedCheckBoxColor={ApplicationStyles.disabledColor.color}
               />

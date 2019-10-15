@@ -12,7 +12,7 @@ function NotificationUi({
   return (
 
     <View style={{
-      backgroundColor: Colors.lightFont,
+      backgroundColor: ApplicationStyles.lightColor.color,
       flex: 1,
       flexDirection: 'row',
       padding: wp('2%'),
@@ -20,7 +20,7 @@ function NotificationUi({
       justifyContent: 'center',
       margin: wp('1%'),
       marginVertical: hp('1%'),
-      elevation: 1,
+      ...ApplicationStyles.elevationS,
     }}
     >
       <Image
@@ -43,7 +43,7 @@ function NotificationUi({
       <Button
         icon="md-more"
         iconSize={25}
-        iconColor={Colors.mediumDarkFont}
+        iconColor={ApplicationStyles.disabledColor.color}
         style={{
 
           alignContent: 'center',

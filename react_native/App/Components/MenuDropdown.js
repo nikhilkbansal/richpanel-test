@@ -84,7 +84,7 @@ class MenuDropdown extends React.Component {
                 <Button
                   title={o.label}
                   onPress={() => { this.closePicker(); o.func(); }}
-                  titleStyle={{ ...ApplicationStyles.bodyHeading, ...styles.button, ...menuItemStyle }}
+                  titleStyle={{ ...ApplicationStyles.button2, color: ApplicationStyles.darkColor.color, ...styles.button, ...menuItemStyle }}
                 />
               ))}
             </ScrollView>

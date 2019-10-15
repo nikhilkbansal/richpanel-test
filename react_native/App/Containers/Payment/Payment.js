@@ -20,7 +20,7 @@ import {
 import AxiosRequest from '../../Services/HttpRequestService';
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
+  container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
   subContainer: { flex: 1, paddingHorizontal: wp('5%') },
   loginContainer: {
     marginVertical: hp('1%'),
@@ -30,9 +30,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: hp('7%'),
   },
-  loginTitle: { color: Colors.lightFont, textAlign: 'center', fontSize: FontSizes.h3 },
+  loginTitle: { color: ApplicationStyles.lightColor.color, textAlign: 'center', fontSize: FontSizes.h3 },
   menuContainer: {
-    elevation: 1,
+    ...ApplicationStyles.elevationS,
     marginVertical: hp('0.2%'),
     backgroundColor: ApplicationStyles.lightBackground.color,
     paddingHorizontal: wp('4%'),

@@ -10,5 +10,11 @@ module.exports = {
       followeeId: Joi.string().required(),
     },
   },
-
+  list: {
+    query: {
+      skip: Joi.number(),
+      followeeId: Joi.string(),
+      followerId: Joi.string(),
+    },
+  },
 };
