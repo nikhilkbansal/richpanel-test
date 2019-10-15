@@ -9,10 +9,10 @@ import { ApplicationStyles } from '../Theme';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 function MenuItem({
-  leftIcon, rightIcon, leftLabel, rightLabel
+  leftIcon, rightIcon, leftLabel, rightLabel, onPress
 }) { 
   return (
-    <Button buttonWrapperStyle={{
+    <Button onPress={onPress} buttonWrapperStyle={{
       flex: 1,
       flexDirection: 'row',
       alignContent: 'center',
@@ -35,11 +35,12 @@ MenuItem.propTypes = {
   leftIcon: PropTypes.object,
   rightIcon: PropTypes.object,
   leftLabel: PropTypes.string,
-  rightLabel: PropTypes.string
+  rightLabel: PropTypes.string,
+  onPress: PropTypes.func
 };
 
 MenuItem.defaultProps = {
-  leftIcon: {}, rightIcon: {}, leftLabel: '', rightLabel: ''
+  leftIcon: {}, rightIcon: {}, leftLabel: '', rightLabel: '', onPress: ()=>{}
 };
 
 

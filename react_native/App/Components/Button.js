@@ -84,7 +84,7 @@ Button.defaultProps = {
   children: null,
   iconSize: null,
   iconFamily: null,
-  onPress: () => alert('Its working'),
+  onPress: () => alert('Work in progress'),
   iconColor: ApplicationStyles.darkColor.color,
   iconExtraProps: {}
 };

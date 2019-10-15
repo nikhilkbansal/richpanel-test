@@ -69,7 +69,7 @@ const AppNav = createStackNavigator(
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'MyDonations',
+    initialRouteName: 'HomePage',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },

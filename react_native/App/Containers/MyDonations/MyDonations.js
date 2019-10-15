@@ -1,6 +1,6 @@
 import React, { Fragment, Component } from 'react';
 import {
-  View, StyleSheet, FlatList, Image, ScrollView,
+  View, StyleSheet, FlatList, Image, ScrollView, SectionList
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
@@ -15,11 +15,12 @@ import {
   StackedBarChart,
 } from 'react-native-chart-kit';
 import { connect } from 'react-redux';
-
+import moment from 'moment';
 import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
+import AxiosRequest from '../../Services/HttpRequestService';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
@@ -44,10 +45,9 @@ class MyDonations extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      email: null,
-      password: '',
-      checked: false,
+    const { params } = props.navigation.state;
+    this.state = { 
+      forPo: params && params.forPo,
       donations: []
     };
     this.getMyDonations = this.getMyDonations.bind(this);
@@ -57,35 +57,56 @@ class MyDonations extends Component {
     this.getMyDonations();
   }
 
-  async getMyDonations(itemsLength = 0) {
+  async getMyDonations( ) {
     const { profile } = this.props;
+    const { donations, forPo } = this.state;
+    const itemsLength = donations.reduce((x,y)=>x+y.data.length,0);
     try {
       const { donations } = this.state;
+      const cond = forPo ? {receiverId: profile.id} : {senderId: profile.id}
       const data = await AxiosRequest({
         method: 'get',
-        params:{ senderId: profile._id ,skip: itemsLength },
+        params:{ ...cond ,skip: itemsLength },
         url: 'payment/transaction',
       });
       this.setState({ donations: donations.concat(data) });
     } catch (e) {
       console.log('eeee',e)
-      Toast('Some error occured. Please try again later');
     }
   }
 
+  transctionItem({item}){
+    const date = moment(item.createdAt);
+    return (
+      <View style={{flex:1, flexDirection: 'row', paddingVertical: hp('1%'),backgroundColor:ApplicationStyles.lightBackground.color,  }}>
+        <View style={{flex:1}}>
+          <Text style={{...ApplicationStyles.bodySubHeading,textAlign:'center'}}>{date.format('hh:mm A')}</Text>
+          <Text style={{...ApplicationStyles.headline2, textAlign:'center'}}>{date.format('DD MMM')}</Text>
+          <Text style={{...ApplicationStyles.bodySubHeading, textAlign:'center'}}>{date.format('YYYY')}</Text>
+        </View>
+        <View style={{flex:1, justifyContent:'center'}}>
+        <Text style={{...ApplicationStyles.bodySubHeading, textAlign:'center'}}> </Text>
+          <Text style={{...ApplicationStyles.headline2, textAlign:'center'}}>₹{item.amount}</Text>
+          <Text style={{...ApplicationStyles.bodySubHeading, textAlign:'center'}}>{item.receiverId && item.receiverId.name}</Text>
+        </View>
+        <View style={{flex:1, justifyContent:'center'}}>
+          <Text style={{...ApplicationStyles.bodySubHeading, textAlign:'center'}}> </Text>
+          <Button title='View' titleStyle={{...ApplicationStyles.button2}}></Button>
+          <Text style={{...ApplicationStyles.bodySubHeading, textAlign:'center'}}>No Attachment</Text>
+        </View>
+      </View>
+    )
+  }
 
-  render() {
+  
+  render() { 
+
     const { navigation } = this.props;
     const { donations } = this.state;
-    const data = {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-      datasets: [{
-        data: [20, 45, 28, 80, 99, 43],
-      }],
-    };
+ 
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} title="My Donations" />
+        <NavigationBar {...navigation} title="Donations" />
         {/* <ScrollView style={styles.subContainer}> */}
           {/* <BarChart
             data={data}
@@ -112,19 +133,25 @@ class MyDonations extends Component {
             }}
           /> */}
         {/* </ScrollView> */}
-        <FlatList
-            data={donations}
+        <SectionList
+            sections={donations}
             extraData={donations}
             showsVerticalScrollIndicator={false}
             ref={this.listRef}
             onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
-            renderItem={item => this.followItem(item)}
+            renderItem={item => this.transctionItem(item)}
+           renderSectionHeader={({ section: { weekDesc } }) => (
+             <View style={{ paddingHorizontal:wp('3%'), flexDirection: 'row', flex:1, justifyContent:'space-around'}}>
+              <Text style={{ ...ApplicationStyles.bodySubHeading, textAlign:'center', paddingVertical: hp('0.5%')}}>{weekDesc}</Text>
+            </View> 
+
+        )}
             // refreshing={isRefreshing}
             // onRefresh={this.getMoreComments}
             onEndReached={(data) => {
               if (!this.onEndReachedCalledDuringMomentum) {
                 this.onEndReachedCalledDuringMomentum = true;
-                this.getFollowees(followees.length);
+                this.getMyDonations( );
               }
             }}
             onEndReachedThreshold={0.1}
