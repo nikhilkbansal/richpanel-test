@@ -9,6 +9,7 @@ import { INITIAL_STATE } from '../Stores/User/InitialState';
 import NavigationService from '../Services/NavigationService';
 import httpClient from './HttpClient';
 import { CommonFunctions } from '../Utils';
+import Toast from '../Services/ToastService';
 
 
 export function* login({ payload }) {
@@ -62,8 +63,13 @@ export function* register({ payload }) {
       url: 'auth/register',
     };
     const data = yield call(httpClient, payloadData);
-    NavigationService.navigate('HomePage');
-    yield put(userActions.putUserInfo({ ...data, isLoggedIn: true }));
+    if(payload.role ==='ngo'){
+      NavigationService.goBack();
+      Toast('We have received your request and will contact you soon for verification process',  4000);
+    } else {
+      NavigationService.navigate('HomePage');
+      yield put(userActions.putUserInfo({ ...data, isLoggedIn: true }));
+    }
   } catch (e) {
   }
 }

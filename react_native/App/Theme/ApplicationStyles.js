@@ -43,7 +43,9 @@ export default {
   elevationXL:{
     elevation: 5
   },
-
+ elevationXLL:{
+    elevation: 8
+  },
   // Font/icons colors
   primaryColor: {
     color: primaryColor,

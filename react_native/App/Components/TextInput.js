@@ -27,7 +27,7 @@ class TextInput extends React.Component {
 
 
     if (keys.includes('name') && !name) {
-      errors = { ...errors, usernameOrEmail: 'Enter a valid name' };
+      errors = { ...errors, name: 'Enter a valid name' };
     }
 
     if (keys.includes('usernameOrEmail') && !usernameOrEmail) {
@@ -46,7 +46,11 @@ class TextInput extends React.Component {
       errors = { ...errors, password: 'Enter a valid password' };
     }
 
-    if (keys.includes('confirmPassword') && confirmPassword !== password) {
+    if (keys.includes('confirmPassword') && !confirmPassword) {
+      errors = { ...errors, confirmPassword: 'Enter a valid password' };
+    }
+
+    if (confirmPassword && keys.includes('confirmPassword') && confirmPassword !== password) {
       errors = { ...errors, confirmPassword: 'Both passwords are different' };
     }
 

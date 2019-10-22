@@ -11,7 +11,7 @@ import { Colors, ApplicationStyles } from '../Theme';
 const styles = StyleSheet.create({
   container: {
     width: wp('100%'),
-    height: hp('6%'),
+    height: hp('10%'),
     backgroundColor: ApplicationStyles.primaryColor.color,
     ...ApplicationStyles.elevationS,
   },
@@ -43,20 +43,20 @@ const styles = StyleSheet.create({
 
 
 function NavigationBar({
-  title, showRightSection, goBack, containerStyle, showLeftSection, rightIcon, statusBarColor, rightButtonAction, iconsColor, statusBarStyle,
+  title, leftIcon, leftFunction, showRightSection, goBack, containerStyle, showLeftSection, rightIcon, statusBarColor, rightButtonAction, iconsColor, statusBarStyle,
 }) {
   return (
-    <View style={[styles.container, containerStyle]}>
-      <StatusBar barStyle={statusBarStyle || 'light-content'} backgroundColor={statusBarColor || ApplicationStyles.primaryColor.color} />
+    <View style={[styles.container,{paddingTop: StatusBar.currentHeight}, containerStyle]}>
+      <StatusBar translucent  barStyle={statusBarStyle || 'light-content'} backgroundColor={statusBarColor || ApplicationStyles.primaryColor.color} />
       <View style={styles.subContainer}>
         <View style={styles.leftArea}>
           {showLeftSection && (
           <Button
-            onPress={() => goBack()}
+            onPress={leftFunction || goBack}
             style={{ }}
             iconColor={iconsColor || ApplicationStyles.lightColor.color}
             buttonWrapperStyle={{ paddingHorizontal: wp('7%') }}
-            icon="ios-arrow-round-back"
+            icon={leftIcon || "ios-arrow-round-back"}
           />
           )}
         </View>

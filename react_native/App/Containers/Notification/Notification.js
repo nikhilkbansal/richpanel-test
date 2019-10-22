@@ -8,7 +8,7 @@ import NotificationActions from '../../Stores/Notification/Actions';
 import { connect } from 'react-redux';
 
 import { ApplicationStyles } from '../../Theme';
-import {NotificationUi, NavigationBar} from '../../Components';
+import {NotificationUi, NavigationBar, Text, EmptyState} from '../../Components';
 class Notification extends Component {
   static get propTypes() {
     return {
@@ -45,15 +45,18 @@ class Notification extends Component {
     const { email, password, checked } = this.state;
     const { navigation, notifications } = this.props;
     return (
-      <View style={{flex:1}}>
+      <View style={{flex:1,backgroundColor: ApplicationStyles.smokeBackground.color}}>
 
       <NavigationBar {...navigation} title='Notifications' showLeftSection={false}/>
-
-        <FlatList
+      { notifications.length < 1
+        ? <EmptyState message='There are no notifications to show'> 
+          </EmptyState>
+        :<FlatList
           style={{paddingHorizontal: wp('3%')}}
           data={notifications} 
           renderItem={this._renderItem}
         />
+      }
       </View>
     );
   }

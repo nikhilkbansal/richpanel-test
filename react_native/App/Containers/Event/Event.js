@@ -9,7 +9,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import ActionButton from 'react-native-action-button';
 import defaultStyle from '../../Theme/ApplicationStyles';
-import {EventUi, NavigationBar} from '../../Components';
+import {EventUi, NavigationBar, EmptyState} from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Dialog, { DialogContent,SlideAnimation } from 'react-native-popup-dialog';
@@ -70,10 +70,18 @@ class Event extends Component {
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color}}>
         <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddEvent')} showLeftSection={false} showRightSection rightIcon="md-add" title="Events"  />
-        <FlatList
-          data={homeEvents} 
-          renderItem={this._renderItem}
-        />
+      
+           {homeEvents.length < 1 
+          ? <EmptyState message='There are no events to show'> 
+            Tip: Follow some Philanthropy organizations from <Text  onPress={()=>navigation.navigate('Search')}  style={{...ApplicationStyles.button2, textDecorationLine: 'underline', color: ApplicationStyles.grayishBackground.color, textAlign:'center'}}>search page</Text>
+          </EmptyState>
+          :<FlatList
+              onRefresh={()=>{}}
+              refreshing={false}
+              data={homeEvents} 
+              renderItem={this._renderItem}
+            /> 
+        }
       </View>
     );
   }

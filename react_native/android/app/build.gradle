@@ -100,7 +100,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.helpapp" 
+        applicationId "com.handout" 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
         minSdkVersion rootProject.ext.minSdkVersion
@@ -156,6 +156,9 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-gesture-handler')
+    compile project(':react-native-screens')
+    compile project(':react-native-reanimated')
     compile project(':react-native-fcm')
     compile project(':react-native-text-input-mask')
     compile project(':react-native-svg')
@@ -169,7 +172,6 @@ dependencies {
     compile project(':react-native-vector-icons')
     compile project(':react-native-code-push')
     compile project(':lottie-react-native')
-    compile project(':react-native-photo-view')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:26.0.1"
     compile "com.google.android.gms:play-services-base:16.1.0"
@@ -184,6 +186,21 @@ dependencies {
 task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
+}
+
+preBuild.doFirst {
+    ant.replaceregexp(match: 'android.support.annotation.NonNull;', replace: 'androidx.annotation.NonNull;', flags: 'g', byline: true)
+            {
+                fileset(dir: '../../node_modules/react-native-reanimated/android/src/main/java/com/swmansion/reanimated/transitions/', includes: '*.java')
+            }
+    ant.replaceregexp(match: 'android.support.annotation.Nullable;', replace: 'androidx.annotation.Nullable;', flags: 'g', byline: true)
+            {
+                fileset(dir: '../../node_modules/react-native-reanimated/android/src/main/java/com/swmansion/reanimated/transitions/', includes: '*.java')
+            }
+    ant.replaceregexp(match: 'android.support.transition', replace: 'androidx.transition', flags: 'g', byline: true)
+            {
+                fileset(dir: '../../node_modules/react-native-reanimated/android/src/main/java/com/swmansion/reanimated/transitions/', includes: '*.java')
+            }
 }
 
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"

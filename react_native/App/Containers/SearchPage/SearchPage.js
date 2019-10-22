@@ -9,7 +9,7 @@ import { Searchbar } from 'react-native-paper';
 import SearchActions from 'App/Stores/Search/Actions';
 import { connect } from 'react-redux';
 import defaultStyle from '../../Theme/ApplicationStyles';
-import { TextInput, Text, Button } from '../../Components';
+import { TextInput, Text, Button, ProgressiveImage } from '../../Components';
 import ApplicationStyles from '../../Theme/ApplicationStyles';
 import CommonFunctions from '../../Utils/CommonFunctions';
 
@@ -63,6 +63,7 @@ class SearchPage extends Component {
     super(props);
     this.state = {
       term: '',
+      selectedTab: 'Posts'
     };
     this.searchSection = this.searchSection.bind(this);
     this.renderPostItem = this.renderPostItem.bind(this);
@@ -173,6 +174,7 @@ class SearchPage extends Component {
 
   render() {
     const { autoComplete } = this.props;
+    const { selectedTab } = this.state;
     const searchResultExist = (autoComplete.posts && autoComplete.posts.length > 0)
     || (autoComplete.events && autoComplete.events.length > 0)
     || (autoComplete.ngos && autoComplete.ngos.length > 0);
@@ -190,9 +192,7 @@ class SearchPage extends Component {
           returnKeyType="search"
           containerStyle={{
             paddingHorizontal: wp('5%'),
-            paddingBottom: hp('2%'),
-            borderColor: ApplicationStyles.grayishBackground.color,
-            borderBottomWidth: 1,
+            paddingBottom: hp('2%'), 
           }}
           inputStyle={{
             backgroundColor: ApplicationStyles.grayishBackground.color,
@@ -203,8 +203,9 @@ class SearchPage extends Component {
           }}
           onChangeText={text => this.getSearch(text)}
         />
-        <ScrollView style={{
+        <View style={{
           marginTop: -hp('1%'),
+          flex:1
         }}
         >
           {searchResultExist && (
@@ -222,7 +223,85 @@ class SearchPage extends Component {
           )
           }
 
+          <View style={{ 
+            
+            flexDirection:'row',
+            alignContent:'center',
+            borderBottomWidth: StyleSheet.hairlineWidth*2,
+            borderColor: ApplicationStyles.grayishBackground.color,
+            paddingHorizontal: wp('3%'),
+            height: hp('5.5%')
+            }}>
+
+            {['Posts', 'Events', 'Shop', 'PO'].map((o)=><Button 
+            style={{
+              flex:1,
+              borderBottomWidth: wp('0.5%'),
+              borderBottomColor: selectedTab === o ? ApplicationStyles.primaryColor.color: 'transparent'
+            }} 
+            onPress={()=>this.setState({ selectedTab : o})}
+            buttonWrapperStyle={{
+                paddingHorizontal: wp('2%'), 
+                paddingVertical: hp('1%'), 
+                marginHorizontal: wp('0.4%'), 
+                flex:1,
+              }}>
+              <Text style={{
+                textAlign: 'center',
+                ...ApplicationStyles.button2,
+                color:  selectedTab===o ? ApplicationStyles.primaryColor.color : ApplicationStyles.grayishBackground.color
+                }}>{o}</Text>
+            </Button>)} 
+          </View>
+        <ScrollView>
+
+          { ['Posts', 'Events', 'Shop', ].includes(selectedTab) ? <View
+            style={{
+              flex:1,
+              flexDirection:'row',
+              flexWrap:'wrap',
+              justifyContent:'center'
+            }}>
+              {
+                [1,2,3,4,5,3,4,3,4,5,3,4].map(o=><View style={{
+                  width: wp('30%'),
+                  margin:wp('1%'),
+                  height: wp('30%')}}>
+                    <ProgressiveImage
+                       source={{ uri: CommonFunctions.getFile('profile.pictur') }}
+                      style={{width: '100%', height: '100%'}}
+                    />
+                </View>)
+              }
+            </View> 
+            :
+            <View
+            style={{
+              flex:1,
+              flexDirection:'row',
+              flexWrap:'wrap',
+              justifyContent:'center',
+              justifyItems:'center'
+            }}>
+              {
+                [1,2,3,4,5,3,4,3,4,5,3,4].map(o=><Button 
+                  buttonWrapperStyle={{
+                  width: wp('22%'),
+                  margin:wp('0.5%'),
+                  alignItems:'center',
+                  height: wp('22%')}}>
+                    <ProgressiveImage
+                       source={{ uri: CommonFunctions.getFile('profile.pictur') }}
+                      style={{width: wp('15%'), height: wp('15%'), borderRadius: wp('40%')}}
+                    />
+                    <Text style={{textAlign: 'center', ...ApplicationStyles.subHeadline}}>Goonj</Text> 
+                </Button>)
+              }
+            </View>
+          }
         </ScrollView>
+
+        </View>
       </View>
     );
   }

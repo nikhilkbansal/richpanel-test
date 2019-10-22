@@ -1,13 +1,16 @@
 import * as React from 'react';
-import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
+import { View } from 'react-native';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Post from '../Post/Post';
 import Event from '../Event/Event';
 import Notification from '../Notification/Notification';
 import SearchPage from '../SearchPage/SearchPage';
 import Profile from '../Profile/Profile';
+import Drawer from './Drawer';
 import { Colors, ApplicationStyles } from '../../Theme';
 import { Text, Icon } from '../../Components';
+import { createDrawerNavigator } from 'react-navigation-drawer';
 
 
 // const RecentsRoute = () => <Text>Recents</Text>;
@@ -122,15 +125,15 @@ import { Text, Icon } from '../../Components';
 // }
 
 const TabNavigator = createBottomTabNavigator({
-  Profile,
 
+  Search: SearchPage,
   Post,
   Event,
-  Search: SearchPage,
   Notification,
-  // Profile,
+  Profile,
 }, {
-  navigationOptions: ({ navigation }) => ({
+  defaultNavigationOptions: ({ navigation }) => ({
+    lazy: true,
     tabBarIcon: ({ focused, horizontal, tintColor }) => {
       const { routeName } = navigation.state;
       let iconName,
@@ -189,10 +192,28 @@ const TabNavigator = createBottomTabNavigator({
     },
     tabStyle: { paddingTop: 0 },
     showLabel: true,
+    showIcon: true,
+    keyboardHidesTabBar: true,
     activeTintColor: ApplicationStyles.primaryColor.color,
     inactiveTintColor: ApplicationStyles.disabledColor.color,
   },
 });
-export default TabNavigator;
+
+const DrawerNavigator = createDrawerNavigator({
+  Home:{
+      screen: TabNavigator
+  }
+},{
+  initialRouteName: 'Home',
+  contentComponent: Drawer,
+  drawerWidth: wp('60%'),
+  drawerType: 'slide',
+  edgeWidth: wp('20%'),
+  drawerBackgroundColor: ApplicationStyles.lightColor.color,
+  hideStatusBar:true,
+  overlayColor: 0.5
+});
+
+export default DrawerNavigator;
 
 // export default withTheme(HomePage);

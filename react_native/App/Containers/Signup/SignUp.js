@@ -16,9 +16,9 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: ApplicationStyles.lightBackground.color },
   subContainer: { flex: 1, paddingHorizontal: wp('7%') },
   firstSection: { flex: 1 },
-  secondSection: { flex: 4, marginTop: hp('5%') },
+  secondSection: { flex: 4, marginVertical: hp('5%') },
   tabularButton: {
-    marginVertical: hp('4%'),
+    marginVertical: hp('1%'),
     flexDirection: 'row',
     borderRadius: ApplicationStyles.commonBorderRadius(wp('80%')),
     overflow: 'hidden',
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     height: hp('7%'),
   },
   submitContainer: {
-    marginVertical: hp('5%'),
+    marginTop: hp('5%'),
     backgroundColor: ApplicationStyles.primaryColor.color,
     borderRadius: ApplicationStyles.commonBorderRadius(wp('80%')),
     width: wp('80%'),
@@ -38,6 +38,9 @@ const styles = StyleSheet.create({
     height: hp('7%'),
   },
   submitTitle: { },
+  signUpLinkContainer: {
+    width: wp('80%'),   flexDirection: 'row', alignItems: 'center', alignContent: 'center', justifyContent: 'center',
+  },
 });
 
 
@@ -52,6 +55,7 @@ class SignUpScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      name: '',
       email: null,
       password: '',
       userType: 'user',
@@ -92,7 +96,7 @@ class SignUpScreen extends Component {
   signUpInit() {
     const { registerInit } = this.props;
     const {
-      email, password, userName, name,
+      email, password, userName, name, userType
     } = this.state;
     const validateForm = TextInput.validateForm(['name', 'password', 'confirmPassword', 'email', 'userName'], this.state);
     if (validateForm) {
@@ -101,7 +105,7 @@ class SignUpScreen extends Component {
     }
 
     registerInit({
-      email, password, userName, name,
+      email, password, userName, name, role: userType 
     });
     return true;
   }
@@ -122,24 +126,32 @@ class SignUpScreen extends Component {
             <Text style={ApplicationStyles.subHeadline}>Let's take first step</Text>
           </View>
           <View style={styles.secondSection}>
+            <View style={styles.signUpLinkContainer}>
+              <Text style={{ ...ApplicationStyles.bodySubHeading }}>Signup as a</Text>
+            </View>
             <View style={styles.tabularButton}>
               <Button
                 style={[styles.tabButton, this.tabButtonsStyle('user').container]}
                 titleStyle={[this.tabButtonsStyle('user').title]}
-                title="AS USER"
+                title="USER"
                 onPress={() => this.setState({ userType: 'user' })}
               />
               <Button
                 style={[styles.tabButton, this.tabButtonsStyle('ngo').container]}
                 titleStyle={[this.tabButtonsStyle('ngo').title]}
-                title="AS NGO"
+                title="PO"
                 onPress={() => this.setState({ userType: 'ngo' })}
               />
             </View>
+            <View style={{...styles.signUpLinkContainer, marginBottom: hp('2%')}}>
+              <Text style={{ ...ApplicationStyles.bodySubHeading }}>PO: Philanthropy Organizations (NGO, NPO etc)</Text>
+             </View>
+            <View>
             <TextInput
               error={errors.name}
-              label="Full Name"
+              label={userType === 'ngo' ? "PO Name": "Name"}
               returnKeyType="next"
+              placeholder={userType === 'ngo' ? 'Philanthropy organization name' :'Name'}
               onChangeText={text => this.updateTextInput('name', text)}
               onSubmitEditing={() => this.emailRef.current.focus()}
             />
@@ -156,6 +168,7 @@ class SignUpScreen extends Component {
               label="Username"
               returnKeyType="next"
               textInputRef={this.userNameRef}
+              placeholder=''
               onChangeText={text => this.updateTextInput('userName', text)}
               onSubmitEditing={() => this.passwordRef.current.focus()}
             />
@@ -164,6 +177,7 @@ class SignUpScreen extends Component {
               label="Password"
               returnKeyType="next"
               textInputRef={this.passwordRef}
+              placeholder='Enter between 6 to 18 characters'
               secureTextEntry
               onChangeText={text => this.updateTextInput('password', text)}
               onSubmitEditing={() => this.confirmPasswordRef.current.focus()}
@@ -177,12 +191,17 @@ class SignUpScreen extends Component {
               onChangeText={text => this.updateTextInput('confirmPassword', text)}
               onSubmitEditing={() => this.signUpInit()}
             />
+            </View>
+
             <Button
               style={styles.submitContainer}
               titleStyle={styles.submitTitle}
               title="SUBMIT"
               onPress={() => this.signUpInit()}
             />
+            { userType ==='ngo' && <View style={{...styles.signUpLinkContainer, width: '100%', marginTop: hp('0.5%') }}>
+                <Text style={{  ...ApplicationStyles.bodySubHeading, textAlign:'center', }}>Note: As soon as we will get your request, we will start verifification process. Once you verified we will notify you and then you will be able to login</Text>
+            </View>}
           </View>
         </KeyboardAwareScrollView>
       </View>

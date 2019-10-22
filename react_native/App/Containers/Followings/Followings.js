@@ -10,14 +10,14 @@ import CommentActions from 'App/Stores/Comment/Actions';
 import { CommonFunctions } from '../../Utils';
 import { Config } from '../../Config';
 import {
-  AvatarImage, ProgressiveImage, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, Text,
+  AvatarImage,EmptyState, ProgressiveImage, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, Text,
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import AxiosRequest from '../../Services/HttpRequestService';
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: ApplicationStyles.lightBackground.color },
+  container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
   commentContainer: {
     flexDirection: 'row',
     paddingVertical: hp('2%'),
@@ -134,9 +134,11 @@ class Followings extends Component {
       <View style={{
         flex: 1,
         flexDirection: 'row',
-        height: hp('8.5%'),
-        paddingHorizontal: wp('3%'),
+        height: hp('10.5%'),
+        paddingHorizontal: wp('5.5%'),
+        paddingVertical: hp('1%'),
         marginVertical: hp('1%'),
+        backgroundColor: ApplicationStyles.lightBackground.color
       }}
       >
         <View style={{
@@ -208,9 +210,12 @@ class Followings extends Component {
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} title="Followings" />
-        <View style={{ paddingHorizontal: wp('4%'), flex:1, height: hp('93%'),   }}>
+        {followees.length < 221 ? <EmptyState message='There are no followings to show'> 
+          Tip: Follow some Philanthropy organizations from <Text onPress={()=>navigation.navigate('Search')}  style={{...ApplicationStyles.button2, textDecorationLine: 'underline', color: ApplicationStyles.grayishBackground.color, textAlign:'center'}}>search page</Text>
+        </EmptyState> 
+        :<View style={{   flex:1, height: hp('93%'),   }}>
           <FlatList
-            data={followees}
+            data={followees }
             extraData={followees}
             showsVerticalScrollIndicator={false}
             ref={this.listRef}
@@ -227,6 +232,7 @@ class Followings extends Component {
             onEndReachedThreshold={0.1}
           />  
       </View>
+        }
       </View>
     );
   }

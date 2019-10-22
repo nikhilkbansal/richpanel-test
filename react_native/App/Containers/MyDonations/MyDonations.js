@@ -17,7 +17,7 @@ import {
 import { connect } from 'react-redux';
 import moment from 'moment';
 import {
-  Text, NavigationBar, TextInput, Button,
+  Text, NavigationBar, TextInput, Button, EmptyState
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import AxiosRequest from '../../Services/HttpRequestService';
@@ -133,7 +133,10 @@ class MyDonations extends Component {
             }}
           /> */}
         {/* </ScrollView> */}
-        <SectionList
+        {donations.length < 1 
+          ? <EmptyState message='There are no donations to show'> 
+          </EmptyState>
+        : <SectionList
             sections={donations}
             extraData={donations}
             showsVerticalScrollIndicator={false}
@@ -155,7 +158,8 @@ class MyDonations extends Component {
               }
             }}
             onEndReachedThreshold={0.1}
-          />  
+          /> 
+        } 
       </View>
     );
   }

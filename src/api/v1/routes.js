@@ -27,6 +27,8 @@ router.get(
   (req, res) => res.send('OK'),
 );
 
+router.get('/v2/:params', (req, res, n) => { console.log('req', req.headers.host, req.url, req.method); n(); });
+
 /**
  * GET v1/docs
  */

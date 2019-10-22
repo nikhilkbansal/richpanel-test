@@ -121,19 +121,7 @@ class Profile extends Component {
                     @
                     {profile.userName}
                   </Text>
-                </View>
-                <View style={{ flex: 1, alignContent: 'flex-start', justifyContent: 'flex-start' }}>
-                  <Button
-                    buttonWrapperStyle={{
-                      borderRadius: wp('2%'),
-                      alignSelf: 'flex-end',
-                      padding: wp('1%'),
-                    }}
-                    titleStyle={{ ...ApplicationStyles.link }}
-                    onPress={logoutInit}
-                    title="Logout"
-                  />
-                </View>
+                </View> 
               </View>
               <View style={{ flexWrap: 'wrap', flex: 1, flexDirection: 'row' }}>
                 {/* <Text style={styles.info}>
@@ -169,14 +157,14 @@ class Profile extends Component {
               title="My Donations"
             />
           </View> */}
-            <View style={[styles.sectionContainer, ]}>
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('Followings')} leftLabel='Following' />
+            {profile.role ==='duser' ? <View style={[styles.sectionContainer, ]}>
+              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('Followings')} leftLabel='Followings' />
               <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='My Donations' />
               <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='Recurring Payments' />
               <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Stats' />
+              <MenuItem leftLabel='Logout' onPress={logoutInit}/>
             </View>
-
-            <View style={[styles.sectionContainer, { marginBottom: hp('2%') }]}>
+            :<View style={[styles.sectionContainer, { marginBottom: hp('2%') }]}>
               <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('OrgInfo')} leftLabel='Organization Info' />
               <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('PoSlider')} leftLabel='Carousel' />
               <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='Posts' />
@@ -187,7 +175,10 @@ class Profile extends Component {
               <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations', {forPo: true})} leftLabel='Donations' />
               <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='Recurring Donations' />
               <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('AddBankAccount')} leftLabel='Bank details' />
+              <MenuItem leftLabel='Logout' onPress={logoutInit} />
+
             </View>
+            }
           {/* <View style={{
             paddingTop: hp('3%'),
             flex: 1,

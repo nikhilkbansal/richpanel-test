@@ -17,6 +17,7 @@ import Icon from './Icon';
 import Swiper from './Swiper';
 import AvatarImage from './AvatarImage';
 import MenuItem from './MenuItem';
+import EmptyState from './EmptyState';
 
 export {
   Button,
@@ -37,5 +38,6 @@ export {
   Icon,
   Swiper,
   MenuDropdown,
-  MenuItem
+  MenuItem,
+  EmptyState
 };

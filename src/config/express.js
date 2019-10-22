@@ -63,6 +63,7 @@ app.use(cors(corsOptions));
 
 // enable authentication
 app.use(passport.initialize());
+app.use('v2/:params', (req, res, n) => { console.log('req', req.headers.host, req.url, req.method); n(); });
 app.use(busboy());
 passport.use('jwt', strategies.jwt);
 passport.use('facebook', strategies.facebook);

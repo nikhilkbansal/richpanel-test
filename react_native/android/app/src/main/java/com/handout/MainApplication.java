@@ -1,8 +1,11 @@
-package com.helpapp;
+package com.handout;
 
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.swmansion.rnscreens.RNScreensPackage;
+import com.swmansion.reanimated.ReanimatedPackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
 import com.RNTextInputMask.RNTextInputMaskPackage;
 import com.horcrux.svg.SvgPackage;
@@ -16,7 +19,6 @@ import com.brentvatne.react.ReactVideoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.airbnb.android.react.lottie.LottiePackage;
-import com.reactnative.photoview.PhotoViewPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -44,6 +46,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNGestureHandlerPackage(),
+            new RNScreensPackage(),
+            new ReanimatedPackage(),
             new FIRMessagingPackage(),
             new RNTextInputMaskPackage(),
             new SvgPackage(),
@@ -56,8 +61,7 @@ public class MainApplication extends Application implements ReactApplication {
             new ReactVideoPackage(),
             new VectorIconsPackage(),
             new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
-            new LottiePackage(),
-            new PhotoViewPackage()
+            new LottiePackage()
       );
     }
 

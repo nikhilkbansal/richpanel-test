@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createAppContainer } from 'react-navigation';
 import NavigationService from 'App/Services/NavigationService';
 import { View, StatusBar } from 'react-native';
 // import ExampleScreen from 'App/Containers/Example/ExampleScreen';
@@ -42,7 +43,7 @@ import FontSizes from '../../Theme/FontSizes';
  *
  * @see https://reactnavigation.org/docs/en/hello-react-navigation.html#creating-a-stack-navigator
  */
-const AppNav = createStackNavigator(
+const AppNav = createAppContainer(createStackNavigator(
   {
     SplashScreen,
     LogIn,
@@ -73,7 +74,7 @@ const AppNav = createStackNavigator(
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },
-);
+));
 
 /**
  * Theme configuraion

@@ -11,14 +11,13 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import ActionButton from 'react-native-action-button';
 import defaultStyle from '../../Theme/ApplicationStyles';
-import {PostUi, NavigationBar, MenuDropdown} from '../../Components';
-import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { Button, Text } from 'react-native'
+import {PostUi, NavigationBar, MenuDropdown, Icon, Text, EmptyState} from '../../Components';
+import { Colors, FontSizes, ApplicationStyles, Files } from '../../Theme';
+import { Button,  } from 'react-native'
 import { connect } from 'react-redux';
 import PostActions from '../../Stores/Post/Actions';
 import UserActions from '../../Stores/User/Actions';
-
+import LottieView from 'lottie-react-native';
 
 const styles = StyleSheet.create({
   actionButtonIcon: {
@@ -50,7 +49,7 @@ class Post extends Component {
     const { profile, sharePost } = this.props;
       Share.open( {
         message:  profile.name+ ' wants you see this post: ' + item.title+'. Use Help App to make to world a better place for everyone like '+ profile.name +' is doing',
-        url: 'com.helpapp/'+item.title.replace(' ', ''),
+        url: 'com.handout/'+item.title.replace(' ', ''),
     })
     .then((res) => {
        console.log(res)
@@ -70,7 +69,10 @@ class Post extends Component {
 
   componentWillUnmount() {
     this.navListener.remove();
+    this.animation.play();
+
   }
+ 
 
   _renderItem = ({item}) =><PostUi 
     userName={item.userId.name}
@@ -90,13 +92,18 @@ class Post extends Component {
     const {  navigation, homePosts  } = this.props;
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color}}>
-        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={false} showRightSection rightIcon="md-add" title="Home"/>
-        <FlatList
-        onRefresh={()=>{}}
-        refreshing={false}
-          data={homePosts} 
-          renderItem={this._renderItem}
-        />
+        <NavigationBar {...navigation} leftFunction={()=>navigation.openDrawer()} leftIcon={'md-menu'} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={true} showRightSection rightIcon="md-add" title="Home"/>
+        {homePosts.length < 1 
+          ? <EmptyState message='There are no posts to show'> 
+            Tip: Follow some Philanthropy organizations from <Text onPress={()=>navigation.navigate('Search')} style={{...ApplicationStyles.button2, textDecorationLine: 'underline', color: ApplicationStyles.grayishBackground.color, textAlign:'center'}}>search page</Text>
+          </EmptyState>
+          :<FlatList
+            onRefresh={()=>{}}
+            refreshing={false}
+              data={homePosts} 
+              renderItem={this._renderItem}
+            /> 
+        }
       </View>
     );
   }
