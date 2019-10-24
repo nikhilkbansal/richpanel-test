@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View, TextInput as RNTextInput, StyleSheet } from 'react-native';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -25,17 +26,16 @@ class TextInput extends React.Component {
     } = state;
     let errors = {};
 
-
-    if (keys.includes('name') && !name) {
-      errors = { ...errors, name: 'Enter a valid name' };
-    }
+    // checking if fields are not empty
+    // for custom message replace with if statement written after this function
+    keys.forEach(o=>{
+      if(!state[o]){
+        errors = { ...errors, [o]: 'Enter a valid '+_.startCase(o) };
+      }
+    });
 
     if (keys.includes('usernameOrEmail') && !usernameOrEmail) {
       errors = { ...errors, usernameOrEmail: 'Enter a valid username or email' };
-    }
-
-    if (keys.includes('userName') && !userName) {
-      errors = { ...errors, userName: 'Enter a valid username' };
     }
 
     if (keys.includes('email') && !Validations.validateEmail(email)) {
@@ -44,10 +44,6 @@ class TextInput extends React.Component {
 
     if (keys.includes('password') && !Validations.validatePassword(password)) {
       errors = { ...errors, password: 'Enter a valid password' };
-    }
-
-    if (keys.includes('confirmPassword') && !confirmPassword) {
-      errors = { ...errors, confirmPassword: 'Enter a valid password' };
     }
 
     if (confirmPassword && keys.includes('confirmPassword') && confirmPassword !== password) {

@@ -12,6 +12,7 @@ import defaultStyle from '../../Theme/ApplicationStyles';
 import { TextInput, Text, Button, ProgressiveImage } from '../../Components';
 import ApplicationStyles from '../../Theme/ApplicationStyles';
 import CommonFunctions from '../../Utils/CommonFunctions';
+import AxiosRequest from '../../Services/HttpRequestService';
 
 const styles = StyleSheet.create({
   subContainer: { flex: 1, flexDirection: 'row', paddingVertical: hp('0.5%') },
@@ -63,19 +64,25 @@ class SearchPage extends Component {
     super(props);
     this.state = {
       term: '',
-      selectedTab: 'Posts'
+      selectedTab: 'Posts',
+      postRecommendations: [],
+      poRecommendations:[]
     };
     this.searchSection = this.searchSection.bind(this);
     this.renderPostItem = this.renderPostItem.bind(this);
     this.getSearch = this.getSearch.bind(this);
     this.openSeeAllScreen = this.openSeeAllScreen.bind(this);
     this.renderItem = this.renderItem.bind(this);
+    this.getPostRecommendations = this.getPostRecommendations.bind(this);
+    this.getPoRecommendations = this.getPoRecommendations.bind(this);
   }
 
   componentDidMount() {
-    const { putAutoCompleteResults } = this.props;
+    const { putAutoCompleteResults, getPostRecommendation } = this.props;
     const { term } = this.state;
     if (term.length === 0) { putAutoCompleteResults([]); }
+    this.getPostRecommendations();
+    this.getPoRecommendations();
     this.navListener = this.props.navigation.addListener('didFocus', () => {
       StatusBar.setBarStyle('dark-content');
       StatusBar.setBackgroundColor(ApplicationStyles. smokeBackground.color);
@@ -84,6 +91,7 @@ class SearchPage extends Component {
 
   componentWillUnmount() {
     this.navListener.remove();
+    
   }
 
 
@@ -94,6 +102,36 @@ class SearchPage extends Component {
       getSearch({ term, type: 'all' });
     } else {
       putAutoCompleteResults([]);
+    }
+  }
+
+  async getPostRecommendations( ) { 
+    const { postRecommendations } = this.state;
+    const itemsLength = postRecommendations.length;
+    try {
+      const data = await AxiosRequest({
+        method: 'get',
+        params:{ skip: itemsLength },
+        url: 'search/recommendation/post',
+      });
+      this.setState({ postRecommendations: postRecommendations.concat(data) });
+    } catch (e) {
+      console.log('eeee',e)
+    }
+  }
+
+  async getPoRecommendations( ) { 
+    const { poRecommendations } = this.state;
+    const itemsLength = poRecommendations.length;
+    try {
+      const data = await AxiosRequest({
+        method: 'get',
+        params:{ skip: itemsLength },
+        url: 'search/recommendation/po',
+      });
+      this.setState({ poRecommendations: poRecommendations.concat(data) });
+    } catch (e) {
+      console.log('eeee',e)
     }
   }
 
@@ -173,8 +211,8 @@ class SearchPage extends Component {
 
 
   render() {
-    const { autoComplete } = this.props;
-    const { selectedTab } = this.state;
+    const { autoComplete, navigation } = this.props;
+    const { selectedTab, postRecommendations, poRecommendations } = this.state;
     const searchResultExist = (autoComplete.posts && autoComplete.posts.length > 0)
     || (autoComplete.events && autoComplete.events.length > 0)
     || (autoComplete.ngos && autoComplete.ngos.length > 0);
@@ -263,15 +301,17 @@ class SearchPage extends Component {
               justifyContent:'center'
             }}>
               {
-                [1,2,3,4,5,3,4,3,4,5,3,4].map(o=><View style={{
-                  width: wp('30%'),
-                  margin:wp('1%'),
-                  height: wp('30%')}}>
+                postRecommendations.map(o=><Button 
+                  onPress={()=> navigation.navigate('')}
+                  style={{
+                    width: wp('30%'),
+                    margin:wp('1%'),
+                    height: wp('30%')}}>
                     <ProgressiveImage
-                       source={{ uri: CommonFunctions.getFile('profile.pictur') }}
+                       source={{ uri: CommonFunctions.getFile(o.files[0],) }}
                       style={{width: '100%', height: '100%'}}
                     />
-                </View>)
+                </Button>)
               }
             </View> 
             :
@@ -284,14 +324,15 @@ class SearchPage extends Component {
               justifyItems:'center'
             }}>
               {
-                [1,2,3,4,5,3,4,3,4,5,3,4].map(o=><Button 
+                poRecommendations.map(o=><Button 
+                  onPress={()=>navigation.navigate('NgoProfile')}
                   buttonWrapperStyle={{
                   width: wp('22%'),
                   margin:wp('0.5%'),
                   alignItems:'center',
                   height: wp('22%')}}>
                     <ProgressiveImage
-                       source={{ uri: CommonFunctions.getFile('profile.pictur') }}
+                       source={{ uri: CommonFunctions.getFile(o.picture) }}
                       style={{width: wp('15%'), height: wp('15%'), borderRadius: wp('40%')}}
                     />
                     <Text style={{textAlign: 'center', ...ApplicationStyles.subHeadline}}>Goonj</Text> 
@@ -310,6 +351,7 @@ class SearchPage extends Component {
 export default connect(
   ({ search: { autoComplete } }) => ({ autoComplete }), {
     getSearch: SearchActions.getSearch,
+    getPostRecommendation: SearchActions.getPostRecommendation,
     putAutoCompleteResults: SearchActions.putAutoCompleteResults,
   },
 )(SearchPage);

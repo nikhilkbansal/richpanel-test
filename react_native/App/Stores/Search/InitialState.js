@@ -4,4 +4,5 @@
 export const INITIAL_STATE = {
   autoComplete: {},
   seeAll: [],
+  postsRecommendation: []
 };

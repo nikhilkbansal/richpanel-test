@@ -67,17 +67,17 @@ const userSchema = new mongoose.Schema({
     token_type: String,
     expiry_date: Number,
   },
-  preferences: {
-    type: Array,
-    default: [],
-  },
-  causeSupported: {
-    type: Array,
-    default: [],
-  },
-  tags: {
-    type: Array,
-    default: [],
+  poInfo: {
+    publicPhone: String,
+    publicEmail: String,
+    about: String,
+    founded: String,
+    website: String,
+    causeSupported: String,
+    carousel: {
+      type: Array,
+      default: [],
+    },
   },
 }, {
   timestamps: true,
@@ -113,7 +113,7 @@ userSchema.pre('save', async function save(next) {
 userSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['id', 'name', 'email', 'userName', 'picture', 'role', 'createdAt'];
+    const fields = ['id', 'name', 'email', 'userName', 'picture', 'poInfo', 'role', 'createdAt'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];

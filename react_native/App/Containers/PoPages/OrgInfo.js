@@ -15,6 +15,7 @@ import {
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import { CommonFunctions } from '../../Utils';
 import UploadFiles from '../../Services/UploadFilesService';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const options = {
   title: 'Select Profile Pic',
@@ -59,103 +60,128 @@ class OrgInfo extends Component {
   constructor(props) {
     super(props);
     const { profile } = this.props;
+    console.log(profile);
     this.state = {
       errors: {},
       selectedProfilePic: {},
       picture: null,
+      founded: "",
+      publicPhone: "",
+      publicEmail: "",
+      website: "",
+      causeSupported: "",
+      about: "",
       ...profile,
+      ...profile.poInfo
     };
     this.updateProfile = this.updateProfile.bind(this);
     this.updateTextInput = this.updateTextInput.bind(this);
-    this.selectImage = this.selectImage.bind(this);
-    this.emailRef = React.createRef();
-    this.passwordRef = React.createRef();
-    this.confirmPasswordRef = React.createRef();
-    this.userNameRef = React.createRef();
+    this.foundedRef = React.createRef();
+    this.publicEmailRef = React.createRef();
+    this.publicPhoneRef = React.createRef();
+    this.websiteRef = React.createRef();
+    this.causeSupportedRef = React.createRef();
+    this.aboutRef = React.createRef();
   }
-
-
-  selectImage() {
-    ImagePicker.openPicker({
-      // cropping: true,
-    }).then((images) => {
-      this.setState({ picture: images });
-    });
-  }
-
 
   updateTextInput(key, value) {
     this.setState({ [key]: value });
   }
 
   async updateProfile() {
-    const { updateUserInit } = this.props;
+    const { updateUserInit, profile } = this.props;
     const {
-      email, password, userName, name, picture,
+      founded, publicPhone, publicEmail, website, causeSupported, about
     } = this.state;
-    const isPasswordGivenArray = password ? ['password'] : [];
-    const validateForm = TextInput.validateForm(['name', ...isPasswordGivenArray, 'confirmPassword', 'email', 'userName'], this.state);
+    const validateForm = TextInput.validateForm(['founded', 'publicPhone', 'publicEmail', 'causeSupported', 'about'], this.state);
     if (validateForm) {
       this.setState({ errors: validateForm });
       return false;
     }
 
-    const isPasswordGivenObject = password ? { password } : {};
-
-    let pictureCondition;
-    if (picture) {
-      const filesUploaded = await UploadFiles([picture], { fileType: 'image' });
-      const filesIds = filesUploaded.map(o => o._id);
-      pictureCondition = { picture: filesIds[0] };
-    }
-
     updateUserInit({
-      email, ...isPasswordGivenObject, userName, name, ...pictureCondition,
+      poInfo: {...profile.poInfo, founded, publicPhone, publicEmail, website, causeSupported, about} 
     });
   }
 
 
   render() {
-    const { navigation, profile } = this.props;
+    const { navigation, profile} = this.props;
     console.log('CommonFunctions.getFile(profile.picture, true)', CommonFunctions.getFile(profile.picture, true));
     const {
-      errors, name, email, userName, picture,
+      errors, founded, publicPhone, publicEmail, website, causeSupported, about
     } = this.state;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} title="Slider"  />
-        <ScrollView style={styles.subContainer}>
-          
+        <NavigationBar {...navigation} title="Organization Info"  />
+        <KeyboardAwareScrollView style={styles.subContainer}>
           <TextInput
-            error={errors.fullName}
+            error={errors.founded}
+            label="Founded"
+            returnKeyType="next"
+            value={founded}
+            mask="[0000]"
+            keyboardType={'number-pad'}
+            placeholder="e.g. 1995"
+            onChangeText={text => this.updateTextInput('founded', text)}
+            onSubmitEditing={() => this.publicEmailRef.current.focus()}
+          />
+          <TextInput
+            error={errors.publicEmail}
+            label="Public email"
+            returnKeyType="next"
+            value={publicEmail}
+            keyboardType='email-address'
+            placeholder=""
+            textInputRef={this.publicEmailRef}
+            onChangeText={text => this.updateTextInput('publicEmail', text)}
+            onSubmitEditing={() => this.publicPhoneRef.current.focus()}
+          />
+          <TextInput
+            error={errors.publicPhone}
+            label="Public phone number (with country code)"
+            returnKeyType="next"
+            value={publicPhone}
+            keyboardType='phone-pad'
+            placeholder="e.g. +9111111111"
+            textInputRef={this.publicPhoneRef}
+            onChangeText={text => this.updateTextInput('publicPhone', text)}
+            onSubmitEditing={() => this.websiteRef.current.focus()}
+          />
+          <TextInput
+            label="Website"
+            optional
+            placeholder='e.g. www.example.com'
+            returnKeyType="next"
+            value={website}
+            textInputRef={this.websiteRef}
+            onChangeText={text => this.updateTextInput('website', text)}
+            onSubmitEditing={() => this.causeSupportedRef.current.focus()}
+          /> 
+          <TextInput
+            error={errors.causeSupported}
+            label="Cause supported (comma separated)"
+            returnKeyType="next"
+            multiline
+            value={causeSupported}
+            numberOfLines={2}
+            placeholder="e.g. Child education, woman empowerment"
+            textInputRef={this.causeSupportedRef}
+            onChangeText={text => this.updateTextInput('causeSupported', text)}
+            onSubmitEditing={() => this.aboutRef.current.focus()}
+          />
+          <TextInput
+            error={errors.about}
             label="About" 
             multiline
+            value={about}
             inputStyle={ApplicationStyles.body}
             numberOfLines={3}
-            returnKeyType="next"
-            placeholder='Will be shown to other users on profile page'
-            onChangeText={text => this.updateTextInput('name', text)}
-            onSubmitEditing={() => this.emailRef.current.focus()}
-          />
-
-          <TextInput
-            error={errors.email}
-            label="Founded on"
-            returnKeyType="next"
-            value={email}
-            mask="0000"
-            textInputRef={this.emailRef}
-            onChangeText={text => this.updateTextInput('email', text)}
-            onSubmitEditing={() => this.userNameRef.current.focus()}
-          />
-          <TextInput
-            error={errors.userName}
-            label="Website"
-            value={userName}
-            returnKeyType="next"
-            textInputRef={this.userNameRef}
-            onChangeText={text => this.updateTextInput('userName', text)}
-            onSubmitEditing={() => this.passwordRef.current.focus()}
+            textInputRef={this.aboutRef}
+            returnKeyType="done"
+            placeholder="Sumary about organization's work, goal or other important aspects"
+            onChangeText={text => this.updateTextInput('about', text)}
+            onSubmitEditing={() => this.updateProfile()}
           />
           <Button
             style={styles.loginContainer}
@@ -163,7 +189,7 @@ class OrgInfo extends Component {
             title="UPDATE"
           />
 
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </View>
     );
   }
@@ -171,7 +197,6 @@ class OrgInfo extends Component {
 
 export default connect(
   ({ user: { profile } }) => ({ profile }), {
-    updateUserInit: UserActions.updateUserInit,
-    uploadProfilePic: UserActions.uploadProfilePic,
+    updateUserInit: UserActions.updateUserInit
   },
 )(OrgInfo);

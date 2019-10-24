@@ -69,7 +69,7 @@ class Event extends Component {
     const { navigation, homeEvents  } = this.props;
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color}}>
-        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddEvent')} showLeftSection={false} showRightSection rightIcon="md-add" title="Events"  />
+        <NavigationBar  leftFunction={()=>navigation.openDrawer()} leftIcon={'md-menu'}  {...navigation} rightButtonAction={() => navigation.navigate('AddEvent')}  showRightSection rightIcon="md-add" title="Events"  />
       
            {homeEvents.length < 1 
           ? <EmptyState message='There are no events to show'> 

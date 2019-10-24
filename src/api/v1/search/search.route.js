@@ -6,6 +6,7 @@ const { authorize } = require('../../middlewares/auth');
 
 const {
   getSearch,
+  postsRecommendation,
 } = require('./search.validation');
 
 const router = express.Router();
@@ -34,5 +35,17 @@ router
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
   .get(authorize(), validate(getSearch), controller.getSearch);
+
+router
+  .route('/recommendation/post')
+  .get(authorize(), validate(postsRecommendation), controller.postsRecommendation);
+
+router
+  .route('/recommendation/post')
+  .get(authorize(), validate(postsRecommendation), controller.postsRecommendation);
+
+router
+  .route('/recommendation/po')
+  .get(authorize(), validate(postsRecommendation), controller.poRecommendation);
 
 module.exports = router;

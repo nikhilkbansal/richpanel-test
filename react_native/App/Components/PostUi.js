@@ -182,7 +182,8 @@ function PostUi({
           <View style={styles.titleContainer}>
             <Text style={ApplicationStyles.headline2}>{title}</Text>
           </View>
-          <Text style={{ ...ApplicationStyles.bodySubHeading, paddingVertical: hp('0.6%'), alignSelf: 'flex-end' }}>Ends on 12 Aug 2019</Text>
+          {campaignGoal
+          && <Text style={{ ...ApplicationStyles.bodySubHeading, paddingVertical: hp('0.6%'), alignSelf: 'flex-end' }}>Ends on 12 Aug 2019</Text>}
 
           {campaignGoal
           && (

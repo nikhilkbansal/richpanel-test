@@ -27,7 +27,7 @@ export default {
     nightRider: '#333333'/** '#343434' '#1e1e1e' */,
     blackRussian: '#27282b',
     cinnabar: '#D93842',
-    sunflower: '#e6bd17',s
+    sunflower: '#e6bd17',
     nepal: '#9eb5c1',
     ronchi: '#EFCA4B',
     sunsetOrange: '#F6404C',

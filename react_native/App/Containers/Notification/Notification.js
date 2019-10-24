@@ -47,7 +47,7 @@ class Notification extends Component {
     return (
       <View style={{flex:1,backgroundColor: ApplicationStyles.smokeBackground.color}}>
 
-      <NavigationBar {...navigation} title='Notifications' showLeftSection={false}/>
+      <NavigationBar  leftFunction={()=>navigation.openDrawer()} leftIcon={'md-menu'}  {...navigation} title='Notifications' />
       { notifications.length < 1
         ? <EmptyState message='There are no notifications to show'> 
           </EmptyState>

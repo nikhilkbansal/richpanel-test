@@ -46,6 +46,7 @@ module.exports = {
       oldPassword: Joi.string().min(6).max(128),
       name: Joi.string().max(128),
       files: Joi.array(),
+      poInfo: Joi.object(),
       // role: Joi.string().valid(User.roles),
     },
     params: {

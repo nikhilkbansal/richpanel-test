@@ -6,6 +6,7 @@ import Post from '../Post/Post';
 import Event from '../Event/Event';
 import Notification from '../Notification/Notification';
 import SearchPage from '../SearchPage/SearchPage';
+import Shop from '../Shop/Shop';
 import Profile from '../Profile/Profile';
 import Drawer from './Drawer';
 import { Colors, ApplicationStyles } from '../../Theme';
@@ -129,8 +130,8 @@ const TabNavigator = createBottomTabNavigator({
   Search: SearchPage,
   Post,
   Event,
+  Shop,
   Notification,
-  Profile,
 }, {
   defaultNavigationOptions: ({ navigation }) => ({
     lazy: true,
@@ -149,10 +150,10 @@ const TabNavigator = createBottomTabNavigator({
         iconSize = wp('6.4%');
       } else if (routeName === 'Event') {
         iconName = 'md-time';
-      } else if (routeName === 'Profile') {
-        iconFamily = 'MaterialCommunityIcons';
-        iconSize = wp('6.1%');
-        iconName = 'face-profile';
+      } else if (routeName === 'Shop') {
+        iconFamily = 'Feather';
+        iconSize = wp('5.8%');
+        iconName = 'shopping-bag';
       }
 
 
@@ -171,8 +172,8 @@ const TabNavigator = createBottomTabNavigator({
         title = 'Notifications';
       } else if (routeName === 'Event') {
         title = 'Events';
-      } else if (routeName === 'Profile') {
-        title = 'Profile';
+      } else if (routeName === 'Shop') {
+        title = 'Shop';
       }
 
       return (

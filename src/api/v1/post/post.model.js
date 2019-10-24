@@ -34,7 +34,6 @@ const postSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
-    maxlength: 128,
   },
   campaignGoal: String,
   campaignStartDate: Date,
@@ -58,13 +57,13 @@ postSchema.index({ title: 'text', description: 'text' });
 
 postSchema.statics = {
   async list({
-    page = 1, perPage = 30, _id, userId, title, $text,
+    skip = 0, perPage = 30, _id, userId, title, $text,
   }) {
     const options = omitBy({
       _id, userId, title, $text,
     }, isNil);
     return this.find(options).sort({ createdAt: -1 })
-      .skip(perPage * (page - 1))
+      .skip(skip)
       .limit(perPage)
       .populate('userId', 'name _id picture')
       .exec();

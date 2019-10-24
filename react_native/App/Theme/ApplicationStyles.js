@@ -220,6 +220,12 @@ export default {
     fontFamily: Fonts.light,
   },
 
+  // Drawer menu items
+  primaryInfo2: {
+    fontSize: FontSizes.h3,
+    color: primaryColor,
+    fontFamily: Fonts.light,
+  },
 
   // avtar user names,
   // Profile My Posts

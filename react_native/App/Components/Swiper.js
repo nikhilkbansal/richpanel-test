@@ -52,7 +52,7 @@ class SwiperPage extends React.Component {
   render() {
     const { dateTime } = this.state;
     const {
-      files,
+      files, isWholePath
     } = this.props;
     return (
       <Swiper loop={false} style={styles.wrapper} showsButtons={false} activeDotColor={ApplicationStyles.primaryColor.color}>
@@ -79,7 +79,7 @@ class SwiperPage extends React.Component {
               : (
                 <ProgressiveImage
                   thumbnailSource={{ uri: `${CommonFunctions.getFile(o)}?width=50&height=50` }}
-                  source={{ uri: CommonFunctions.getFile(o) }}
+                  source={{ uri: isWholePath ? o :CommonFunctions.getFile(o) }}
                   style={styles.mainImage}
                   resizeMode="cover"
                 />

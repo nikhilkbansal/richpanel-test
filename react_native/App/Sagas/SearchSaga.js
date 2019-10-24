@@ -25,12 +25,32 @@ export function* getSearch({ payload }) {
   }
 }
 
+export function* getRecommendationPosts({ payload }) {
+  try {
+    console.log('payload', payload);
+    const payloadData = {
+      method: 'get',
+      params: {
+        ...payload,
+      },
+      url: '/search/recommendation/posts',
+    };
+    const data = yield call(httpClient, payloadData, 'default', false);
+    yield put(searchActions.putAutoCompleteResults(data));
+  } catch (e) {
+    console.log('eee', e);
+  }
+}
+
+
+
 
 function* func() {
   yield all(
     [
       takeLatest(SearchTypes.GET_SEARCH, getSearch),
-
+      takeLatest(SearchTypes.GET_POST_RECOMMENDATION, getRecommendationPosts),
+      
     ],
   );
 }

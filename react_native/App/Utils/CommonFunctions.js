@@ -43,7 +43,7 @@ export default {
 
     return toFixTwoIfNeeds(Math.abs(Number(labelValue)));
   },
-  isFileVideo: name => name.includes('__vv'),
+  isFileVideo: name => name && name.includes('__vv'),
   getPaddedZero(num) {
     return num < 10 ? `0${num}` : num;
   },

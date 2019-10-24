@@ -87,13 +87,13 @@ exports.getHomePagePosts = async (req, res, next) => {
   try {
     const { user } = req;
     const { page, perPage } = req.query;
-    const followers = Follow.getFollowers(user.id);
-    // if(!followers || followers.length ===0){
-    //   res.json([]);
-    // }
-    // const followeeIds = followers.map(o => o.followeeId);
-    // const posts = Post.list({ userId: { $in: followeeIds }, page, perPage });
-    const posts = await Post.list({ page, perPage });
+    const followers = await Follow.getFollowers(user.id);
+    if (!followers || followers.length === 0) {
+      res.json([]);
+    }
+    const followeeIds = followers.map(o => o.followeeId);
+    const posts = Post.list({ userId: { $in: followeeIds }, page, perPage });
+    // const posts = await Post.list({ page, perPage });
     const resultedPosts = await Promise.map(posts, async (post, index) => {
       const postsCount = await Reaction.findReactionsCounts(post._id);
       const howUserReacted = await Reaction.howUserReacted(user._id, post._id);

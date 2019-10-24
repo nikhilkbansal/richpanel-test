@@ -11,11 +11,10 @@ import ActionButton from 'react-native-action-button';
 import defaultStyle from '../../Theme/ApplicationStyles';
 import {PostUi, NavigationBar, Button} from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
-import Icon from 'react-native-vector-icons/Ionicons';
 import Dialog, { DialogContent,SlideAnimation } from 'react-native-popup-dialog';
 import { connect } from 'react-redux';
 import SearchActions from '../../Stores/Search/Actions';
-import { AvatarImage, Text, MenuItem } from '../../Components';
+import { AvatarImage, Text, MenuItem, Icon } from '../../Components';
 import { CommonFunctions } from '../../Utils';
  
 
@@ -54,12 +53,13 @@ class Drawer extends Component {
             }}
             >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Icon name={leftIcon.name} size={leftIcon.size ||  wp('7%')} color={leftIcon.color || ApplicationStyles.info3.color} iconFamily={leftIcon.family || "Ionicons"} />
-            <Text style={{ ...ApplicationStyles.primaryInfo, marginLeft: wp('3.5%'), color: ApplicationStyles.darkColor.color }}> {leftLabel}</Text>
+            <Icon name={leftIcon.name} style={{width:wp('6.8%')}} size={leftIcon.size ||  wp('6%')} color={leftIcon.color || ApplicationStyles.info3.color} iconFamily={leftIcon.family || "Ionicons"} />
+            <Text style={{ ...ApplicationStyles.primaryInfo2, marginLeft: wp('3.5%'), color: ApplicationStyles.darkColor.color }}> {leftLabel}</Text>
           </View>
         </Button>);
   }
   render() {
+    const { navigation: { navigate, closeDrawer } } = this.props;
   /**
    * User pic,name with edit profile icon
    * Followings
@@ -90,17 +90,33 @@ class Drawer extends Component {
           <AvatarImage style={{}} source={{ uri: CommonFunctions.getFile("userPicture", 'avatar', true) }}></AvatarImage>
           <View style={{marginLeft: wp('2%')}}> 
             <Text style={{ ...ApplicationStyles.avatarTitle}}>Rahul Saini</Text>
-            <Text style={{ ...ApplicationStyles.info}}>Edit Profile</Text>
+            <Text style={{ ...ApplicationStyles.info}} onPress={()=>{
+              closeDrawer();
+              navigate('NgoProfile');
+              }}>See Profile</Text>
           </View>
         </View>
-        <View style={{marginTop: hp('3%')}}>
-        { this.getMenuItem('Followings', {name: 'ios-analytics', family: 'Ionicons'}) }
-        { this.getMenuItem('Handouts', {name: 'ios-bicycle', family: 'Ionicons'}) }
-        { this.getMenuItem('Donations', {name: 'ios-analytics', family: 'Ionicons'}) }
-        { this.getMenuItem('Settings', {name: 'ios-analytics', family: 'Ionicons'}) }
-        { this.getMenuItem('About Us', {name: 'ios-analytics', family: 'Ionicons'}) }
-        { this.getMenuItem('Contact Us', {name: 'ios-analytics', family: 'Ionicons'}) }
+        { false ? <View style={{marginTop: hp('3%')}}>
+        { this.getMenuItem('Followings', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}) }
+        { this.getMenuItem('Handouts', {name: 'hand-paper-o', family: 'FontAwesome', size: wp('5%')}) }
+        { this.getMenuItem('Donations', {name: 'money', family: 'FontAwesome', size: wp('4.9%')}) }
+        { this.getMenuItem('Settings', {name: 'setting', family: 'AntDesign', size: wp('5.4%')}) }
+        { this.getMenuItem('About Us', {name: 'infocirlceo', family: 'AntDesign', size: wp('4.6%')}) }
+        { this.getMenuItem('Contact Us', {name: 'mail', family: 'AntDesign', size: wp('5.1%')}) }
         </View>
+        :<View style={{marginTop: hp('3%')}}>
+        { this.getMenuItem('Followers', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}) }
+        { this.getMenuItem('Handouts', {name: 'hand-paper-o', family: 'FontAwesome', size: wp('5%')}) }
+        { this.getMenuItem('Posts', {name: 'md-list', family: null, size: wp('5.4%')}) }
+        { this.getMenuItem('Events', {name: 'md-time', family: null, size: wp('5.4%')}) }
+        { this.getMenuItem('Jobs', {name: 'file', family: 'Octicons', size: wp('5.4%')}) }
+        { this.getMenuItem('Shop', {name: 'shopping-bag', family: 'Feather', size: wp('5%')}) }
+        { this.getMenuItem('Analytics', {name: 'md-stats', family: null, size: wp('5%')}) }
+        { this.getMenuItem('Settings', {name: 'setting', family: 'AntDesign', size: wp('5.3%')}) }
+        { this.getMenuItem('About Us', {name: 'infocirlceo', family: 'AntDesign', size: wp('4.6%')}) }
+        { this.getMenuItem('Contact Us', {name: 'mail', family: 'AntDesign', size: wp('5.1%')}) }
+        </View>
+        }
         {/* <View style={{position:}}>
           <Text>Handout</Text>
         </View> */}

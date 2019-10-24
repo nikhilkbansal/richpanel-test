@@ -14,11 +14,11 @@ const styles = StyleSheet.create({
 });
 
 function EmptyState({
-  message,  children
+  message,  children, messageContainerStyle, containerStyle
 }) {
   return (
-    <View style={{   alignItems:'center', marginTop: hp('19%')}}>
-      <View style={{ width: wp('70%'), height: wp('50%'),alignItems:'center', justifyContent:'center', backgroundColor:ApplicationStyles.smokeBackground.color,}}>
+    <View style={{ alignItems:'center', marginTop: hp('19%'),...containerStyle}}>
+      <View style={{ width: wp('70%'), height: wp('50%'),alignItems:'center', justifyContent:'center', backgroundColor:ApplicationStyles.smokeBackground.color,...messageContainerStyle}}>
         <Icon name='emoji-neutral' iconFamily='Entypo' size={wp('24%')} color={ApplicationStyles.grayishBackground.color}/>
         <Text style={{...ApplicationStyles.button2, color: ApplicationStyles.grayishBackground.color}}>{message}</Text>
         <Text style={{...ApplicationStyles.subHeadline, color: ApplicationStyles.grayishBackground.color, textAlign:'center'}}>{children}</Text>

@@ -22,6 +22,11 @@ export const putSeeAllResults = (state, { payload }) => ({
   autoComplete: { ...payload },
 });
 
+export const putPostRecommendation = (state, { payload }) => ({
+  ...state,
+  postsRecommendation: { ...payload },
+});
+
 export const logoutSuccess = (state, data) => ({ ...INITIAL_STATE });
 
 /**
@@ -31,4 +36,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [SearchTypes.PUT_AUTO_COMPLETE_RESULTS]: putAutoCompleteResults,
   [SearchTypes.PUT_SEE_ALL_RESULTS]: putSeeAllResults,
   [UserTypes.LOGOUT_SUCCESS]: logoutSuccess,
+  [SearchTypes.PUT_POST_RECOMMENDATION]: putPostRecommendation,  
 });

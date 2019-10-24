@@ -68,15 +68,16 @@ class PoSlider extends Component {
   constructor(props) {
     super(props);
     const { profile } = this.props;
+    const files = profile.poInfo.carousel.map(o=>({ fileId:o, path: CommonFunctions.getFile(o)}));
+
     this.state = {
-      errors: {},
-      selectedProfilePic: {},
+      errors: {}, 
       picture: null,
+      files: files || [],
       ...profile,
     };
     this.updateProfile = this.updateProfile.bind(this);
     this.updateTextInput = this.updateTextInput.bind(this);
-    this.selectImage = this.selectImage.bind(this);
     this.emailRef = React.createRef();
     this.passwordRef = React.createRef();
     this.confirmPasswordRef = React.createRef();
@@ -84,42 +85,39 @@ class PoSlider extends Component {
   }
 
 
-  selectImage() {
-    ImagePicker.openPicker({
-      // cropping: true,
-    }).then((images) => {
-      this.setState({ picture: images });
-    });
-  }
-
 
   updateTextInput(key, value) {
     this.setState({ [key]: value });
   }
 
   async updateProfile() {
-    const { updateUserInit } = this.props;
+    const { updateUserInit, profile } = this.props;
     const {
-      email, password, userName, name, picture,
+      files
     } = this.state;
-    const isPasswordGivenArray = password ? ['password'] : [];
-    const validateForm = TextInput.validateForm(['name', ...isPasswordGivenArray, 'confirmPassword', 'email', 'userName'], this.state);
-    if (validateForm) {
-      this.setState({ errors: validateForm });
-      return false;
-    }
+    
+    let newFilesIndex = [];
+    let newFiles = [];
+    files.forEach((o,index)=>{
+      if(!o.fileId){
+        newFiles.push(o);
+        newFilesIndex.push(index);
+      }
+    });
+    let filesIds = [];
+    if (newFiles.length > 0) {
+      const filesUploaded = await UploadFiles(newFiles, { fileType: 'image' });
+      newFilesIndex.forEach((o, index)=>{
+        files[o] = { fileId:  filesUploaded[index]._id}
+      });
+      filesIds = files.map(o =>o.fileId);
 
-    const isPasswordGivenObject = password ? { password } : {};
-
-    let pictureCondition;
-    if (picture) {
-      const filesUploaded = await UploadFiles([picture], { fileType: 'image' });
-      const filesIds = filesUploaded.map(o => o._id);
-      pictureCondition = { picture: filesIds[0] };
+    } else if(files.length === 0) {
+      this.setState({ error: { files : 'Please choose atleast one image'}});
     }
 
     updateUserInit({
-      email, ...isPasswordGivenObject, userName, name, ...pictureCondition,
+      poInfo: { ...profile.poInfo, carousel: filesIds }
     });
   }
 
@@ -128,18 +126,17 @@ class PoSlider extends Component {
     const { navigation, profile } = this.props;
     console.log('CommonFunctions.getFile(profile.picture, true)', CommonFunctions.getFile(profile.picture, true));
     const {
-      errors, name, email, userName, picture,
+      errors, files
     } = this.state;
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} title="Carousel"  />
         <ScrollView style={styles.subContainer}>
         <View style={styles.sectionContainer}>
-            <Swiper files={['sds', 'sds']} />
-            <Text style={{textAlign: 'center', paddingTop: hp('0.5%')}}>Current carousel</Text>
+            <Swiper isWholePath files={files.map(o=>o.path)} />
+            <Text style={{textAlign: 'center', paddingTop: hp('0.5%')}}>Carousel preview</Text>
             </View>
-          <FileSelector label="Add images and videos" onChange={files => this.updateTextInput('files', files)} />
-          
+            <FileSelector files={files} error={errors.files} label="Add images and videos (drag and drop to change order)" onChange={files => this.updateTextInput('files', files)} />
           <Button
             style={styles.loginContainer}
             onPress={() => this.updateProfile()}
@@ -154,7 +151,6 @@ class PoSlider extends Component {
 
 export default connect(
   ({ user: { profile } }) => ({ profile }), {
-    updateUserInit: UserActions.updateUserInit,
-    uploadProfilePic: UserActions.uploadProfilePic,
+    updateUserInit: UserActions.updateUserInit
   },
 )(PoSlider);

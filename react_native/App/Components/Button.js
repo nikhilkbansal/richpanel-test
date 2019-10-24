@@ -7,6 +7,7 @@ import { heightPercentageToDP, widthPercentageToDP as wp } from 'react-native-re
 import Icon from './Icon';
 import Text from './Text';
 import { ApplicationStyles, Colors, Fonts } from '../Theme';
+import Toast from '../Services/ToastService';
 
 const styles = StyleSheet.create({
   buttonStyle: {
@@ -84,7 +85,7 @@ Button.defaultProps = {
   children: null,
   iconSize: null,
   iconFamily: null,
-  onPress: () => alert('Work in progress'),
+  onPress: () => Toast('This feature is coming soon'),
   iconColor: ApplicationStyles.darkColor.color,
   iconExtraProps: {}
 };

@@ -11,4 +11,12 @@ module.exports = {
       type: Joi.string().valid(['all', 'ngo', 'post', 'event']).default('post'),
     },
   },
+
+  // GET /v1/search/recommendation/posts
+  postsRecommendation: {
+    query: {
+      skip: Joi.number(),
+      perPage: Joi.number().min(1).max(100),
+    },
+  },
 };

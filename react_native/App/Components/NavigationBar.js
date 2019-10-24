@@ -52,7 +52,7 @@ function NavigationBar({
         <View style={styles.leftArea}>
           {showLeftSection && (
           <Button
-            onPress={leftFunction || goBack}
+            onPress={() =>leftFunction ? leftFunction() : goBack()}
             style={{ }}
             iconColor={iconsColor || ApplicationStyles.lightColor.color}
             buttonWrapperStyle={{ paddingHorizontal: wp('7%') }}

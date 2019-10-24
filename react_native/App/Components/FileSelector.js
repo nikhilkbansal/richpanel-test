@@ -38,23 +38,28 @@ class FileSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      files: [],
+      files: props.files || [],
     };
 
     this.selectImage = this.selectImage.bind(this);
     this.removeFile = this.removeFile.bind(this);
+    this.updateFiles = this.updateFiles.bind(this);
   }
 
+  updateFiles(newFiles){
+    const { onChange } = this.props;
+
+    onChange(newFiles);
+    this.setState({ files: newFiles });
+  }
 
   selectImage() {
     const { files } = this.state;
-    const { onChange } = this.props;
     ImagePicker.openPicker({
       multiple: true,
     }).then((images) => {
       const newFiles = [...files, ...images];
-      onChange(newFiles);
-      this.setState({ files: newFiles });
+      this.updateFiles(newFiles);
     });
 
     // ImagePicker.showImagePicker(options, (response) => {
@@ -86,7 +91,7 @@ class FileSelector extends React.Component {
     console.log('response', files);
 
     const {
-      label, placeholder,
+      label, placeholder, error
     } = this.props;
     return (
       <View style={styles.container}>
@@ -186,8 +191,14 @@ class FileSelector extends React.Component {
               </View>
             )}
             horizontal
+            keyExtractor={(item, index) => item.path}
+            onMoveEnd={({ data }) =>  this.updateFiles(data) }
           />
         </View>
+        {error &&<Text style={[{ ...ApplicationStyles.textInputLabel, color: ApplicationStyles.warningColor.color }, { padding: 0 }]}>
+          {error}
+        </Text>
+        }
       </View>
     );
   }
