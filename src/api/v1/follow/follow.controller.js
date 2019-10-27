@@ -28,9 +28,9 @@ exports.follow = async (req, res, next) => {
     const { followeeId } = req.body;
     const { user } = req;
     const followerId = user._id;
-    await follow.add(followeeId, followerId);
+    const followResult = await follow.add(followeeId, followerId);
     res.status(httpStatus.CREATED);
-    res.json();
+    res.json({ isFollowed: followResult.isActive });
   } catch (error) {
     next(error);
   }

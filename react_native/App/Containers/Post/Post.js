@@ -48,7 +48,7 @@ class Post extends Component {
   onShare = async (item) => {
     const { profile, sharePost } = this.props;
       Share.open( {
-        message:  profile.name+ ' wants you see this post: ' + item.title+'. Use Help App to make to world a better place for everyone like '+ profile.name +' is doing',
+        message:  profile.name+ ' wants you see this post: ' + item.title+'. Use Handout App to make to world a better place for everyone like '+ profile.name +' is doing',
         url: 'com.handout/'+item.title.replace(' ', ''),
     })
     .then((res) => {
@@ -81,7 +81,7 @@ class Post extends Component {
     onReactionPress={this.props.postReaction}
     onReactionRemovePress={this.props.removeReaction}
     userPicture={item.userId.picture}
-    onUserClick={()=>this.props.navigation.navigate('NgoProfile',{itemId:item._id, itemType:'post'})}
+    onUserClick={()=>this.props.navigation.navigate('NgoProfile',{poUserId:item.userId._id})}
     onViewComments={()=>this.props.navigation.navigate('Comment',{itemId:item._id, itemType:'post'})}
     onDonatePress={()=>this.props.navigation.navigate('Donate',{paymentMeta:{_id:item._id, txType:'userToPOCampaign'}})}
     {...item}

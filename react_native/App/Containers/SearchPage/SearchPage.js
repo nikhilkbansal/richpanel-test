@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  FlatList, View, ScrollView, StyleSheet, Image, StatusBar,
+  FlatList, View, ScrollView, StyleSheet, StatusBar
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
@@ -181,7 +181,7 @@ class SearchPage extends Component {
     const { navigation } = this.props;
     return (
       <Button buttonWrapperStyle={[styles.subContainer]}>
-        <Image
+        <ProgressiveImage
           style={styles.avatarImage}
           source={{ uri: CommonFunctions.getFile(item.userId.picture, 'avatar', true) }}
         />
@@ -209,7 +209,7 @@ class SearchPage extends Component {
 
     return (
       <Button buttonWrapperStyle={[styles.subContainer]}>
-        <Image
+        <ProgressiveImage
           style={styles.avatarImage}
           source={{ uri: CommonFunctions.getFile(item.picture, 'avatar', true) }}
         />
@@ -323,8 +323,25 @@ class SearchPage extends Component {
               flexWrap:'wrap',
               justifyContent:'center'
             }}>
-              { listItems.length > 0 ?
-                listItems.map(o=><Button 
+              <FlatList
+                contentContainerStyle={{ flex:1, flexDirection:'row',  justifyContent:'center', flexWrap:'wrap'}}
+                style={{flex:1,}}
+                data={listItems}
+                renderItem={({ item })=><Button 
+                onPress={()=> navigation.navigate('')}
+                style={{
+                  width: wp('30%'),
+                  margin:wp('1%'),
+                  height: wp('30%')}}>
+                  <ProgressiveImage
+                     source={{ uri: CommonFunctions.getFile(item.files[0],) }}
+                    style={{width: '100%', height: '100%'}}
+                  />
+              </Button>}
+              />
+              {/* { listItems.length > 0 ?
+                listItems.map(o=>
+                <Button 
                   onPress={()=> navigation.navigate('')}
                   style={{
                     width: wp('30%'),
@@ -336,7 +353,7 @@ class SearchPage extends Component {
                     />
                 </Button>)
                 : <EmptyState containerStyle={{marginTop: hp('16%')}} message='No items found' />
-              }
+              } */}
             </View> 
             :
             <View
@@ -347,21 +364,25 @@ class SearchPage extends Component {
               justifyContent:'center',
               justifyItems:'center'
             }}>
-              {
-                poRecommendations.map(o=><Button 
-                  onPress={()=>navigation.navigate('NgoProfile', { poUserId: o._id })}
-                  buttonWrapperStyle={{
-                  width: wp('22%'),
+              <FlatList
+                contentContainerStyle={{ flex:1, flexDirection:'row',  justifyContent:'center', flexWrap:'wrap'}}
+                style={{flex:1,}}
+                data={poRecommendations}
+                renderItem={({ item })=><Button 
+                onPress={()=>navigation.navigate('NgoProfile', { poUserId: item._id })}
+                style={{
+                   width: wp('22%'),
                   margin:wp('0.5%'),
                   alignItems:'center',
                   height: wp('22%')}}>
                     <ProgressiveImage
-                       source={{ uri: CommonFunctions.getFile(o.picture) }}
+                      source={{ uri: CommonFunctions.getFile(item.picture) }}
                       style={{width: wp('15%'), height: wp('15%'), borderRadius: wp('40%')}}
                     />
-                    <Text style={{textAlign: 'center', ...ApplicationStyles.subHeadline}}>{o.name}</Text> 
-                </Button>)
-              }
+                    <Text style={{textAlign: 'center', ...ApplicationStyles.subHeadline}}>{item.name}</Text> 
+              </Button>}
+              />
+               
             </View>
           }
         </ScrollView>

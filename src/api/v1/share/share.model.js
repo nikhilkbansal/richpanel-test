@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
  * Share Schema
  * @private
  */
-const shareType = ['post', 'event', 'ngo'];
+const shareType = ['post', 'event', 'po'];
 
 
 const shareSchema = new mongoose.Schema({

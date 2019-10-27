@@ -48,24 +48,24 @@ followSchema.statics = {
       newrelation.isActive = !existingrelation.isActive;
       existingrelation = Object.assign(existingrelation, newrelation);
       if (newrelation.isActive) {
-        User.updateOne({ _id: followeeId }, { $inc: { followerCount: 1 } });
+        await User.updateOne({ _id: followeeId }, { $inc: { followerCount: 1 } });
       } else {
-        User.updateOne({ _id: followeeId }, { $inc: { followerCount: -1 } });
+        await User.updateOne({ _id: followeeId }, { $inc: { followerCount: -1 } });
       }
 
       return existingrelation.save();
     }
-    User.updateOne({ _id: followeeId }, { $inc: { followerCount: 1 } });
+    await User.updateOne({ _id: followeeId }, { $inc: { followerCount: 1 } });
     return this.create(newrelation);
   },
 
   getFollowers(followerId) {
-    return this.find({ followerId }).sort({ createdAt: -1 });
+    return this.find({ followerId, isActive: true }).sort({ createdAt: -1 });
   },
 
 
   async list({
-    skip = 0, perPage = 30, _id, followeeId, followerId, isActive,
+    skip = 0, perPage = 30, _id, followeeId, followerId, isActive = true,
   }, sort = { createdAt: -1 }) {
     const options = omitBy({
       _id, followeeId, followerId, isActive,

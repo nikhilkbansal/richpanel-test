@@ -1,10 +1,18 @@
-import { Platform } from 'react-native';
+import { Platform, Linking } from 'react-native';
 import { Config } from '../Config';
 
 const getFileNameFromUrl = url => url.substring(url.lastIndexOf('/') + 1);
 const toFixTwoIfNeeds = num => Math.round(num * 100) / 100;
 
 export default {
+  openUrl: async (url) => {
+    try{
+      await Linking.canOpenURL(url);
+      await Linking.openURL(url);
+    }catch(e){
+      console.log(e)
+    }
+  },
   getFileNameFromUrl,
   getFollowerCount(num) {
     if(num && Number(num) > 500){
@@ -13,7 +21,7 @@ export default {
     return num;
   },
   getPluralString(string, number) {
-    if (number === 1) {
+    if (number !== 1) {
       return `${string}s`;
     }
     return string;

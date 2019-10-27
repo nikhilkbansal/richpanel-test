@@ -231,13 +231,13 @@ userSchema.statics = {
 
 
   async list({
-    page = 1, perPage = 30, _id, $text, causeSupported, role,
+    skip = 0, perPage = 30, _id, $text, causeSupported, role,
   }) {
     const options = omitBy({
       _id, $text, causeSupported, role,
     }, isNil);
     return this.find(options).sort({ createdAt: -1 })
-      .skip(perPage * (page - 1))
+      .skip(skip)
       .limit(perPage)
       .exec();
   },

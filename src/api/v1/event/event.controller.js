@@ -79,6 +79,7 @@ exports.getHomePageEvents = async (req, res, next) => {
     console.log('followers', followers);
     if (!followers || followers.length === 0) {
       res.json([]);
+      return;
     }
     const followeeIds = followers.map(o => o.followeeId);
     const events = await Event.list({ userId: { $in: followeeIds }, page, perPage });

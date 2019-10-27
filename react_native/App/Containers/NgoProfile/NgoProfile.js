@@ -1,11 +1,13 @@
 import React, { Fragment, Component } from 'react';
 import {
-  View, StyleSheet, FlatList, Image, ScrollView, StatusBar,
+  View, StyleSheet, FlatList, Image, ScrollView, StatusBar
 } from 'react-native';
+import Share from 'react-native-share';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
 import UserActions from 'App/Stores/User/Actions';
 import { connect } from 'react-redux';
+import Dialog, { DialogContent, SlideAnimation, DialogTitle } from 'react-native-popup-dialog';
 import {
   Text, EmptyState, NavigationBar, TextInput, Button, ProgressiveImage, Swiper, Icon, MenuItem
 } from '../../Components';
@@ -117,12 +119,15 @@ class NgoProfile extends Component {
       recentPosts: [],
       recentEvents: [],
       poInfo: null,
+      isFollowed: false,
+      contactModal: false,
       poUserId: params && params.poUserId ? params.poUserId : profile.id
     };
     this.setActiveTab = this.setActiveTab.bind(this);
     this.getMyRecentPost = this.getMyRecentPost.bind(this);
     this.getMyRecentEvents = this.getMyRecentEvents.bind(this);
     this.getEditIcon = this.getEditIcon.bind(this);
+    this.followUnfollow = this.followUnfollow.bind(this);
   }
 
   componentDidMount() {
@@ -165,19 +170,66 @@ class NgoProfile extends Component {
   }
 
   async checkIfFollowed( ) { 
-    const { poUserId} = this.state; 
+    const { profile } = this.props;
+    const { poUserId } = this.state; 
     try {
       const data = await AxiosRequest({
         method: 'get', 
-        params:{ },
-        url: ` v1/follow`,
+        params:{ 
+          followerId: profile.id,
+          followeeId: poUserId,
+        },
+        url: `/follow`,
       });
-      this.setState({ poInfo: data });
+      const isFollowed = data.length > 0;
+      this.setState({ isFollowed });
     } catch (e) {
       console.log('error',e)
     }
   }
 
+  async sharePost(params){ 
+    try {
+      const data = await AxiosRequest({
+        method: 'post', 
+        data:{ 
+          ...params
+        },
+        url: `/share`,
+      }); 
+    } catch (e) {
+      console.log('error',e)
+    }
+  }
+
+  onShare = async (item) => {
+    const { profile } = this.props;
+    const { isMe } = this.state;
+      Share.open( {
+        message:  profile.name+ ' wants you see this post: ' + item.name+'. Use Handout App to make to world a better place for everyone like '+ profile.name +' is doing',
+        url: 'com.handout/'+item.userName.replace(' ', ''),
+    })
+    .then((res) => {
+      !isMe && this.sharePost({ itemId: item.id, itemType: 'po'})
+    })
+    .catch((err) => { err && console.log(err); });
+  };
+
+  async followUnfollow() { 
+    const { poUserId, poInfo } = this.state; 
+    try {
+      const data = await AxiosRequest({
+        method: 'post', 
+        data:{ 
+          followeeId: poUserId,
+        },
+        url: `/follow`,
+      });
+      this.setState({ isFollowed:  data.isFollowed, poInfo: {...poInfo, followerCount: data.isFollowed ? poInfo.followerCount+1 : poInfo.followerCount-1 } });
+    } catch (e) {
+      console.log('error',e)
+    }
+  }
  
 
   async getMyRecentEvents( ) { 
@@ -235,7 +287,7 @@ class NgoProfile extends Component {
 
   render() {
     const { navigation, profile, logoutInit } = this.props;
-    const {  activeTab, recentPosts, poInfo, recentEvents, isMe } = this.state;
+    const {  activeTab, recentPosts, poInfo, recentEvents, isMe, isFollowed, contactModal } = this.state;
     const poData = poInfo || profile;
     const postsOrEvents = activeTab === 'post'? recentPosts : recentEvents;
     let activeTabStyle = {borderBottomColor: ApplicationStyles.primaryColor.color, borderBottomWidth:wp('0.5%'),}
@@ -269,8 +321,9 @@ class NgoProfile extends Component {
                     <Text style={styles.poName}>{poData.name}</Text>
                     {!isMe 
                     ? <Button
-                      title="Follow"
+                      title={isFollowed ? "Unfollow" : "Follow"}
                       style={styles.follow}
+                      onPress={this.followUnfollow}
                       containerStyle={styles.followButton}
                       buttonWrapperStyle={styles.followButton}
                       titleStyle={{ ...ApplicationStyles.button, color:ApplicationStyles.primaryColor.color }}
@@ -304,7 +357,7 @@ class NgoProfile extends Component {
                   flex: 1,
                 }}
                 containerStyle={{ flex: 1 }}
-                onPress={{}}
+                onPress={()=>this.setState({contactModal: true})}
                 buttonWrapperStyle={{
                   flex: 1,
                   paddingVertical: hp('0.7%'),
@@ -319,7 +372,7 @@ class NgoProfile extends Component {
                   flex: 1,
                   alignItems:'center'
                 }}
-                onPress={()=>navigation.navigate('Donate', {})}
+                onPress={()=>navigation.navigate('Donate', {_id:poInfo._id, txType:'userToDirectPO'})}
                 iconSize={wp('6.2%')}
                 containerStyle={{ flex: 1 }}
                 buttonWrapperStyle={{
@@ -327,7 +380,9 @@ class NgoProfile extends Component {
                 }}
                 titleStyle={{ ...ApplicationStyles.button, color:ApplicationStyles.primaryColor.color}}
               />
-              <Button icon="share" iconSize={wp('5.3%')} iconFamily="SimpleLineIcons" style={{ flex:1, alignItems:'flex-end'}}   />
+              <Button
+                onPress={()=>this.onShare(poData)}
+                icon="share" iconSize={wp('5.3%')} iconFamily="SimpleLineIcons" style={{ flex:1, alignItems:'flex-end'}}   />
 
             </View>
             <View style={[styles.userInfo, { paddingTop: hp('0.1%') }]}>
@@ -396,6 +451,34 @@ class NgoProfile extends Component {
             <MenuItem leftIcon={{ size:wp('4%'),name: 'organization', family: 'SimpleLineIcons'}}  rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Jobs' />
             <MenuItem leftIcon={{ size:wp('4.5%'),name: 'web', family: 'MaterialCommunityIcons'}}  rightLabel='www.goonj.com' leftLabel='Website' />         
           </View> */}
+
+          <Dialog
+            visible={contactModal}
+            dialogAnimation={new SlideAnimation({
+              slideFrom: 'bottom',
+            })}
+            onTouchOutside={() => {
+              this.setState({ contactModal: false });
+            }}
+            dialogTitle={<DialogTitle title="Contact" textStyle={{ ...ApplicationStyles.textInputLabel }} />}
+          >
+            <DialogContent style={{ width: wp('80%'), height: hp('15%') }}>
+              <View style={{flex:1,flexDirection:'row'}}>
+                {poData.poInfo && poData.poInfo.publicEmail && <Button onPress={()=>CommonFunctions.openUrl(`mailto:${poData.poInfo.publicEmail}`)} style={{flex:1}} buttonWrapperStyle={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+                  <Icon name='mail' iconFamily='AntDesign' />
+                  <Text style={{...ApplicationStyles.avatarSubtitle, marginTop: hp('1%')}}>{poData.poInfo.publicEmail}</Text>
+                </Button>}
+                {poData.poInfo && poData.poInfo.publicPhone && <Button  onPress={()=>CommonFunctions.openUrl(`tel:${poData.poInfo.publicPhone}`)} style={{flex:1}}  buttonWrapperStyle={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+                  <Icon name='phone' iconFamily='AntDesign' />
+                  <Text style={{...ApplicationStyles.avatarSubtitle, marginTop: hp('1%')}}>{poData.poInfo.publicPhone}</Text>
+                </Button>}
+                {!poData.poInfo || (!poData.poInfo.publicEmail && !poData.poInfo.publicPhone) &&
+                  <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+                    <Text style={{...ApplicationStyles.avatarSubtitle, marginTop: hp('1%')}}>No shared information found!</Text>
+                  </View>}
+              </View>
+            </DialogContent>
+          </Dialog>
         </ScrollView>
       </View>
     );
