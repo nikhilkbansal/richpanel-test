@@ -59,7 +59,7 @@ class Drawer extends Component {
         </Button>);
   }
   render() {
-    const { navigation: { navigate, closeDrawer } } = this.props;
+    const { navigation: { navigate, closeDrawer }, profile } = this.props;
   /**
    * User pic,name with edit profile icon
    * Followings
@@ -89,7 +89,7 @@ class Drawer extends Component {
         <View style={{ backgroundColor:ApplicationStyles.lightColor.color, flex:1,paddingHorizontal: wp('4%'), flexDirection: 'row', width: '100%',paddingTop: hp('15%'), paddingBottom:hp('2%') }}>
           <AvatarImage style={{}} source={{ uri: CommonFunctions.getFile("userPicture", 'avatar', true) }}></AvatarImage>
           <View style={{marginLeft: wp('2%')}}> 
-            <Text style={{ ...ApplicationStyles.avatarTitle}}>Rahul Saini</Text>
+            <Text style={{ ...ApplicationStyles.avatarTitle}}>{ profile && profile.name }</Text>
             <Text style={{ ...ApplicationStyles.info}} onPress={()=>{
               closeDrawer();
               navigate('NgoProfile');
@@ -100,9 +100,7 @@ class Drawer extends Component {
         { this.getMenuItem('Followings', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}) }
         { this.getMenuItem('Handouts', {name: 'hand-paper-o', family: 'FontAwesome', size: wp('5%')}) }
         { this.getMenuItem('Donations', {name: 'money', family: 'FontAwesome', size: wp('4.9%')}) }
-        { this.getMenuItem('Settings', {name: 'setting', family: 'AntDesign', size: wp('5.4%')}) }
-        { this.getMenuItem('About Us', {name: 'infocirlceo', family: 'AntDesign', size: wp('4.6%')}) }
-        { this.getMenuItem('Contact Us', {name: 'mail', family: 'AntDesign', size: wp('5.1%')}) }
+        { this.getMenuItem('Settings', {name: 'setting', family: 'AntDesign', size: wp('5.4%')}, ()=> navigate('Settings')) }
         </View>
         :<View style={{marginTop: hp('3%')}}>
         { this.getMenuItem('Followers', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}) }
@@ -112,9 +110,7 @@ class Drawer extends Component {
         { this.getMenuItem('Jobs', {name: 'file', family: 'Octicons', size: wp('5.4%')}) }
         { this.getMenuItem('Shop', {name: 'shopping-bag', family: 'Feather', size: wp('5%')}) }
         { this.getMenuItem('Analytics', {name: 'md-stats', family: null, size: wp('5%')}) }
-        { this.getMenuItem('Settings', {name: 'setting', family: 'AntDesign', size: wp('5.3%')}) }
-        { this.getMenuItem('About Us', {name: 'infocirlceo', family: 'AntDesign', size: wp('4.6%')}) }
-        { this.getMenuItem('Contact Us', {name: 'mail', family: 'AntDesign', size: wp('5.1%')}) }
+        { this.getMenuItem('Settings', {name: 'setting', family: 'AntDesign', size: wp('5.3%')}, ()=> navigate('Settings')) }
         </View>
         }
         {/* <View style={{position:}}>
@@ -126,7 +122,7 @@ class Drawer extends Component {
 }
 
 export default connect(
-  ({ search: { autoComplete } }) => ({ autoComplete }), {
+  ({ user: { profile }}) => ({ profile }), {
     getSearch: SearchActions.getSearch,
   },
 )(Drawer);

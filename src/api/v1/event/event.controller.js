@@ -37,6 +37,21 @@ exports.add = async (req, res, next) => {
   }
 };
 
+
+/**
+ * List events
+ * @public
+ */
+exports.list = async (req, res, next) => {
+  try {
+    const posts = await Event.list(req.query);
+    res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 /**
  * Update any old event
  * @public
@@ -60,10 +75,14 @@ exports.getHomePageEvents = async (req, res, next) => {
   try {
     const { user } = req;
     const { page, perPage } = req.query;
-    // const followers = Follow.getFollowers(user.id);
-    // const followeeIds = followers.map(o => o.followeeId);
-    // const events = Event.list({ userId: { $in: followeeIds }, page, perPage });
-    const events = await Event.list({ page, perPage });
+    const followers = await Follow.getFollowers(user.id);
+    console.log('followers', followers);
+    if (!followers || followers.length === 0) {
+      res.json([]);
+    }
+    const followeeIds = followers.map(o => o.followeeId);
+    const events = await Event.list({ userId: { $in: followeeIds }, page, perPage });
+    // const events = await Event.list({ page, perPage });
     const resultedEvents = await Promise.map(events, async (event, index) => {
       const eventsCount = await Reaction.findReactionsCounts(event._id);
       const howUserReacted = await Reaction.howUserReacted(user._id, event._id);

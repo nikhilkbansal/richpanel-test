@@ -87,10 +87,25 @@ exports.postsRecommendation = async (req, res, next) => {
     const followers = await Follow.getFollowers(user.id);
     const followeeIds = followers.map(o => o.followeeId);
     const posts = await Post.list({
-      // userId: { $nin: followeeIds },
+      userId: { $nin: followeeIds },
       ...query,
     });
     res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.eventsRecommendation = async (req, res, next) => {
+  try {
+    const { user, query } = req;
+    const followers = await Follow.getFollowers(user.id);
+    const followeeIds = followers.map(o => o.followeeId);
+    const events = await Event.list({
+      userId: { $nin: followeeIds },
+      ...query,
+    });
+    res.json(events);
   } catch (error) {
     next(error);
   }
@@ -102,8 +117,9 @@ exports.poRecommendation = async (req, res, next) => {
     const followers = await Follow.getFollowers(user.id);
     const followeeIds = followers.map(o => o.followeeId);
     const users = await User.list({
-      // userId: { $nin: followeeIds },
       ...query,
+      userId: { $nin: followeeIds },
+      role: 'ngo',
     });
     res.json(users);
   } catch (error) {

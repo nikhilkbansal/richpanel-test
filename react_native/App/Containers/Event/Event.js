@@ -46,8 +46,8 @@ class Event extends Component {
 
   componentDidMount(){
     const { getHomeEvents } = this.props;
-    getHomeEvents();
     this.navListener = this.props.navigation.addListener('didFocus', () => {
+      getHomeEvents();
       StatusBar.setBarStyle('light-content');
       StatusBar.setBackgroundColor(ApplicationStyles.primaryColor.color);
     });

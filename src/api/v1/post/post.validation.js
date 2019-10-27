@@ -6,9 +6,10 @@ module.exports = {
   // GET /v1/post
   listPosts: {
     query: {
-      page: Joi.number().min(1),
+      skip: Joi.number(),
       perPage: Joi.number().min(1).max(100),
       _id: Joi.string(),
+      userId: Joi.string(),
     },
   },
 

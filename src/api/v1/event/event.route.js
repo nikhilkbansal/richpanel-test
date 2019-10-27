@@ -6,6 +6,7 @@ const { authorize, authorizeEvent } = require('../../middlewares/auth');
 const {
   createEvent,
   updateEvent,
+  listEvent,
 } = require('./event.validation');
 
 const router = express.Router();
@@ -62,6 +63,7 @@ router
    * @apiError (Bad Request 400)   ValidationError  Some parameters may contain invalid values
    * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users can create the data
    */
+  .get(authorize(), validate(listEvent), controller.list)
   .post(authorize(), validate(createEvent), controller.add);
 
 router

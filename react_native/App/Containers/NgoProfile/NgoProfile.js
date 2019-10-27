@@ -13,6 +13,7 @@ import {
   Colors, FontSizes, Fonts, ApplicationStyles,
 } from '../../Theme';
 import CommonFunctions from '../../Utils/CommonFunctions';
+import AxiosRequest from '../../Services/HttpRequestService';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
@@ -104,45 +105,107 @@ class NgoProfile extends Component {
 
   constructor(props) {
     super(props);
+    const { profile, navigation:{ state: { params }} } = props;
+    const isMe = !params || !params.poUserId ||params.poUserId === profile.id;;
+
     this.state = {
+      isMe,
       email: null,
       password: '',
       checked: false,
-      activeTab: 'post'
+      activeTab: 'post',
+      recentPosts: [],
+      recentEvents: [],
+      poInfo: null,
+      poUserId: params && params.poUserId ? params.poUserId : profile.id
     };
     this.setActiveTab = this.setActiveTab.bind(this);
+    this.getMyRecentPost = this.getMyRecentPost.bind(this);
+    this.getMyRecentEvents = this.getMyRecentEvents.bind(this);
+    this.getEditIcon = this.getEditIcon.bind(this);
   }
 
   componentDidMount() {
-    this.navListener = this.props.navigation.addListener('didFocus', () => {
-      StatusBar.setBarStyle('light-content');
-      StatusBar.setBackgroundColor(ApplicationStyles.primaryColor.color);
-    });
+    const { navigation:{ state: { params }} } = this.props
+    const { isMe } = this.state
+
+    !isMe && this.checkIfFollowed(); 
+
+    if(params && params.poUserId) this.getPoInfo();
+
+    this.getMyRecentPost();
+    this.getMyRecentEvents();
+  } 
+
+  async getMyRecentPost( ) { 
+    const { recentPosts, poUserId } = this.state; 
+    try {
+      const data = await AxiosRequest({
+        method: 'get',
+        params:{ perPage: 9, userId: poUserId },
+        url: '/post',
+      });
+      this.setState({ recentPosts: recentPosts.concat(data) });
+    } catch (e) {
+      console.log('error',e)
+    }
   }
 
-  componentWillUnmount() {
-    this.navListener.remove();
+  async getPoInfo( ) { 
+    const { poUserId} = this.state; 
+    try {
+      const data = await AxiosRequest({
+        method: 'get', 
+        url: `/users/${poUserId}`,
+      });
+      this.setState({ poInfo: data });
+    } catch (e) {
+      console.log('error',e)
+    }
   }
 
-  postItem(text = false) {
+  async checkIfFollowed( ) { 
+    const { poUserId} = this.state; 
+    try {
+      const data = await AxiosRequest({
+        method: 'get', 
+        params:{ },
+        url: ` v1/follow`,
+      });
+      this.setState({ poInfo: data });
+    } catch (e) {
+      console.log('error',e)
+    }
+  }
+
+ 
+
+  async getMyRecentEvents( ) { 
+    const { recentEvents, poUserId} = this.state; 
+    try {
+      const data = await AxiosRequest({
+        method: 'get',
+        params:{ perPage: 9, userId: poUserId },
+        url: '/event',
+      });
+      this.setState({ recentEvents: recentEvents.concat(data) });
+    } catch (e) {
+      console.log('error',e)
+    }
+  }
+  
+  postItem(data, text = false) {
     return (
       <View style={styles.postContainer}
       >
         <View style={styles.postImage}
         >
-          <Image
-            resizeMode="contain"
-            source={require('../../Assets/Images/child.jpeg')}
+          <ProgressiveImage
+            resizeMode="cover"
+            style={{width:'100%', height: '100%'}}
+            source={{uri: CommonFunctions.getFile(data.files[0])}}
           />
-        </View>
-        {text && <Text
-          style={styles.postTitle}
-          numberOfLines={2}
-          ellipsizeMode="tail"
-        >
-        Help ing kids to get better education
-
-        </Text>}
+        </View> 
       </View>
 
     );
@@ -151,30 +214,41 @@ class NgoProfile extends Component {
   setActiveTab(tab){
     this.setState({activeTab: tab})
   }
+  
 
   getEditIcon({ iconColor, style = {}, buttonWrapperStyle = {}, onPress }){
-    return <Button 
-    icon='md-create'
-    iconColor={iconColor}
-    iconSize={wp('5.5%')}
-    onPress={onPress}
-    style={[{width:wp('8%'), height: wp('8%'), position: 'absolute', top: hp('1%'), right: wp('2%')}, style]}
-    buttonWrapperStyle={[{padding:wp('2%'), borderRadius: wp('10%')},buttonWrapperStyle]}
-    />
+    const { isMe } = this.state;
+
+    if(isMe){
+      return <Button 
+      icon='md-create'
+      iconColor={iconColor}
+      iconSize={wp('5.5%')}
+      onPress={onPress}
+      style={[{width:wp('8%'), height: wp('8%'), position: 'absolute', top: hp('1%'), right: wp('2%')}, style]}
+      buttonWrapperStyle={[{padding:wp('2%'), borderRadius: wp('10%')},buttonWrapperStyle]}
+      />
+    }
+    return null;
+ 
   }
 
   render() {
     const { navigation, profile, logoutInit } = this.props;
-    const {  activeTab } = this.state;
-    const poData = profile;
+    const {  activeTab, recentPosts, poInfo, recentEvents, isMe } = this.state;
+    const poData = poInfo || profile;
+    const postsOrEvents = activeTab === 'post'? recentPosts : recentEvents;
+    let activeTabStyle = {borderBottomColor: ApplicationStyles.primaryColor.color, borderBottomWidth:wp('0.5%'),}
+    let activeTabLabelStyle = {color: ApplicationStyles.primaryColor.color,}
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} goBack={()=>navigation.goBack()} rightButtonAction={() => navigation.navigate('EditProfile')}  title="PO Profile" />
+        <NavigationBar {...navigation} statusBarColor={ApplicationStyles.primaryColor.color} goBack={()=>navigation.goBack()} rightButtonAction={() => navigation.navigate('EditProfile')}  title="PO Profile" />
         <ScrollView style={styles.subContainer}>
           <View style={styles.sectionContainer}>
-            <Swiper files={poData.poInfo.carousel} />
+            <Swiper files={poData.poInfo.carousel.length > 0 ? poData.poInfo.carousel: ['default']} />
             <this.getEditIcon 
               onPress={()=>navigation.navigate('PoSlider')}
+              style={{borderRadius:wp('10%'), backgroundColor: ApplicationStyles.smokeBackground.color}}
               iconColor={ApplicationStyles.lightColor.color}  />
             <View style={styles.sectionSubContainer}
             >
@@ -193,23 +267,25 @@ class NgoProfile extends Component {
                   >
                     <View style={styles.poNameContainer}>
                     <Text style={styles.poName}>{poData.name}</Text>
-                    {/* <Button
+                    {!isMe 
+                    ? <Button
                       title="Follow"
                       style={styles.follow}
                       containerStyle={styles.followButton}
                       buttonWrapperStyle={styles.followButton}
                       titleStyle={{ ...ApplicationStyles.button, color:ApplicationStyles.primaryColor.color }}
-                    /> */}
-                  <this.getEditIcon 
-                    onPress={()=>navigation.navigate('EditProfile')}
-                    style={{right: 0}}
-                    iconColor={ApplicationStyles.darkColor.color}  />
+                    />
+                    : <this.getEditIcon 
+                      onPress={()=>navigation.navigate('EditProfile')}
+                      style={{right:0, borderRadius:wp('10%'), backgroundColor: ApplicationStyles.smokeBackground.color}}
+                      iconColor={ApplicationStyles.lightColor.color}  />
+                    }
                     </View>
                     <Text style={[ApplicationStyles.bodySubHeading, { flex: 1 }]}>
                       @{poData.userName}
                     </Text>
                     <Text style={[ApplicationStyles.bodySubHeading2, { flex: 1 }]}>
-                      500+ Followers
+                      {CommonFunctions.getFollowerCount(poData.followerCount)} { CommonFunctions.getPluralString('Follower', poData.followerCount)}
                     </Text>
                   </View>
                 </View>
@@ -228,6 +304,7 @@ class NgoProfile extends Component {
                   flex: 1,
                 }}
                 containerStyle={{ flex: 1 }}
+                onPress={{}}
                 buttonWrapperStyle={{
                   flex: 1,
                   paddingVertical: hp('0.7%'),
@@ -242,6 +319,7 @@ class NgoProfile extends Component {
                   flex: 1,
                   alignItems:'center'
                 }}
+                onPress={()=>navigation.navigate('Donate', {})}
                 iconSize={wp('6.2%')}
                 containerStyle={{ flex: 1 }}
                 buttonWrapperStyle={{
@@ -255,8 +333,9 @@ class NgoProfile extends Component {
             <View style={[styles.userInfo, { paddingTop: hp('0.1%') }]}>
               <this.getEditIcon 
                 onPress={()=>navigation.navigate('OrgInfo')}
-                iconColor={ApplicationStyles.darkColor.color} 
-                style={{bottom: hp('1%'), top:null}} />
+                iconColor={ApplicationStyles.lightColor.color}
+                style={{bottom: hp('1%'), top:null, borderRadius:wp('10%'), backgroundColor: ApplicationStyles.smokeBackground.color}}
+              />
  
               <Text style={[ApplicationStyles.body, { paddingHorizontal: wp('2%') }]} maxLength={wp('25%')}>
                 {poData.poInfo.about}
@@ -285,22 +364,31 @@ class NgoProfile extends Component {
          
           <View style={[styles.sectionContainer, styles.tabContainer]}>
                 <View   style={styles.tabs}>
-                    <Button title='Posts' onPress={()=>this.setActiveTab('post')} buttonWrapperStyle={{ margin:0,padding:0, paddingVertical: hp('0.7%')}} style={[styles.scrollButton,activeTab === 'post' ? { backgroundColor: ApplicationStyles.lightBackground.color}: '']} titleStyle={[ApplicationStyles.button2,{color: ApplicationStyles.darkColor.color,textAlign:'center'}]} />
-                    <Button title='Events' onPress={()=>this.setActiveTab('event')} style={[{borderColor: ApplicationStyles.lightBackground.color, borderWidth: StyleSheet.hairlineWidth, borderBottomColor: 'transparent', borderTopColor: 'transparent'},styles.scrollButton,activeTab === 'event' ? { backgroundColor: ApplicationStyles.lightBackground.color}: '']} titleStyle={[ApplicationStyles.button2,{color: ApplicationStyles.darkColor.color, textAlign:'center'}]}/>
-                    <Button title='Shop' onPress={()=>this.setActiveTab('shop')} style={[styles.scrollButton,activeTab === 'shop' ? { backgroundColor: ApplicationStyles.lightBackground.color}: '']} titleStyle={[ApplicationStyles.button2,{color: ApplicationStyles.darkColor.color,textAlign:'center'}]}/>
+                    <Button title='Posts' onPress={()=>this.setActiveTab('post')} 
+                      buttonWrapperStyle={{  height: '100%',  margin:0,padding:0, paddingVertical: hp('0.7%')}}
+                      style={[styles.scrollButton,activeTab === 'post' ? activeTabStyle : '']}
+                      titleStyle={[ ApplicationStyles.button2,{color: ApplicationStyles.disabledColor.color,textAlign:'center'},activeTab === 'post' ? activeTabLabelStyle:"",]} />
+                    <Button title='Events' onPress={()=>this.setActiveTab('event')}
+                      buttonWrapperStyle={{  height: '100%',  margin:0,padding:0, paddingVertical: hp('0.7%')}}
+                      style={[styles.scrollButton,activeTab === 'event' ? activeTabStyle : '']}
+                      titleStyle={[ ApplicationStyles.button2,{color: ApplicationStyles.disabledColor.color,textAlign:'center'},activeTab === 'event' ? activeTabLabelStyle:"",]} />
+                    <Button title='Shop' onPress={()=>this.setActiveTab('shop')}
+                      buttonWrapperStyle={{  height: '100%',  margin:0,padding:0, paddingVertical: hp('0.7%')}}
+                      style={[styles.scrollButton,activeTab === 'shop' ? activeTabStyle : '']}
+                      titleStyle={[ ApplicationStyles.button2,{color: ApplicationStyles.disabledColor.color,textAlign:'center'},activeTab === 'shop' ? activeTabLabelStyle:"",]} />
                   </View>
-                <View  style={styles.tabContent}>
-                  <EmptyState message="No posts availble" containerStyle={{ marginTop: hp('4%'), marginBottom: hp('5%') }} messageContainerStyle={ {backgroundColor: ApplicationStyles.lightColor.color}}/>
-                  {/* {this.postItem(activeTab === 'event')}
-                  {this.postItem(activeTab === 'event')}
-                  {this.postItem(activeTab === 'event')}
-                  {this.postItem(activeTab === 'event')}
-                  {this.postItem(activeTab === 'event')}
-                  {this.postItem(activeTab === 'event')}
-                  {this.postItem(activeTab === 'event')}
-                  {this.postItem(activeTab === 'event')}
-                  {this.postItem(activeTab === 'event')} */}
+                { ['post', 'event'].includes(activeTab) ? <View style={styles.tabContent}>
+                  {postsOrEvents.length === 0
+                    ? <EmptyState message="No posts availble" containerStyle={{ marginTop: hp('4%'), marginBottom: hp('5%') }} messageContainerStyle={ {backgroundColor: ApplicationStyles.lightColor.color}}/>
+                    : <Fragment>
+                        {postsOrEvents.map(o=>this.postItem(o, activeTab === 'event'))}
+                      </Fragment>
+                  }
                 </View>
+                :<View style={styles.tabContent}>
+                   <EmptyState message="No products availble" containerStyle={{ marginTop: hp('4%'), marginBottom: hp('5%') }} messageContainerStyle={ {backgroundColor: ApplicationStyles.lightColor.color}}/>
+                </View>
+                }
                 <Button title='View All' style={styles.viewAll}  titleStyle={{...ApplicationStyles.button2}}/>
             </View>
             

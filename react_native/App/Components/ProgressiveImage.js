@@ -1,6 +1,8 @@
 import React from 'react';
+import _ from 'lodash';
 import { View, StyleSheet, Animated } from 'react-native';
 
+const colors = ['#F7ECFB','#ECF7FB', '#FBECF0', '#ECF0FB', '#FBECF7'];
 const styles = StyleSheet.create({
   imageOverlay: {
     position: 'absolute',
@@ -8,6 +10,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     top: 0,
+    backgroundColor: _.sample(colors)
   },
   container: {
     backgroundColor: '#F2F2F2',
@@ -39,12 +42,12 @@ class ProgressiveImage extends React.Component {
       containerStyle,
       ...props
     } = this.props;
-
+    const thumbnailSourceObj = thumbnailSource || { uri: source.uri+'width=200&height=200'}
     return (
       <View style={[styles.container, containerStyle]}>
         <Animated.Image
           {...props}
-          source={thumbnailSource}
+          source={thumbnailSourceObj}
           style={[style, { opacity: this.thumbnailAnimated }]}
           onLoad={this.handleThumbnailLoad}
           blurRadius={1}

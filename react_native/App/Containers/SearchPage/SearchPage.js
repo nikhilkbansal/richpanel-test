@@ -9,7 +9,7 @@ import { Searchbar } from 'react-native-paper';
 import SearchActions from 'App/Stores/Search/Actions';
 import { connect } from 'react-redux';
 import defaultStyle from '../../Theme/ApplicationStyles';
-import { TextInput, Text, Button, ProgressiveImage } from '../../Components';
+import { TextInput, Text, Button, ProgressiveImage, EmptyState } from '../../Components';
 import ApplicationStyles from '../../Theme/ApplicationStyles';
 import CommonFunctions from '../../Utils/CommonFunctions';
 import AxiosRequest from '../../Services/HttpRequestService';
@@ -66,7 +66,8 @@ class SearchPage extends Component {
       term: '',
       selectedTab: 'Posts',
       postRecommendations: [],
-      poRecommendations:[]
+      poRecommendations:[],
+      eventRecommendations: []
     };
     this.searchSection = this.searchSection.bind(this);
     this.renderPostItem = this.renderPostItem.bind(this);
@@ -74,16 +75,18 @@ class SearchPage extends Component {
     this.openSeeAllScreen = this.openSeeAllScreen.bind(this);
     this.renderItem = this.renderItem.bind(this);
     this.getPostRecommendations = this.getPostRecommendations.bind(this);
+    this.getEventRecommendations = this.getEventRecommendations.bind(this);
     this.getPoRecommendations = this.getPoRecommendations.bind(this);
   }
 
   componentDidMount() {
-    const { putAutoCompleteResults, getPostRecommendation } = this.props;
+    const { putAutoCompleteResults } = this.props;
     const { term } = this.state;
-    if (term.length === 0) { putAutoCompleteResults([]); }
-    this.getPostRecommendations();
-    this.getPoRecommendations();
     this.navListener = this.props.navigation.addListener('didFocus', () => {
+      if (term.length === 0) { putAutoCompleteResults([]); }
+      this.getPostRecommendations();
+      this.getEventRecommendations();
+      this.getPoRecommendations();
       StatusBar.setBarStyle('dark-content');
       StatusBar.setBackgroundColor(ApplicationStyles. smokeBackground.color);
     });
@@ -119,6 +122,23 @@ class SearchPage extends Component {
       console.log('eeee',e)
     }
   }
+
+
+  async getEventRecommendations( ) { 
+    const { eventRecommendations } = this.state;
+    const itemsLength = eventRecommendations.length;
+    try {
+      const data = await AxiosRequest({
+        method: 'get',
+        params:{ skip: itemsLength },
+        url: 'search/recommendation/event',
+      });
+      this.setState({ eventRecommendations: eventRecommendations.concat(data) });
+    } catch (e) {
+      console.log('eeee',e)
+    }
+  }
+
 
   async getPoRecommendations( ) { 
     const { poRecommendations } = this.state;
@@ -212,10 +232,13 @@ class SearchPage extends Component {
 
   render() {
     const { autoComplete, navigation } = this.props;
-    const { selectedTab, postRecommendations, poRecommendations } = this.state;
+    const { selectedTab, postRecommendations, poRecommendations, eventRecommendations } = this.state;
     const searchResultExist = (autoComplete.posts && autoComplete.posts.length > 0)
     || (autoComplete.events && autoComplete.events.length > 0)
     || (autoComplete.ngos && autoComplete.ngos.length > 0);
+    let listItems = postRecommendations;
+    listItems = selectedTab === 'Events' ? eventRecommendations : listItems;
+    listItems = selectedTab === 'Shop' ? [] : listItems;
     return (
       <View style={[{
         flex: 1,
@@ -300,8 +323,8 @@ class SearchPage extends Component {
               flexWrap:'wrap',
               justifyContent:'center'
             }}>
-              {
-                postRecommendations.map(o=><Button 
+              { listItems.length > 0 ?
+                listItems.map(o=><Button 
                   onPress={()=> navigation.navigate('')}
                   style={{
                     width: wp('30%'),
@@ -312,6 +335,7 @@ class SearchPage extends Component {
                       style={{width: '100%', height: '100%'}}
                     />
                 </Button>)
+                : <EmptyState containerStyle={{marginTop: hp('16%')}} message='No items found' />
               }
             </View> 
             :
@@ -325,7 +349,7 @@ class SearchPage extends Component {
             }}>
               {
                 poRecommendations.map(o=><Button 
-                  onPress={()=>navigation.navigate('NgoProfile')}
+                  onPress={()=>navigation.navigate('NgoProfile', { poUserId: o._id })}
                   buttonWrapperStyle={{
                   width: wp('22%'),
                   margin:wp('0.5%'),
@@ -335,7 +359,7 @@ class SearchPage extends Component {
                        source={{ uri: CommonFunctions.getFile(o.picture) }}
                       style={{width: wp('15%'), height: wp('15%'), borderRadius: wp('40%')}}
                     />
-                    <Text style={{textAlign: 'center', ...ApplicationStyles.subHeadline}}>Goonj</Text> 
+                    <Text style={{textAlign: 'center', ...ApplicationStyles.subHeadline}}>{o.name}</Text> 
                 </Button>)
               }
             </View>

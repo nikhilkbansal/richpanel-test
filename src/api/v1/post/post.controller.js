@@ -42,6 +42,19 @@ exports.add = async (req, res, next) => {
 };
 
 /**
+ * List posts
+ * @public
+ */
+exports.list = async (req, res, next) => {
+  try {
+    const posts = await Post.list(req.query);
+    res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * Update any old post
  * @public
  */

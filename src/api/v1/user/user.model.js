@@ -60,6 +60,10 @@ const userSchema = new mongoose.Schema({
   picture: {
     type: String,
   },
+  followerCount: {
+    type: Number,
+    default: 0,
+  },
   googleAuth: {
     access_token: String,
     refresh_token: String,
@@ -78,6 +82,10 @@ const userSchema = new mongoose.Schema({
       type: Array,
       default: [],
     },
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
   },
 }, {
   timestamps: true,
@@ -113,7 +121,7 @@ userSchema.pre('save', async function save(next) {
 userSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['id', 'name', 'email', 'userName', 'picture', 'poInfo', 'role', 'createdAt'];
+    const fields = ['id', 'name', 'email', 'followerCount', 'userName', 'isActive', 'picture', 'poInfo', 'role', 'createdAt'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -208,7 +216,7 @@ userSchema.statics = {
       if (user && await user.passwordMatches(password)) {
         return { user, accessToken: user.token() };
       }
-      err.message = 'Incorrect email or password';
+      err.message = 'Incorrect username/email or password';
     } else if (refreshObject && refreshObject.userEmail === email) {
       if (refreshObject.isLogout || moment(refreshObject.expires).isBefore()) {
         err.message = 'Refresh token expired or user is not loggedin.';
@@ -223,10 +231,10 @@ userSchema.statics = {
 
 
   async list({
-    page = 1, perPage = 30, _id, $text, causeSupported,
+    page = 1, perPage = 30, _id, $text, causeSupported, role,
   }) {
     const options = omitBy({
-      _id, $text, causeSupported,
+      _id, $text, causeSupported, role,
     }, isNil);
     return this.find(options).sort({ createdAt: -1 })
       .skip(perPage * (page - 1))

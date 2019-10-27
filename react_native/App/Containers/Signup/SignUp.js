@@ -102,7 +102,7 @@ class SignUpScreen extends Component {
     if (validateForm) {
       this.setState({ errors: validateForm });
       return false;
-    }
+      }
 
     registerInit({
       email, password, userName, name, role: userType 

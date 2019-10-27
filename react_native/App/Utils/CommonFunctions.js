@@ -6,8 +6,14 @@ const toFixTwoIfNeeds = num => Math.round(num * 100) / 100;
 
 export default {
   getFileNameFromUrl,
+  getFollowerCount(num) {
+    if(num && Number(num) > 500){
+      return '500+'
+    }
+    return num;
+  },
   getPluralString(string, number) {
-    if (number > 1) {
+    if (number === 1) {
       return `${string}s`;
     }
     return string;
@@ -53,8 +59,8 @@ export default {
     return { hours, noonStatus: num > 12 ? 'PM' : 'AM' };
   },
 
-  getFile(id, type = '', forceRefresh = false) {
-    let params = '';
+  getFile(id, type = '', params='', forceRefresh = false) {
+ 
     switch (type) {
       case 'avatar':
         params = 'width=200&height=200';

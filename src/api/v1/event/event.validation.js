@@ -6,9 +6,10 @@ module.exports = {
   // GET /v1/event
   listEvent: {
     query: {
-      page: Joi.number().min(1),
+      skip: Joi.number(),
       perPage: Joi.number().min(1).max(100),
       _id: Joi.string(),
+      userId: Joi.string(),
     },
   },
 
@@ -17,7 +18,7 @@ module.exports = {
     body: {
       files: Joi.array().required(),
       title: Joi.string().required().max(50),
-      description: Joi.string().max(128),
+      description: Joi.string(),
       location: Joi.string(),
       startTime: Joi.string().required(),
       endTime: Joi.string().required(),

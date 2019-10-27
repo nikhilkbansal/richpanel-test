@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { omitBy, isNil } = require('lodash');
-
+const User = require('../user/user.model');
 /**
  * follow Schema
  * @private
@@ -47,8 +47,15 @@ followSchema.statics = {
     if (existingrelation) {
       newrelation.isActive = !existingrelation.isActive;
       existingrelation = Object.assign(existingrelation, newrelation);
+      if (newrelation.isActive) {
+        User.updateOne({ _id: followeeId }, { $inc: { followerCount: 1 } });
+      } else {
+        User.updateOne({ _id: followeeId }, { $inc: { followerCount: -1 } });
+      }
+
       return existingrelation.save();
     }
+    User.updateOne({ _id: followeeId }, { $inc: { followerCount: 1 } });
     return this.create(newrelation);
   },
 

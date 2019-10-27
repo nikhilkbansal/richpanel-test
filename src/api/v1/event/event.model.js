@@ -34,7 +34,6 @@ const eventSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
-    maxlength: 128,
   },
   files: {
     type: Array,

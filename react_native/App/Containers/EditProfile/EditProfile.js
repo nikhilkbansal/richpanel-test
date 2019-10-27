@@ -99,8 +99,9 @@ class EditProfile extends Component {
       this.setState({ errors: validateForm });
       return false;
     }
-
+    
     const isPasswordGivenObject = password ? { password } : {};
+    console.log('isPasswordGivenArray',isPasswordGivenArray)
 
     let pictureCondition;
     if (picture) {
@@ -108,6 +109,7 @@ class EditProfile extends Component {
       const filesIds = filesUploaded.map(o => o._id);
       pictureCondition = { picture: filesIds[0] };
     }
+    console.log('pictureCondition',pictureCondition)
 
     updateUserInit({
       email, ...isPasswordGivenObject, userName, name, ...pictureCondition,

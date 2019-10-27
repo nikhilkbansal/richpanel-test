@@ -127,9 +127,9 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 
 const TabNavigator = createBottomTabNavigator({
 
-  Search: SearchPage,
   Post,
   Event,
+  Search: SearchPage,
   Shop,
   Notification,
 }, {

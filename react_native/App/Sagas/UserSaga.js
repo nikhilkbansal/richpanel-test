@@ -26,12 +26,17 @@ export function* login({ payload }) {
       url: 'auth/login',
     };
     const data = yield call(httpClient, payloadData);
-    yield put(userActions.putUserInfo({ ...data, isLoggedIn: true }));
-    if (payload.isRememberMe) {
-      yield put(userActions.manageRememberMe(payload));
+    if(data.profile && data.profile.role === 'ngo' && !data.profile.isActive){
+      Toast('Sorry your account is not activated yet. We will contact you for verification.')
+    } else {
+      yield put(userActions.putUserInfo({ ...data, isLoggedIn: true }));
+      if (payload.isRememberMe) {
+        yield put(userActions.manageRememberMe(payload));
+      }
+      yield call(delay, 1000);
+      NavigationService.navigate('HomePage');  
     }
-    yield call(delay, 1000);
-    NavigationService.navigate('HomePage');
+
   } catch (e) {
     console.log('eee', e);
     // catch errors here

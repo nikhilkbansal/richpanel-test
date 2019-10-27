@@ -60,8 +60,8 @@ class Post extends Component {
 
   componentDidMount(){
     const { getHomePosts } = this.props;
-    getHomePosts();
     this.navListener = this.props.navigation.addListener('didFocus', () => {
+      getHomePosts();
       StatusBar.setBarStyle('light-content');
       StatusBar.setBackgroundColor(ApplicationStyles.primaryColor.color);
     });

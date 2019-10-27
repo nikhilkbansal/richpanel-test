@@ -41,8 +41,8 @@ router
   .get(authorize(), validate(postsRecommendation), controller.postsRecommendation);
 
 router
-  .route('/recommendation/post')
-  .get(authorize(), validate(postsRecommendation), controller.postsRecommendation);
+  .route('/recommendation/event')
+  .get(authorize(), validate(postsRecommendation), controller.eventsRecommendation);
 
 router
   .route('/recommendation/po')

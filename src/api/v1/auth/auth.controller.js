@@ -47,7 +47,11 @@ exports.register = async (req, res, next) => {
     if (isUserNameExisted) {
       throw new APIError({ message: 'The username you entered is already registered' });
     }
-    const user = await (new User(req.body)).save();
+    let isActiveCondition = {};
+    if (req.body.role === 'ngo') {
+      isActiveCondition = { isActive: false };
+    }
+    const user = await (new User({ ...req.body, ...isActiveCondition })).save();
     const userTransformed = user.transform();
     const token = await generateTokenResponse(user, user.token());
     res.status(httpStatus.CREATED);

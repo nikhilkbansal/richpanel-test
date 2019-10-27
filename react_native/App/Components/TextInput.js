@@ -46,6 +46,13 @@ class TextInput extends React.Component {
       errors = { ...errors, password: 'Enter a valid password' };
     }
 
+    if (password && keys.includes('confirmPassword') && !confirmPassword) {
+      errors = { ...errors, confirmPassword: 'Enter a valid Confirm Password'};
+    } else {
+      errors = { ...errors, confirmPassword: null};
+      delete errors.confirmPassword;
+    }
+
     if (confirmPassword && keys.includes('confirmPassword') && confirmPassword !== password) {
       errors = { ...errors, confirmPassword: 'Both passwords are different' };
     }

@@ -26,6 +26,7 @@ import AddBankAccount from 'App/Containers/Payment/AddBankAccount';
 import OrgInfo from 'App/Containers/PoPages/OrgInfo';
 import PoSlider from 'App/Containers/PoPages/PoSlider';
 import Followings from 'App/Containers/Followings/Followings';
+import Settings from 'App/Containers/Settings/Settings';
 
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -66,11 +67,12 @@ const AppNav = createAppContainer(createStackNavigator(
     AddBankAccount,
     OrgInfo,
     Followings,
-    PoSlider
+    PoSlider,
+    Settings
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'HomePage',
+    initialRouteName: 'NgoProfile',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },
