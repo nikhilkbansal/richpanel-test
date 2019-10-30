@@ -66,6 +66,7 @@ class AdditionalPayment extends Component {
       isCardSave: false,
       isRememberVpa: false,
       isCardsRequested: !!params.cards,
+      errors: {}
     };
     this.updateTextInput = this.updateTextInput.bind(this);
     this.passwordRef = React.createRef();
@@ -82,7 +83,13 @@ class AdditionalPayment extends Component {
       isCardsRequested, vpa, cardHolderName, cardNumber, expiry, cvc, isCardSave,
     } = this.state;
     let seamlessParams = {};
+
     if (isCardsRequested) {
+      const validateForm = TextInput.validateForm(['cardHolderName', 'cardNumber', 'expiry', 'cvc'], this.state);
+      if (validateForm) {
+        this.setState({ errors: validateForm });
+        return false;
+      }
       seamlessParams = {
         paymentOption: 'card',
         card_number: cardNumber,
@@ -93,11 +100,18 @@ class AdditionalPayment extends Component {
         card_save: isCardSave ? 1 : 0,
       };
     } else {
+      const validateForm = TextInput.validateForm(['vpa'], this.state);
+      if (validateForm) {
+        this.setState({ errors: validateForm });
+        return false;
+      }
       seamlessParams = {
         paymentOption: 'upi',
         upi_vpa: vpa,
       };
     }
+    this.setState({ errors: {} });
+    
     navigate('Payment', {
       paymentMeta: state.params.paymentMeta,
       seamlessParams: {
@@ -112,7 +126,7 @@ class AdditionalPayment extends Component {
     console.log('this.props', this.props);
     const { navigation } = this.props;
     const {
-      errors, isCardSave, isRememberVpa, password, isCardsRequested,
+      errors, isCardSave, isRememberVpa, password, isCardsRequested
     } = this.state;
     return (
       <View style={styles.container}>
@@ -124,6 +138,7 @@ class AdditionalPayment extends Component {
             ? (
               <View style={styles.secondSection}>
                 <TextInput
+                  error={errors.cardHolderName}
                   label="Card holder's name"
                   returnKeyType="next"
                   onChangeText={text => this.updateTextInput('cardHolderName', text)}
@@ -131,6 +146,7 @@ class AdditionalPayment extends Component {
                 />
                 <TextInput
                   label="Card number"
+                  error={errors.cardNumber}
                   placeholder="XXXX-XXXX-XXXX-XXXX"
                   mask="[0000] [0000] [0000] [0000]"
                   returnKeyType="next"
@@ -140,6 +156,7 @@ class AdditionalPayment extends Component {
                 <TextInput
                   label="Expiry Date"
                   placeholder="MM/YY"
+                  error={errors.expiry}
                   mask="[00]/[00]"
                   returnKeyType="next"
                   onChangeText={(formatted, extracted) => this.updateTextInput('expiry', extracted)}
@@ -147,6 +164,7 @@ class AdditionalPayment extends Component {
                 />
                 <TextInput
                   label="CVV/CVC"
+                  error={errors.cvc}
                   textInputRef={this.passwordRef}
                   placeholder="XXX"
                   returnKeyType="done"
@@ -176,6 +194,7 @@ class AdditionalPayment extends Component {
               <View style={styles.secondSection}>
                 <TextInput
                   label="Enter VPA"
+                  error={errors.vpa}                  
                   placeholder="username@upi"
                   returnKeyType="done"
                   onChangeText={text => this.updateTextInput('vpa', text)}

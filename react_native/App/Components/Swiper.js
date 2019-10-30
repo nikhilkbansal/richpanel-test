@@ -55,7 +55,11 @@ class SwiperPage extends React.Component {
       files, isWholePath
     } = this.props;
     return (
-      <Swiper loop={false} style={styles.wrapper} showsButtons={false} activeDotColor={ApplicationStyles.primaryColor.color}>
+      <Swiper showsPagination showsButtons loop={false} style={styles.wrapper}
+        dotColor={'red'}
+        nextButton={<Text style={{...ApplicationStyles.headline, color: ApplicationStyles.smokeBackground.color}}>›</Text>}
+        prevButton={<Text style={{...ApplicationStyles.headline, color: ApplicationStyles.smokeBackground.color}}>‹</Text>}
+        buttonWrapperStyle={{...ApplicationStyles.elevationS}} activeDotColor={ApplicationStyles.smokeBackground.color}>
         {files && files.map(o => (
           <View style={styles.slide}>
             {CommonFunctions.isFileVideo(o) ? (<Video

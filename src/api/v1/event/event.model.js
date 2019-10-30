@@ -62,10 +62,10 @@ eventSchema.index({ title: 'text', description: 'text' });
 
 eventSchema.statics = {
   async list({
-    page = 1, perPage = 30, _id, userId, title, $text,
+    page = 1, perPage = 30, _id, userId, title, $text, endTime,
   }) {
     const options = omitBy({
-      _id, userId, title, $text,
+      _id, userId, title, $text, endTime,
     }, isNil);
     return this.find(options).sort({ createdAt: -1 })
       .skip(perPage * (page - 1))

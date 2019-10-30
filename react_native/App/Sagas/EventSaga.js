@@ -40,12 +40,70 @@ export function* getHomeEvents() {
   }
 }
 
+
+export function* eventReaction({ payload }) {
+  try {
+    const payloadData = {
+      method: 'post',
+      url: 'reaction',
+      data: {
+        ...payload,
+        itemId: payload._id,
+        itemType: 'post',
+      },
+    };
+    yield call(httpClient, payloadData, 'default', 'false');
+    yield put(eventActions.eventReactionSuccess(payload));
+  } catch (e) {
+    console.log('eee', e);
+    // catch errors here
+  }
+}
+
+
+export function* share({ payload }) {
+  try {
+    const payloadData = {
+      method: 'post',
+      url: 'share',
+      data: {
+        ...payload,
+      },
+    };
+    yield call(httpClient, payloadData, 'default', 'false');
+    yield put(eventActions.addEventShareCount(payload));
+  } catch (e) {
+    // catch errors here
+  }
+}
+
+
+export function* removeReaction({ payload }) {
+  try {
+    const payloadData = {
+      method: 'delete',
+      url: 'reaction',
+      data: {
+        itemId: payload._id,
+      },
+    };
+    yield call(httpClient, payloadData, 'default', 'false');
+    yield put(eventActions.removeEventReactionSuccess(payload));
+  } catch (e) {
+    console.log('eee', e);
+    // catch errors here
+  }
+}
+
+
 function* func() {
   yield all(
     [
       takeLatest(EventTypes.EVENT_CREATE, createEvent),
       takeLatest(EventTypes.GET_HOME_EVENTS, getHomeEvents),
-
+      takeLatest(EventTypes.EVENT_REACTION, eventReaction),
+      takeLatest(EventTypes.REMOVE_EVENT_REACTION, removeReaction),
+      takeLatest(EventTypes.SHARE_EVENT, share),
     ],
   );
 }

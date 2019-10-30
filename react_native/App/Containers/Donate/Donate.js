@@ -61,27 +61,36 @@ class Donate extends Component {
       files: [],
       amount: 0,
     };
-    this.addPost = this.addPost.bind(this);
+    this.goNext = this.goNext.bind(this);
     this.descriptionRef = React.createRef();
   }
 
-  addPost() {
-    const {
-      errors, title, description, files,
-    } = this.state;
-    const { postCreate } = this.props;
-    postCreate({ title, description, files });
-  }
+ 
 
   updateTextInput(key, value) {
     this.setState({ [key]: value });
   }
 
+  goNext(){
+    const { amount } = this.state;
+    const { paymentMeta } = this.props.navigation.state.params;
+
+    const validateForm = TextInput.validateForm(['amount'], this.state);
+    if (validateForm) {
+      this.setState({ errors: validateForm });
+      return false;
+    } else {
+      this.setState({ errors: {} });
+
+    }
+
+    this.props.navigation.navigate('SelectPaymentMethod', { amount, paymentMeta });
+  }
 
   render() {
     const { navigation } = this.props;
 
-    const { errors, donate, amount } = this.state;
+    const { errors, donate } = this.state;
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} title="Donate" />
@@ -89,7 +98,7 @@ class Donate extends Component {
           <Dropdown dropDownLabel="Donate" default={donateOptions[0]} placeholder="Donate" options={donateOptions} onValueChange={(label, value) => this.setState({ donate: value })} />
           {donate !== 'once' && <Dropdown dropDownLabel="Frequency" default={frequencyOptions[0]} placeholder="Donate" options={frequencyOptions} />}
           <TextInput
-            error={errors.title}
+            error={errors.amount}
             multiline
             numberOfLines={1}
             label="Amount"
@@ -100,10 +109,7 @@ class Donate extends Component {
           />
           <Button
             style={styles.loginContainer}
-            onPress={() => {
-              const { paymentMeta } = navigation.state.params;
-              navigation.navigate('SelectPaymentMethod', { amount, paymentMeta });
-            }}
+            onPress={this.goNext}
             title="NEXT"
           />
 

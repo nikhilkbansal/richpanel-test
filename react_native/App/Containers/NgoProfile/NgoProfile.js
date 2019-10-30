@@ -288,7 +288,7 @@ class NgoProfile extends Component {
   render() {
     const { navigation, profile, logoutInit } = this.props;
     const {  activeTab, recentPosts, poInfo, recentEvents, isMe, isFollowed, contactModal } = this.state;
-    const poData = poInfo || profile;
+    const poData = poInfo || profile; 
     const postsOrEvents = activeTab === 'post'? recentPosts : recentEvents;
     let activeTabStyle = {borderBottomColor: ApplicationStyles.primaryColor.color, borderBottomWidth:wp('0.5%'),}
     let activeTabLabelStyle = {color: ApplicationStyles.primaryColor.color,}
@@ -372,7 +372,7 @@ class NgoProfile extends Component {
                   flex: 1,
                   alignItems:'center'
                 }}
-                onPress={()=>navigation.navigate('Donate', {_id:poInfo._id, txType:'userToDirectPO'})}
+                onPress={()=>navigation.navigate('Donate', {paymentMeta:{poId: poData.id, txType: 'userToDirectPO'}, txType:'userToDirectPO'})}
                 iconSize={wp('6.2%')}
                 containerStyle={{ flex: 1 }}
                 buttonWrapperStyle={{

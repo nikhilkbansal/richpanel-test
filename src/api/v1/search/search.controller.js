@@ -4,6 +4,9 @@ const Post = require('../post/post.model');
 const Event = require('../event/event.model');
 const User = require('../user/user.model');
 const Follow = require('../follow/follow.model');
+const Share = require('../share/share.model');
+const Reaction = require('../reaction/reaction.model');
+const Comment = require('../comment/comment.model');
 const { handler: errorHandler } = require('../../middlewares/error');
 
 
@@ -18,6 +21,7 @@ exports.getSearch = async (req, res, next) => {
     const {
       term, type, page, perPage, filterCauseSupported,
     } = req.query;
+    const { user } = req;
     const all = [];
     let posts = [];
     let events = [];
@@ -72,6 +76,44 @@ exports.getSearch = async (req, res, next) => {
       default:
     }
 
+    if (type === 'post') {
+      posts = await Promise.map(posts, async (post) => {
+        const isFollowedByMe = await Follow.list({ followeeId: post.userId, followerId: user.id });
+        const postsCount = await Reaction.findReactionsCounts(post._id);
+        const howUserReacted = await Reaction.howUserReacted(user._id, post._id);
+        const comment = await Comment.list({ perPage: 1, itemId: post._id, itemType: 'post' });
+        const shares = await Share.getShares({ itemId: post._id, userId: user._id });
+        return {
+          comment,
+          ...post.toObject(),
+          ...postsCount,
+          howUserReacted,
+          sharesCount: shares.length,
+          isFollowed: isFollowedByMe.length > 0,
+        };
+      });
+    }
+
+    if (type === 'event') {
+      events = await Promise.map(events, async (event) => {
+        const isFollowedByMe = await Follow.list({ followeeId: event.userId, followerId: user.id });
+        return {
+          ...event.toObject(),
+          isFollowedByMe: isFollowedByMe.length > 0,
+        };
+      });
+    }
+
+    if (type === 'ngo') {
+      ngos = await Promise.map(ngos, async (ngo) => {
+        const isFollowedByMe = await Follow.list({ followeeId: ngo._id, followerId: user.id });
+        return {
+          ...ngo.toObject(),
+          isFollowedByMe: isFollowedByMe.length > 0,
+        };
+      });
+    }
+
     res.json({
       posts, events, ngos,
     });
@@ -84,7 +126,7 @@ exports.getSearch = async (req, res, next) => {
 exports.postsRecommendation = async (req, res, next) => {
   try {
     const { user, query } = req;
-    const followers = await Follow.getFollowers(user.id);
+    const followers = await Follow.getFollowees(user.id);
     const followeeIds = followers.map(o => o.followeeId);
     const posts = await Post.list({
       userId: { $nin: followeeIds },
@@ -99,7 +141,7 @@ exports.postsRecommendation = async (req, res, next) => {
 exports.eventsRecommendation = async (req, res, next) => {
   try {
     const { user, query } = req;
-    const followers = await Follow.getFollowers(user.id);
+    const followers = await Follow.getFollowees(user.id);
     const followeeIds = followers.map(o => o.followeeId);
     const events = await Event.list({
       userId: { $nin: followeeIds },
@@ -114,11 +156,12 @@ exports.eventsRecommendation = async (req, res, next) => {
 exports.poRecommendation = async (req, res, next) => {
   try {
     const { user, query } = req;
-    const followers = await Follow.getFollowers(user.id);
+    const followers = await Follow.getFollowees(user.id);
+    console.log(followers);
     const followeeIds = followers.map(o => o.followeeId);
     const users = await User.list({
       ...query,
-      userId: { $nin: followeeIds },
+      _id: { $nin: followeeIds },
       role: 'ngo',
     });
     res.json(users);

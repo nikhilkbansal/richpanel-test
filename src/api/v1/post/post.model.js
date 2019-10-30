@@ -35,6 +35,10 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  raisedMoney: {
+    type: Number,
+    default: 0,
+  },
   campaignGoal: String,
   campaignStartDate: Date,
   campaignEndDate: Date,
@@ -56,11 +60,14 @@ const postSchema = new mongoose.Schema({
 postSchema.index({ title: 'text', description: 'text' });
 
 postSchema.statics = {
+  async updateRaisedMoney(_id, raisedMoney) {
+    return this.updateOne({ _id }, { $inc: { raisedMoney } });
+  },
   async list({
-    skip = 0, perPage = 30, _id, userId, title, $text,
+    skip = 0, perPage = 30, _id, userId, title, $text, $or,
   }) {
     const options = omitBy({
-      _id, userId, title, $text,
+      _id, userId, title, $text, $or,
     }, isNil);
     return this.find(options).sort({ createdAt: -1 })
       .skip(skip)

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import {
-  Image, View, Share, Slider, StyleSheet, FlatList, ScrollView,
+  Image, View, Share, Slider, StyleSheet, FlatList, ScrollView,Clipboard
 } from 'react-native';
 import Video from 'react-native-video';
 import {
@@ -19,8 +19,9 @@ import ReactionsGot from './ReactionsGot';
 import Swiper from './Swiper';
 import Icon from './Icon';
 import { CommonFunctions } from '../Utils';
+import Toast from '../Services/ToastService';
 import AvatarImage from './AvatarImage';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'; 
 
 console.log('Avatar', Avatar);
 
@@ -105,15 +106,23 @@ const styles = StyleSheet.create({
     paddingVertical: hp('1%'),
   },
   raisedSliderContainer: { backgroundColor:ApplicationStyles.smokeBackground.color, height: hp('0.2%') },
-  raisedSlider: { backgroundColor: ApplicationStyles.primaryColor.color, width: '56%', height: hp('0.2%') },
+  raisedSlider: { backgroundColor: ApplicationStyles.primaryColor.color, height: hp('0.2%') },
   body: { ...ApplicationStyles.body2, marginBottom: hp('2%') },
   moreStyle: { ...ApplicationStyles.body3, color: ApplicationStyles.primaryColor.color },
   subBody: { padding: wp('2%') },
   raisedMoney: { ...ApplicationStyles.info2, alignContent: 'center', justifyContent: 'center' },
 });
 
+function getPercentage(total, some = 1){
+  return parseInt(some)/parseInt(total)*100;
+}
+
+function getHumanCurrency(num){
+  return num.toLocaleString('en-IN')
+}
+
 function PostUi({
-  _id, title, description, isFollowed, files, userId, userName, comment, userPicture,onUserClick, onViewComments, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
+  _id, title, description, isFollowed, files, userId, userName, comment, userPicture, onUserClick, raisedMoney, campaignEndDate, onViewComments, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
 }) {
   return (
     <View style={styles.container}>
@@ -146,9 +155,9 @@ function PostUi({
             menuTitle={userName}
             buttonStyle={[styles.moreWrapperStyle]}
             menus={[
-              { label: isFollowed ? 'Unfollow' : 'Follow', func: () => followUnfollow({ type: 'homePagePosts', isFollowed, followeeId: userId._id }) },
-              { label: 'Copy Link', func: () => {} },
-              { label: 'Report This Post', func: () => {} }]}
+              { label: isFollowed ? 'Unfollow' : 'Follow', func: () => followUnfollow() },
+              { label: 'Copy Link', func: () => { Clipboard.setString('http://handoutapp.com'); Toast('Copied') } },
+              { label: 'Report', func: () => {} }]}
           >
             <Icon name="md-more" size={25} color={ApplicationStyles.darkColor.color} />
           </MenuDropdown>
@@ -183,7 +192,7 @@ function PostUi({
             <Text style={ApplicationStyles.headline2}>{title}</Text>
           </View>
           {campaignGoal
-          && <Text style={{ ...ApplicationStyles.bodySubHeading, paddingVertical: hp('0.6%'), alignSelf: 'flex-end' }}>Ends on 12 Aug 2019</Text>}
+          && <Text style={{ ...ApplicationStyles.bodySubHeading, paddingVertical: hp('0.6%'), alignSelf: 'flex-end' }}>Ends on { moment(campaignEndDate).format('DD MMM YYYY') }</Text>}
 
           {campaignGoal
           && (
@@ -191,16 +200,16 @@ function PostUi({
           
 
             <View style={styles.raisedSliderContainer}>
-              <View style={styles.raisedSlider} />
+              <View style={{...styles.raisedSlider, width: getPercentage(campaignGoal,raisedMoney)}} />
             </View>
             <View style={styles.raisedContainer}>
-              <Text style={ApplicationStyles.bodySubHeading}>₹100 Raised</Text>
+              <Text style={ApplicationStyles.bodySubHeading}>{raisedMoney ? `₹${getHumanCurrency(raisedMoney)} Raised`  : ''}</Text>
               <Text style={styles.raisedMoney}>
               {/* ₹100 */}
                 {' '}
                 <Text style={ApplicationStyles.primaryInfo}>
                   ₹
-                  {campaignGoal}
+                  {getHumanCurrency(campaignGoal)}
                 </Text>
               </Text>
             </View>
@@ -216,7 +225,7 @@ function PostUi({
         <View style={styles.commentContainer}>
 
         {/* <View style={styles.subBody}> */}
-          {comment.length > 0 && (
+          {comment && comment.length > 0 && (
           <View style={{
             flexDirection: 'row',
           }}

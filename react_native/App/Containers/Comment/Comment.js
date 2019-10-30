@@ -10,7 +10,7 @@ import CommentActions from 'App/Stores/Comment/Actions';
 import { CommonFunctions } from '../../Utils';
 import { Config } from '../../Config';
 import {
-  AvatarImage, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, Text,
+  AvatarImage, EmptyState, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, Text,
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 
@@ -282,6 +282,9 @@ class Comment extends Component {
         <NavigationBar {...navigation} title="Comments" />
 
         <View style={{ paddingHorizontal: wp('4%'), height: replyingTo ? hp('73.1%') : hp('80%') }}>
+        {comments.lenght===0 && <EmptyState message='No one commented yet. You can be the first one' messageContainerStyle={{backgroundColor: ApplicationStyles.lightBackground.color}}
+        > 
+          </EmptyState>}
           <FlatList
             data={comments}
             extraData={comments}

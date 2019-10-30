@@ -19,6 +19,7 @@ import Donate from 'App/Containers/Donate/Donate';
 import SeeAllSearch from 'App/Containers/SeeAllSearch/SeeAllSearch';
 import Comment from 'App/Containers/Comment/Comment';
 import NgoProfile from 'App/Containers/NgoProfile/NgoProfile';
+import Profile from 'App/Containers/Profile/Profile';
 import SplashScreen from 'App/Containers/SplashScreen/SplashScreen';
 import StyleGuide from 'App/Containers/StyleGuide/StyleGuide';
 import AdditionalPayment from 'App/Containers/Payment/AdditionalPayment';
@@ -64,6 +65,7 @@ const AppNav = createAppContainer(createStackNavigator(
     Donate,
     SeeAllSearch,
     NgoProfile,
+    Profile,
     AddBankAccount,
     OrgInfo,
     Followings,

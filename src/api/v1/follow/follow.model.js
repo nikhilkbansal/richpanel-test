@@ -8,12 +8,12 @@ const User = require('../user/user.model');
 
 
 const followSchema = new mongoose.Schema({
-  followeeId: {
+  followeeId: { // the user who is followed by followerId
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  followerId: {
+  followerId: { // the user who follows
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
@@ -59,7 +59,7 @@ followSchema.statics = {
     return this.create(newrelation);
   },
 
-  getFollowers(followerId) {
+  getFollowees(followerId) {
     return this.find({ followerId, isActive: true }).sort({ createdAt: -1 });
   },
 

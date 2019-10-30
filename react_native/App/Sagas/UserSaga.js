@@ -5,6 +5,8 @@ import {
 import { delay } from 'redux-saga';
 import userActions, { UserTypes } from '../Stores/User/Actions';
 import postActions from '../Stores/Post/Actions';
+import eventActions from '../Stores/Event/Actions';
+import searchActions from '../Stores/Search/Actions';
 import { INITIAL_STATE } from '../Stores/User/InitialState';
 import NavigationService from '../Services/NavigationService';
 import httpClient from './HttpClient';
@@ -89,8 +91,13 @@ export function* followUnFollow({ payload }) {
       url: 'follow',
     };
     yield call(httpClient, payloadData);
-    if (payload.type === 'homePosts') {
+    if (payload.type === 'homePagePosts') {
       yield put(postActions.followUnfollow(payload));
+    } else if  (payload.type === 'homePageEvents'){
+      yield put(eventActions.followUnfollowEvent(payload));
+    } else {
+      yield put(searchActions.followUnfollowFromSearch(payload));
+      
     }
   } catch (e) {
   }

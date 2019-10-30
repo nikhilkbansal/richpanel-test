@@ -15,7 +15,7 @@ import CommonFunctions from '../../Utils/CommonFunctions';
 import AxiosRequest from '../../Services/HttpRequestService';
 
 const styles = StyleSheet.create({
-  subContainer: { flex: 1, flexDirection: 'row', paddingVertical: hp('0.5%') },
+  subContainer: { flex: 1, flexDirection: 'row', paddingVertical: hp('0.9%') },
   avatarImage: {
     width: wp('12%'), height: wp('12%'), borderRadius: wp('7.5%'), alignSelf: 'center',
   },
@@ -83,6 +83,12 @@ class SearchPage extends Component {
     const { putAutoCompleteResults } = this.props;
     const { term } = this.state;
     this.navListener = this.props.navigation.addListener('didFocus', () => {
+      this.setState({
+        postRecommendations: [],
+        poRecommendations:[],
+        eventRecommendations: []
+      })
+
       if (term.length === 0) { putAutoCompleteResults([]); }
       this.getPostRecommendations();
       this.getEventRecommendations();
@@ -158,8 +164,8 @@ class SearchPage extends Component {
 
   searchSection(title, type, items) {
     return (
-      <View>
-        <Text style={[ApplicationStyles.subHeadline, { textAlign: 'left', paddingHorizontal: wp('2%') }]}>{title}</Text>
+      <View style={{ paddingBottom: hp('1%')}}>
+        <Text style={[ApplicationStyles.bodySubHeading2, { textAlign: 'left', paddingHorizontal: wp('2%') }]}>{title}</Text>
         <FlatList
           data={items}
           renderItem={type === 'ngo' ? this.renderItem : this.renderPostItem}
@@ -183,6 +189,7 @@ class SearchPage extends Component {
       <Button buttonWrapperStyle={[styles.subContainer]}>
         <ProgressiveImage
           style={styles.avatarImage}
+          containerStyle={{ backgroundColor: 'transparent'}}
           source={{ uri: CommonFunctions.getFile(item.userId.picture, 'avatar', true) }}
         />
         <View style={[styles.avatarContainer]}>
@@ -211,6 +218,7 @@ class SearchPage extends Component {
       <Button buttonWrapperStyle={[styles.subContainer]}>
         <ProgressiveImage
           style={styles.avatarImage}
+          containerStyle={{ backgroundColor: 'transparent'}}
           source={{ uri: CommonFunctions.getFile(item.picture, 'avatar', true) }}
         />
         <View style={[styles.avatarContainer]}>
@@ -221,7 +229,7 @@ class SearchPage extends Component {
           </View>
           <View style={styles.agoContainer}>
             <Text style={styles.ago}>
-              12M Followers
+              {CommonFunctions.getFollowerCount(item.followerCount)} { CommonFunctions.getPluralString('Follower', item.followerCount)}
             </Text>
           </View>
         </View>
@@ -246,7 +254,6 @@ class SearchPage extends Component {
         backgroundColor: ApplicationStyles. smokeBackground.color,
       }]}
       >
-
         <TextInput
           placeholder="Search ngos, events, campaign, posts ..."
           numberOfLines={1}
@@ -269,20 +276,7 @@ class SearchPage extends Component {
           flex:1
         }}
         >
-          {searchResultExist && (
-          <View style={{
-            backgroundColor: ApplicationStyles.lightColor.color,
-            padding: wp('1%'),
-            ...ApplicationStyles.elevationS,
-            marginBottom: hp('2%'),
-          }}
-          >
-            {autoComplete.ngos && autoComplete.ngos.length > 0 && this.searchSection('NGOs', 'ngo', autoComplete.ngos)}
-            {autoComplete.posts && autoComplete.posts.length > 0 && this.searchSection('Posts', 'post', autoComplete.posts)}
-            {autoComplete.events && autoComplete.events.length > 0 && this.searchSection('Events', 'event', autoComplete.events)}
-          </View>
-          )
-          }
+         
 
           <View style={{ 
             
@@ -386,7 +380,25 @@ class SearchPage extends Component {
             </View>
           }
         </ScrollView>
-
+        {searchResultExist && (
+          <View style={{
+            position: 'absolute',
+            top:0,
+            width: '100%',
+            zIndex:999,
+            ...ApplicationStyles.elevationS,
+            backgroundColor: ApplicationStyles.lightColor.color,
+            padding: wp('2%'),
+            ...ApplicationStyles.elevationS,
+            marginBottom: hp('2%'),
+          }}
+          >
+            {autoComplete.ngos && autoComplete.ngos.length > 0 && this.searchSection('NGOs', 'ngo', autoComplete.ngos)}
+            {autoComplete.posts && autoComplete.posts.length > 0 && this.searchSection('Posts', 'post', autoComplete.posts)}
+            {autoComplete.events && autoComplete.events.length > 0 && this.searchSection('Events', 'event', autoComplete.events)}
+          </View>
+          )
+          }
         </View>
       </View>
     );

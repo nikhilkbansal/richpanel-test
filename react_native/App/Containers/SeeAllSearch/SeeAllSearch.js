@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  FlatList, View, StyleSheet, Image
+  FlatList, View, StyleSheet, Image, Clipboard
 } from 'react-native';
 import { 
   withTheme
@@ -9,13 +9,14 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import ActionButton from 'react-native-action-button';
 import defaultStyle from '../../Theme/ApplicationStyles';
-import {PostUi, NavigationBar, Button} from '../../Components';
+import {PostUi, Text, NavigationBar, Button, MenuDropdown} from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Dialog, { DialogContent,SlideAnimation } from 'react-native-popup-dialog';
-import {  Text } from 'react-native'
+import Dialog, { DialogContent, SlideAnimation } from 'react-native-popup-dialog';
+import Share from 'react-native-share';
 import { connect } from 'react-redux';
 import SearchActions from '../../Stores/Search/Actions';
+import UserActions from '../../Stores/User/Actions';
 import { CommonFunctions, } from '../../Utils'
  
 const styles = StyleSheet.create({
@@ -78,7 +79,7 @@ class Post extends Component {
     };
     this._renderItem = this._renderItem.bind(this);
     this.flatlistItems = this.flatlistItems.bind(this);
-    this.getData = this.getData.bind(this);
+    this._renderNgo = this._renderNgo.bind(this);
     console.log('thisprops',props);
   }
 
@@ -87,10 +88,31 @@ class Post extends Component {
     getSearch({ term, type });
   }
 
+
+  onShare = async (item) => {
+    const { profile } = this.props;
+      Share.open( {
+        message:  profile.name+ ' wants you see this post: ' + item.title+'. Use Handout App to make to world a better place for everyone like '+ profile.name +' is doing',
+        url: 'com.handout/'+item.title.replace(' ', ''),
+    })
+    .then((res) => {
+       console.log(res)
+       sharePost({ itemId: item._id, itemType: 'post'})
+    })
+    .catch((err) => { err && console.log(err); });
+  };
+
+
   _renderItem = ({item}) =><PostUi 
     userName={item.userId.name}
+    followUnfollow={()=>this.props.followUnFollow({ type: 'searchedItems', isFollowed: item.isFollowed , followeeId: item.userId._id })}
+    onSharePress={()=>this.onShare(item)}
+    onReactionPress={this.props.postReaction}
+    onReactionRemovePress={this.props.removeReaction}
     userPicture={item.userId.picture}
-    onDonatePress={()=>this.props.navigation.navigate('Donate')}
+    onUserClick={()=>this.props.navigation.navigate('NgoProfile',{poUserId:item.userId._id})}
+    onViewComments={()=>this.props.navigation.navigate('Comment',{itemId:item._id, itemType:'post'})}
+    onDonatePress={()=>this.props.navigation.navigate('Donate',{paymentMeta:{_id:item._id, txType:'userToPOCampaign'}})}
     {...item}
     />;
 
@@ -108,19 +130,23 @@ class Post extends Component {
     </View>
     <View style={styles.agoContainer}>
       <Text style={styles.ago}>
-12M Followers
+      {CommonFunctions.getFollowerCount(item.followerCount)} { CommonFunctions.getPluralString('Follower', item.followerCount)}
       </Text>
     </View>
-    
   </View>
   <View style={styles.moreContainer}>
-          <Button
-            icon="md-more"
-            iconSize={25}
-            style={styles.moreStyle}
-            buttonWrapperStyle={styles.moreWrapperStyle}
-          />
-        </View>
+    <MenuDropdown
+        menuTitle={item.name}
+        buttonStyle={[styles.moreWrapperStyle]}
+        menus={[
+          { label: item.isFollowedByMe ? 'Unfollow' : 'Follow', func: () => {} },
+          { label: 'See Profile', func: () => this.props.navigation.navigate('NgoProfile', {poUserId: item._id}) },
+          { label: 'Copy Link', func: () => { Clipboard.setString('http://handoutapp.com'); Toast('Copied') } },
+        ]}
+      >
+        <Icon name="md-more" size={25} color={ApplicationStyles.darkColor.color} />
+      </MenuDropdown>
+    </View>
 </View>);
 
   flatlistItems(data){
@@ -135,27 +161,16 @@ class Post extends Component {
     }
   }
 
-  getData(){
-    const { autoComplete,navigation: { state: { params: { type} } } } = this.props;
-    switch(type){
-      case 'ngo':
-        return autoComplete.ngos;
-      case 'event':
-        return autoComplete.events;
-      default:
-          return autoComplete.posts;
-    }
-  }
 
   render() {
 
-    const {  navigation, navigation: { state: { params: { term } } }  } = this.props;
+    const {  seeAll, navigation, navigation: { state: { params: { term } } }  } = this.props;
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color}}>
         <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={true}  rightIcon="md-add" title={'Search: ' +term}  />
         <View style={{flex:1, }}>
         <FlatList
-          data={this.getData() } 
+          data={seeAll} 
           renderItem={this.flatlistItems}
         />
         </View>
@@ -166,7 +181,11 @@ class Post extends Component {
 }
 
 export default connect(
-  ({ search: { autoComplete } }) => ({ autoComplete }), {
+  ({ user: { profile }, search: { seeAll } }) => ({ seeAll, profile }), {
     getSearch: SearchActions.getSearch,
+    postReaction: SearchActions.postReactionFromSearch,
+    removeReaction: SearchActions.removeReactionFromSearch,
+    sharePost: SearchActions.sharePostFromSearch,
+    followUnfollow: UserActions.followUnfollow 
   },
 )(Post);

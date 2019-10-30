@@ -75,14 +75,16 @@ exports.getHomePageEvents = async (req, res, next) => {
   try {
     const { user } = req;
     const { page, perPage } = req.query;
-    const followers = await Follow.getFollowers(user.id);
+    const followers = await Follow.getFollowees(user.id);
     console.log('followers', followers);
     if (!followers || followers.length === 0) {
       res.json([]);
       return;
     }
     const followeeIds = followers.map(o => o.followeeId);
-    const events = await Event.list({ userId: { $in: followeeIds }, page, perPage });
+    const events = await Event.list({
+      userId: { $in: followeeIds }, endTime: { $gte: new Date() }, page, perPage,
+    });
     // const events = await Event.list({ page, perPage });
     const resultedEvents = await Promise.map(events, async (event, index) => {
       const eventsCount = await Reaction.findReactionsCounts(event._id);

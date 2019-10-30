@@ -41,47 +41,55 @@ const styles = StyleSheet.create({
   leftIcon: { alignSelf: 'center' },
 });
 
+class NavigationBar extends React.Component {
 
-function NavigationBar({
-  title, leftIcon, leftFunction, showRightSection, goBack, containerStyle, showLeftSection, rightIcon, statusBarColor, rightButtonAction, iconsColor, statusBarStyle,
-}) {
-  return (
-    <View style={[styles.container,{paddingTop: StatusBar.currentHeight}, containerStyle]}>
-      <StatusBar translucent  barStyle={statusBarStyle || 'light-content'} backgroundColor={statusBarColor || ApplicationStyles.primaryColor.color} />
-      <View style={styles.subContainer}>
-        <View style={styles.leftArea}>
-          {showLeftSection && (
-          <Button
-            onPress={() =>leftFunction ? leftFunction() : goBack()}
-            style={{ }}
-            iconColor={iconsColor || ApplicationStyles.lightColor.color}
-            buttonWrapperStyle={{ paddingHorizontal: wp('7%') }}
-            icon={leftIcon || "ios-arrow-round-back"}
-          />
-          )}
+  componentDidMount(){
+    let backgroundColor = this.props.statusBarColor || ApplicationStyles.primaryColor.color;
+    StatusBar.setBackgroundColor(backgroundColor);
+  }
+
+  render(){
+    const {
+      title, leftIcon, leftFunction, showRightSection, goBack, containerStyle, showLeftSection, rightIcon, statusBarColor, rightButtonAction, iconsColor, statusBarStyle,
+    } = this.props;
+    return (
+      <View style={[styles.container,{paddingTop: StatusBar.currentHeight}, containerStyle]}>
+        <StatusBar translucent  barStyle={statusBarStyle || 'light-content'} backgroundColor={statusBarColor || ApplicationStyles.primaryColor.color} />
+        <View style={styles.subContainer}>
+          <View style={styles.leftArea}>
+            {showLeftSection && (
+            <Button
+              onPress={() =>leftFunction ? leftFunction() : goBack()}
+              style={{ }}
+              iconColor={iconsColor || ApplicationStyles.lightColor.color}
+              buttonWrapperStyle={{ paddingHorizontal: wp('7%') }}
+              icon={leftIcon || "ios-arrow-round-back"}
+            />
+            )}
+          </View>
+          <View style={styles.centerArea}>
+            <Text style={[styles.label, ApplicationStyles.headline3, { color: ApplicationStyles.lightColor.color }]}>
+              {title}
+            </Text>
+          </View>
+          <View style={styles.rightArea}>
+            {showRightSection && (
+            <Button
+              onPress={rightButtonAction}
+              icon={rightIcon}
+              iconColor={iconsColor || ApplicationStyles.lightColor.color}
+              buttonWrapperStyle={{ paddingHorizontal: wp('7%') }}
+              iconSize={wp('6%')}
+            />
+            )}
+          </View>
         </View>
-        <View style={styles.centerArea}>
-          <Text style={[styles.label, ApplicationStyles.headline3, { color: ApplicationStyles.lightColor.color }]}>
-            {title}
-          </Text>
-        </View>
-        <View style={styles.rightArea}>
-          {showRightSection && (
-          <Button
-            onPress={rightButtonAction}
-            icon={rightIcon}
-            iconColor={iconsColor || ApplicationStyles.lightColor.color}
-            buttonWrapperStyle={{ paddingHorizontal: wp('7%') }}
-            iconSize={wp('6%')}
-          />
-          )}
-        </View>
+  
       </View>
-
-    </View>
-  );
+    );
+  }
 }
-
+ 
 NavigationBar.propTypes = {
   title: PropTypes.string,
   showRightSection: PropTypes.bool,

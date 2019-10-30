@@ -58,6 +58,18 @@ class AddPost extends Component {
       campaignEndDate,
     } = this.state;
     const { postCreate } = this.props;
+
+    let keysToValidate = ['title', 'description', 'files'];
+    if(!!campaignGoal || !!campaignStartDate || !!campaignEndDate){
+      keysToValidate = keysToValidate.concat(['campaignGoal', 'campaignStartDate', 'campaignEndDate'])
+    }
+    const validateForm = TextInput.validateForm(keysToValidate, this.state)
+    if (validateForm) {
+      this.setState({ errors: validateForm });
+      return false;
+    }
+   
+
     const filesUploaded = await UploadFiles(files, { fileType: 'image' });
     const filesIds = filesUploaded.map(o => o._id);
     postCreate({
@@ -104,11 +116,11 @@ class AddPost extends Component {
             onChangeText={text => this.updateTextInput('description', text)}
             onSubmitEditing={() => this.passwordRef.current.focus()}
           />
-          <FileSelector label="Add images and videos" onChange={files => this.updateTextInput('files', files)} />
+          <FileSelector error={errors.files} label="Add images and videos" onChange={files => this.updateTextInput('files', files)} />
           <HrLine />
           <Text style={{ ...ApplicationStyles.info3 }}>Fill below section if you are creating a campaign </Text>
           <TextInput
-            error={errors.description}
+            error={errors.campaignGoal}
             multiline
             numberOfLines={1}
             label="Campaign Goal"
@@ -119,9 +131,9 @@ class AddPost extends Component {
             onChangeText={text => this.updateTextInput('campaignGoal', text)}
             onSubmitEditing={() => this.passwordRef.current.focus()}
           />
-          <DatePicker label="Campaign Starts from" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('campaignStartDate', text)} />
-          <DatePicker label="Campaign Ends on" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('campaignEndDate', text)} />
-          <LocationSelector label="Location" placeholder="Select location" onChange={text => this.updateTextInput('starts', text)} />
+          <DatePicker error={errors.campaignStartDate} label="Campaign Starts from" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('campaignStartDate', text)} />
+          <DatePicker error={errors.campaignEndDate} label="Campaign Ends on" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('campaignEndDate', text)} />
+          {/* <LocationSelector label="Location" placeholder="Select location" onChange={text => this.updateTextInput('starts', text)} /> */}
           <Button
             style={styles.loginContainer}
             onPress={this.addPost}

@@ -100,12 +100,19 @@ exports.getHomePagePosts = async (req, res, next) => {
   try {
     const { user } = req;
     const { page, perPage } = req.query;
-    const followers = await Follow.getFollowers(user.id);
+    const followers = await Follow.getFollowees(user.id);
     if (!followers || followers.length === 0) {
       res.json([]);
+      return;
     }
     const followeeIds = followers.map(o => o.followeeId);
-    const posts = Post.list({ userId: { $in: followeeIds }, page, perPage });
+    const posts = Post.list({
+      userId: { $in: followeeIds },
+      $or: [{ campaignEndDate: { $gte: new Date() } },
+        { campaignEndDate: { $exists: false } }],
+      page,
+      perPage,
+    });
     // const posts = await Post.list({ page, perPage });
     const resultedPosts = await Promise.map(posts, async (post, index) => {
       const postsCount = await Reaction.findReactionsCounts(post._id);

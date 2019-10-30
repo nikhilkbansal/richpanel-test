@@ -29,8 +29,9 @@ class TextInput extends React.Component {
     // checking if fields are not empty
     // for custom message replace with if statement written after this function
     keys.forEach(o=>{
-      if(!state[o]){
-        errors = { ...errors, [o]: 'Enter a valid '+_.startCase(o) };
+      if(!state[o] || (Array.isArray(state[o])  && state[o].length === 0)){
+
+        errors = { ...errors, [o]: Array.isArray(state[o]) ?'Enter valid '+_.startCase(o): 'Enter a valid '+_.startCase(o) };
       }
     });
 

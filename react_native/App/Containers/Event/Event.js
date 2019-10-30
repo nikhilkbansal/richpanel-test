@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import {
-  FlatList, View, StyleSheet, StatusBar
+  FlatList, View, StyleSheet, StatusBar, 
 } from 'react-native';
 import { 
   withTheme
 } from 'react-native-paper';
+import Share from 'react-native-share';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
 import ActionButton from 'react-native-action-button';
@@ -16,6 +17,7 @@ import Dialog, { DialogContent,SlideAnimation } from 'react-native-popup-dialog'
 import { Button, Text } from 'react-native'
 import { connect } from 'react-redux';
 import EventActions from '../../Stores/Event/Actions';
+import UserActions from '../../Stores/User/Actions';
 
 
 const styles = StyleSheet.create({
@@ -57,10 +59,29 @@ class Event extends Component {
     this.navListener.remove();
   }
 
+  onShare = async (item) => {
+    const { profile, shareEvent } = this.props;
+      Share.open( {
+        message:  profile.name+ ' wants you see this event: ' + item.title+'. Use Handout App to make to world a better place for everyone like '+ profile.name +' is doing',
+        url: 'com.handout/'+item.title.replace(' ', ''),
+    })
+    .then((res) => {
+       console.log(res)
+       shareEvent({ itemId: item._id, itemType: 'event'})
+    })
+    .catch((err) => { err && console.log(err); });
+  };
+
   _renderItem = ({item}) =><EventUi 
     userName={item.userId.name}
+    followUnfollow={()=>this.props.followUnFollow({ type: 'homePageEvents', isFollowed: item.isFollowed , followeeId: item.userId._id })}
+    onSharePress={()=>this.onShare(item)}
+    onReactionPress={this.props.eventReaction}
+    onReactionRemovePress={this.props.removeEventReaction}
     userPicture={item.userId.picture}
-    onDonatePress={()=>this.props.navigation.navigate('Donate')}
+    onUserClick={()=>this.props.navigation.navigate('NgoProfile',{poUserId:item.userId._id})}
+    onViewComments={()=>this.props.navigation.navigate('Comment',{itemId:item._id, itemType:'event'})}
+    onDonatePress={()=>this.props.navigation.navigate('Donate',{paymentMeta:{_id:item._id, txType:'userToDirectPO'}})}
     {...item}
     />;
 
@@ -88,7 +109,11 @@ class Event extends Component {
 }
 
 export default connect(
-  ({ event: { homeEvents } }) => ({ homeEvents }), {
+  ({ event: { homeEvents }, user: {profile} }) => ({ homeEvents, profile }), {
     getHomeEvents: EventActions.getHomeEvents,
+    eventReaction: EventActions.eventReaction,
+    removeEventReaction: EventActions.removeEventReaction,
+    shareEvent: EventActions.shareEvent,
+    followUnFollow: UserActions.followUnFollow 
   },
 )(Event);

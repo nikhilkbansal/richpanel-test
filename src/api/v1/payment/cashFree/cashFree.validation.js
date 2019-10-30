@@ -45,6 +45,7 @@ module.exports = {
   saveTransaction: {
     body: {
       postId: Joi.string().optional(),
+      receiverId: Joi.string().optional(),
       orderId: Joi.string().required(),
       txData: Joi.string().required(),
       txType: Joi.string().required().valid(Transaction.txTypes),

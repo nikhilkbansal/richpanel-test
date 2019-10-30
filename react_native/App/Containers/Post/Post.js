@@ -45,6 +45,22 @@ class Post extends Component {
     this._renderItem = this._renderItem.bind(this);
   }
 
+
+  componentDidMount(){
+    const { getHomePosts } = this.props;
+    this.navListener = this.props.navigation.addListener('didFocus', () => {
+      getHomePosts();
+      StatusBar.setBarStyle('light-content');
+      StatusBar.setBackgroundColor(ApplicationStyles.primaryColor.color);
+    });
+  }
+
+  componentWillUnmount() {
+    this.navListener.remove();
+  }
+
+
+
   onShare = async (item) => {
     const { profile, sharePost } = this.props;
       Share.open( {
@@ -58,25 +74,9 @@ class Post extends Component {
     .catch((err) => { err && console.log(err); });
   };
 
-  componentDidMount(){
-    const { getHomePosts } = this.props;
-    this.navListener = this.props.navigation.addListener('didFocus', () => {
-      getHomePosts();
-      StatusBar.setBarStyle('light-content');
-      StatusBar.setBackgroundColor(ApplicationStyles.primaryColor.color);
-    });
-  }
-
-  componentWillUnmount() {
-    this.navListener.remove();
-    this.animation.play();
-
-  }
- 
-
   _renderItem = ({item}) =><PostUi 
     userName={item.userId.name}
-    followUnfollow={this.props.followUnfollow}
+    followUnfollow={()=>this.props.followUnfollow({ type: 'homePagePosts', isFollowed: item.isFollowed , followeeId: item.userId._id })}
     onSharePress={()=>this.onShare(item)}
     onReactionPress={this.props.postReaction}
     onReactionRemovePress={this.props.removeReaction}
@@ -86,6 +86,7 @@ class Post extends Component {
     onDonatePress={()=>this.props.navigation.navigate('Donate',{paymentMeta:{_id:item._id, txType:'userToPOCampaign'}})}
     {...item}
     />;
+
 
   render() {
 

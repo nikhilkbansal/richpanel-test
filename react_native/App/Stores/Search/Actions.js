@@ -7,8 +7,13 @@ const { Types, Creators } = createActions({
 
   getPostRecommendation: ['payload'],
   putPostRecommendation: ['payload'],
-
-
+  postReactionFromSearch: ['payload'],
+  removeReactionFromSearch: ['payload'],
+  sharePostFromSearch: ['payload'],
+  postReactionSuccessFromSearch: ['payload'],
+  addShareCountFromSearch: ['payload'],
+  removeReactionSuccessFromSearch: ['payload'],
+  followUnfollowFromSearch: ['payload'],
 });
 
 export const SearchTypes = Types;

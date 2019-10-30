@@ -6,14 +6,6 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import CheckBox from 'react-native-checkbox';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-} from 'react-native-chart-kit';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import {

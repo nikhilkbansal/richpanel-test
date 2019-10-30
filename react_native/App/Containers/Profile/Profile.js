@@ -1,12 +1,13 @@
 import React, { Fragment, Component } from 'react';
 import {
-  View, StyleSheet, FlatList, Image, ScrollView, StatusBar,
+  View, StyleSheet, FlatList, Image, ScrollView, StatusBar, processColor
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
 import UserActions from 'App/Stores/User/Actions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
+ 
 import {
   Text, NavigationBar, TextInput, Button, ProgressiveImage, MenuItem
 } from '../../Components';
@@ -14,6 +15,7 @@ import {
   Colors, FontSizes, Fonts, ApplicationStyles,
 } from '../../Theme';
 import CommonFunctions from '../../Utils/CommonFunctions';
+import { XAxis, Grid, LineChart } from 'react-native-svg-charts' 
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
@@ -56,6 +58,9 @@ const styles = StyleSheet.create({
   info: { padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 },
 });
 
+function getRandomColor(){
+  return 'red'
+}
 class Profile extends Component {
   static get propTypes() {
     return {
@@ -83,12 +88,24 @@ class Profile extends Component {
     this.navListener.remove();
   }
 
+  getEditIcon({ iconColor, style = {}, buttonWrapperStyle = {}, onPress }){
 
+      return <Button 
+      icon='md-create'
+      iconColor={iconColor}
+      iconSize={wp('5.5%')}
+      onPress={onPress}
+      style={[{width:wp('8%'), height: wp('8%'), position: 'absolute', top: hp('1%'), right: wp('2%')}, style]}
+      buttonWrapperStyle={[{padding:wp('2%'), borderRadius: wp('10%')},buttonWrapperStyle]}
+      />
+ 
+  }
   render() {
     const { navigation, profile, logoutInit } = this.props;
+    const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('EditProfile')} showLeftSection={false} showRightSection rightIcon="md-create" title="Profile" />
+        <NavigationBar {...navigation}      title="Profile" />
         {profile && (
         <ScrollView style={styles.subContainer}>
           <View style={styles.sectionContainer}>
@@ -144,20 +161,35 @@ class Profile extends Component {
                      +9392992929
                 </Text> */}
               </View>
-
-            </View>
+              </View>
+              <this.getEditIcon 
+                      onPress={()=>navigation.navigate('EditProfile')}
+                      style={{right:wp('2%'), borderRadius:wp('10%'), backgroundColor: ApplicationStyles.smokeBackground.color}}
+                      iconColor={ApplicationStyles.lightColor.color}  />
           </View>
-          {/* <View style={[styles.sectionContainer, { marginTop: 10 }]}>
-            <Button
-              style={{
-                borderRadius: wp('2%'),
-                paddingHorizontal: wp('1%'),
-              }}
-              onPress={() => navigation.navigate('HomePage')}
-              title="My Donations"
-            />
-          </View> */}
-            {profile.role ==='duser' ? <View style={[styles.sectionContainer, ]}>
+          <View style={[styles.sectionContainer,{flex:1, padding: wp('3%')} ]}>
+            <Text style={{ ...ApplicationStyles.avatarSubtitle, textAlign: 'center'}}>This month's handouts</Text>
+            <LineChart
+              style={{ height: 200 }}
+              data={ [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]}
+              showGrid
+              animate
+              animationDuration={400}
+              contentInset={{ top: hp('1%'), bottom: hp('1%') }}
+              // curve={shape.curveNatural}
+              svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}
+              >
+                <Grid />
+            </LineChart>
+            <XAxis
+                    style={{ marginHorizontal: -10 }}
+                    data={[50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]}
+                    formatLabel={(value, index) => index}
+                    contentInset={{ left: 10, right: 10 }}
+                    svg={{ fontSize: 10, fill: 'black' }}
+                />
+          </View>
+          {/* {profile.role ==='user' ? <View style={[styles.sectionContainer, ]}>
               <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('Followings')} leftLabel='Followings' />
               <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='My Donations' />
               <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='Recurring Payments' />
@@ -178,66 +210,7 @@ class Profile extends Component {
               <MenuItem leftLabel='Logout' onPress={logoutInit} />
 
             </View>
-            }
-          {/* <View style={{
-            paddingTop: hp('3%'),
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignContent: 'center',
-          }}
-          >
-            <Text style={{ ...ApplicationStyles.avatarTitle }}>
-                     MY POSTS
-            </Text>
-            <Button
-              style={{
-                borderRadius: wp('2%'),
-                alignSelf: 'flex-end',
-                paddingHorizontal: wp('1%'),
-              }}
-              titleStyle={{ ...ApplicationStyles.link }}
-              onPress={() => navigation.navigate('HomePage')}
-              title="See all"
-            />
-          </View>
-
-          <FlatList
-            data={[{ empty: true }, { a: 3 }, { a: 3 }, { a: 3 }, { a: 3 }]}
-            style={{ flex: 1 }}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <View style={{ marginHorizontal: wp('1%') }}>
-                <View style={{
-                  width: wp('30%'),
-                  height: wp('30%'),
-                  borderRadius: wp('3.1%'),
-                  ...ApplicationStyles.elevationS,
-                  overflow: 'hidden',
-                  justifyContent: 'center',
-                  marginVertical: wp('2%'),
-                }}
-                >
-
-
-                  <Image
-                    resizeMode="cover"
-                    source={require('../../Assets/Images/child.jpeg')}
-                  />
-
-
-                </View>
-                <Text style={{ textAlign: 'center', ...ApplicationStyles.info3 }}>Why do we do?</Text>
-              </View>
-
-            )}
-            horizontal
-          />
-          <Button
-            style={styles.loginContainer}
-            onPress={() => navigation.navigate('HomePage')}
-            title="MY DONATIONS"
-          /> */}
+            } */}
 
         </ScrollView>
         )}

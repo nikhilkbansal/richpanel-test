@@ -58,6 +58,13 @@ class AddEvent extends Component {
     } = this.state;
     const { eventCreate } = this.props;
 
+    let keysToValidate = ['title', 'description', 'files','startTime', 'endTime'];
+    const validateForm = TextInput.validateForm(keysToValidate, this.state)
+    if (validateForm) {
+      this.setState({ errors: validateForm });
+      return false;
+    }
+
     const filesUploaded = await UploadFiles(files, { fileType: 'image' });
     const filesIds = filesUploaded.map(o => o._id);
     eventCreate({
@@ -103,10 +110,10 @@ class AddEvent extends Component {
             onChangeText={text => this.updateTextInput('description', text)}
             onSubmitEditing={() => this.passwordRef.current.focus()}
           />
-          <FileSelector label="Add images and videos" onChange={files => this.updateTextInput('files', files)} />
-          <DatePicker label="Event Starts from" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('startTime', text)} />
-          <DatePicker label="Event Ends on" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('endTime', text)} />
-          <LocationSelector label="Location" placeholder="Select location" onChange={text => this.updateTextInput('starts', text)} />
+          <FileSelector error={errors.files} label="Add images and videos" onChange={files => this.updateTextInput('files', files)} />
+          <DatePicker error={errors.startTime} label="Event Starts from" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('startTime', text)} />
+          <DatePicker error={errors.endTime} label="Event Ends on" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('endTime', text)} />
+          <LocationSelector error={errors.location}  label="Location" placeholder="Select location" onChange={text => this.updateTextInput('starts', text)} />
           <Button
             style={styles.loginContainer}
             onPress={this.addEvent}

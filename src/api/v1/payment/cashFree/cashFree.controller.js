@@ -33,16 +33,23 @@ exports.saveTransaction = async (req, res, next) => {
   try {
     const { user } = req;
     const {
-      postId, orderId, txType, txData,
+      postId, orderId, receiverId, txType, txData,
     } = req.body;
 
     const post = Post.findById(postId);
     const orderDetail = await CashFree.getOrderDetails({
       orderId,
     });
+
+    if (txType === 'userToPOCampaign') {
+      console.log('chlaa');
+      await Post.updateRaisedMoney(postId, parseFloat(orderDetail.details.orderAmount));
+    }
+
     await Transaction.add({
       senderId: user._id,
-      receiverId: post.userId,
+      postId: postId || null,
+      receiverId: receiverId || post.userId,
       amount: parseFloat(orderDetail.details.orderAmount),
       txStatus: _.camelCase(orderDetail.details.orderStatus),
       txData: JSON.parse(txData),

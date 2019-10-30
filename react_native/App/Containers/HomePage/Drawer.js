@@ -87,16 +87,16 @@ class Drawer extends Component {
     return (
       <ScrollView style={{ ...ApplicationStyles.elevationXLL, flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color}}>
         <View style={{ backgroundColor:ApplicationStyles.lightColor.color, flex:1,paddingHorizontal: wp('4%'), flexDirection: 'row', width: '100%',paddingTop: hp('15%'), paddingBottom:hp('2%') }}>
-          <AvatarImage style={{}} source={{ uri: CommonFunctions.getFile("userPicture", 'avatar', true) }}></AvatarImage>
+          <AvatarImage style={{}} source={{ uri: CommonFunctions.getFile(profile.picture, 'avatar', true) }}></AvatarImage>
           <View style={{marginLeft: wp('2%')}}> 
             <Text style={{ ...ApplicationStyles.avatarTitle}}>{ profile && profile.name }</Text>
             <Text style={{ ...ApplicationStyles.info}} onPress={()=>{
               closeDrawer();
-              navigate('NgoProfile');
+              navigate(profile.role === 'ngo' ? 'NgoProfile' : "Profile");
               }}>See Profile</Text>
           </View>
         </View>
-        { false ? <View style={{marginTop: hp('3%')}}>
+        { profile.role === 'user' ? <View style={{marginTop: hp('3%')}}>
         { this.getMenuItem('Followings', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}) }
         { this.getMenuItem('Handouts', {name: 'hand-paper-o', family: 'FontAwesome', size: wp('5%')}) }
         { this.getMenuItem('Donations', {name: 'money', family: 'FontAwesome', size: wp('4.9%')}) }

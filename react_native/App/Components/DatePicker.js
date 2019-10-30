@@ -62,7 +62,7 @@ class DatePicker extends React.Component {
   render() {
     const { dateTime } = this.state;
     const {
-      label, placeholder,
+      label, placeholder, error
     } = this.props;
     return (
       <View style={styles.container}>
@@ -79,7 +79,10 @@ class DatePicker extends React.Component {
             : <Text style={[{ ...ApplicationStyles.textInputValue, ...ApplicationStyles.disabledColor }, { padding: 0 }]}>{placeholder}</Text>
           }
         </Button>
-
+      {error &&<Text style={[{ ...ApplicationStyles.textInputLabel, color: ApplicationStyles.warningColor.color }, { padding: 0 }]}>
+      {error}
+      </Text>
+      }
       </View>
     );
   }
@@ -89,11 +92,13 @@ class DatePicker extends React.Component {
 DatePicker.propTypes = {
   label: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
+  error: PropTypes.string,
   onChange: PropTypes.func,
 };
 
 DatePicker.defaultProps = {
   placeholder: '',
+  error: null,
   onChange: () => {},
 };
 

@@ -68,6 +68,7 @@ class Payment extends Component {
   constructor(props) {
     super(props);
     const { orderAmount } = props.navigation.state.params.seamlessParams;
+    console.log(props);
     this.state = {
       errors: {},
       title: '',
@@ -118,6 +119,7 @@ class Payment extends Component {
       const data = await AxiosRequest({
         method: 'post',
         data: {
+          receiverId: paymentMeta.poId,
           postId: paymentMeta._id,
           amount: orderAmount,
           orderId,
@@ -129,6 +131,7 @@ class Payment extends Component {
 
       this.setState({ ...data });
     } catch (e) {
+      console.log('e',e);
       Toast('Some error occured. Please try again later');
     }
   }
@@ -140,7 +143,7 @@ class Payment extends Component {
       const data = await AxiosRequest({
         method: 'post',
         data: {
-          amount: 100,
+          amount: orderAmount,
           intervalType: 'monthly',
           customerEmail: 'ab@ad.com',
           customerPhone: '+911234567890',
@@ -155,7 +158,7 @@ class Payment extends Component {
       console.log('createAndSubscribePlan', data);
       // this.setState({ ...data });
     } catch (e) {
-      Toast('Some error occured. Please try again later');
+      // Toast('Some error occured. Please try again later');
     }
   }
 
@@ -170,7 +173,7 @@ class Payment extends Component {
 
   afterPaymentDone() {
     this.setState({ modalVisible: false },
-      () => navigation.navigate('HomePage'));
+      () => this.props.navigation.navigate('HomePage'));
   }
 
   render() {
@@ -239,7 +242,6 @@ class Payment extends Component {
           tokenData={cfToken}
           {...params.seamlessParams}
           callback={(eventData) => {
-            this.saveTransaction(JSON.stringify(eventData));
             const jsonEventData = JSON.parse(eventData);
             console.log('eventsdataeventsdata', eventData);
             // {"orderId":"INHWMM1569925455","referenceId":"169912",
@@ -248,6 +250,7 @@ class Payment extends Component {
             // "paymentMode":"CREDIT_CARD",
             // "signature":"Prk5z39jbI7BJxuvZ1F3g21+4Q1HGXsyVGU17xfDmkA="}
             if (jsonEventData.txStatus === 'SUCCESS') {
+              this.saveTransaction(JSON.stringify(eventData));
               this.setState({ modalVisible: true });
               setTimeout(this.afterPaymentDone, 5000);
             } else {

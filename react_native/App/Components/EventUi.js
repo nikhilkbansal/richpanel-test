@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import {
-  Image, View, Share, Slider, StyleSheet, FlatList, ScrollView,
+  Image, View, Share, Slider, StyleSheet, FlatList, ScrollView, Clipboard
 } from 'react-native';
 import Video from 'react-native-video';
 import {
@@ -20,6 +20,7 @@ import ReactionsGot from './ReactionsGot';
 import Swiper from './Swiper';
 import Icon from './Icon';
 import { CommonFunctions } from '../Utils';
+import Toast from '../Services/ToastService';
 
 console.log('Avatar', Avatar);
 
@@ -31,9 +32,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: wp('4%'),
     marginBottom: hp('1%'),
+    
   },
 
-  subContainer: { flex: 1, flexDirection: 'row', paddingVertical: hp('2%') },
+  subContainer: { flex: 1, flexDirection: 'row', paddingVertical: hp('2%')  },
   avatarImage: {
     width: wp('12%'), height: wp('12%'), borderRadius: wp('7.5%'), alignSelf: 'center',
   },
@@ -64,8 +66,16 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     borderBottomWidth: StyleSheet.hairlineWidth,
     flex: 1,
+    minHeight: hp('3.8%'),
     paddingVertical: hp('1%'),
     flexDirection: 'row',
+  },
+  commentContainer:{
+    paddingHorizontal: wp('3%'),
+    borderColor: ApplicationStyles.disabledColor.color,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingVertical: hp('1%'),
   },
   ago: {
     ...ApplicationStyles.avatarSubtitle,
@@ -94,16 +104,121 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: hp('1%'),
   },
-  raisedSliderContainer: { backgroundColor: ApplicationStyles.smokeBackground.color, height: hp('0.2%') },
+  raisedSliderContainer: { backgroundColor:ApplicationStyles.smokeBackground.color, height: hp('0.2%') },
   raisedSlider: { backgroundColor: ApplicationStyles.primaryColor.color, width: '56%', height: hp('0.2%') },
-  body: { ...ApplicationStyles.body3, marginBottom: hp('2%') },
+  body: { ...ApplicationStyles.body2, marginBottom: hp('2%') },
   moreStyle: { ...ApplicationStyles.body3, color: ApplicationStyles.primaryColor.color },
   subBody: { padding: wp('2%') },
   raisedMoney: { ...ApplicationStyles.info2, alignContent: 'center', justifyContent: 'center' },
 });
 
-function EventUi({
-  title, description, comment, files, userName, userPicture, createdAt, onViewComments, onPress, containerStyle, theme, onDonatePress,
+function EventUi
+
+// ({
+//   title, description, comment, files, userName, userPicture, createdAt, onViewComments, onPress, containerStyle, theme, onDonatePress,
+// }) {
+//   return (
+//     <View style={styles.container}>
+//       <View style={[styles.subContainer]}>
+//         <AvatarImage
+//           source={{ uri: CommonFunctions.getFile(userPicture, 'avatar', true) }}
+//         />
+//         <View style={[styles.avatarContainer]}>
+//           <View style={styles.avatarName}>
+//             <Text style={ApplicationStyles.avatarTitle}>
+//               {userName}
+//             </Text>
+//             {/* <Text style={[styles.medal]}>
+//               <Icon name="md-medal" size={wp('4%')} color={Colors.golden} style={{ paddingHorizontal: wp('2%') }} />
+//               {' '}
+//             200
+//             </Text> */}
+//           </View>
+//           <View style={styles.agoContainer}>
+//             <Text style={styles.ago}>
+//               { moment(createdAt).fromNow()}
+//             </Text>
+//           </View>
+
+//         </View>
+//         <View style={styles.moreContainer}>
+//           <MenuDropdown
+//             menuTitle={userName}
+//             buttonStyle={[styles.moreWrapperStyle]}
+//             menus={[
+//               { label: isFollowed ? 'Unfollow' : 'Follow', func: () => followUnfollow({ type: 'homePagePosts', isFollowed, followeeId: userId._id }) },
+//               { label: 'Copy Link', func: () => { Clipboard.setString('http://handoutapp.com'); Toast('Copied') } },
+//               { label: 'Report', func: () => {} }]}
+//             >
+//             <Icon name="md-more" size={25} color={ApplicationStyles.darkColor.color} />
+//           </MenuDropdown>
+//         </View>
+//       </View>
+//       <View style={styles.imageContainer}>
+//         <Swiper files={files} />
+//         <View style={styles.userFeedBack}>
+//           <ReactionsGot />
+//           <Text style={{ ...ApplicationStyles.bodySubHeading2 }}>12M Shares</Text>
+//         </View>
+//         <View style={styles.subContainerSecond}>
+//           <View style={styles.userActions}>
+//             <Reaction />
+//             <Button icon="share" iconSize={wp('5.3%')} iconFamily="SimpleLineIcons" style={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
+//           </View>
+//           <View style={styles.titleContainer}>
+//             <Text style={ApplicationStyles.headline2}>{title}</Text>
+//           </View>
+//           <Text style={{ ...ApplicationStyles.bodySubHeading, paddingVertical: hp('0.6%'), alignSelf: 'flex-end' }}>12 Aug to 15 Sep 2019</Text>
+
+
+//         </View>
+//         <View style={styles.subBody}>
+//           <Text style={styles.body}>
+//             {description}
+//             <Text style={styles.moreStyle}> more</Text>
+//           </Text>
+//         </View>
+//         <View style={styles.subBody}>
+//           {comment && comment.length > 0 && (
+//           <View style={{
+//             flexDirection: 'row',
+//           }}
+//           >
+//             <AvatarImage
+//               style={{
+//                 paddingRight: wp('1%'),
+//                 paddingTop: hp('0.57%'),
+//               }}
+//               size={wp('6%')}
+//               source={{ uri: CommonFunctions.getFile(comment[0].userId.userPicture, 'avatar', true) }}
+//             />
+
+
+//             <Text style={{
+//               ...ApplicationStyles.body3, flex: 1, flexWrap: 'wrap',
+//             }}
+//             >
+//               <Text style={{ ...ApplicationStyles.info3 }}>
+//                 {`${comment[0].userId.name} `}
+//               </Text>
+//               {comment[0].comment}
+//             </Text>
+
+//           </View>
+//           )}
+//           <Button
+//             title="View comments"
+//             titleStyle={{ ...ApplicationStyles.body3, textAlign: 'right' }}
+//             onPress={onViewComments}
+//           />
+//         </View>
+//       </View>
+//     </View>
+//   );
+// }
+
+({
+  _id, title, description, isFollowed, files, userId, userName, comment, userPicture,onUserClick, onViewComments, startTime, endTime, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
 }) {
   return (
     <View style={styles.container}>
@@ -111,7 +226,8 @@ function EventUi({
         <AvatarImage
           source={{ uri: CommonFunctions.getFile(userPicture, 'avatar', true) }}
         />
-        <View style={[styles.avatarContainer]}>
+        <Button style={[styles.avatarContainer]} onPress={onUserClick}>
+
           <View style={styles.avatarName}>
             <Text style={ApplicationStyles.avatarTitle}>
               {userName}
@@ -128,16 +244,16 @@ function EventUi({
             </Text>
           </View>
 
-        </View>
+        </Button>
+
         <View style={styles.moreContainer}>
           <MenuDropdown
-            menuTitle="Goong NGO"
+            menuTitle={userName}
             buttonStyle={[styles.moreWrapperStyle]}
             menus={[
-              { label: 'Unfollow', func: () => {} },
-              { label: 'Copy Link', func: () => {} },
-              { label: 'Report', func: () => {} },
-              { label: 'Share', func: () => {} }]}
+              { label: isFollowed ? 'Unfollow' : 'Follow', func: () => followUnfollow() },
+              { label: 'Copy Link', func: () => { Clipboard.setString('http://handoutapp.com'); Toast('Copied') } },
+              { label: 'Report', func: () => {} }]}
           >
             <Icon name="md-more" size={25} color={ApplicationStyles.darkColor.color} />
           </MenuDropdown>
@@ -146,48 +262,61 @@ function EventUi({
       <View style={styles.imageContainer}>
         <Swiper files={files} />
         <View style={styles.userFeedBack}>
-          <ReactionsGot />
-          <Text style={{ ...ApplicationStyles.bodySubHeading2 }}>12M Shares</Text>
+          <ReactionsGot reactionsCount={reactionsCount} topThreeReactions={topThreeReactions} />
+          {sharesCount > 0 && (
+          <Text style={{ ...ApplicationStyles.bodySubHeading2 }}>
+            {CommonFunctions.numberToReadable(sharesCount)}
+            {' '}
+            {CommonFunctions.getPluralString('Share', sharesCount)}
+          </Text>
+          )}
         </View>
         <View style={styles.subContainerSecond}>
           <View style={styles.userActions}>
-            <Reaction />
-            <Button icon="share" iconSize={wp('5.3%')} iconFamily="SimpleLineIcons" style={styles.reaction} onLongPress={() => alert('longPress')} onPress={() => alert('shortPress')} />
+            <Reaction active={howUserReacted} onReactionRemovePress={() => onReactionRemovePress({ _id })} onReactionPress={(reaction = 'like') => onReactionPress({ _id, reaction })} />
+            <Button 
+              icon='donate'
+              iconSize={wp('6%')}
+              iconColor={ApplicationStyles.darkColor.color}
+              iconFamily='custom' 
+              style={styles.reaction} 
+              onPress={onDonatePress} />
+            <Button icon="share" iconSize={wp('5.3%')} iconFamily="SimpleLineIcons" style={styles.reaction} onPress={onSharePress} />
+
           </View>
           <View style={styles.titleContainer}>
             <Text style={ApplicationStyles.headline2}>{title}</Text>
           </View>
-          <Text style={{ ...ApplicationStyles.bodySubHeading, paddingVertical: hp('0.6%'), alignSelf: 'flex-end' }}>12 Aug to 15 Sep 2019</Text>
-
-
+          <Text style={{ ...ApplicationStyles.bodySubHeading, paddingVertical: hp('0.6%'), alignSelf: 'flex-end' }}>{moment(startTime).format('DD MMM')} to {moment(endTime).format('DD MMM YYYY')}</Text>
         </View>
         <View style={styles.subBody}>
-          <Text style={styles.body}>
+          <Text style={styles.body} maxLength={wp('40%')}>
             {description}
-            <Text style={styles.moreStyle}> more</Text>
           </Text>
         </View>
-        <View style={styles.subBody}>
+        <View style={styles.commentContainer}>
+
+        {/* <View style={styles.subBody}> */}
           {comment && comment.length > 0 && (
           <View style={{
             flexDirection: 'row',
           }}
           >
-            <AvatarImage
+            {/* <AvatarImage
               style={{
                 paddingRight: wp('1%'),
                 paddingTop: hp('0.57%'),
               }}
               size={wp('6%')}
               source={{ uri: CommonFunctions.getFile(comment[0].userId.userPicture, 'avatar', true) }}
-            />
+            /> */}
 
 
             <Text style={{
-              ...ApplicationStyles.body3, flex: 1, flexWrap: 'wrap',
+              ...ApplicationStyles.body, flex: 1, flexWrap: 'wrap',
             }}
             >
-              <Text style={{ ...ApplicationStyles.info3 }}>
+              <Text style={{ ...ApplicationStyles.avatarTitle }}>
                 {`${comment[0].userId.name} `}
               </Text>
               {comment[0].comment}
@@ -197,7 +326,7 @@ function EventUi({
           )}
           <Button
             title="View comments"
-            titleStyle={{ ...ApplicationStyles.body3, textAlign: 'right' }}
+            titleStyle={{ ...ApplicationStyles.button2, textAlign: 'right' }}
             onPress={onViewComments}
           />
         </View>
@@ -205,6 +334,7 @@ function EventUi({
     </View>
   );
 }
+
 
 EventUi.propTypes = {
   title: PropTypes.string.isRequired,

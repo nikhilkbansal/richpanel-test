@@ -236,6 +236,7 @@ userSchema.statics = {
     const options = omitBy({
       _id, $text, causeSupported, role,
     }, isNil);
+    console.log(options);
     return this.find(options).sort({ createdAt: -1 })
       .skip(skip)
       .limit(perPage)

@@ -51,7 +51,7 @@ class MenuDropdown extends React.Component {
 
   render() {
     const { modalVisible, label } = this.state;
-    const defaultMenus = [{ label: 'Cancel', func: this.closePicker }];
+    const defaultMenus = [];
     const {
       placeholder, menus, menuTitle, children, containerStyle, buttonStyle, modalStyle, menuItemStyle,
     } = this.props;
