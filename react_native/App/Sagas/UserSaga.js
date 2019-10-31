@@ -74,7 +74,7 @@ export function* register({ payload }) {
       NavigationService.goBack();
       Toast('We have received your request and will contact you soon for verification process',  4000);
     } else {
-      NavigationService.navigate('HomePage');
+      NavigationService.navigate('Search', {showWelcomeModal: true});
       yield put(userActions.putUserInfo({ ...data, isLoggedIn: true }));
     }
   } catch (e) {
@@ -92,8 +92,8 @@ export function* followUnFollow({ payload }) {
     };
     yield call(httpClient, payloadData);
     if (payload.type === 'homePagePosts') {
-      yield put(postActions.followUnfollow(payload));
-    } else if  (payload.type === 'homePageEvents'){
+      yield put(postActions.followUnfollowPost(payload));
+    } else if (payload.type === 'homePageEvents'){
       yield put(eventActions.followUnfollowEvent(payload));
     } else {
       yield put(searchActions.followUnfollowFromSearch(payload));

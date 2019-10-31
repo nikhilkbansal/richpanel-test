@@ -50,8 +50,10 @@ class Post extends Component {
     const { getHomePosts } = this.props;
     this.navListener = this.props.navigation.addListener('didFocus', () => {
       getHomePosts();
-      StatusBar.setBarStyle('light-content');
+      StatusBar.setBarStyle('dark-content');
       StatusBar.setBackgroundColor(ApplicationStyles.primaryColor.color);
+      StatusBar.setHidden(false, true); 
+
     });
   }
 
@@ -90,10 +92,10 @@ class Post extends Component {
 
   render() {
 
-    const {  navigation, homePosts  } = this.props;
+    const {  navigation, homePosts, profile  } = this.props;
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color}}>
-        <NavigationBar {...navigation} leftFunction={()=>navigation.openDrawer()} leftIcon={'md-menu'} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={true} showRightSection rightIcon="md-add" title="Home"/>
+        <NavigationBar {...navigation} leftFunction={()=>navigation.openDrawer()} leftIcon={'md-menu'} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={true} showRightSection={profile && profile.role ==='ngo'} rightIcon="md-add" title="Home"/>
         {homePosts.length < 1 
           ? <EmptyState message='There are no posts to show'> 
             Tip: Follow some Philanthropy organizations from <Text onPress={()=>navigation.navigate('Search')} style={{...ApplicationStyles.button2, textDecorationLine: 'underline', color: ApplicationStyles.grayishBackground.color, textAlign:'center'}}>search page</Text>

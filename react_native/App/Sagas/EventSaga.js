@@ -32,7 +32,7 @@ export function* getHomeEvents() {
       method: 'get',
       url: 'event/homepageEvents',
     };
-    const data = yield call(httpClient, payloadData);
+    const data = yield call(httpClient, payloadData, 'default', false);
     yield put(eventActions.putHomeEvents(data));
   } catch (e) {
     // console.log('eee', e);

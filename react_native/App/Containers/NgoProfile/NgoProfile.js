@@ -301,7 +301,7 @@ class NgoProfile extends Component {
             <this.getEditIcon 
               onPress={()=>navigation.navigate('PoSlider')}
               style={{borderRadius:wp('10%'), backgroundColor: ApplicationStyles.smokeBackground.color}}
-              iconColor={ApplicationStyles.lightColor.color}  />
+              iconColor={ApplicationStyles.disabledColor.color}  />
             <View style={styles.sectionSubContainer}
             >
               <View style={styles.avatarContainer}
@@ -331,7 +331,7 @@ class NgoProfile extends Component {
                     : <this.getEditIcon 
                       onPress={()=>navigation.navigate('EditProfile')}
                       style={{right:0, borderRadius:wp('10%'), backgroundColor: ApplicationStyles.smokeBackground.color}}
-                      iconColor={ApplicationStyles.lightColor.color}  />
+                      iconColor={ApplicationStyles.disabledColor.color}  />
                     }
                     </View>
                     <Text style={[ApplicationStyles.bodySubHeading, { flex: 1 }]}>
@@ -388,7 +388,7 @@ class NgoProfile extends Component {
             <View style={[styles.userInfo, { paddingTop: hp('0.1%') }]}>
               <this.getEditIcon 
                 onPress={()=>navigation.navigate('OrgInfo')}
-                iconColor={ApplicationStyles.lightColor.color}
+                iconColor={ApplicationStyles.disabledColor.color}
                 style={{bottom: hp('1%'), top:null, borderRadius:wp('10%'), backgroundColor: ApplicationStyles.smokeBackground.color}}
               />
  

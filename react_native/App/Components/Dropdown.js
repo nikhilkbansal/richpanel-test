@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     paddingTop: hp('0.4%'),
     paddingBottom: hp('1%'),
     flex: 1,
-    borderBottomWidth: StyleSheet.hairlineWidth * 2,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: ApplicationStyles.disabledColor.color,
   },
 });

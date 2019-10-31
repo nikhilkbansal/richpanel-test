@@ -52,6 +52,7 @@ class Event extends Component {
       getHomeEvents();
       StatusBar.setBarStyle('light-content');
       StatusBar.setBackgroundColor(ApplicationStyles.primaryColor.color);
+      StatusBar.setHidden(false, true);
     });
   }
 
@@ -87,10 +88,10 @@ class Event extends Component {
 
   render() {
 
-    const { navigation, homeEvents  } = this.props;
+    const { navigation, homeEvents, profile  } = this.props;
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color}}>
-        <NavigationBar  leftFunction={()=>navigation.openDrawer()} leftIcon={'md-menu'}  {...navigation} rightButtonAction={() => navigation.navigate('AddEvent')}  showRightSection rightIcon="md-add" title="Events"  />
+        <NavigationBar  leftFunction={()=>navigation.openDrawer()} leftIcon={'md-menu'}  {...navigation} rightButtonAction={() => navigation.navigate('AddEvent')}  showRightSection={profile && profile.role ==='ngo'} rightIcon="md-add" title="Events"  />
       
            {homeEvents.length < 1 
           ? <EmptyState message='There are no events to show'> 

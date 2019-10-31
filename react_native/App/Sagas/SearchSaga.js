@@ -10,6 +10,10 @@ import httpClient from './HttpClient';
 export function* getSearch({ payload }) {
   try {
     console.log('payload', payload);
+    if(!payload.term){
+      delete payload.term;
+    }
+
     const payloadData = {
       method: 'get',
       params: {
@@ -58,7 +62,7 @@ export function* postReaction({ payload }) {
         itemType: 'post',
       },
     };
-    yield call(httpClient, payloadData, 'default', 'false');
+    yield call(httpClient, payloadData, 'default', false);
     yield put(searchActions.postReactionSuccessFromSearch(payload));
   } catch (e) {
     console.log('eee', e);
@@ -76,7 +80,7 @@ export function* share({ payload }) {
         ...payload,
       },
     };
-    yield call(httpClient, payloadData, 'default', 'false');
+    yield call(httpClient, payloadData, 'default', false);
     yield put(searchActions.addShareCountFromSearch(payload));
   } catch (e) {
     // catch errors here
@@ -93,7 +97,7 @@ export function* removeReaction({ payload }) {
         itemId: payload._id,
       },
     };
-    yield call(httpClient, payloadData, 'default', 'false');
+    yield call(httpClient, payloadData, 'default', false);
     yield put(searchActions.removeReactionSuccessFromSearch(payload));
   } catch (e) {
     console.log('eee', e);

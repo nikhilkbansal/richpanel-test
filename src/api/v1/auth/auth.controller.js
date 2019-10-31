@@ -49,7 +49,9 @@ exports.register = async (req, res, next) => {
     }
     let isActiveCondition = {};
     if (req.body.role === 'ngo') {
-      isActiveCondition = { isActive: false };
+      // commenting it for now
+      // isActiveCondition = { isActive: false };
+      isActiveCondition = { isActive: true };
     }
     const user = await (new User({ ...req.body, ...isActiveCondition })).save();
     const userTransformed = user.transform();

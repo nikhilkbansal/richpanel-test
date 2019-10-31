@@ -165,7 +165,7 @@ class Profile extends Component {
               <this.getEditIcon 
                       onPress={()=>navigation.navigate('EditProfile')}
                       style={{right:wp('2%'), borderRadius:wp('10%'), backgroundColor: ApplicationStyles.smokeBackground.color}}
-                      iconColor={ApplicationStyles.lightColor.color}  />
+                      iconColor={ApplicationStyles.disabledColor.color}  />
           </View>
           <View style={[styles.sectionContainer,{flex:1, padding: wp('3%')} ]}>
             <Text style={{ ...ApplicationStyles.avatarSubtitle, textAlign: 'center'}}>This month's handouts</Text>

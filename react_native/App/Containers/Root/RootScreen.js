@@ -74,7 +74,7 @@ const AppNav = createAppContainer(createStackNavigator(
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'HomePage',
+    initialRouteName: 'LogIn',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },
@@ -101,7 +101,7 @@ class RootScreen extends Component {
   componentDidMount() {
     // Run the startup saga when the application is starting
     const { startUp } = this.props;
-    // startUp();
+    startUp();
   }
 
   render() {

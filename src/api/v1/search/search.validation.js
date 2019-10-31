@@ -7,7 +7,8 @@ module.exports = {
     query: {
       page: Joi.number().min(1),
       perPage: Joi.number().min(1).max(100),
-      term: Joi.string(),
+      term: Joi.any(),
+      itemId: Joi.string(),
       type: Joi.string().valid(['all', 'ngo', 'post', 'event']).default('post'),
     },
   },

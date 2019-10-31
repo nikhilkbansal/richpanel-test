@@ -28,7 +28,7 @@ export function* getHomePosts() {
       method: 'get',
       url: 'post/homepagePosts',
     };
-    const data = yield call(httpClient, payloadData);
+    const data = yield call(httpClient, payloadData, 'default', false);
     yield put(postActions.putHomePosts(data));
   } catch (e) {
     console.log('eee', e);

@@ -19,7 +19,7 @@ const { handler: errorHandler } = require('../../middlewares/error');
 exports.getSearch = async (req, res, next) => {
   try {
     const {
-      term, type, page, perPage, filterCauseSupported,
+      term, type, page, perPage, filterCauseSupported, itemId,
     } = req.query;
     const { user } = req;
     const all = [];
@@ -38,38 +38,40 @@ exports.getSearch = async (req, res, next) => {
     switch (type) {
       case 'all':
         posts = await Post.list({
-          $text: { $search: term }, ...filteredCauseSupported, page, perPage, score: { $meta: 'textScore' },
+          $text: { $search: term }, ...filteredCauseSupported, userId: { $nin: [user.id] }, page, perPage, score: { $meta: 'textScore' },
         });
         events = await Event.list({
-          $text: { $search: term }, ...filteredCauseSupported, page, perPage, score: { $meta: 'textScore' },
+          $text: { $search: term }, ...filteredCauseSupported, userId: { $nin: [user.id] }, page, perPage, score: { $meta: 'textScore' },
         });
         if (filterCauseSupported && type !== 'ngo') {
           filteredCauseSupported = { causeSupported: filterCauseSupported };
         }
         ngos = await User.list({
-          role: 'ngo', $text: { $search: term }, page, perPage, ...filteredCauseSupported, score: { $meta: 'textScore' },
+          role: 'ngo', $text: { $search: term }, _id: { $nin: [user.id] }, page, perPage, ...filteredCauseSupported, score: { $meta: 'textScore' },
         });
 
         break;
 
-      case 'post':
+      case 'post': {
+        const singleItemCondition = itemId ? { _id: itemId } : { $text: { $search: term } };
         posts = await Post.list({
-          $text: { $search: term }, ...filteredCauseSupported, page, perPage, score: { $meta: 'textScore' },
+          ...filteredCauseSupported, ...singleItemCondition, userId: { $nin: [user.id] }, page, perPage, score: { $meta: 'textScore' },
         });
-        break;
+        break; }
 
-      case 'event':
+      case 'event': {
+        const singleItemCondition = itemId ? { _id: itemId } : { $text: { $search: term } };
         events = await Event.list({
-          $text: { $search: term }, ...filteredCauseSupported, page, perPage, score: { $meta: 'textScore' },
+          ...filteredCauseSupported, ...singleItemCondition, userId: { $nin: [user.id] }, page, perPage, score: { $meta: 'textScore' },
         });
         break;
-
+      }
       case 'ngo':
         if (filterCauseSupported && type !== 'ngo') {
           filteredCauseSupported = { causeSupported: filterCauseSupported };
         }
         ngos = await User.list({
-          role: 'ngo', $text: { $search: term }, page, perPage, ...filteredCauseSupported, score: { $meta: 'textScore' },
+          role: 'ngo', $text: { $search: term }, _id: { $nin: [user.id] }, page, perPage, ...filteredCauseSupported, score: { $meta: 'textScore' },
         });
         break;
 
@@ -128,8 +130,11 @@ exports.postsRecommendation = async (req, res, next) => {
     const { user, query } = req;
     const followers = await Follow.getFollowees(user.id);
     const followeeIds = followers.map(o => o.followeeId);
+    console.log('followeeIds', followeeIds);
     const posts = await Post.list({
-      userId: { $nin: followeeIds },
+      userId: { $nin: [...followeeIds, user.id] },
+      $or: [{ campaignEndDate: { $gte: new Date() } },
+        { campaignEndDate: { $exists: false } }],
       ...query,
     });
     res.json(posts);
@@ -144,7 +149,8 @@ exports.eventsRecommendation = async (req, res, next) => {
     const followers = await Follow.getFollowees(user.id);
     const followeeIds = followers.map(o => o.followeeId);
     const events = await Event.list({
-      userId: { $nin: followeeIds },
+      userId: { $nin: [...followeeIds, user.id] },
+      endTime: { $gte: new Date() },
       ...query,
     });
     res.json(events);
@@ -161,7 +167,7 @@ exports.poRecommendation = async (req, res, next) => {
     const followeeIds = followers.map(o => o.followeeId);
     const users = await User.list({
       ...query,
-      _id: { $nin: followeeIds },
+      _id: { $nin: [...followeeIds, user.id] },
       role: 'ngo',
     });
     res.json(users);

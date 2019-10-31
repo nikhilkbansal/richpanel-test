@@ -81,5 +81,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [PostTypes.POST_REACTION_SUCCESS]: postReaction,
   [PostTypes.REMOVE_REACTION_SUCCESS]: removeReaction,
   [PostTypes.ADD_SHARE_COUNT]: addShareCount,
-  [PostTypes.FOLLOW_UNFOLLOW]: followUnfollow,
+  [PostTypes.FOLLOW_UNFOLLOW_POST]: followUnfollow,
 });

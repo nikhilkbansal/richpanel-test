@@ -211,7 +211,7 @@ const DrawerNavigator = createDrawerNavigator({
   drawerType: 'slide',
   edgeWidth: wp('20%'),
   drawerBackgroundColor: ApplicationStyles.lightColor.color,
-  hideStatusBar:true,
+  hideStatusBar: true,
   overlayColor: 0.5
 });
 

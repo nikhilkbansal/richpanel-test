@@ -60,30 +60,7 @@ class Drawer extends Component {
   }
   render() {
     const { navigation: { navigate, closeDrawer }, profile } = this.props;
-  /**
-   * User pic,name with edit profile icon
-   * Followings
-   * Handouts
-   * Donations (With recurring)
-   * Settings
-   * About Us
-   * Contact Us
-   * 
-   * 
-   * User pic,name with edit profile icon
-   * Followers
-   * Organization info
-   * Carousel
-   * Posts
-   * Events
-   * Jobs
-   * Shop
-   * Analytics
-   * Donations
-   * Settings
-   * About Us
-   * Contact Us
-   */
+    if(!profile) return null;
     return (
       <ScrollView style={{ ...ApplicationStyles.elevationXLL, flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color}}>
         <View style={{ backgroundColor:ApplicationStyles.lightColor.color, flex:1,paddingHorizontal: wp('4%'), flexDirection: 'row', width: '100%',paddingTop: hp('15%'), paddingBottom:hp('2%') }}>
@@ -92,19 +69,20 @@ class Drawer extends Component {
             <Text style={{ ...ApplicationStyles.avatarTitle}}>{ profile && profile.name }</Text>
             <Text style={{ ...ApplicationStyles.info}} onPress={()=>{
               closeDrawer();
-              navigate(profile.role === 'ngo' ? 'NgoProfile' : "Profile");
+              navigate(profile && profile.role === 'ngo' ? 'NgoProfile' : "Profile");
               }}>See Profile</Text>
           </View>
         </View>
-        { profile.role === 'user' ? <View style={{marginTop: hp('3%')}}>
-        { this.getMenuItem('Followings', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}) }
+        { profile && profile.role === 'user' ? <View style={{marginTop: hp('3%')}}>
+        { this.getMenuItem('Followings', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}, ()=> navigate('Followings')) }
         { this.getMenuItem('Handouts', {name: 'hand-paper-o', family: 'FontAwesome', size: wp('5%')}) }
-        { this.getMenuItem('Donations', {name: 'money', family: 'FontAwesome', size: wp('4.9%')}) }
+        { this.getMenuItem('Donations', {name: 'money', family: 'FontAwesome', size: wp('4.9%')}, ()=> navigate('MyDonations')) }
         { this.getMenuItem('Settings', {name: 'setting', family: 'AntDesign', size: wp('5.4%')}, ()=> navigate('Settings')) }
         </View>
         :<View style={{marginTop: hp('3%')}}>
         { this.getMenuItem('Followers', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}) }
         { this.getMenuItem('Handouts', {name: 'hand-paper-o', family: 'FontAwesome', size: wp('5%')}) }
+        { this.getMenuItem('Donations', {name: 'money', family: 'FontAwesome', size: wp('4.9%')}, ()=> navigate('MyDonations',{forPo: true})) }
         { this.getMenuItem('Posts', {name: 'md-list', family: null, size: wp('5.4%')}) }
         { this.getMenuItem('Events', {name: 'md-time', family: null, size: wp('5.4%')}) }
         { this.getMenuItem('Jobs', {name: 'file', family: 'Octicons', size: wp('5.4%')}) }

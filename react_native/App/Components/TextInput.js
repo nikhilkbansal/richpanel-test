@@ -2,12 +2,13 @@ import * as React from 'react';
 import { View, TextInput as RNTextInput, StyleSheet } from 'react-native';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+ 
 import { flush } from 'redux-saga/effects';
 import TextInputMask from 'react-native-text-input-mask';
 import Button from './Button';
 import Text from './Text';
+import Icon from './Icon';
 import {
   Colors, ApplicationStyles, Fonts, FontSizes,
 } from '../Theme';
@@ -72,7 +73,7 @@ class TextInput extends React.Component {
 
   eyeButton(icon = 'ios-eye') {
     return (
-      <Button style={{ position: 'absolute', right: 0, top: hp('3%') }} onClick={this.toggleSecureEntry}>
+      <Button style={{ position: 'absolute', right: 0, top: hp('3%') }} onPress={this.toggleSecureEntry}>
         <Icon name={icon} size={ApplicationStyles.iconSize} color={ApplicationStyles.disabledColor.color} />
       </Button>
     );
@@ -88,7 +89,7 @@ class TextInput extends React.Component {
     const {
       label, numberOfLines, multiline, secureTextEntry, error,
       placeholder, onChangeText, returnKeyType, textInputRef, onSubmitEditing,
-      containerStyle, inputStyle,
+      containerStyle, inputStyle, rightIcon, leftIcon, 
       mask, optional,
       value, ...props
     } = this.props;
@@ -164,6 +165,14 @@ class TextInput extends React.Component {
         {error && <Text style={[{ ...ApplicationStyles.textInputLabel }, { ...ApplicationStyles.warningColor }]}>{error}</Text>}
         {false && showEyeIcon && secureTextEntry && this.eyeButton('ios-eye') }
         {false && showEyeIcon && secureTextEntry && this.eyeButton('ios-eye-off') }
+        { leftIcon && leftIcon.name &&  <Button style={{ position: 'absolute', left: wp('6%'), top: hp('1.3%') }} onPress={leftIcon.onPress}>
+            <Icon name={leftIcon.name} iconFamily={leftIcon.family} size={leftIcon.size || ApplicationStyles.iconSize} color={ApplicationStyles.disabledColor.color} />
+          </Button>
+        }
+         { rightIcon && rightIcon.name &&  <Button style={{ position: 'absolute', right: wp('5%'), top: hp('1.3%') }} onPress={rightIcon.onPress}>
+            <Icon name={rightIcon.name} iconFamily={rightIcon.family} size={rightIcon.size || ApplicationStyles.iconSize} color={ApplicationStyles.disabledColor.color} />
+          </Button>
+        }
 
       </View>
     );
@@ -187,6 +196,8 @@ TextInput.propTypes = {
   inputStyle: PropTypes.object,
   mask: PropTypes.string,
   optional: PropTypes.bool,
+  rightIcon: PropTypes.object,
+  leftIcon: PropTypes.object
 };
 
 TextInput.defaultProps = {
@@ -202,6 +213,8 @@ TextInput.defaultProps = {
   textInputRef: 'input',
   onSubmitEditing: Function,
   containerStyle: {},
+  rightIcon: {},
+  leftIcon: {},
   inputStyle: {},
   mask: null,
   optional: false,

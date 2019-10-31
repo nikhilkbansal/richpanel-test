@@ -137,7 +137,7 @@ class Followings extends Component {
         height: hp('10.5%'),
         paddingHorizontal: wp('5.5%'),
         paddingVertical: hp('1%'),
-        marginVertical: hp('1%'),
+        marginVertical: hp('0.8%'),
         backgroundColor: ApplicationStyles.lightBackground.color
       }}
       >
@@ -210,7 +210,7 @@ class Followings extends Component {
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} title="Followings" />
-        {followees.length < 221 ? <EmptyState message='There are no followings to show'> 
+        {followees.length < 1 ? <EmptyState message='There are no followings to show'> 
           Tip: Follow some Philanthropy organizations from <Text onPress={()=>navigation.navigate('Search')}  style={{...ApplicationStyles.button2, textDecorationLine: 'underline', color: ApplicationStyles.grayishBackground.color, textAlign:'center'}}>search page</Text>
         </EmptyState> 
         :<View style={{   flex:1, height: hp('93%'),   }}>

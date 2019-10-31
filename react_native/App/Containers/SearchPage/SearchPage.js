@@ -13,6 +13,7 @@ import { TextInput, Text, Button, ProgressiveImage, EmptyState } from '../../Com
 import ApplicationStyles from '../../Theme/ApplicationStyles';
 import CommonFunctions from '../../Utils/CommonFunctions';
 import AxiosRequest from '../../Services/HttpRequestService';
+import Dialog, { DialogContent, SlideAnimation, DialogTitle } from 'react-native-popup-dialog';
 
 const styles = StyleSheet.create({
   subContainer: { flex: 1, flexDirection: 'row', paddingVertical: hp('0.9%') },
@@ -62,13 +63,17 @@ class SearchPage extends Component {
 
   constructor(props) {
     super(props);
+    const { params } = props.navigation.state;
     this.state = {
       term: '',
       selectedTab: 'Posts',
+      wentToSeeAll: false,
+      welcomeModal: params && params.showWelcomeModal,
       postRecommendations: [],
       poRecommendations:[],
       eventRecommendations: []
     };
+    this.termRef = React.createRef();
     this.searchSection = this.searchSection.bind(this);
     this.renderPostItem = this.renderPostItem.bind(this);
     this.getSearch = this.getSearch.bind(this);
@@ -81,20 +86,25 @@ class SearchPage extends Component {
 
   componentDidMount() {
     const { putAutoCompleteResults } = this.props;
-    const { term } = this.state;
+    
     this.navListener = this.props.navigation.addListener('didFocus', () => {
+      
+      if(!this.state.wentToSeeAll){
       this.setState({
         postRecommendations: [],
         poRecommendations:[],
         eventRecommendations: []
+      },()=>{
+        this.getPostRecommendations();
+        this.getEventRecommendations();
+        this.getPoRecommendations();
       })
+      }else{
+        this.setState({ wentToSeeAll: false })
+      } 
 
-      if (term.length === 0) { putAutoCompleteResults([]); }
-      this.getPostRecommendations();
-      this.getEventRecommendations();
-      this.getPoRecommendations();
-      StatusBar.setBarStyle('dark-content');
-      StatusBar.setBackgroundColor(ApplicationStyles. smokeBackground.color);
+      if (this.state.term.length === 0) { putAutoCompleteResults([]); }
+      StatusBar.setHidden(true, true); 
     });
   }
 
@@ -109,7 +119,7 @@ class SearchPage extends Component {
     this.setState({ term });
     if (term.length > 1) {
       getSearch({ term, type: 'all' });
-    } else {
+    } else { 
       putAutoCompleteResults([]);
     }
   }
@@ -168,7 +178,7 @@ class SearchPage extends Component {
         <Text style={[ApplicationStyles.bodySubHeading2, { textAlign: 'left', paddingHorizontal: wp('2%') }]}>{title}</Text>
         <FlatList
           data={items}
-          renderItem={type === 'ngo' ? this.renderItem : this.renderPostItem}
+          renderItem={type === 'ngo' ?  this.renderItem : (data)=>this.renderPostItem({...data, type})}
         />
         <Button title="See all" buttonWrapperStyle={{ textAlign: 'center' }} titleStyle={{ ...ApplicationStyles.primaryColor }} onPress={() => this.openSeeAllScreen(type)} />
       </View>
@@ -176,17 +186,18 @@ class SearchPage extends Component {
   }
 
 
-  openSeeAllScreen(type) {
-    const { navigation } = this.props;
+  openSeeAllScreen(type, itemId = null) {
+    const { navigation, putSeeAllResults } = this.props;
     const { term } = this.state;
-    navigation.navigate('SeeAllSearch', { term, type });
+    this.setState({ wentToSeeAll: true})
+    putSeeAllResults({posts: [], ngos: [], events: []});
+    navigation.navigate('SeeAllSearch', { term: term, type, itemId });
   }
 
 
-  renderPostItem({ item }) {
-    const { navigation } = this.props;
+  renderPostItem({ item, type }) { 
     return (
-      <Button buttonWrapperStyle={[styles.subContainer]}>
+      <Button buttonWrapperStyle={[styles.subContainer]} onPress={()=>this.openSeeAllScreen(type,  item._id)}>
         <ProgressiveImage
           style={styles.avatarImage}
           containerStyle={{ backgroundColor: 'transparent'}}
@@ -215,7 +226,7 @@ class SearchPage extends Component {
     const { navigation } = this.props;
 
     return (
-      <Button buttonWrapperStyle={[styles.subContainer]}>
+      <Button buttonWrapperStyle={[styles.subContainer]} onPress={()=> navigation.navigate('NgoProfile', { poUserId: item._id})}>
         <ProgressiveImage
           style={styles.avatarImage}
           containerStyle={{ backgroundColor: 'transparent'}}
@@ -239,8 +250,8 @@ class SearchPage extends Component {
 
 
   render() {
-    const { autoComplete, navigation } = this.props;
-    const { selectedTab, postRecommendations, poRecommendations, eventRecommendations } = this.state;
+    const { autoComplete, navigation, profile } = this.props;
+    const { selectedTab, postRecommendations, welcomeModal, poRecommendations, eventRecommendations, term } = this.state;
     const searchResultExist = (autoComplete.posts && autoComplete.posts.length > 0)
     || (autoComplete.events && autoComplete.events.length > 0)
     || (autoComplete.ngos && autoComplete.ngos.length > 0);
@@ -254,10 +265,29 @@ class SearchPage extends Component {
         backgroundColor: ApplicationStyles. smokeBackground.color,
       }]}
       >
+        <Dialog
+            visible={welcomeModal}
+            dialogAnimation={new SlideAnimation({
+              slideFrom: 'bottom',
+            })}
+            onTouchOutside={() => {
+              this.setState({ welcomeModal: false });
+            }}
+            dialogTitle={<DialogTitle title="Welcome!" textStyle={{ ...ApplicationStyles.textInputLabel }} />}
+          >
+            <DialogContent style={{ width: wp('80%'), height: hp('25%') }}>
+              <View style={{flex:1,flexDirection:'column'}}>
+                <Text style={{...ApplicationStyles.body, textAlign:'center', marginTop: hp('2.5%')}}>Thank you so much {profile && profile.name}, for becoming the part of Handout family. We together make this world a better place for everyone. </Text>
+                <Text style={{...ApplicationStyles.bodySubHeading, textAlign:'center', marginTop: hp('1%')}}>To get started, Please follow some philanthropy organistaions. We have given some suggestions below and you can also search yours.</Text>
+              
+              </View>
+            </DialogContent>
+          </Dialog>
         <TextInput
           placeholder="Search ngos, events, campaign, posts ..."
           numberOfLines={1}
           returnKeyType="search"
+          textInputRef={this.termRef}
           containerStyle={{
             paddingHorizontal: wp('5%'),
             paddingBottom: hp('2%'), 
@@ -266,10 +296,26 @@ class SearchPage extends Component {
             backgroundColor: ApplicationStyles.grayishBackground.color,
             borderWidth: 0,
             verticalAlign: 'center',
-            paddingHorizontal: wp('2%'),
+            paddingLeft: wp('8%'),
+            paddingRight: wp('7.2%'),
+            paddingTop: hp('0.9%'),
+            paddingBottom: hp('1.1%'),
             ...ApplicationStyles.avatarTitle,
           }}
           onChangeText={text => this.getSearch(text)}
+          rightIcon={{
+            name:'cross',
+            family: 'Entypo',
+            size:wp('6.5%'),
+            onPress: ()=>this.getSearch("")
+          }}
+          value={term}
+          leftIcon={{
+            name:'magnifying-glass',
+            family: 'Entypo',
+            size:wp('6%'),
+            onPress: ()=>this.termRef.current.focus()
+          }}
         />
         <View style={{
           marginTop: -hp('1%'),
@@ -322,7 +368,7 @@ class SearchPage extends Component {
                 style={{flex:1,}}
                 data={listItems}
                 renderItem={({ item })=><Button 
-                onPress={()=> navigation.navigate('')}
+                onPress={()=>this.openSeeAllScreen( selectedTab === 'Posts' ? 'post': 'event',  item._id)}
                 style={{
                   width: wp('30%'),
                   margin:wp('1%'),
@@ -406,9 +452,10 @@ class SearchPage extends Component {
 }
 
 export default connect(
-  ({ search: { autoComplete } }) => ({ autoComplete }), {
+  ({ search: { autoComplete }, user: {profile} }) => ({ autoComplete,profile }), {
     getSearch: SearchActions.getSearch,
     getPostRecommendation: SearchActions.getPostRecommendation,
     putAutoCompleteResults: SearchActions.putAutoCompleteResults,
+    putSeeAllResults: SearchActions.putSeeAllResults
   },
 )(SearchPage);

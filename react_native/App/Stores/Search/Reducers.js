@@ -19,6 +19,7 @@ export const putAutoCompleteResults = (state, { payload }) => {
 };
 
 export const putSeeAllResults = (state, { payload }) => {
+console.log(payload);
   const seeAll = payload.posts.length > 0 
     ? payload.posts :  payload.ngos.length > 0 
     ? payload.ngos: payload.events

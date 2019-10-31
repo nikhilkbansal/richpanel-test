@@ -30,6 +30,7 @@ class Notification extends Component {
     this.navListener = this.props.navigation.addListener('didFocus', () => {
       StatusBar.setBarStyle('light-content');
       StatusBar.setBackgroundColor(ApplicationStyles.primaryColor.color);
+      StatusBar.setHidden(false, true);
     });
 
     this.props.getNotifications();

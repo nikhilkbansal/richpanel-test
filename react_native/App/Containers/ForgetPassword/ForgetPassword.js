@@ -61,7 +61,6 @@ class ForgetPassword extends Component {
     const validateForm = TextInput.validateForm(['email'], this.state);
     if (validateForm) {
       this.setState({ errors: validateForm });
-      alert(3434);
       return false;
     }
     forgotPasswordInit({ email });

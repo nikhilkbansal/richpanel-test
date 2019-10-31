@@ -10,7 +10,7 @@ const { Types, Creators } = createActions({
   removeReactionSuccess: ['payload'],
   sharePost: ['payload'],
   addShareCount: ['payload'],
-  followUnfollow: ['payload'],
+  followUnfollowPost: ['payload'],
 });
 
 export const PostTypes = Types;

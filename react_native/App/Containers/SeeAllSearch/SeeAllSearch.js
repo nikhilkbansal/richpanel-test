@@ -9,7 +9,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import ActionButton from 'react-native-action-button';
 import defaultStyle from '../../Theme/ApplicationStyles';
-import {PostUi, Text, NavigationBar, Button, MenuDropdown} from '../../Components';
+import {PostUi, EventUi, Text, NavigationBar, Button, MenuDropdown} from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Dialog, { DialogContent, SlideAnimation } from 'react-native-popup-dialog';
@@ -80,17 +80,19 @@ class Post extends Component {
     this._renderItem = this._renderItem.bind(this);
     this.flatlistItems = this.flatlistItems.bind(this);
     this._renderNgo = this._renderNgo.bind(this);
+    this._renderEventItem = this._renderEventItem.bind(this);
     console.log('thisprops',props);
   }
 
+  
   componentDidMount(){
-    const { getSearch, navigation: { state: { params: { term, type} } } } = this.props;
-    getSearch({ term, type });
+    const { getSearch, navigation: { state: { params: { term, type, itemId} } } } = this.props;
+    getSearch({ term, type, itemId });
   }
 
 
   onShare = async (item) => {
-    const { profile } = this.props;
+    const { profile, sharePost } = this.props;
       Share.open( {
         message:  profile.name+ ' wants you see this post: ' + item.title+'. Use Handout App to make to world a better place for everyone like '+ profile.name +' is doing',
         url: 'com.handout/'+item.title.replace(' ', ''),
@@ -102,10 +104,22 @@ class Post extends Component {
     .catch((err) => { err && console.log(err); });
   };
 
+  _renderEventItem = ({item}) =><EventUi 
+    userName={item.userId.name}
+    followUnfollow={()=>this.props.followUnfollow({ type: 'searchedItems', isFollowed: item.isFollowed , followeeId: item.userId._id })}
+    onSharePress={()=>this.onShare(item)}
+    onReactionPress={this.props.postReaction}
+    onReactionRemovePress={this.props.removeReaction}
+    userPicture={item.userId.picture}
+    onUserClick={()=>this.props.navigation.navigate('NgoProfile',{poUserId:item.userId._id})}
+    onViewComments={()=>this.props.navigation.navigate('Comment',{itemId:item._id, itemType:'event'})}
+    onDonatePress={()=>this.props.navigation.navigate('Donate',{paymentMeta:{_id:item._id, txType:'userToDirectPO'}})}
+    {...item}
+    />;
 
   _renderItem = ({item}) =><PostUi 
     userName={item.userId.name}
-    followUnfollow={()=>this.props.followUnFollow({ type: 'searchedItems', isFollowed: item.isFollowed , followeeId: item.userId._id })}
+    followUnfollow={()=>this.props.followUnfollow({ type: 'searchedItems', isFollowed: item.isFollowed , followeeId: item.userId._id })}
     onSharePress={()=>this.onShare(item)}
     onReactionPress={this.props.postReaction}
     onReactionRemovePress={this.props.removeReaction}
@@ -149,13 +163,15 @@ class Post extends Component {
     </View>
 </View>);
 
+
+
   flatlistItems(data){
     const { navigation: { state: { params: { type} } } } = this.props;
     switch(type){
       case 'ngo':
         return this._renderNgo(data);
       case 'event':
-        return this._renderItem(data);
+        return this._renderEventItem(data);
       default:
           return this._renderItem(data);
     }
@@ -164,10 +180,10 @@ class Post extends Component {
 
   render() {
 
-    const {  seeAll, navigation, navigation: { state: { params: { term } } }  } = this.props;
+    const {  seeAll, navigation, navigation: { state: { params: { term, itemId } } }  } = this.props;
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color}}>
-        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={true}  rightIcon="md-add" title={'Search: ' +term}  />
+        <NavigationBar {...navigation} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={true}  rightIcon="md-add" title={itemId ? '' : `Search: ${term}`}  />
         <View style={{flex:1, }}>
         <FlatList
           data={seeAll} 
@@ -186,6 +202,7 @@ export default connect(
     postReaction: SearchActions.postReactionFromSearch,
     removeReaction: SearchActions.removeReactionFromSearch,
     sharePost: SearchActions.sharePostFromSearch,
+    putSeeAllResults: SearchActions.putSeeAllResults,
     followUnfollow: UserActions.followUnfollow 
   },
 )(Post);
