@@ -99,7 +99,7 @@ exports.getPreferencedPosts = async (req, res, next) => {
 exports.getHomePagePosts = async (req, res, next) => {
   try {
     const { user } = req;
-    const { page, perPage } = req.query;
+    const { page, perPage, skip } = req.query;
     const followers = await Follow.getFollowees(user.id);
     if (!followers || followers.length === 0) {
       res.json([]);
@@ -112,6 +112,7 @@ exports.getHomePagePosts = async (req, res, next) => {
         { campaignEndDate: { $exists: false } }],
       page,
       perPage,
+      skip,
     });
     // const posts = await Post.list({ page, perPage });
     const resultedPosts = await Promise.map(posts, async (post, index) => {

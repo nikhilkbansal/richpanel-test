@@ -5,7 +5,7 @@ module.exports = {
   // GET /v1/search
   getSearch: {
     query: {
-      page: Joi.number().min(1),
+      skip: Joi.number(),
       perPage: Joi.number().min(1).max(100),
       term: Joi.any(),
       itemId: Joi.string(),

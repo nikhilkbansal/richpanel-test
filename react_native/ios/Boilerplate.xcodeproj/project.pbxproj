@@ -85,10 +85,8 @@
 		2C5EA5608DC14458B42CF2CF /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F30AAB6C92744D4B846FFE4 /* Octicons.ttf */; };
 		9FB82093A00A432EAEA594F9 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 780AC092DB3148579037DF00 /* SimpleLineIcons.ttf */; };
 		FEC3A9E39A4A44449C59C781 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67207C9BF45A43CA8143F6FF /* Zocial.ttf */; };
-		AF277AD3FEEC4D0F8D06A0CE /* libRCTVideo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CBEA9434D5E24170B0A845A6 /* libRCTVideo.a */; };
 		723DD4BCDB324F568CFF301E /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 25E782765B084F72AA1920F6 /* libRNImagePicker.a */; };
 		BE35AFCBA612474185184545 /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D4D503A1231493B91B624CB /* libimageCropPicker.a */; };
-		1E9311F490EE48839C9B6727 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E034ACD5958A4DE9BB77CA83 /* libBVLinearGradient.a */; };
 		1B9813E5AAA5431F956FDAF7 /* libRNTextInputMask.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FE549F0A720544C387431FFE /* libRNTextInputMask.a */; };
 		3D68D4C173314978842312E6 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF1AF2CD9794FACAB5A51D5 /* libRNGestureHandler.a */; };
 /* End PBXBuildFile section */
@@ -448,14 +446,10 @@
 		5F30AAB6C92744D4B846FFE4 /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		780AC092DB3148579037DF00 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		67207C9BF45A43CA8143F6FF /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		5BC17C2C0E324CAD8775C524 /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; name = "RCTVideo.xcodeproj"; path = "../node_modules/react-native-video/ios/RCTVideo.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		CBEA9434D5E24170B0A845A6 /* libRCTVideo.a */ = {isa = PBXFileReference; name = "libRCTVideo.a"; path = "libRCTVideo.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		D0627688D73E44CA87F80CA4 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; name = "RNImagePicker.xcodeproj"; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		25E782765B084F72AA1920F6 /* libRNImagePicker.a */ = {isa = PBXFileReference; name = "libRNImagePicker.a"; path = "libRNImagePicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		9AEBC9E9571A4AEBA61E2169 /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; name = "imageCropPicker.xcodeproj"; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		4D4D503A1231493B91B624CB /* libimageCropPicker.a */ = {isa = PBXFileReference; name = "libimageCropPicker.a"; path = "libimageCropPicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		5080700AB3D445D0A51AEEE4 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; name = "BVLinearGradient.xcodeproj"; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		E034ACD5958A4DE9BB77CA83 /* libBVLinearGradient.a */ = {isa = PBXFileReference; name = "libBVLinearGradient.a"; path = "libBVLinearGradient.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		E337DD2F7C484163A0ACA92D /* RNTextInputMask.xcodeproj */ = {isa = PBXFileReference; name = "RNTextInputMask.xcodeproj"; path = "../node_modules/react-native-text-input-mask/ios/RNTextInputMask.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		FE549F0A720544C387431FFE /* libRNTextInputMask.a */ = {isa = PBXFileReference; name = "libRNTextInputMask.a"; path = "libRNTextInputMask.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		7FEB6DD906654FC2BCE8047C /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; name = "RNGestureHandler.xcodeproj"; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
@@ -493,10 +487,8 @@
 				5BDAD2C2E5D34797B94B65AE /* libCodePush.a in Frameworks */,
 				6763204BB63F430BBBAE4E70 /* libz.tbd in Frameworks */,
 				3107DC7FF7614E008957B7F6 /* libRNVectorIcons.a in Frameworks */,
-				AF277AD3FEEC4D0F8D06A0CE /* libRCTVideo.a in Frameworks */,
 				723DD4BCDB324F568CFF301E /* libRNImagePicker.a in Frameworks */,
 				BE35AFCBA612474185184545 /* libimageCropPicker.a in Frameworks */,
-				1E9311F490EE48839C9B6727 /* libBVLinearGradient.a in Frameworks */,
 				1B9813E5AAA5431F956FDAF7 /* libRNTextInputMask.a in Frameworks */,
 				3D68D4C173314978842312E6 /* libRNGestureHandler.a in Frameworks */,
 			);
@@ -692,10 +684,8 @@
 				99342B1D918442A08073B687 /* LottieReactNative.xcodeproj */,
 				FC575D69162A4DF9B1EF0CB7 /* CodePush.xcodeproj */,
 				1670C66F6B124FE2AF5220FA /* RNVectorIcons.xcodeproj */,
-				5BC17C2C0E324CAD8775C524 /* RCTVideo.xcodeproj */,
 				D0627688D73E44CA87F80CA4 /* RNImagePicker.xcodeproj */,
 				9AEBC9E9571A4AEBA61E2169 /* imageCropPicker.xcodeproj */,
-				5080700AB3D445D0A51AEEE4 /* BVLinearGradient.xcodeproj */,
 				E337DD2F7C484163A0ACA92D /* RNTextInputMask.xcodeproj */,
 				7FEB6DD906654FC2BCE8047C /* RNGestureHandler.xcodeproj */,
 			);
@@ -1424,11 +1414,9 @@
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
@@ -1458,11 +1446,9 @@
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
@@ -1490,11 +1476,9 @@
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
@@ -1521,11 +1505,9 @@
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
@@ -1564,11 +1546,9 @@
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
@@ -1607,11 +1587,9 @@
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
@@ -1649,11 +1627,9 @@
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);
@@ -1691,11 +1667,9 @@
 					"$(SRCROOT)/../node_modules/lottie-react-native/src/ios/LottieReactNative",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/react-native-video/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-text-input-mask/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 				);

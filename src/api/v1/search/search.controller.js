@@ -19,7 +19,7 @@ const { handler: errorHandler } = require('../../middlewares/error');
 exports.getSearch = async (req, res, next) => {
   try {
     const {
-      term, type, page, perPage, filterCauseSupported, itemId,
+      term, type, perPage, skip, filterCauseSupported, itemId,
     } = req.query;
     const { user } = req;
     const all = [];
@@ -38,16 +38,16 @@ exports.getSearch = async (req, res, next) => {
     switch (type) {
       case 'all':
         posts = await Post.list({
-          $text: { $search: term }, ...filteredCauseSupported, userId: { $nin: [user.id] }, page, perPage, score: { $meta: 'textScore' },
+          $text: { $search: term }, ...filteredCauseSupported, userId: { $nin: [user.id] }, skip, perPage, score: { $meta: 'textScore' },
         });
         events = await Event.list({
-          $text: { $search: term }, ...filteredCauseSupported, userId: { $nin: [user.id] }, page, perPage, score: { $meta: 'textScore' },
+          $text: { $search: term }, ...filteredCauseSupported, userId: { $nin: [user.id] }, skip, perPage, score: { $meta: 'textScore' },
         });
         if (filterCauseSupported && type !== 'ngo') {
           filteredCauseSupported = { causeSupported: filterCauseSupported };
         }
         ngos = await User.list({
-          role: 'ngo', $text: { $search: term }, _id: { $nin: [user.id] }, page, perPage, ...filteredCauseSupported, score: { $meta: 'textScore' },
+          role: 'ngo', $text: { $search: term }, _id: { $nin: [user.id] }, skip, perPage, ...filteredCauseSupported, score: { $meta: 'textScore' },
         });
 
         break;
@@ -55,14 +55,14 @@ exports.getSearch = async (req, res, next) => {
       case 'post': {
         const singleItemCondition = itemId ? { _id: itemId } : { $text: { $search: term } };
         posts = await Post.list({
-          ...filteredCauseSupported, ...singleItemCondition, userId: { $nin: [user.id] }, page, perPage, score: { $meta: 'textScore' },
+          ...filteredCauseSupported, ...singleItemCondition, userId: { $nin: [user.id] }, skip, perPage, score: { $meta: 'textScore' },
         });
         break; }
 
       case 'event': {
         const singleItemCondition = itemId ? { _id: itemId } : { $text: { $search: term } };
         events = await Event.list({
-          ...filteredCauseSupported, ...singleItemCondition, userId: { $nin: [user.id] }, page, perPage, score: { $meta: 'textScore' },
+          ...filteredCauseSupported, ...singleItemCondition, userId: { $nin: [user.id] }, skip, perPage, score: { $meta: 'textScore' },
         });
         break;
       }
@@ -71,7 +71,7 @@ exports.getSearch = async (req, res, next) => {
           filteredCauseSupported = { causeSupported: filterCauseSupported };
         }
         ngos = await User.list({
-          role: 'ngo', $text: { $search: term }, _id: { $nin: [user.id] }, page, perPage, ...filteredCauseSupported, score: { $meta: 'textScore' },
+          role: 'ngo', $text: { $search: term }, _id: { $nin: [user.id] }, skip, perPage, ...filteredCauseSupported, score: { $meta: 'textScore' },
         });
         break;
 

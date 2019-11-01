@@ -11,6 +11,9 @@ import { UserTypes } from '../User/Actions';
 import { CommonFunctions } from '../../Utils';
 
 export const putHomePosts = (state, { payload }) => ({ ...state, homePosts: [...payload] });
+
+export const pushHomePosts = (state, { payload }) => ({ ...state, homePosts: [ ...state.homePosts, ...payload] });
+
 export const logoutSuccess = (state, data) => ({ ...INITIAL_STATE });
 
 export const addShareCount = (state, { payload }) => {
@@ -77,6 +80,7 @@ export const followUnfollow = (state, { payload }) => {
  */
 export const reducer = createReducer(INITIAL_STATE, {
   [PostTypes.PUT_HOME_POSTS]: putHomePosts,
+  [PostTypes.PUSH_HOME_POSTS]: pushHomePosts,
   [UserTypes.LOGOUT_SUCCESS]: logoutSuccess,
   [PostTypes.POST_REACTION_SUCCESS]: postReaction,
   [PostTypes.REMOVE_REACTION_SUCCESS]: removeReaction,

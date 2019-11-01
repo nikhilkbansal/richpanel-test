@@ -62,13 +62,13 @@ eventSchema.index({ title: 'text', description: 'text' });
 
 eventSchema.statics = {
   async list({
-    page = 1, perPage = 30, _id, userId, title, $text, endTime,
+    skip = 0, perPage = 30, _id, userId, title, $text, endTime,
   }) {
     const options = omitBy({
       _id, userId, title, $text, endTime,
     }, isNil);
     return this.find(options).sort({ createdAt: -1 })
-      .skip(perPage * (page - 1))
+      .skip(parseInt(skip, 10))
       .limit(perPage)
       .populate('userId', 'name _id picture')
       .exec();

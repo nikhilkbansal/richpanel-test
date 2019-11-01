@@ -81,6 +81,8 @@ class Post extends Component {
     this.flatlistItems = this.flatlistItems.bind(this);
     this._renderNgo = this._renderNgo.bind(this);
     this._renderEventItem = this._renderEventItem.bind(this);
+    this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
+    this.viewabilityConfig = {viewAreaCoveragePercentThreshold: 50}
     console.log('thisprops',props);
   }
 
@@ -177,6 +179,11 @@ class Post extends Component {
     }
   }
 
+  handleViewableItemsChanged({viewableItems}) {
+    if (viewableItems && viewableItems.length > 0) {
+      this.setState({ currentVisibleIndex: viewableItems[0].index });
+    }
+  }
 
   render() {
 
@@ -187,7 +194,18 @@ class Post extends Component {
         <View style={{flex:1, }}>
         <FlatList
           data={seeAll} 
+          onViewableItemsChanged={this.handleViewableItemsChanged}
+          viewabilityConfig={this.viewabilityConfig}
           renderItem={this.flatlistItems}
+          onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
+          onEndReached={(data) => {
+            if (!this.onEndReachedCalledDuringMomentum) {
+              this.onEndReachedCalledDuringMomentum = true;
+              const { getSearch, navigation: { state: { params: { term, type, itemId} } } } = this.props;
+              getSearch({ term, type, itemId, skip: seeAll.length });
+            }
+          }}
+          onEndReachedThreshold={2}
         />
         </View>
 

@@ -18,9 +18,10 @@ const styles = StyleSheet.create({
 });
 
 class ProgressiveImage extends React.Component {
-  thumbnailAnimated = new Animated.Value(0);
+  thumbnailAnimated = new Animated.Value(0.6);
 
-  imageAnimated = new Animated.Value(0);
+  // imageAnimated = new Animated.Value(0);
+  imageAnimated = new Animated.Value(1);
 
   handleThumbnailLoad = () => {
     Animated.timing(this.thumbnailAnimated, {
@@ -29,6 +30,7 @@ class ProgressiveImage extends React.Component {
   }
 
   onImageLoad = () => {
+    console.log(23232323);
     Animated.timing(this.imageAnimated, {
       toValue: 1,
     }).start();

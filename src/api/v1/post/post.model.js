@@ -70,7 +70,7 @@ postSchema.statics = {
       _id, userId, title, $text, $or,
     }, isNil);
     return this.find(options).sort({ createdAt: -1 })
-      .skip(skip)
+      .skip(parseInt(skip, 10))
       .limit(perPage)
       .populate('userId', 'name _id picture')
       .exec();

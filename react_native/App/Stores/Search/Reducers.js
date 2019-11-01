@@ -29,6 +29,17 @@ console.log(payload);
   }
 };
 
+export const pushSeeAllResults = (state, { payload }) => {
+console.log(payload);
+  const seeAll = payload.posts.length > 0 
+    ? payload.posts :  payload.ngos.length > 0 
+    ? payload.ngos: payload.events
+  return {
+    ...state,
+    seeAll: [ ...state.seeAll, ...seeAll ],
+  }
+};
+
 export const putPostRecommendation = (state, { payload }) => ({
   ...state,
   postsRecommendation: { ...payload },
@@ -101,6 +112,7 @@ export const followUnfollow = (state, { payload }) => {
 export const reducer = createReducer(INITIAL_STATE, {
   [SearchTypes.PUT_AUTO_COMPLETE_RESULTS]: putAutoCompleteResults,
   [SearchTypes.PUT_SEE_ALL_RESULTS]: putSeeAllResults,
+  [SearchTypes.PUSH_SEE_ALL_RESULTS]: pushSeeAllResults,
   [UserTypes.LOGOUT_SUCCESS]: logoutSuccess,
   [SearchTypes.PUT_POST_RECOMMENDATION]: putPostRecommendation, 
   [SearchTypes.POST_REACTION_SUCCESS_FROM_SEARCH]: postReaction,

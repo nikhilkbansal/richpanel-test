@@ -4,7 +4,7 @@ const { Types, Creators } = createActions({
   getSearch: ['payload'],
   putAutoCompleteResults: ['payload'],
   putSeeAllResults: ['payload'],
-
+  pushSeeAllResults: ['payload'],
   getPostRecommendation: ['payload'],
   putPostRecommendation: ['payload'],
   postReactionFromSearch: ['payload'],

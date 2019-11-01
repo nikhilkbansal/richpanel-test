@@ -26,14 +26,20 @@ export function* createEvent({ payload }) {
   }
 }
 
-export function* getHomeEvents() {
+export function* getHomeEvents({ payload }) {
   try {
     const payloadData = {
       method: 'get',
+      params: {...payload},
       url: 'event/homepageEvents',
     };
     const data = yield call(httpClient, payloadData, 'default', false);
-    yield put(eventActions.putHomeEvents(data));
+    
+    if(payload && payload.skip && payload.skip > 0){
+      yield put(eventActions.pushHomeEvents(data));
+    }else{
+      yield put(eventActions.putHomeEvents(data));
+    }
   } catch (e) {
     // console.log('eee', e);
     // catch errors here

@@ -41,8 +41,11 @@ class Post extends Component {
       email: null,
       password: '',
       checked: false,
+      currentVisibleIndex: 0,
     };
     this._renderItem = this._renderItem.bind(this);
+    this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
+    this.viewabilityConfig = {viewAreaCoveragePercentThreshold: 50}
   }
 
 
@@ -62,10 +65,9 @@ class Post extends Component {
   }
 
 
-
   onShare = async (item) => {
     const { profile, sharePost } = this.props;
-      Share.open( {
+      Share.open({
         message:  profile.name+ ' wants you see this post: ' + item.title+'. Use Handout App to make to world a better place for everyone like '+ profile.name +' is doing',
         url: 'com.handout/'+item.title.replace(' ', ''),
     })
@@ -76,8 +78,9 @@ class Post extends Component {
     .catch((err) => { err && console.log(err); });
   };
 
-  _renderItem = ({item}) =><PostUi 
+  _renderItem = ({item, index}) =><PostUi 
     userName={item.userId.name}
+    currentVisible={this.state.currentVisibleIndex === index}
     followUnfollow={()=>this.props.followUnfollow({ type: 'homePagePosts', isFollowed: item.isFollowed , followeeId: item.userId._id })}
     onSharePress={()=>this.onShare(item)}
     onReactionPress={this.props.postReaction}
@@ -89,6 +92,11 @@ class Post extends Component {
     {...item}
     />;
 
+  handleViewableItemsChanged({viewableItems}) {
+    if (viewableItems && viewableItems.length > 0) {
+      this.setState({ currentVisibleIndex: viewableItems[0].index });
+    }
+  }
 
   render() {
 
@@ -101,10 +109,20 @@ class Post extends Component {
             Tip: Follow some Philanthropy organizations from <Text onPress={()=>navigation.navigate('Search')} style={{...ApplicationStyles.button2, textDecorationLine: 'underline', color: ApplicationStyles.grayishBackground.color, textAlign:'center'}}>search page</Text>
           </EmptyState>
           :<FlatList
+            onViewableItemsChanged={this.handleViewableItemsChanged}
+            viewabilityConfig={this.viewabilityConfig}
             onRefresh={()=>{}}
             refreshing={false}
-              data={homePosts} 
-              renderItem={this._renderItem}
+            data={homePosts} 
+            renderItem={this._renderItem}
+            onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
+            onEndReached={(data) => {
+              if (!this.onEndReachedCalledDuringMomentum) {
+                this.onEndReachedCalledDuringMomentum = true;
+                this.props.getHomePosts({skip: homePosts.length});
+              }
+            }}
+            onEndReachedThreshold={2}
             /> 
         }
       </View>

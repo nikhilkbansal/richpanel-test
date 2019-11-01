@@ -44,6 +44,8 @@ class Event extends Component {
       checked: false,
     };
     this._renderItem = this._renderItem.bind(this);
+    this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
+    this.viewabilityConfig = {viewAreaCoveragePercentThreshold: 50}
   }
 
   componentDidMount(){
@@ -86,6 +88,14 @@ class Event extends Component {
     {...item}
     />;
 
+
+  handleViewableItemsChanged({viewableItems}) {
+    if (viewableItems && viewableItems.length > 0) {
+      this.setState({ currentVisibleIndex: viewableItems[0].index });
+    }
+  }
+
+    
   render() {
 
     const { navigation, homeEvents, profile  } = this.props;
@@ -98,10 +108,20 @@ class Event extends Component {
             Tip: Follow some Philanthropy organizations from <Text  onPress={()=>navigation.navigate('Search')}  style={{...ApplicationStyles.button2, textDecorationLine: 'underline', color: ApplicationStyles.grayishBackground.color, textAlign:'center'}}>search page</Text>
           </EmptyState>
           :<FlatList
+              onViewableItemsChanged={this.handleViewableItemsChanged}
+              viewabilityConfig={this.viewabilityConfig}
               onRefresh={()=>{}}
               refreshing={false}
               data={homeEvents} 
               renderItem={this._renderItem}
+              onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
+              onEndReached={(data) => {
+                if (!this.onEndReachedCalledDuringMomentum) {
+                  this.onEndReachedCalledDuringMomentum = true;
+                  this.props.getHomeEvents({skip: homeEvents.length});
+                }
+              }}
+              onEndReachedThreshold={2}
             /> 
         }
       </View>

@@ -74,7 +74,7 @@ exports.update = async (req, res, next) => {
 exports.getHomePageEvents = async (req, res, next) => {
   try {
     const { user } = req;
-    const { page, perPage } = req.query;
+    const { page, perPage, skip } = req.query;
     const followers = await Follow.getFollowees(user.id);
     console.log('followers', followers);
     if (!followers || followers.length === 0) {
@@ -83,7 +83,7 @@ exports.getHomePageEvents = async (req, res, next) => {
     }
     const followeeIds = followers.map(o => o.followeeId);
     const events = await Event.list({
-      userId: { $in: followeeIds }, endTime: { $gte: new Date() }, page, perPage,
+      userId: { $in: followeeIds }, endTime: { $gte: new Date() }, page, perPage, skip,
     });
     // const events = await Event.list({ page, perPage });
     const resultedEvents = await Promise.map(events, async (event, index) => {

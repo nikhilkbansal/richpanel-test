@@ -3,7 +3,6 @@ import React, { Fragment } from 'react';
 import {
   Image, View, Share, Slider, StyleSheet, FlatList, ScrollView, Clipboard
 } from 'react-native';
-import Video from 'react-native-video';
 import {
   Avatar, IconButton, Card, withTheme,
 } from 'react-native-paper';

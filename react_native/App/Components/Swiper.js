@@ -5,7 +5,8 @@ import {
 import PropTypes from 'prop-types';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Swiper from 'react-native-swiper';
-import Video from 'react-native-video';
+// import Video from 'react-native-video';
+import Video from 'react-native-af-video-player'
 import Button from './Button';
 import Text from './Text';
 import {
@@ -46,8 +47,21 @@ class SwiperPage extends React.Component {
     this.state = {
       dateTime: '',
     };
+    this.player = [];
+    this.onIndexChanged = this.onIndexChanged.bind(this);
   }
 
+  onIndexChanged(i){
+    this.player[i+1] && this.player[i+1].pause();
+    this.player[i] && this.player[i].play();
+    this.player[i-1] && this.player[i-1].pause();
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(this.props.currentVisible !== nextProps.currentVisible){
+      this.player.forEach(o=>!o.controls.props.paused && o.pause());
+    }
+  }
 
   render() {
     const { dateTime } = this.state;
@@ -55,30 +69,36 @@ class SwiperPage extends React.Component {
       files, isWholePath
     } = this.props;
     return (
-      <Swiper showsPagination showsButtons loop={false} style={styles.wrapper}
+      <Swiper onIndexChanged={this.onIndexChanged} showsPagination={false} showsButtons loop={false} style={styles.wrapper}
         dotColor={'red'}
         nextButton={<Text style={{...ApplicationStyles.headline, color: ApplicationStyles.smokeBackground.color}}>›</Text>}
         prevButton={<Text style={{...ApplicationStyles.headline, color: ApplicationStyles.smokeBackground.color}}>‹</Text>}
         buttonWrapperStyle={{...ApplicationStyles.elevationS}} activeDotColor={ApplicationStyles.smokeBackground.color}>
-        {files && files.map(o => (
+        {files && files.map((o, index) => (
           <View style={styles.slide}>
-            {CommonFunctions.isFileVideo(o) ? (<Video
-              source={{ uri: CommonFunctions.getFile(o) }} // Can be a URL or a local file.
+            {CommonFunctions.isFileVideo(o) ? (
+            <View style={{height: hp('30%'), width: '100%',}}>
+              <Video
+              autoPlay={false}
+              url={{uri:CommonFunctions.getFile(o)}}
+              // source={{ uri: CommonFunctions.getFile(o) }} // Can be a URL or a local file.
               ref={(ref) => {
-                this.player = ref;
+                this.player[index] = ref;
               }} // Store reference
-
+              hideFullScreenControl={true}
+              inlineOnly={true}
               style={{
-                height: hp('30%'),
+                height: '100%',
                 width: '100%',
                 flex: 1,
                 justifyContent: 'center',
                 backgroundColor: 'black',
               }}
 
-              controls
+              // controls
               resizeMode="cover"
             />
+            </View>
             )
               : (
                 <ProgressiveImage

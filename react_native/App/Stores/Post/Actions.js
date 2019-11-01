@@ -3,7 +3,8 @@ import { createActions } from 'reduxsauce';
 const { Types, Creators } = createActions({
   postCreate: ['payload'],
   putHomePosts: ['payload'],
-  getHomePosts: null,
+  pushHomePosts: ['payload'],
+  getHomePosts: ['payload'],
   postReaction: ['payload'],
   removeReaction: ['payload'],
   postReactionSuccess: ['payload'],

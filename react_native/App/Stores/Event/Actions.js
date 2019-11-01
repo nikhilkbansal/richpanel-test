@@ -4,7 +4,8 @@ import { createActions } from 'reduxsauce';
 const { Types, Creators } = createActions({
   eventCreate: ['payload'],
   putHomeEvents: ['payload'],
-  getHomeEvents: null,
+  pushHomeEvents: ['payload'],
+  getHomeEvents: ['payload'],
   eventReaction: ['payload'],
   removeEventReaction: ['payload'],
   eventReactionSuccess: ['payload'],

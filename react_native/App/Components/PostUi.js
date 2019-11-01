@@ -3,7 +3,6 @@ import React, { Fragment } from 'react';
 import {
   Image, View, Share, Slider, StyleSheet, FlatList, ScrollView,Clipboard
 } from 'react-native';
-import Video from 'react-native-video';
 import {
   Avatar, IconButton, Card, withTheme,
 } from 'react-native-paper';
@@ -122,7 +121,7 @@ function getHumanCurrency(num){
 }
 
 function PostUi({
-  _id, title, description, isFollowed, files, userId, userName, comment, userPicture, onUserClick, raisedMoney, campaignEndDate, onViewComments, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
+  _id, title, description, isFollowed, files, userId, userName, comment, currentVisible, userPicture, onUserClick, raisedMoney, campaignEndDate, onViewComments, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
 }) {
   return (
     <View style={styles.container}>
@@ -164,7 +163,7 @@ function PostUi({
         </View>
       </View>
       <View style={styles.imageContainer}>
-        <Swiper files={files} />
+        <Swiper files={files} currentVisible={currentVisible}/>
         <View style={styles.userFeedBack}>
           <ReactionsGot reactionsCount={reactionsCount} topThreeReactions={topThreeReactions} />
           {sharesCount > 0 && (

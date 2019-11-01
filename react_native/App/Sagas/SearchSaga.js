@@ -25,7 +25,9 @@ export function* getSearch({ payload }) {
     if(payload.type === 'all'){
       yield put(searchActions.putAutoCompleteResults(data));
     }
-    else{
+    else if( payload && payload.skip && payload.skip >0 ) {
+      yield put(searchActions.pushSeeAllResults(data));
+    } else {
       yield put(searchActions.putSeeAllResults(data));
     }
   } catch (e) {

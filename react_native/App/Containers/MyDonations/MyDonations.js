@@ -133,16 +133,16 @@ class MyDonations extends Component {
             extraData={donations}
             showsVerticalScrollIndicator={false}
             ref={this.listRef}
-            onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
             renderItem={item => this.transctionItem(item)}
-           renderSectionHeader={({ section: { weekDesc } }) => (
-             <View style={{ paddingHorizontal:wp('3%'), flexDirection: 'row', flex:1, justifyContent:'space-around'}}>
-              <Text style={{ ...ApplicationStyles.bodySubHeading, textAlign:'center', paddingVertical: hp('0.5%')}}>{weekDesc}</Text>
-            </View> 
+            renderSectionHeader={({ section: { weekDesc } }) => (
+              <View style={{ paddingHorizontal:wp('3%'), flexDirection: 'row', flex:1, justifyContent:'space-around'}}>
+                  <Text style={{ ...ApplicationStyles.bodySubHeading, textAlign:'center', paddingVertical: hp('0.5%')}}>{weekDesc}</Text>
+                </View> 
 
-        )}
+            )}
             // refreshing={isRefreshing}
             // onRefresh={this.getMoreComments}
+            onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
             onEndReached={(data) => {
               if (!this.onEndReachedCalledDuringMomentum) {
                 this.onEndReachedCalledDuringMomentum = true;

@@ -73,7 +73,10 @@ export default {
       case 'avatar':
         params = 'width=200&height=200';
         break;
-
+      case 'videoThumb':
+        params = 'videoThumb=true';
+        break;
+        
       default:
         break;
     }

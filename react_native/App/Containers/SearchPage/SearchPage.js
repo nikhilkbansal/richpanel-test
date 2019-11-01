@@ -286,7 +286,7 @@ class SearchPage extends Component {
         <TextInput
           placeholder="Search ngos, events, campaign, posts ..."
           numberOfLines={1}
-          returnKeyType="search"
+          returnKeyType="done"
           textInputRef={this.termRef}
           containerStyle={{
             paddingHorizontal: wp('5%'),
@@ -354,7 +354,7 @@ class SearchPage extends Component {
                 }}>{o}</Text>
             </Button>)} 
           </View>
-        <ScrollView>
+        <View style={{flex:1}}>
 
           { ['Posts', 'Events', 'Shop', ].includes(selectedTab) ? <View
             style={{
@@ -364,9 +364,17 @@ class SearchPage extends Component {
               justifyContent:'center'
             }}>
               <FlatList
-                contentContainerStyle={{ flex:1, flexDirection:'row',  justifyContent:'center', flexWrap:'wrap'}}
+                contentContainerStyle={{  flexDirection:'row',  justifyContent:'center', flexWrap:'wrap'}}
                 style={{flex:1,}}
                 data={listItems}
+                onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}
+                onEndReached={(data) => {
+                  if (!this.onEndReachedCalledDuringMomentum) {
+                    this.onEndReachedCalledDuringMomentum = true;
+                    selectedTab==='Posts' ? this.getPostRecommendations(): this.getEventRecommendations();
+                  }
+                }}
+                onEndReachedThreshold={2}
                 renderItem={({ item })=><Button 
                 onPress={()=>this.openSeeAllScreen( selectedTab === 'Posts' ? 'post': 'event',  item._id)}
                 style={{
@@ -374,26 +382,11 @@ class SearchPage extends Component {
                   margin:wp('1%'),
                   height: wp('30%')}}>
                   <ProgressiveImage
-                     source={{ uri: CommonFunctions.getFile(item.files[0],) }}
+                     source={{ uri: CommonFunctions.getFile(item.files[0],'videoThumb') }}
                     style={{width: '100%', height: '100%'}}
                   />
               </Button>}
               />
-              {/* { listItems.length > 0 ?
-                listItems.map(o=>
-                <Button 
-                  onPress={()=> navigation.navigate('')}
-                  style={{
-                    width: wp('30%'),
-                    margin:wp('1%'),
-                    height: wp('30%')}}>
-                    <ProgressiveImage
-                       source={{ uri: CommonFunctions.getFile(o.files[0],) }}
-                      style={{width: '100%', height: '100%'}}
-                    />
-                </Button>)
-                : <EmptyState containerStyle={{marginTop: hp('16%')}} message='No items found' />
-              } */}
             </View> 
             :
             <View
@@ -405,9 +398,17 @@ class SearchPage extends Component {
               justifyItems:'center'
             }}>
               <FlatList
-                contentContainerStyle={{ flex:1, flexDirection:'row',  justifyContent:'center', flexWrap:'wrap'}}
+                contentContainerStyle={{ flexDirection:'row',  justifyContent:'center', flexWrap:'wrap'}}
                 style={{flex:1,}}
                 data={poRecommendations}
+                onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentumPo = false; }}
+                onEndReached={(data) => {
+                  if (!this.onEndReachedCalledDuringMomentumPo) {
+                    this.onEndReachedCalledDuringMomentumPo = true;
+                    this.getPoRecommendations();
+                  }
+                }}
+                onEndReachedThreshold={2}
                 renderItem={({ item })=><Button 
                 onPress={()=>navigation.navigate('NgoProfile', { poUserId: item._id })}
                 style={{
@@ -425,7 +426,7 @@ class SearchPage extends Component {
                
             </View>
           }
-        </ScrollView>
+        </View>
         {searchResultExist && (
           <View style={{
             position: 'absolute',

@@ -29,18 +29,18 @@ exports.create = async (req, res, next) => {
   try {
     const { busboy, user: { id } } = req;
     const recommendVideoExtension = '.mp4';
-    let fileType;
     const files = [];
     let currentUploadingFile;
     req.pipe(busboy); // Pipe it through busboy
-    req.busboy.on('field', (fieldName, value) => {
-      console.log('req.body fieldName', fieldName, value);
-      if (fieldName === 'fileType') {
-        fileType = value;
-      }
-    });
+    // req.busboy.on('field', (fieldName, value) => {
+    //   console.log('req.body fieldName', fieldName, value);
+    //   if (fieldName === 'fileType') {
+    //     fileType = value;
+    //   }
+    // });
 
     busboy.on('file', async (fieldname, file, filename, encoding, mimetype) => {
+      const fileType = mimetype.includes('video/') ? 'video' : 'image';
       const userData = req.user;
       const folderPath = path.join(__dirname, `../../../../cdn/${userData.id}`);
       console.log('filename', filename);
@@ -78,6 +78,12 @@ exports.create = async (req, res, next) => {
               console.log('Processing finished !');
             })
             .save(recommendVideoPath);
+
+          ffmpeg(recommendVideoPath).screenshots({
+            timestamps: ['10%'],
+            filename: `${mongoObjectId}_thumb.png`,
+            folder: folderPath,
+          });
         }
 
         console.log(`'${filename}' is successfully uploaded as ${customeFileName} in ${folderPath}`);
@@ -118,14 +124,22 @@ exports.create = async (req, res, next) => {
 
 exports.getFile = async (req, res, next) => {
   try {
-    const { query: { width, height, format } } = req;
+    const {
+      query: {
+        width, height, format, videoThumb,
+      },
+    } = req;
     const { params: { _id } } = req;
     const file = await Files.findOne({ _id });
     if (!file) {
       res.type('image/png');
       fs.createReadStream(path.join(__dirname, '../../../../assets/default/defaultImage.jpg')).pipe(res);
     } else {
-      const fileFolderWithPath = `../../../../cdn/${file.userId}/${file._id}${file.fileExtension}`;
+      let fileFolderWithPath = `../../../../cdn/${file.userId}/${file._id}${file.fileExtension}`;
+      if (videoThumb && file.fileType !== 'image') {
+        fileFolderWithPath = `../../../../cdn/${file.userId}/${file._id}_thumb.png`;
+      }
+
       const filePath = path.join(__dirname, fileFolderWithPath);
 
       if (!fs.existsSync(filePath)) {

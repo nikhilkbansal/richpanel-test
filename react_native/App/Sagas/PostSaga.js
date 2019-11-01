@@ -22,14 +22,21 @@ export function* createPost({ payload }) {
   }
 }
 
-export function* getHomePosts() {
+export function* getHomePosts({ payload }) {
+  console.log('payload', payload);
   try {
     const payloadData = {
       method: 'get',
+      params: {...payload},
       url: 'post/homepagePosts',
     };
     const data = yield call(httpClient, payloadData, 'default', false);
-    yield put(postActions.putHomePosts(data));
+    if(payload && payload.skip && payload.skip > 0){
+      yield put(postActions.pushHomePosts(data));
+    }else{
+      yield put(postActions.putHomePosts(data));
+    }
+
   } catch (e) {
     console.log('eee', e);
     // catch errors here
