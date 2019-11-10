@@ -54,7 +54,7 @@ class Dropdown extends React.Component {
     } = this.props;
     return (
       <View style={styles.container}>
-        <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>
+        <Text style={[{ ...ApplicationStyles.fontStyles.body1 }, { padding: 0 }]}>
           {dropDownLabel}
         </Text>
         <Button
@@ -63,8 +63,8 @@ class Dropdown extends React.Component {
         >
           { label
 
-            ? <Text style={[{ ...ApplicationStyles.textInputValue }, { padding: 0 }]}>{label}</Text>
-            : <Text style={[{ ...ApplicationStyles.textInputValue, ...ApplicationStyles.disabledColor }, { padding: 0 }]}>{placeholder}</Text>
+            ? <Text style={[{ ...ApplicationStyles.fontStyles.body2 }, { padding: 0 }]}>{label}</Text>
+            : <Text style={[{ ...ApplicationStyles.fontStyles.body2, ...ApplicationStyles.disabledColor }, { padding: 0 }]}>{placeholder}</Text>
           }
         </Button>
 
@@ -76,7 +76,7 @@ class Dropdown extends React.Component {
           onTouchOutside={() => {
             this.setState({ modalVisible: false });
           }}
-          dialogTitle={<DialogTitle title="Donate" textStyle={{ ...ApplicationStyles.textInputLabel }} />}
+          dialogTitle={<DialogTitle title="Donate" textStyle={{ ...ApplicationStyles.fontStyles.body2 }} />}
         >
           <DialogContent style={{ width: wp('50%'), maxHeight: hp('30%') }}>
             <ScrollView>
@@ -84,7 +84,7 @@ class Dropdown extends React.Component {
                 <Button
                   title={o.label}
                   onPress={() => this.setValue(o.label, o.value)}
-                  titleStyle={{ ...ApplicationStyles.textInputValue, ...styles.button }}
+                  titleStyle={{ ...ApplicationStyles.fontStyles.body1, ...styles.button }}
                 />
               ))}
             </ScrollView>

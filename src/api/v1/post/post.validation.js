@@ -17,8 +17,8 @@ module.exports = {
   createPost: {
     body: {
       files: Joi.array(),
-      title: Joi.string().required(),
-      description: Joi.string(),
+      // title: Joi.string().optional(),
+      description: Joi.string().required(),
       location: Joi.string(),
     },
   },

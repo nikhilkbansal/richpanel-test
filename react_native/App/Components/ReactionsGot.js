@@ -48,7 +48,7 @@ class ReactionsGot extends React.Component {
         { topThreeReactions.includes('insightFul') && <Icon iconFamily="FontAwesome5" name="lightbulb" solid size={wp('2.4%')} color={ApplicationStyles.insightFulColor.color} style={styles.iconStyle} />}
         { topThreeReactions.includes('sad') && <Icon iconFamily="Entypo" name="emoji-sad" size={wp('2.5%')} color={ApplicationStyles.sadColor.color} style={styles.iconStyle} />}
         {reactionsCount > 0 && (
-        <Text style={{ ...ApplicationStyles.bodySubHeading2, paddingHorizontal: wp('0.4%') }}>
+        <Text style={{ ...ApplicationStyles.fontStyles.caption, paddingHorizontal: wp('0.4%') }}>
           {CommonFunctions.numberToReadable(reactionsCount) }
         </Text>
         )}

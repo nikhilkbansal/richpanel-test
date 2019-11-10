@@ -12,6 +12,7 @@ import {
   Text, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, FileSelector,
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
+import CheckBox from 'react-native-check-box';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: ApplicationStyles.lightBackground.color },
@@ -41,11 +42,18 @@ class AddPost extends Component {
       title: '',
       description: '',
       files: [],
+      isCampaign: false
     };
     this.addPost = this.addPost.bind(this);
+    this.resetCampaign = this.resetCampaign.bind(this);
     this.descriptionRef = React.createRef();
+    this.campaignGoalRef = React.createRef();
   }
 
+  resetCampaign(isNotCampaign){
+    if(isNotCampaign)
+    this.setState({ title: '', campaignGoal:'', campaignEndDate:  null, campaignStartDate:null, })
+  }
 
   async addPost() {
     const {
@@ -53,15 +61,16 @@ class AddPost extends Component {
       title,
       description,
       files,
+      isCampaign,
       campaignGoal,
       campaignStartDate,
       campaignEndDate,
     } = this.state;
     const { postCreate } = this.props;
 
-    let keysToValidate = ['title', 'description', 'files'];
-    if(!!campaignGoal || !!campaignStartDate || !!campaignEndDate){
-      keysToValidate = keysToValidate.concat(['campaignGoal', 'campaignStartDate', 'campaignEndDate'])
+    let keysToValidate = ['description', 'files'];
+    if(isCampaign){
+      keysToValidate = keysToValidate.concat(['title', 'campaignGoal', 'campaignStartDate', 'campaignEndDate'])
     }
     const validateForm = TextInput.validateForm(keysToValidate, this.state)
     if (validateForm) {
@@ -89,11 +98,41 @@ class AddPost extends Component {
   render() {
     const { navigation } = this.props;
 
-    const { errors } = this.state;
+    const { errors, isCampaign } = this.state;
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} title="Add Post" />
         <KeyboardAwareScrollView style={styles.subContainer}>
+          <TextInput
+            error={errors.description}
+            multiline
+            numberOfLines={4}
+            label="About"
+            placeholder="Write here about this post/campaign"
+            inputStyle={ApplicationStyles.body}
+            textInputRef={this.descriptionRef}
+            returnKeyType="next"
+            onChangeText={text => this.updateTextInput('description', text)}
+            onSubmitEditing={() => this.passwordRef.current.focus()}
+          />
+          <FileSelector error={errors.files} label="Add images and videos (drag and drop to reorder)" onChange={files => this.updateTextInput('files', files)} />
+          <HrLine />
+          <CheckBox
+                style={{ flex: 1 }}
+                onClick={() => {
+                  this.setState({
+                    isCampaign: !isCampaign,
+                  });
+                  this.resetCampaign(isCampaign);
+                }}
+                isChecked={isCampaign}
+                rightText="Switch to Campaign"
+                rightTextStyle={{ ...ApplicationStyles.button2, textAlign: 'left' }}
+                checkBoxColor={ApplicationStyles.primaryColor.color}
+                uncheckedCheckBoxColor={ApplicationStyles.disabledColor.color}
+              />
+          {/* <Text style={{ ...ApplicationStyles.info3 }}>Fill below section if you are creating a campaign </Text> */}
+          {isCampaign && <Fragment>
           <TextInput
             error={errors.title}
             multiline
@@ -102,23 +141,8 @@ class AddPost extends Component {
             placeholder="e.g. Helping kids to get better education"
             returnKeyType="next"
             onChangeText={text => this.updateTextInput('title', text)}
-            onSubmitEditing={() => this.descriptionRef.current.focus()}
+            onSubmitEditing={() => this.campaignGoalRef.current.focus()}
           />
-          <TextInput
-            error={errors.description}
-            multiline
-            numberOfLines={4}
-            label="Description"
-            placeholder=""
-            inputStyle={ApplicationStyles.body}
-            textInputRef={this.descriptionRef}
-            returnKeyType="next"
-            onChangeText={text => this.updateTextInput('description', text)}
-            onSubmitEditing={() => this.passwordRef.current.focus()}
-          />
-          <FileSelector error={errors.files} label="Add images and videos" onChange={files => this.updateTextInput('files', files)} />
-          <HrLine />
-          <Text style={{ ...ApplicationStyles.info3 }}>Fill below section if you are creating a campaign </Text>
           <TextInput
             error={errors.campaignGoal}
             multiline
@@ -126,13 +150,15 @@ class AddPost extends Component {
             label="Campaign Goal"
             placeholder="e.g. 5000"
             keyboardType="number-pad"
-            textInputRef={this.descriptionRef}
-            returnKeyType="next"
+            textInputRef={this.campaignGoalRef}
+            returnKeyType="done"
+            onSubmitEditing={()=>{}}
             onChangeText={text => this.updateTextInput('campaignGoal', text)}
-            onSubmitEditing={() => this.passwordRef.current.focus()}
           />
           <DatePicker error={errors.campaignStartDate} label="Campaign Starts from" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('campaignStartDate', text)} />
           <DatePicker error={errors.campaignEndDate} label="Campaign Ends on" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('campaignEndDate', text)} />
+          </Fragment>
+          }
           {/* <LocationSelector label="Location" placeholder="Select location" onChange={text => this.updateTextInput('starts', text)} /> */}
           <Button
             style={styles.loginContainer}

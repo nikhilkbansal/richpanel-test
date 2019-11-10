@@ -95,7 +95,7 @@ class FileSelector extends React.Component {
     } = this.props;
     return (
       <View style={styles.container}>
-        <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>
+        <Text style={[{ ...ApplicationStyles.fontStyles.body1 }, { padding: 0 }]}>
           {label}
         </Text>
         <View style={{
@@ -195,7 +195,7 @@ class FileSelector extends React.Component {
             onMoveEnd={({ data }) =>  this.updateFiles(data) }
           />
         </View>
-        {error &&<Text style={[{ ...ApplicationStyles.textInputLabel, color: ApplicationStyles.warningColor.color }, { padding: 0 }]}>
+        {error &&<Text style={[{ ...ApplicationStyles.fontStyles.caption, color: ApplicationStyles.warningColor.color }, { padding: 0 }]}>
           {error}
         </Text>
         }

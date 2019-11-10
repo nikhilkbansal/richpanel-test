@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
-  Text, NavigationBar, TextInput, Button, ProgressiveImage,
+  Text, NavigationBar, TextInput, Button, ProgressiveImage, AvatarImage
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import { CommonFunctions } from '../../Utils';
@@ -135,7 +135,11 @@ class EditProfile extends Component {
               onPress={() => this.selectImage()}
               style={[styles.imageButton, { justifyContent: 'center', alignContent: 'center', alignItems: 'center' }]}
             >
-              <ProgressiveImage
+              <AvatarImage
+              size={wp('20%')}
+              source={{ uri: picture && picture.path ? picture.path : CommonFunctions.getFile(profile.picture, 'avatar', true) }}
+              />
+              {/* <ProgressiveImage
                 resizeMode="cover"
                 style={{
                   ...ApplicationStyles.elevationS,
@@ -143,7 +147,7 @@ class EditProfile extends Component {
                   height: wp('22%'),
                 }}
                 source={{ uri: picture && picture.path ? picture.path : CommonFunctions.getFile(profile.picture, 'avatar', true) }}
-              />
+              /> */}
               <Icon
                 name="md-create"
                 size={ApplicationStyles.iconSize}
@@ -194,7 +198,7 @@ class EditProfile extends Component {
 
           <TextInput
             error={errors.password}
-            label="Password"
+            label="New Password"
             returnKeyType="next"
             placeholder="Only enter if you want to change; 6 to 18 chars"
             textInputRef={this.passwordRef}

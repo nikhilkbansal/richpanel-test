@@ -26,6 +26,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.google.firebase.FirebaseApp;
+import androidx.multidex.MultiDex;
+import android.content.Context;
 
 import java.util.Arrays;
 import java.util.List;
@@ -69,6 +71,7 @@ public class MainApplication extends Application implements ReactApplication {
       );
     }
 
+
     @Override
     protected String getJSMainModuleName() {
       return "index";
@@ -78,6 +81,12 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public ReactNativeHost getReactNativeHost() {
     return mReactNativeHost;
+  }
+
+  @Override
+  protected void attachBaseContext(Context base) {
+    super.attachBaseContext(base);
+    MultiDex.install(this);
   }
 
   @Override

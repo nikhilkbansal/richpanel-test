@@ -59,7 +59,7 @@ class SwiperPage extends React.Component {
 
   componentWillReceiveProps(nextProps){
     if(this.props.currentVisible !== nextProps.currentVisible){
-      this.player.forEach(o=>!o.controls.props.paused && o.pause());
+      this.player.forEach(o=>o && o.controls && !o.controls.props.paused && o.pause());
     }
   }
 

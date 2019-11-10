@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: ApplicationStyles.lightBackground.color },
   subContainer: { flex: 1, paddingHorizontal: wp('7%') },
   firstSection: { flex: 1 },
-  secondSection: { flex: 4, marginVertical: hp('5%') },
+  secondSection: { flex: 4, marginTop: hp('5%'), marginBottom: hp('7%') },
   tabularButton: {
     marginVertical: hp('1%'),
     flexDirection: 'row',
@@ -122,12 +122,12 @@ class SignUpScreen extends Component {
         <NavigationBar {...navigation} showLeftSection iconsColor={ApplicationStyles.darkColor.color} containerStyle={{ backgroundColor: ApplicationStyles.lightBackground.color, elevation: 0 }} statusBarColor={ApplicationStyles.lightBackground .color} statusBarStyle='dark-content' />
         <KeyboardAwareScrollView style={styles.subContainer}>
           <View style={styles.firstSection}>
-            <Text style={ApplicationStyles.headline}>Signup</Text>
-            <Text style={ApplicationStyles.subHeadline}>Let's take first step</Text>
+            <Text style={ApplicationStyles.fontStyles.headline}>Signup</Text>
+            <Text style={ApplicationStyles.fontStyles.subheading}>Let's take first step</Text>
           </View>
           <View style={styles.secondSection}>
             <View style={styles.signUpLinkContainer}>
-              <Text style={{ ...ApplicationStyles.bodySubHeading }}>Signup as a</Text>
+              <Text style={{ ...ApplicationStyles.fontStyles.caption }}>Signup as a</Text>
             </View>
             <View style={styles.tabularButton}>
               <Button
@@ -143,8 +143,8 @@ class SignUpScreen extends Component {
                 onPress={() => this.setState({ userType: 'ngo' })}
               />
             </View>
-            <View style={{...styles.signUpLinkContainer, marginBottom: hp('2%')}}>
-              <Text style={{ ...ApplicationStyles.bodySubHeading }}>PO: Philanthropy Organizations (NGO, NPO etc)</Text>
+            <View style={{...styles.signUpLinkContainer, marginBottom: hp('4%')}}>
+              <Text style={{ ...ApplicationStyles.fontStyles.caption }}>PO: Philanthropy Organizations (NGO, NPO etc)</Text>
              </View>
             <View>
             <TextInput
@@ -158,6 +158,7 @@ class SignUpScreen extends Component {
             <TextInput
               error={errors.email}
               label="Email"
+              placeholder='Email address'
               textInputRef={this.emailRef}
               returnKeyType="next"
               onChangeText={text => this.updateTextInput('email', text)}
@@ -167,8 +168,8 @@ class SignUpScreen extends Component {
               error={errors.userName}
               label="Username"
               returnKeyType="next"
+              placeholder='Username'
               textInputRef={this.userNameRef}
-              placeholder=''
               onChangeText={text => this.updateTextInput('userName', text)}
               onSubmitEditing={() => this.passwordRef.current.focus()}
             />
@@ -187,6 +188,7 @@ class SignUpScreen extends Component {
               label="Confirm Password"
               returnKeyType="done"
               secureTextEntry
+              placeholder='Confirm Password'
               textInputRef={this.confirmPasswordRef}
               onChangeText={text => this.updateTextInput('confirmPassword', text)}
               onSubmitEditing={() => this.signUpInit()}
@@ -200,7 +202,7 @@ class SignUpScreen extends Component {
               onPress={() => this.signUpInit()}
             />
             { userType ==='ngo' && <View style={{...styles.signUpLinkContainer, width: '100%', marginTop: hp('0.5%') }}>
-                <Text style={{  ...ApplicationStyles.bodySubHeading, textAlign:'center', }}>Note: As soon as we will get your request, we will start verifification process. Once you verified we will notify you and then you will be able to login</Text>
+                <Text style={{  ...ApplicationStyles.fontStyles.caption, textAlign:'center', }}>Note: As soon as we will get your request, we will start verifification process. Once you verified we will notify you and then you will be able to login</Text>
             </View>}
           </View>
         </KeyboardAwareScrollView>

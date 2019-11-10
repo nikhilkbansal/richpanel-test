@@ -73,7 +73,7 @@ class MenuDropdown extends React.Component {
           onTouchOutside={() => {
             this.setState({ modalVisible: false });
           }}
-          dialogTitle={<DialogTitle title={menuTitle} textStyle={{ ...ApplicationStyles.textInputLabel }} />}
+          dialogTitle={<DialogTitle title={menuTitle} textStyle={{ ...ApplicationStyles.fontStyles.caption }} />}
         >
           <DialogContent style={[{
             width: wp('50%'), maxHeight: hp('50%'), paddingTop: hp('2%'), paddingHorizontal: 0,
@@ -82,9 +82,9 @@ class MenuDropdown extends React.Component {
             <ScrollView>
               { menus && [...menus, ...defaultMenus].map(o => (
                 <Button
-                  title={o.label}
+                  title={o.label.toUpperCase()}
                   onPress={() => { this.closePicker(); o.func(); }}
-                  titleStyle={{ ...ApplicationStyles.button2, color: ApplicationStyles.darkColor.color, ...styles.button, ...menuItemStyle }}
+                  titleStyle={{ ...ApplicationStyles.fontStyles.button, color: ApplicationStyles.darkColor.color, ...styles.button, ...menuItemStyle }}
                 />
               ))}
             </ScrollView>

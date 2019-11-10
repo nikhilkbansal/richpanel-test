@@ -101,13 +101,15 @@ class Event extends Component {
     const { navigation, homeEvents, profile  } = this.props;
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color}}>
-        <NavigationBar  leftFunction={()=>navigation.openDrawer()} leftIcon={'md-menu'}  {...navigation} rightButtonAction={() => navigation.navigate('AddEvent')}  showRightSection={profile && profile.role ==='ngo'} rightIcon="md-add" title="Events"  />
+        <NavigationBar  leftFunction={()=>navigation.toggleDrawer()} leftIcon={'md-menu'}  {...navigation} rightButtonAction={() => navigation.navigate('AddEvent')}  showRightSection={profile && profile.role ==='ngo'} rightIcon="md-add" title="Events"  />
       
            {homeEvents.length < 1 
           ? <EmptyState message='There are no events to show'> 
-            Tip: Follow some Philanthropy organizations from <Text  onPress={()=>navigation.navigate('Search')}  style={{...ApplicationStyles.button2, textDecorationLine: 'underline', color: ApplicationStyles.grayishBackground.color, textAlign:'center'}}>search page</Text>
+            Tip: Follow some Philanthropy organizations from <Text  onPress={()=>navigation.navigate('Search')}  style={{...ApplicationStyles.fontStyles.button, textDecorationLine: 'underline', color: ApplicationStyles.darkColor.color, textAlign:'center'}}>search page</Text>
           </EmptyState>
           :<FlatList
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
               onViewableItemsChanged={this.handleViewableItemsChanged}
               viewabilityConfig={this.viewabilityConfig}
               onRefresh={()=>{}}

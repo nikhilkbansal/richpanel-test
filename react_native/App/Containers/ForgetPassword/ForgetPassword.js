@@ -74,14 +74,15 @@ class ForgetPassword extends Component {
         <NavigationBar {...navigation} showLeftSection iconsColor={ApplicationStyles.darkColor.color} containerStyle={{ backgroundColor: ApplicationStyles.lightBackground.color, elevation: 0 }} statusBarColor={ApplicationStyles.lightBackground .color} statusBarStyle='dark-content' />
         <KeyboardAwareScrollView style={styles.subContainer}>
           <View style={styles.firstSection}>
-            <Text style={ApplicationStyles.headline}>Forgot Password?</Text>
-            <Text style={ApplicationStyles.subHeadline}>Don't worry! just follow along</Text>
+            <Text style={ApplicationStyles.fontStyles.headline}>Forgot Password?</Text>
+            <Text style={ApplicationStyles.fontStyles.subheading}>Don't worry! just follow along</Text>
           </View>
           <View style={styles.secondSection}>
             <TextInput
               error={errors.email}
               label="Email"
               returnKeyType="done"
+              placeholder='Email address'
               onChangeText={text => this.updateTextInput('email', text)}
               onSubmitEditing={this.forgotPassInit}
             />

@@ -66,7 +66,7 @@ class DatePicker extends React.Component {
     } = this.props;
     return (
       <View style={styles.container}>
-        <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>
+        <Text style={[{ ...ApplicationStyles.fontStyles.body1 }, { padding: 0 }]}>
           {label}
         </Text>
         <Button
@@ -75,11 +75,11 @@ class DatePicker extends React.Component {
         >
           { dateTime
 
-            ? <Text style={[{ ...ApplicationStyles.textInputValue }, { padding: 0 }]}>{dateTime}</Text>
-            : <Text style={[{ ...ApplicationStyles.textInputValue, ...ApplicationStyles.disabledColor }, { padding: 0 }]}>{placeholder}</Text>
+            ? <Text style={[{ ...ApplicationStyles.fontStyles.body2 }, { padding: 0 }]}>{dateTime}</Text>
+            : <Text style={[{ ...ApplicationStyles.fontStyles.body2, ...ApplicationStyles.disabledColor }, { padding: 0 }]}>{placeholder}</Text>
           }
         </Button>
-      {error &&<Text style={[{ ...ApplicationStyles.textInputLabel, color: ApplicationStyles.warningColor.color }, { padding: 0 }]}>
+      {error &&<Text style={[{ ...ApplicationStyles.fontStyles.caption, color: ApplicationStyles.warningColor.color }, { padding: 0 }]}>
       {error}
       </Text>
       }

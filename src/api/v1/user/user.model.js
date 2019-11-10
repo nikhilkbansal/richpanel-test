@@ -22,9 +22,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     match: /^\S+@\S+\.\S+$/,
     required: true,
-    unique: true,
     trim: true,
     lowercase: true,
+  },
+  phone: {
+    type: String,
   },
   password: {
     type: String,
@@ -35,7 +37,6 @@ const userSchema = new mongoose.Schema({
   userName: {
     type: String,
     required: true,
-    unique: true,
     trim: true,
   },
   forgotPasswordKey: {
@@ -45,7 +46,6 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     maxlength: 128,
-    index: true,
     trim: true,
   },
   services: {
@@ -92,7 +92,13 @@ const userSchema = new mongoose.Schema({
 });
 
 
-userSchema.index({ name: 'text', tags: 'text', userName: 'text' });
+userSchema.index({
+  userName: 'text',
+  'poInfo.about': 'text',
+  'poInfo.causeSupported': 'text',
+  name: 'text',
+  'poInfo.publicPhone': 'text',
+});
 
 /**
  * Add your
@@ -231,10 +237,10 @@ userSchema.statics = {
 
 
   async list({
-    skip = 0, perPage = 30, _id, $text, causeSupported, role,
+    skip = 0, perPage = 30, _id, $text, causeSupported, role, $or,
   }) {
     const options = omitBy({
-      _id, $text, causeSupported, role,
+      _id, $text, causeSupported, role, $or,
     }, isNil);
     console.log(options);
     return this.find(options).sort({ createdAt: -1 })
@@ -314,4 +320,6 @@ userSchema.statics = {
 /**
  * @typedef User
  */
-module.exports = mongoose.model('User', userSchema);
+const model = mongoose.model('User', userSchema);
+model.syncIndexes();
+module.exports = model;

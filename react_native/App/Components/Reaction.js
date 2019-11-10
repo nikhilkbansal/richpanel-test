@@ -12,6 +12,7 @@ import {
   Colors, ApplicationStyles,
 } from '../Theme';
 import { CommonFunctions } from '../Utils';
+import Icon from './Icon';
 
 const styles = StyleSheet.create({
 
@@ -23,20 +24,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // top: -hp('8.5%'),
     // left: wp('-1%'),
-    height: hp('5.5%'),
+    height: hp('10%'),
     backgroundColor: ApplicationStyles.lightColor.color,
+    alignContent:'center',
+    alignItems: 'center',
+    justifyContent:'center',
+    paddingTop: hp('2%')
     // ...ApplicationStyles.elevationS,
     // borderRadius: wp('1%'),
     // zIndex: 9999,
 
   },
   reaction: {
-    padding: wp('1%'),
-    paddingTop: hp('0.4%'),
-    paddingBottom: 0,
+    // padding: wp('1%'),
+    // paddingTop: hp('0.4%'),
+    // paddingBottom: 0,
     flex: 1,
-    marginBottom: 0,
+    // marginBottom: 0,
+    paddingHorizontal: wp('1%'),
     alignSelf: 'center',
+    alignContent:'center',
+    alignItems: 'center',
+    justifyContent:'center',
   },
 });
 
@@ -98,21 +107,21 @@ class Reaction extends React.Component {
       >
         <Button
           iconSize={wp('6%')}
-          style={{ flex: 1 }}
-          iconColor={iconColor}
-          iconFamily={iconFamily}
-          icon={icon}
+          style={{ flex: 1,   }}          
           buttonWrapperStyle={styles.reaction}
           onPress={() => this.postCustomReaction(value)}
-        />
+        >
+        <Icon name={icon} iconFamily={iconFamily}  color={iconColor}/>
         <Text style={{
-          ...ApplicationStyles.tabLabelStyle,
+          ...ApplicationStyles.fontStyles.caption,
           color: iconColor,
           textAlign: 'center',
+          flex:1
         }}
         >
           {title}
         </Text>
+        </Button>
       </Animated.View>
     );
   }
@@ -134,8 +143,7 @@ class Reaction extends React.Component {
           onTouchOutside={this.toggleReactions}
         >
           <DialogContent style={{
-            width: wp('70%'),
-            minHeight: hp('8%'),
+            width: wp('84%'),
             flexDirection: 'row',
             alignContent: 'center',
             justifyContent: 'center',
@@ -145,7 +153,7 @@ class Reaction extends React.Component {
             paddingLeft: 0,
             paddingRight: 0,
             paddingBottom: 0,
-
+            marginBottom:0
           }}
           >
             <View style={styles.overlay}>

@@ -9,7 +9,7 @@ import UserActions from 'App/Stores/User/Actions';
 import { connect } from 'react-redux';
 import Dialog, { DialogContent, SlideAnimation, DialogTitle } from 'react-native-popup-dialog';
 import {
-  Text, EmptyState, NavigationBar, TextInput, Button, ProgressiveImage, Swiper, Icon, MenuItem
+  Text, EmptyState, NavigationBar, AvatarImage, TextInput, Button, ProgressiveImage, Swiper, Icon, MenuItem
 } from '../../Components';
 import {
   Colors, FontSizes, Fonts, ApplicationStyles,
@@ -19,7 +19,7 @@ import AxiosRequest from '../../Services/HttpRequestService';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
-  subContainer: { flex: 1, paddingHorizontal: wp('5%') },
+  subContainer: { flex: 1, paddingHorizontal: wp('1%') },
   sectionContainer: {
     ...ApplicationStyles.elevationS,
     flex: 1,
@@ -74,27 +74,29 @@ const styles = StyleSheet.create({
     // justifyItems: 'center',
   },
   poNameContainer: {flexDirection: 'row'},
-  poName: {...ApplicationStyles.avatarTitle, flex: 1 },
+  poName: {...ApplicationStyles.fontStyles.body2, flex: 1 },
   follow:{
     flex: 1,
     alignItems:'flex-end'
   },
   followButton:{ flex: 1 },
   postContainer: {
-    marginVertical: wp('2%'), marginHorizontal: wp('0.9%'), width: wp('28%'), padding: wp('0.5%'),
+    margin: wp('2%'), 
   },
   postImage: {
-    width: '100%',
+    // width: '100%',
+    margin: wp('2%'), 
+
+    width: wp('28%'),
     height: wp('28%'),
     borderRadius: wp('1.5%'),
     ...ApplicationStyles.elevationS,
     overflow: 'hidden',
-    justifyContent: 'center',
   },
   postTitle: { width: '100%', textAlign: 'center', ...ApplicationStyles.bodyHeading },
   tabContainer: {flex:1, flexDirection: 'column',paddingBottom:0, backgroundColor: ApplicationStyles.smokeBackground.color, marginBottom: hp('2%'), },
   tabs: {flex:1,  backgroundColor:ApplicationStyles.grayishBackground.color , flexDirection:'row', justifyContent: 'space-around'},
-  tabContent: {flex:1, minHeight: hp('20%'), flexWrap:'wrap', flexDirection:'row',backgroundColor: ApplicationStyles.lightBackground.color, justifyContent: 'space-around', },
+  tabContent: {flex:1, minHeight: hp('20%'), flexWrap:'wrap', flexDirection:'row',backgroundColor: ApplicationStyles.lightBackground.color, flexDirection:'row',  justifyContent:'center', },
   viewAll: {backgroundColor:ApplicationStyles.lightBackground.color,paddingBottom:hp('1%')},
 });
 
@@ -248,16 +250,16 @@ class NgoProfile extends Component {
   
   postItem(data, text = false) {
     return (
-      <View style={styles.postContainer}
-      >
+      // <View style={styles.postContainer}
+      // >
         <View style={styles.postImage}
         >
           <ProgressiveImage
             resizeMode="cover"
             style={{width:'100%', height: '100%'}}
-            source={{uri: CommonFunctions.getFile(data.files[0])}}
+            source={{uri: CommonFunctions.getFile(data.files[0],'videoThumb')}}
           />
-        </View> 
+        {/* </View>  */}
       </View>
 
     );
@@ -306,10 +308,9 @@ class NgoProfile extends Component {
             >
               <View style={styles.avatarContainer}
               >
-                <ProgressiveImage
-                  resizeMode="cover"
-                  containerStyle={styles.avatarImageContainer}
-                  style={styles.avatarImage}
+                <AvatarImage
+                  size={wp('14%')}
+                  // containerStyle={styles.avatarImageContainer}
                   source={{ uri: CommonFunctions.getFile(poData.picture, 'avatar', true) }}
                 />
               </View>
@@ -326,7 +327,7 @@ class NgoProfile extends Component {
                       onPress={this.followUnfollow}
                       containerStyle={styles.followButton}
                       buttonWrapperStyle={styles.followButton}
-                      titleStyle={{ ...ApplicationStyles.button, color:ApplicationStyles.primaryColor.color }}
+                      titleStyle={{ ...ApplicationStyles.fontStyles.button, color:ApplicationStyles.primaryColor.color }}
                     />
                     : <this.getEditIcon 
                       onPress={()=>navigation.navigate('EditProfile')}
@@ -334,10 +335,10 @@ class NgoProfile extends Component {
                       iconColor={ApplicationStyles.disabledColor.color}  />
                     }
                     </View>
-                    <Text style={[ApplicationStyles.bodySubHeading, { flex: 1 }]}>
+                    <Text style={[ApplicationStyles.fontStyles.caption, { flex: 1 }]}>
                       @{poData.userName}
                     </Text>
-                    <Text style={[ApplicationStyles.bodySubHeading2, { flex: 1 }]}>
+                    <Text style={[ApplicationStyles.fontStyles.caption, { flex: 1 }]}>
                       {CommonFunctions.getFollowerCount(poData.followerCount)} { CommonFunctions.getPluralString('Follower', poData.followerCount)}
                     </Text>
                   </View>
@@ -392,24 +393,24 @@ class NgoProfile extends Component {
                 style={{bottom: hp('1%'), top:null, borderRadius:wp('10%'), backgroundColor: ApplicationStyles.smokeBackground.color}}
               />
  
-              <Text style={[ApplicationStyles.body, { paddingHorizontal: wp('2%') }]} maxLength={wp('25%')}>
+              <Text style={[ApplicationStyles.fontStyles.body1, { paddingHorizontal: wp('2%') }]} maxLength={wp('25%')}>
                 {poData.poInfo.about}
               </Text>
               
               <View style={{marginTop: hp('2%'),flex:1, flexDirection: 'row'}}>
-                <Text style={[ApplicationStyles.link, {width: wp('20%'),  color: ApplicationStyles.darkColor.color, paddingLeft: wp('2%') }]} maxLength={wp('25%')}>
+                <Text style={[ApplicationStyles.fontStyles.body2, {width: wp('20%'),  color: ApplicationStyles.darkColor.color, paddingLeft: wp('2%') }]} maxLength={wp('25%')}>
                   Founded:
                 </Text>
-                <Text style={[ApplicationStyles.body, {   }]} maxLength={wp('25%')}>
+                <Text style={[ApplicationStyles.fontStyles.body1, {   }]} maxLength={wp('25%')}>
                 {poData.poInfo.founded || 'N/A' }
                 </Text>
               </View>
 
               <View style={{flex:1, flexDirection: 'row'}}>
-                <Text style={[ApplicationStyles.link, {width: wp('20%'),  color: ApplicationStyles.darkColor.color, paddingLeft: wp('2%') }]} maxLength={wp('25%')}>
+                <Text style={[ApplicationStyles.fontStyles.body2, {width: wp('20%'),  color: ApplicationStyles.darkColor.color, paddingLeft: wp('2%') }]} maxLength={wp('25%')}>
                   Website:
                 </Text>
-                <Text style={[ApplicationStyles.body, {   }]} maxLength={wp('25%')}>
+                <Text style={[ApplicationStyles.fontStyles.body1, {   }]} maxLength={wp('25%')}>
                   {poData.poInfo.website || 'N/A' }
                 </Text>
               </View>
@@ -419,18 +420,18 @@ class NgoProfile extends Component {
          
           <View style={[styles.sectionContainer, styles.tabContainer]}>
                 <View   style={styles.tabs}>
-                    <Button title='Posts' onPress={()=>this.setActiveTab('post')} 
+                    <Button title='POSTS' onPress={()=>this.setActiveTab('post')} 
                       buttonWrapperStyle={{  height: '100%',  margin:0,padding:0, paddingVertical: hp('0.7%')}}
                       style={[styles.scrollButton,activeTab === 'post' ? activeTabStyle : '']}
-                      titleStyle={[ ApplicationStyles.button2,{color: ApplicationStyles.disabledColor.color,textAlign:'center'},activeTab === 'post' ? activeTabLabelStyle:"",]} />
-                    <Button title='Events' onPress={()=>this.setActiveTab('event')}
+                      titleStyle={[ ApplicationStyles.fontStyles.button,{borderBottomColor:ApplicationStyles.grayishBackground.color, color: ApplicationStyles.darkColor.color,textAlign:'center'},activeTab === 'post' ? activeTabLabelStyle:"",]} />
+                    <Button title='EVENTS' onPress={()=>this.setActiveTab('event')}
                       buttonWrapperStyle={{  height: '100%',  margin:0,padding:0, paddingVertical: hp('0.7%')}}
                       style={[styles.scrollButton,activeTab === 'event' ? activeTabStyle : '']}
-                      titleStyle={[ ApplicationStyles.button2,{color: ApplicationStyles.disabledColor.color,textAlign:'center'},activeTab === 'event' ? activeTabLabelStyle:"",]} />
-                    <Button title='Shop' onPress={()=>this.setActiveTab('shop')}
+                      titleStyle={[ ApplicationStyles.fontStyles.button,{borderBottomColor:ApplicationStyles.grayishBackground.color, color: ApplicationStyles.darkColor.color,textAlign:'center'},activeTab === 'event' ? activeTabLabelStyle:"",]} />
+                    <Button title='SHOP' onPress={()=>this.setActiveTab('shop')}
                       buttonWrapperStyle={{  height: '100%',  margin:0,padding:0, paddingVertical: hp('0.7%')}}
                       style={[styles.scrollButton,activeTab === 'shop' ? activeTabStyle : '']}
-                      titleStyle={[ ApplicationStyles.button2,{color: ApplicationStyles.disabledColor.color,textAlign:'center'},activeTab === 'shop' ? activeTabLabelStyle:"",]} />
+                      titleStyle={[ ApplicationStyles.fontStyles.button,{borderBottomColor:ApplicationStyles.grayishBackground.color, color: ApplicationStyles.darkColor.color,textAlign:'center'},activeTab === 'shop' ? activeTabLabelStyle:"",]} />
                   </View>
                 { ['post', 'event'].includes(activeTab) ? <View style={styles.tabContent}>
                   {postsOrEvents.length === 0
@@ -444,7 +445,7 @@ class NgoProfile extends Component {
                    <EmptyState message="No products availble" containerStyle={{ marginTop: hp('4%'), marginBottom: hp('5%') }} messageContainerStyle={ {backgroundColor: ApplicationStyles.lightColor.color}}/>
                 </View>
                 }
-                <Button title='View All' style={styles.viewAll}  titleStyle={{...ApplicationStyles.button2}}/>
+                <Button title='VIEW ALL' style={styles.viewAll}  titleStyle={{...ApplicationStyles.fontStyles.button}}/>
             </View>
             
           {/* <View style={[styles.sectionContainer, { marginBottom: hp('2%') }]}>
@@ -460,21 +461,21 @@ class NgoProfile extends Component {
             onTouchOutside={() => {
               this.setState({ contactModal: false });
             }}
-            dialogTitle={<DialogTitle title="Contact" textStyle={{ ...ApplicationStyles.textInputLabel }} />}
+            dialogTitle={<DialogTitle title="Contact" textStyle={{ ...ApplicationStyles.fontStyles.caption }} />}
           >
-            <DialogContent style={{ width: wp('80%'), height: hp('15%') }}>
-              <View style={{flex:1,flexDirection:'row'}}>
+            <DialogContent style={{ width: wp('80%'), height: hp('18%'), paddingBottom:0,}}>
+              <View style={{flex:1,flexDirection:'row', alignItems:'center', alignContent:'center' }}>
                 {poData.poInfo && poData.poInfo.publicEmail && <Button onPress={()=>CommonFunctions.openUrl(`mailto:${poData.poInfo.publicEmail}`)} style={{flex:1}} buttonWrapperStyle={{flex:1, justifyContent: 'center', alignItems:'center'}}>
                   <Icon name='mail' iconFamily='AntDesign' />
-                  <Text style={{...ApplicationStyles.avatarSubtitle, marginTop: hp('1%')}}>{poData.poInfo.publicEmail}</Text>
+                  <Text style={{...ApplicationStyles.fontStyles.body2, marginTop: hp('1%')}}>{poData.poInfo.publicEmail}</Text>
                 </Button>}
                 {poData.poInfo && poData.poInfo.publicPhone && <Button  onPress={()=>CommonFunctions.openUrl(`tel:${poData.poInfo.publicPhone}`)} style={{flex:1}}  buttonWrapperStyle={{flex:1, justifyContent: 'center', alignItems:'center'}}>
                   <Icon name='phone' iconFamily='AntDesign' />
-                  <Text style={{...ApplicationStyles.avatarSubtitle, marginTop: hp('1%')}}>{poData.poInfo.publicPhone}</Text>
+                  <Text style={{...ApplicationStyles.fontStyles.body2, marginTop: hp('1%')}}>{poData.poInfo.publicPhone}</Text>
                 </Button>}
                 {!poData.poInfo || (!poData.poInfo.publicEmail && !poData.poInfo.publicPhone) &&
                   <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
-                    <Text style={{...ApplicationStyles.avatarSubtitle, marginTop: hp('1%')}}>No shared information found!</Text>
+                    <Text style={{...ApplicationStyles.fontStyles.body2, marginTop: hp('1%')}}>No shared information found!</Text>
                   </View>}
               </View>
             </DialogContent>

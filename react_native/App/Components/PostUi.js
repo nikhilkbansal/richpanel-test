@@ -30,17 +30,17 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignContent: 'center',
     justifyContent: 'center',
-    paddingHorizontal: wp('4%'),
+    paddingHorizontal: wp('1%'),
     marginBottom: hp('1%'),
     
   },
 
-  subContainer: { flex: 1, flexDirection: 'row', paddingVertical: hp('2%')  },
+  subContainer: { flex: 1, flexDirection: 'row',   paddingBottom: hp('1.1%'), paddingTop: hp('1.5%')   },
   avatarImage: {
     width: wp('12%'), height: wp('12%'), borderRadius: wp('7.5%'), alignSelf: 'center',
-  },
+  }, 
   avatarContainer: {
-    flex: 5, paddingHorizontal: wp('2%'), justifyContent: 'space-around', flexDirection: 'column',
+    flex: 5, paddingHorizontal: wp('2%'), justifyContent: 'space-between', flexDirection: 'column',
   },
   userActions: {
     flex: 1,
@@ -48,12 +48,12 @@ const styles = StyleSheet.create({
     ...ApplicationStyles.elevationS,
     justifyContent: 'space-between',
   },
-  avatarName: { flexDirection: 'row', flex: 3 },
+  avatarName: {   flexDirection: 'row', flex: 1 },
   medal: { ...ApplicationStyles.avatarSubtitle, paddingHorizontal: wp('2%'), alignItems: 'center' },
   agoContainer: {
     flex: 1,
     alignSelf: 'flex-start',
-    height: hp('4%'),
+    height: hp('3%'),
     alignContent: 'center',
     borderRadius: wp('10%'),
     backgroundColor: ApplicationStyles.grayishBackground.color,
@@ -78,10 +78,10 @@ const styles = StyleSheet.create({
     paddingVertical: hp('1%'),
   },
   ago: {
-    ...ApplicationStyles.avatarSubtitle,
+    ...ApplicationStyles.fontStyles.caption,
     paddingHorizontal: wp('1.5%'),
   },
-  moreContainer: { flex: 1, justifyContent: 'center' },
+  moreContainer: { flex: 1, alignItems: 'flex-end', },
   subContainerSecond: { paddingHorizontal: wp('3%'), paddingTop: wp('2%') },
   moreWrapperStyle: {
     width: wp('10%'),
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   },
   raisedSliderContainer: { backgroundColor:ApplicationStyles.smokeBackground.color, height: hp('0.2%') },
   raisedSlider: { backgroundColor: ApplicationStyles.primaryColor.color, height: hp('0.2%') },
-  body: { ...ApplicationStyles.body2, marginBottom: hp('2%') },
+  body: { ...ApplicationStyles.fontStyles.body1, marginBottom: hp('2%') },
   moreStyle: { ...ApplicationStyles.body3, color: ApplicationStyles.primaryColor.color },
   subBody: { padding: wp('2%') },
   raisedMoney: { ...ApplicationStyles.info2, alignContent: 'center', justifyContent: 'center' },
@@ -126,14 +126,15 @@ function PostUi({
   return (
     <View style={styles.container}>
       <View style={[styles.subContainer]}>
-        <AvatarImage
-          source={{ uri: CommonFunctions.getFile(userPicture, 'avatar', true) }}
-        />
-        <Button style={[styles.avatarContainer]} onPress={onUserClick}>
-
+        
+        <Button style={{ flex:5, flexDirection:'row'  }} buttonWrapperStyle={{ flex:1, flexDirection:'row', justifyContent:'center',alignItems: 'center' }} onPress={onUserClick}>
+          <AvatarImage 
+            source={{ uri: CommonFunctions.getFile(userPicture, 'avatar', true) }}
+          />
+          <View style={[styles.avatarContainer]}>
           <View style={styles.avatarName}>
-            <Text style={ApplicationStyles.avatarTitle}>
-              {userName}
+            <Text style={ApplicationStyles.fontStyles.body2}>
+              {userName} 
             </Text>
             {/* <Text style={[styles.medal]}>
               <Icon name="md-medal" size={wp('4%')} color={Colors.golden} style={{ paddingHorizontal: wp('2%') }} />
@@ -145,6 +146,7 @@ function PostUi({
             <Text style={styles.ago}>
               { moment(createdAt).fromNow()}
             </Text>
+          </View>
           </View>
 
         </Button>
@@ -167,7 +169,7 @@ function PostUi({
         <View style={styles.userFeedBack}>
           <ReactionsGot reactionsCount={reactionsCount} topThreeReactions={topThreeReactions} />
           {sharesCount > 0 && (
-          <Text style={{ ...ApplicationStyles.bodySubHeading2 }}>
+          <Text style={{ ...ApplicationStyles.fontStyles.caption }}>
             {CommonFunctions.numberToReadable(sharesCount)}
             {' '}
             {CommonFunctions.getPluralString('Share', sharesCount)}
@@ -177,21 +179,21 @@ function PostUi({
         <View style={styles.subContainerSecond}>
           <View style={styles.userActions}>
             <Reaction active={howUserReacted} onReactionRemovePress={() => onReactionRemovePress({ _id })} onReactionPress={(reaction = 'like') => onReactionPress({ _id, reaction })} />
-            <Button 
+            {campaignGoal && <Button 
               icon='donate'
               iconSize={wp('6%')}
               iconColor={ApplicationStyles.darkColor.color}
               iconFamily='custom' 
               style={styles.reaction} 
-              onPress={onDonatePress} />
+              onPress={onDonatePress} />}
             <Button icon="share" iconSize={wp('5.3%')} iconFamily="SimpleLineIcons" style={styles.reaction} onPress={onSharePress} />
 
           </View>
-          <View style={styles.titleContainer}>
-            <Text style={ApplicationStyles.headline2}>{title}</Text>
-          </View>
+          {campaignGoal && <View style={styles.titleContainer}>
+            <Text style={ApplicationStyles.fontStyles.title}>{title}</Text>
+          </View>}
           {campaignGoal
-          && <Text style={{ ...ApplicationStyles.bodySubHeading, paddingVertical: hp('0.6%'), alignSelf: 'flex-end' }}>Ends on { moment(campaignEndDate).format('DD MMM YYYY') }</Text>}
+          && <Text style={{ ...ApplicationStyles.fontStyles.caption, paddingVertical: hp('0.6%'), alignSelf: 'flex-end' }}>Ends on { moment(campaignEndDate).format('DD MMM YYYY') }</Text>}
 
           {campaignGoal
           && (
@@ -202,11 +204,11 @@ function PostUi({
               <View style={{...styles.raisedSlider, width: getPercentage(campaignGoal,raisedMoney)}} />
             </View>
             <View style={styles.raisedContainer}>
-              <Text style={ApplicationStyles.bodySubHeading}>{raisedMoney ? `₹${getHumanCurrency(raisedMoney)} Raised`  : ''}</Text>
+              <Text style={ApplicationStyles.fontStyles.caption}>{raisedMoney ? `₹${getHumanCurrency(raisedMoney)} Raised`  : ''}</Text>
               <Text style={styles.raisedMoney}>
               {/* ₹100 */}
                 {' '}
-                <Text style={ApplicationStyles.primaryInfo}>
+                <Text style={ApplicationStyles.fontStyles.caption, { ...ApplicationStyles.primaryColor}}>
                   ₹
                   {getHumanCurrency(campaignGoal)}
                 </Text>
@@ -217,7 +219,7 @@ function PostUi({
           }
         </View>
         <View style={styles.subBody}>
-          <Text style={styles.body} maxLength={wp('40%')}>
+          <Text style={[styles.body]} maxLength={wp('40%')}>
             {description}
           </Text>
         </View>
@@ -240,10 +242,10 @@ function PostUi({
 
 
             <Text style={{
-              ...ApplicationStyles.body, flex: 1, flexWrap: 'wrap',
+              ...ApplicationStyles.fontStyles.body1, flex: 1, flexWrap: 'wrap',
             }}
             >
-              <Text style={{ ...ApplicationStyles.avatarTitle }}>
+              <Text style={{ ...ApplicationStyles.fontStyles.body2 }}>
                 {`${comment[0].userId.name} `}
               </Text>
               {comment[0].comment}
@@ -252,8 +254,8 @@ function PostUi({
           </View>
           )}
           <Button
-            title="View comments"
-            titleStyle={{ ...ApplicationStyles.button2, textAlign: 'right' }}
+            title="VIEW COMMENTS"
+            titleStyle={{ ...ApplicationStyles.fontStyles.button,color:ApplicationStyles.darkColor.color,textAlign: 'right' }}
             onPress={onViewComments}
           />
         </View>

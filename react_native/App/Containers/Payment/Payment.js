@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     height: hp('7%'),
   },
-  loginTitle: { color: ApplicationStyles.lightColor.color, textAlign: 'center', fontSize: FontSizes.h3 },
+  loginTitle: {  textAlign: 'center', },
   menuContainer: {
     ...ApplicationStyles.elevationS,
     marginVertical: hp('0.2%'),
@@ -194,7 +194,7 @@ class Payment extends Component {
           onTouchOutside={this.afterPaymentDone}
         >
           <DialogContent style={{
-            width: wp('50%'),
+            width: wp('60%'),
             maxHeight: hp('30%'),
             justifyContent: 'center',
             alignItems: 'center',
@@ -204,8 +204,8 @@ class Payment extends Component {
           }}
           >
             <Icon iconFamily="SimpleLineIcons" name="check" size={wp('20%')} color={ApplicationStyles.primaryColor.color} />
-            <Text style={{ ...ApplicationStyles.button, marginTop: hp('1%'), ...ApplicationStyles.primaryColor }}>Payment Successful</Text>
-            <Text style={{ ...ApplicationStyles.bodySubHeading, textAlign: 'center' }}>Thank you for helping the needies</Text>
+            <Text style={{ ...ApplicationStyles.fontStyles.title, marginTop: hp('1%'), ...ApplicationStyles.primaryColor }}>Payment Successful</Text>
+            <Text style={{ ...ApplicationStyles.fontStyles.caption, textAlign: 'center' }}>Thank you for helping the needies</Text>
           </DialogContent>
         </Dialog>
         {!txSuccess && (

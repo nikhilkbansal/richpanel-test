@@ -130,6 +130,7 @@ class Followings extends Component {
  
 
   followItem({ item, index }) {
+    const { navigation:{ navigate}} = this.props;
     return (
       <View style={{
         flex: 1,
@@ -137,11 +138,13 @@ class Followings extends Component {
         height: hp('10.5%'),
         paddingHorizontal: wp('5.5%'),
         paddingVertical: hp('1%'),
-        marginVertical: hp('0.8%'),
+        marginVertical: ApplicationStyles.listItemsSpace,
         backgroundColor: ApplicationStyles.lightBackground.color
       }}
       >
-        <View style={{
+        <Button 
+        onPress={()=>navigate('NgoProfile',{poUserId:item.followeeId._id})}
+        buttonWrapperStyle={{
           flex: 1,
           justifyContent: 'center',
           alignContent: 'center',
@@ -150,22 +153,8 @@ class Followings extends Component {
           justifyItems: 'center',
         }}
         >
-          <ProgressiveImage
-            resizeMode="cover"
-            containerStyle={{
-              width: '100%',
-              height: '100%',
-              borderRadius: wp('20%'),
-              overflow: 'hidden',
-            }}
-            style={{
-              ...ApplicationStyles.elevationS,
-              width: '100%',
-              height: '100%',
-            }}
-            source={{ uri: CommonFunctions.getFile(item.followeeId.picture, 'avatar', true) }}
-          />
-        </View>
+          <AvatarImage size={wp('13%')} source={{ uri: CommonFunctions.getFile(item.followeeId.picture, 'avatar', true) }}/>
+        </Button>
         <View style={{ flex: 5, alignItems: 'center' }}>
           <View style={[styles.nameDetail]}>
             <View style={{
@@ -175,7 +164,7 @@ class Followings extends Component {
             }}
             >
               <View style={{flexDirection: 'row'}}>
-              <Text style={[ApplicationStyles.avatarTitle, { flex: 1 }]}>{item.followeeId.name}</Text>
+              <Text onPress={()=>navigate('NgoProfile',{poUserId:item.followeeId._id})} style={[ApplicationStyles.fontStyles.body2, { flex: 1 }]}>{item.followeeId.name}</Text>
               <Button
                 title={item.unfollowed ? "Follow": "Unfollow"}
                 style={{
@@ -187,13 +176,13 @@ class Followings extends Component {
                   flex: 1,
                 }}
                 onPress={()=>this.followUnfollow(item.followeeId._id, index, item.unfollowed)}
-                titleStyle={{ ...ApplicationStyles.button, color:ApplicationStyles.primaryColor.color }}
+                titleStyle={{ ...ApplicationStyles.fontStyles.button, color:ApplicationStyles.primaryColor.color }}
                 />
               </View>
-              <Text style={[ApplicationStyles.bodySubHeading, { flex: 1 }]}>
+              <Text style={[ApplicationStyles.fontStyles.caption, { flex: 1 }]}>
                 @{item.followeeId.userName}
               </Text>
-              <Text style={[ApplicationStyles.bodySubHeading2, { flex: 1 }]}>
+              <Text style={[ApplicationStyles.fontStyles.caption, { flex: 1 }]}>
                 { item.followerCount } { CommonFunctions.getPluralString('Follower', item.followerCount)}
               </Text>
             </View>

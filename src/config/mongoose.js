@@ -26,6 +26,8 @@ exports.connect = () => {
     keepAlive: 1,
     useNewUrlParser: true,
     useCreateIndex: true,
+    autoIndex: true,
   });
+  mongoose.set('autoIndex', false);
   return mongoose.connection;
 };

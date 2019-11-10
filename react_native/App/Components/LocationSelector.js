@@ -166,7 +166,7 @@ class LocationSelector extends React.Component {
             </KeyboardAwareScrollView>
           </DialogContent>
         </Dialog>
-        <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>
+        <Text style={[{ ...ApplicationStyles.fontStyles.body1 }, { padding: 0 }]}>
           {label}
         </Text>
         <Button
@@ -175,8 +175,8 @@ class LocationSelector extends React.Component {
         >
           { dateTime
 
-            ? <Text style={[{ ...ApplicationStyles.textInputValue }, { padding: 0 }]}>{dateTime}</Text>
-            : <Text style={[{ ...ApplicationStyles.textInputValue, ...ApplicationStyles.disabledColor }, { padding: 0 }]}>{placeholder}</Text>
+            ? <Text style={[{ ...ApplicationStyles.fontStyles.body2 }, { padding: 0 }]}>{dateTime}</Text>
+            : <Text style={[{ ...ApplicationStyles.fontStyles.body2, ...ApplicationStyles.disabledColor }, { padding: 0 }]}>{placeholder}</Text>
           }
         </Button>
 

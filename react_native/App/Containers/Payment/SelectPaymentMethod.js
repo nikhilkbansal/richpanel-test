@@ -34,9 +34,9 @@ const styles = StyleSheet.create({
   loginTitle: { color: ApplicationStyles.lightColor.color, textAlign: 'center', fontSize: FontSizes.h3 },
   menuContainer: {
     ...ApplicationStyles.elevationS,
-    marginVertical: hp('0.2%'),
+    marginVertical: ApplicationStyles.listItemsSpace,
     backgroundColor: ApplicationStyles.lightBackground.color,
-    paddingHorizontal: wp('4%'),
+    paddingLeft: wp('4%'),
     justifyContent: 'center',
     // ...dynamicStyle,
     flex: 1,
@@ -50,11 +50,11 @@ const styles = StyleSheet.create({
 
   },
   mainMenu: { flex: 3, flexDirection: 'row', alignItems: 'center' },
-  menuLabel: { marginLeft: wp('2%'), ...ApplicationStyles.button, color: ApplicationStyles.disabledColor.color },
+  menuLabel: { marginLeft: wp('2%'), ...ApplicationStyles.fontStyles.button,  },
   menuRightSide: {
-    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end',
+    flex: 1, flexDirection: 'row', paddingRight: wp('4%'),  alignItems: 'center', justifyContent: 'flex-end',
   },
-  menuRightLabel: { marginHorizontal: wp('2%'), color: ApplicationStyles.primaryColor.color },
+  menuRightLabel: { marginHorizontal: wp('2%'), ...ApplicationStyles.fontStyles.button, textAlign:'right', color: ApplicationStyles.primaryColor.color },
 });
 
 const banks = [{ label: 'Allahabad Bank', value: '3001' }, { label: 'Andhra Bank', value: '3002' }, { label: 'Axis Bank', value: '3003' }, { label: 'Bank of Baroda - Corporate', value: '3060' }, { label: 'Bank of Baroda - Retail', value: '3005' }, { label: 'Bank of India', value: '3006' }, { label: 'Bank of Maharashtra', value: '3007' }, { label: 'Canara Bank', value: '3009' }, { label: 'Catholic Syrian Bank', value: '3010' }, { label: 'Central Bank of India', value: '3011' }, { label: 'City Union Bank', value: '3012' }, { label: 'Corporation Bank', value: '3013' }, { label: 'DBS Bank Ltd', value: '3017' }, { label: 'DCB Bank - Corporate', value: '3062' }, { label: 'DCB Bank - Personal', value: '3018' }, { label: 'Deutsche Bank', value: '3016' }, { label: 'Dhanlakshmi Bank', value: '3019' }, { label: 'Federal Bank', value: '3020' }, { label: 'HDFC Bank', value: '3021' }, { label: 'ICICI Bank', value: '3022' }, { label: 'IDBI Bank', value: '3023' }, { label: 'Indian Bank', value: '3026' }, { label: 'Indian Overseas Bank', value: '3027' }, { label: 'IndusInd Bank', value: '3028' }, { label: 'Jammu and Kashmir Bank', value: '3029' }, { label: 'Karnataka Bank Ltd', value: '3030' }, { label: 'Karur Vysya Bank', value: '3031' }, { label: 'Kotak Mahindra Bank', value: '3032' }, { label: 'Laxmi Vilas Bank', value: '3033' }, { label: 'Oriental Bank of Commerce', value: '3035' }, { label: 'Punjab & Sind Bank', value: '3037' }, { label: 'Punjab National Bank - Corporate', value: '3065' }, { label: 'Punjab National Bank - Retail', value: '3038' }, { label: 'Saraswat Bank', value: '3040' }, { label: 'South Indian Bank', value: '3042' }, { label: 'Standard Chartered Bank', value: '3043' }, { label: 'State Bank Of India', value: '3044' }, { label: 'Tamilnad Mercantile Bank Ltd', value: '3052' }, { label: 'UCO Bank', value: '3054' }, { label: 'Union Bank of India', value: '3055' }, { label: 'United Bank of India', value: '3056' }, { label: 'Vijaya Bank', value: '3057' }, { label: 'Yes Bank Ltd', value: '3058' }, { label: 'TEST Bank', value: '3333' }];
@@ -123,8 +123,9 @@ class SelectPaymentMethod extends Component {
     return (
       <Button
         style={{
-          flex: 1,
+          flex: 1
         }}
+        buttonWrapperStyle={{flex:1}}
         onPress={() => navigate('Payment', {
           paymentMeta,
           seamlessParams: {
@@ -143,9 +144,9 @@ class SelectPaymentMethod extends Component {
           overflow: 'hidden',
         }}
         >
-          <Image style={{ width: wp('14%'), height: wp('14%') }} resizeMode="contain" source={Files[iconName]} />
+          <Image style={{ width: wp('9%'), height: wp('9%') }} resizeMode="contain" source={Files[iconName]} />
         </View>
-        <Text style={{ textAlign: 'center', paddingVertical: hp('0.5%'), paddingBottom: hp('2%') }}>{label}</Text>
+        <Text style={{ textAlign: 'center', paddingVertical: hp('0.5%'), paddingBottom: hp('2%'), ...ApplicationStyles.fontStyles.caption }}>{label}</Text>
       </Button>
     );
   }
@@ -156,17 +157,17 @@ class SelectPaymentMethod extends Component {
       <View style={styles.menuContainer}>
         <View style={styles.menuSubFirst}>
           <View style={styles.mainMenu}>
-            <Icon name={leftIcon.name} iconFamily={leftIcon.family} size={leftIcon.size} color={ApplicationStyles.disabledColor.color} />
-            <Text style={styles.menuLabel}>{label}</Text>
+            <Icon  name={leftIcon.name} iconFamily={leftIcon.family} size={leftIcon.size || wp('5%')} color={ApplicationStyles.darkColor.color} />
+            <Text style={styles.menuLabel}>{label.toUpperCase()}</Text>
           </View>
-          <View style={{ ...styles.menuRightSide, flex: 2 }}>
+          <View style={{ ...styles.menuRightSide, paddingRight:0, flex: 2 }}>
             <MenuDropdown
               menuTitle={label === 'Wallet' ? 'Select wallet' : 'Select bank'}
               modalStyle={{
                 width: wp('65%'),
               }}
               menuItemStyle={{ ...ApplicationStyles.body, textAlign: 'left' }}
-              buttonStyle={[styles.moreWrapperStyle]}
+              buttonStyle={[{ flex:1, paddingRight: wp('4%'), justifyContent: 'flex-end',  alignItems:'center', flexDirection: 'row'}]}
               menus={label === 'Wallet' ? this.addPaymentFunc(wallets, 'wallets') : this.addPaymentFunc(banks, 'banks')}
             >
               <Text style={{
@@ -175,8 +176,8 @@ class SelectPaymentMethod extends Component {
               >
               See more
               </Text>
+              <Icon color={ApplicationStyles.primaryColor.color} name="ios-arrow-down" />
             </MenuDropdown>
-            <Icon color={ApplicationStyles.primaryColor.color} name="ios-arrow-down" />
           </View>
         </View>
 
@@ -208,7 +209,7 @@ class SelectPaymentMethod extends Component {
         flex: 1, flexDirection: 'row', alignItems: 'center',
       }}
       >
-        <Icon name="credit-card" size={wp('4.5%')} iconFamily="Octicons" color={ApplicationStyles.disabledColor.color} />
+        <Icon name="credit-card" size={wp('4.5%')} iconFamily="Octicons" color={ApplicationStyles.darkColor.color} />
         <CheckBox
           style={{ flex: 1 }}
           onClick={() => {
@@ -221,7 +222,7 @@ class SelectPaymentMethod extends Component {
           leftText="  4101-XXXXXXXX-1222"
           rightTextStyle={{ ...ApplicationStyles.body, textAlign: 'left' }}
           checkBoxColor={ApplicationStyles.primaryColor.color}
-          uncheckedCheckBoxColor={ApplicationStyles.disabledColor.color}
+          uncheckedCheckBoxColor={ApplicationStyles.darkColor.color}
         />
       </View>
     );
@@ -243,8 +244,8 @@ class SelectPaymentMethod extends Component {
           <View style={styles.menuContainer}>
             <View style={styles.menuSubFirst}>
               <View style={styles.mainMenu}>
-                <Icon name="credit-card" iconFamily="Octicons" color={ApplicationStyles.disabledColor.color} />
-                <Text style={styles.menuLabel}>Cards</Text>
+                <Icon name="credit-card" iconFamily="Octicons" size={wp('5%')} color={ApplicationStyles.darkColor.color} />
+                <Text style={styles.menuLabel}>CARDS</Text>
               </View>
               <Button
                 buttonWrapperStyle={styles.menuRightSide}
@@ -283,7 +284,7 @@ class SelectPaymentMethod extends Component {
           <View style={styles.menuContainer}>
             <View style={styles.menuSubFirst}>
               <View style={styles.mainMenu}>
-                <Icon name="rupee" iconFamily="FontAwesome" color={ApplicationStyles.disabledColor.color} size={wp('6.5%')} />
+                <Icon name="rupee" size={wp('5%')} iconFamily="FontAwesome" color={ApplicationStyles.darkColor.color} />
                 <Text style={styles.menuLabel}>UPI</Text>
               </View>
               <Button

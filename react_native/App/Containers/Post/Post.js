@@ -103,16 +103,17 @@ class Post extends Component {
     const {  navigation, homePosts, profile  } = this.props;
     return (
       <View style={{flex: 1, backgroundColor: ApplicationStyles. smokeBackground.color}}>
-        <NavigationBar {...navigation} leftFunction={()=>navigation.openDrawer()} leftIcon={'md-menu'} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={true} showRightSection={profile && profile.role ==='ngo'} rightIcon="md-add" title="Home"/>
+        <NavigationBar {...navigation} leftFunction={()=>navigation.toggleDrawer()} leftIcon={'md-menu'} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={true} showRightSection={profile && profile.role ==='ngo'} rightIcon="md-add" title="Home"/>
         {homePosts.length < 1 
           ? <EmptyState message='There are no posts to show'> 
-            Tip: Follow some Philanthropy organizations from <Text onPress={()=>navigation.navigate('Search')} style={{...ApplicationStyles.button2, textDecorationLine: 'underline', color: ApplicationStyles.grayishBackground.color, textAlign:'center'}}>search page</Text>
+            Tip: Follow some Philanthropy organizations from <Text onPress={()=>navigation.navigate('Search')} style={{...ApplicationStyles.fontStyles.button, textDecorationLine: 'underline', color: ApplicationStyles.darkColor.color, textAlign:'center'}}>search page</Text>
           </EmptyState>
           :<FlatList
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
             onViewableItemsChanged={this.handleViewableItemsChanged}
             viewabilityConfig={this.viewabilityConfig}
-            onRefresh={()=>{}}
-            refreshing={false}
+             
             data={homePosts} 
             renderItem={this._renderItem}
             onMomentumScrollBegin={() => { this.onEndReachedCalledDuringMomentum = false; }}

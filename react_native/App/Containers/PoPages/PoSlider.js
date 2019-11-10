@@ -134,7 +134,7 @@ class PoSlider extends Component {
         <ScrollView style={styles.subContainer}>
         <View style={styles.sectionContainer}>
             <Swiper isWholePath files={files.map(o=>o.path)} />
-            <Text style={{textAlign: 'center', paddingTop: hp('0.5%')}}>Carousel preview</Text>
+            <Text style={{textAlign: 'center', paddingTop: hp('0.5%'), ...ApplicationStyles.fontStyles.caption}}>Carousel preview</Text>
             </View>
             <FileSelector files={files} error={errors.files} label="Add images and videos (drag and drop to change order)" onChange={files => this.updateTextInput('files', files)} />
           <Button

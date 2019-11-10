@@ -97,7 +97,7 @@ class TextInput extends React.Component {
       <View style={[{ marginTop: hp('1%'), marginBottom: !error ? hp('1%') : 0 }, containerStyle]}>
         {label
         && (
-        <Text style={[{ ...ApplicationStyles.textInputLabel }, { padding: 0 }]}>
+        <Text style={[{ ...ApplicationStyles.fontStyles.body1 }, { padding: 0 }]}>
           {label}
           {' '}
           { optional ? ' (optional)' : null}
@@ -115,9 +115,9 @@ class TextInput extends React.Component {
               enablesReturnKeyAutomatically
               ref={textInputRef}
               value={value || undefined}
-              onSubmitEditing={onSubmitEditing}
+              onSubmitEditing={onSubmitEditing? onSubmitEditing : ()=>{}}
               style={[{
-                ...ApplicationStyles.textInputValue,
+                ...ApplicationStyles.fontStyles.body2,
                 paddingHorizontal: 0,
                 paddingTop: hp('0.5%'),
                 paddingBottom: hp('1.5%'),
@@ -146,9 +146,9 @@ class TextInput extends React.Component {
               enablesReturnKeyAutomatically
               ref={textInputRef}
               value={value || undefined}
-              onSubmitEditing={onSubmitEditing}
+              onSubmitEditing={onSubmitEditing? onSubmitEditing : ()=>{}}
               style={[{
-                ...ApplicationStyles.textInputValue,
+                ...ApplicationStyles.fontStyles.body2,
                 paddingHorizontal: 0,
                 paddingTop: hp('0.5%'),
                 paddingBottom: hp('1.5%'),
@@ -162,14 +162,14 @@ class TextInput extends React.Component {
               underlineColorAndroid="transparent"
             />
           )}
-        {error && <Text style={[{ ...ApplicationStyles.textInputLabel }, { ...ApplicationStyles.warningColor }]}>{error}</Text>}
+        {error && <Text style={[{ ...ApplicationStyles.fontStyles.caption }, { ...ApplicationStyles.warningColor }]}>{error}</Text>}
         {false && showEyeIcon && secureTextEntry && this.eyeButton('ios-eye') }
         {false && showEyeIcon && secureTextEntry && this.eyeButton('ios-eye-off') }
-        { leftIcon && leftIcon.name &&  <Button style={{ position: 'absolute', left: wp('6%'), top: hp('1.3%') }} onPress={leftIcon.onPress}>
+        { leftIcon && leftIcon.name &&  <Button style={{ position: 'absolute', left: wp('6%'), top: hp('1%') }} onPress={leftIcon.onPress}>
             <Icon name={leftIcon.name} iconFamily={leftIcon.family} size={leftIcon.size || ApplicationStyles.iconSize} color={ApplicationStyles.disabledColor.color} />
           </Button>
         }
-         { rightIcon && rightIcon.name &&  <Button style={{ position: 'absolute', right: wp('5%'), top: hp('1.3%') }} onPress={rightIcon.onPress}>
+         { rightIcon && rightIcon.name &&  <Button style={{ position: 'absolute', right: wp('5%'), top: hp('1%') }} onPress={rightIcon.onPress}>
             <Icon name={rightIcon.name} iconFamily={rightIcon.family} size={rightIcon.size || ApplicationStyles.iconSize} color={ApplicationStyles.disabledColor.color} />
           </Button>
         }
@@ -208,10 +208,10 @@ TextInput.defaultProps = {
   value: '',
   placeholder: '',
   error: null,
-  onChangeText: Function,
+  onChangeText: ()=>{},
   returnKeyType: '',
   textInputRef: 'input',
-  onSubmitEditing: Function,
+  onSubmitEditing: ()=>{},
   containerStyle: {},
   rightIcon: {},
   leftIcon: {},

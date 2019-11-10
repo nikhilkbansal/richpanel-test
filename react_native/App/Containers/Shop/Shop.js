@@ -49,7 +49,7 @@ class Shop extends Component {
     return (
       <View style={{flex:1,backgroundColor: ApplicationStyles.smokeBackground.color}}>
 
-      <NavigationBar  leftFunction={()=>navigation.openDrawer()} leftIcon={'md-menu'}  {...navigation} title='Shop' />
+      <NavigationBar  leftFunction={()=>navigation.toggleDrawer()} leftIcon={'md-menu'}  {...navigation} title='Shop' />
       { notifications.length < 1
         ? <EmptyState message='There are no products to show'> 
           </EmptyState>

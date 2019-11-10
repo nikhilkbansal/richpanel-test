@@ -176,15 +176,14 @@ const TabNavigator = createBottomTabNavigator({
         title = 'Shop';
       }
 
-      return (
+      return focused ? (
         <Text style={{
-          ...ApplicationStyles.tabLabelStyle, marginTop: -hp('1%'), textAlign: 'center', color: focused ? tintColor : ApplicationStyles.disabledColor.color,
+          ...ApplicationStyles.fontStyles.caption, marginTop: -hp('0.5%'), textAlign: 'center', color: focused ? tintColor : ApplicationStyles.disabledColor.color,
         }}
         >
           {title}
-
         </Text>
-      );
+      ): null;
     },
   }),
   tabBarOptions: {
@@ -209,9 +208,9 @@ const DrawerNavigator = createDrawerNavigator({
   contentComponent: Drawer,
   drawerWidth: wp('60%'),
   drawerType: 'slide',
-  edgeWidth: wp('20%'),
+  edgeWidth: wp('5%'),
   drawerBackgroundColor: ApplicationStyles.lightColor.color,
-  hideStatusBar: true,
+  hideStatusBar: false,
   overlayColor: 0.5
 });
 

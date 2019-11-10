@@ -70,21 +70,21 @@ class MyDonations extends Component {
   transctionItem({item}){
     const date = moment(item.createdAt);
     return (
-      <View style={{flex:1, flexDirection: 'row', paddingVertical: hp('1%'),backgroundColor:ApplicationStyles.lightBackground.color,  }}>
+      <View style={{flex:1, flexDirection: 'row', marginVertical: ApplicationStyles.listItemsSpace, paddingVertical: hp('1%'),backgroundColor:ApplicationStyles.lightBackground.color,  }}>
         <View style={{flex:1}}>
-          <Text style={{...ApplicationStyles.bodySubHeading,textAlign:'center'}}>{date.format('hh:mm A')}</Text>
-          <Text style={{...ApplicationStyles.headline2, textAlign:'center'}}>{date.format('DD MMM')}</Text>
-          <Text style={{...ApplicationStyles.bodySubHeading, textAlign:'center'}}>{date.format('YYYY')}</Text>
+          <Text style={{...ApplicationStyles.fontStyles.caption,textAlign:'center'}}>{date.format('hh:mm A')}</Text>
+          <Text style={{...ApplicationStyles.fontStyles.title, textAlign:'center'}}>{date.format('DD MMM')}</Text>
+          <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>{date.format('YYYY')}</Text>
+        </View>
+        <View style={{flex:1, }}>
+        <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}> </Text>
+          <Text style={{...ApplicationStyles.fontStyles.title, textAlign:'center'}}>₹{item.amount}</Text>
+          <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>{item.receiverId && item.receiverId.name}</Text>
         </View>
         <View style={{flex:1, justifyContent:'center'}}>
-        <Text style={{...ApplicationStyles.bodySubHeading, textAlign:'center'}}> </Text>
-          <Text style={{...ApplicationStyles.headline2, textAlign:'center'}}>₹{item.amount}</Text>
-          <Text style={{...ApplicationStyles.bodySubHeading, textAlign:'center'}}>{item.receiverId && item.receiverId.name}</Text>
-        </View>
-        <View style={{flex:1, justifyContent:'center'}}>
-          <Text style={{...ApplicationStyles.bodySubHeading, textAlign:'center'}}> </Text>
-          <Button title='View' titleStyle={{...ApplicationStyles.button2}}></Button>
-          <Text style={{...ApplicationStyles.bodySubHeading, textAlign:'center'}}>No Attachment</Text>
+          <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}> </Text>
+          <Button title='VIEW' titleStyle={{...ApplicationStyles.fontStyles.button}}></Button>
+          <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>No Attachment</Text>
         </View>
       </View>
     )

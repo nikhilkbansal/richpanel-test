@@ -9,32 +9,33 @@ import { Searchbar } from 'react-native-paper';
 import SearchActions from 'App/Stores/Search/Actions';
 import { connect } from 'react-redux';
 import defaultStyle from '../../Theme/ApplicationStyles';
-import { TextInput, Text, Button, ProgressiveImage, EmptyState } from '../../Components';
+import { TextInput, Text, Button, ProgressiveImage, EmptyState, AvatarImage } from '../../Components';
 import ApplicationStyles from '../../Theme/ApplicationStyles';
 import CommonFunctions from '../../Utils/CommonFunctions';
 import AxiosRequest from '../../Services/HttpRequestService';
+import Toast from '../../Services/ToastService';
 import Dialog, { DialogContent, SlideAnimation, DialogTitle } from 'react-native-popup-dialog';
+ 
 
 const styles = StyleSheet.create({
-  subContainer: { flex: 1, flexDirection: 'row', paddingVertical: hp('0.9%') },
+  subContainer: { flex: 1, flexDirection: 'row', paddingVertical: hp('0.9%'), justifyContent: 'center' },
   avatarImage: {
     width: wp('12%'), height: wp('12%'), borderRadius: wp('7.5%'), alignSelf: 'center',
   },
   avatarContainer: {
-    flex: 5, paddingHorizontal: wp('2%'), justifyContent: 'space-around', flexDirection: 'column',
+    flex: 5, paddingVertical: hp('0.4%'), paddingHorizontal:wp('2%'), justifyContent: 'space-around', flexDirection: 'column',
   },
   medal: { ...ApplicationStyles.avatarSubtitle, paddingHorizontal: wp('2%'), alignItems: 'center' },
   agoContainer: {
     flex: 1,
     alignSelf: 'flex-start',
-    height: hp('3%'),
+    // height: hp('3%'),
     alignContent: 'center',
     borderRadius: wp('10%'),
     justifyContent: 'center',
   },
   ago: {
-    ...ApplicationStyles.avatarSubtitle,
-    paddingHorizontal: wp('1%'),
+    ...ApplicationStyles.fontStyles.caption,
   },
   moreContainer: { flex: 1, justifyContent: 'center' },
   moreStyle: {
@@ -66,7 +67,7 @@ class SearchPage extends Component {
     const { params } = props.navigation.state;
     this.state = {
       term: '',
-      selectedTab: 'Posts',
+      selectedTab: 'POSTS',
       wentToSeeAll: false,
       welcomeModal: params && params.showWelcomeModal,
       postRecommendations: [],
@@ -175,12 +176,12 @@ class SearchPage extends Component {
   searchSection(title, type, items) {
     return (
       <View style={{ paddingBottom: hp('1%')}}>
-        <Text style={[ApplicationStyles.bodySubHeading2, { textAlign: 'left', paddingHorizontal: wp('2%') }]}>{title}</Text>
+        <Text style={[ApplicationStyles.fontStyles.caption, { textAlign: 'left', paddingHorizontal: wp('2%') }]}>{title}</Text>
         <FlatList
           data={items}
           renderItem={type === 'ngo' ?  this.renderItem : (data)=>this.renderPostItem({...data, type})}
         />
-        <Button title="See all" buttonWrapperStyle={{ textAlign: 'center' }} titleStyle={{ ...ApplicationStyles.primaryColor }} onPress={() => this.openSeeAllScreen(type)} />
+        <Button title="See all" buttonWrapperStyle={{ textAlign: 'center' }} titleStyle={{ ...ApplicationStyles.darkColor }} onPress={() => this.openSeeAllScreen(type)} />
       </View>
     );
   }
@@ -198,14 +199,15 @@ class SearchPage extends Component {
   renderPostItem({ item, type }) { 
     return (
       <Button buttonWrapperStyle={[styles.subContainer]} onPress={()=>this.openSeeAllScreen(type,  item._id)}>
-        <ProgressiveImage
+        <AvatarImage
           style={styles.avatarImage}
+          size={wp('12%')}
           containerStyle={{ backgroundColor: 'transparent'}}
           source={{ uri: CommonFunctions.getFile(item.userId.picture, 'avatar', true) }}
         />
         <View style={[styles.avatarContainer]}>
-          <View style={{ flexDirection: 'row', flex: 3 }}>
-            <Text style={ApplicationStyles.avatarTitle}>
+          <View style={{ flexDirection: 'row', flex: 1, }}>
+            <Text style={ApplicationStyles.fontStyles.body1}>
               {item.title}
             </Text>
           </View>
@@ -227,14 +229,15 @@ class SearchPage extends Component {
 
     return (
       <Button buttonWrapperStyle={[styles.subContainer]} onPress={()=> navigation.navigate('NgoProfile', { poUserId: item._id})}>
-        <ProgressiveImage
+        <AvatarImage
           style={styles.avatarImage}
+          size={wp('12%')}
           containerStyle={{ backgroundColor: 'transparent'}}
           source={{ uri: CommonFunctions.getFile(item.picture, 'avatar', true) }}
         />
         <View style={[styles.avatarContainer]}>
           <View style={{ flexDirection: 'row', flex: 3 }}>
-            <Text style={ApplicationStyles.avatarTitle}>
+            <Text style={ApplicationStyles.fontStyles.body2}>
               {item.name}
             </Text>
           </View>
@@ -256,8 +259,8 @@ class SearchPage extends Component {
     || (autoComplete.events && autoComplete.events.length > 0)
     || (autoComplete.ngos && autoComplete.ngos.length > 0);
     let listItems = postRecommendations;
-    listItems = selectedTab === 'Events' ? eventRecommendations : listItems;
-    listItems = selectedTab === 'Shop' ? [] : listItems;
+    listItems = selectedTab === 'EVENTS' ? eventRecommendations : listItems;
+    listItems = selectedTab === 'SHOP' ? [] : listItems;
     return (
       <View style={[{
         flex: 1,
@@ -293,6 +296,7 @@ class SearchPage extends Component {
             paddingBottom: hp('2%'), 
           }}
           inputStyle={{
+            ...ApplicationStyles.fontStyles.body2,
             backgroundColor: ApplicationStyles.grayishBackground.color,
             borderWidth: 0,
             verticalAlign: 'center',
@@ -300,7 +304,6 @@ class SearchPage extends Component {
             paddingRight: wp('7.2%'),
             paddingTop: hp('0.9%'),
             paddingBottom: hp('1.1%'),
-            ...ApplicationStyles.avatarTitle,
           }}
           onChangeText={text => this.getSearch(text)}
           rightIcon={{
@@ -316,6 +319,7 @@ class SearchPage extends Component {
             size:wp('6%'),
             onPress: ()=>this.termRef.current.focus()
           }}
+          onSubmitEditing={()=>!searchResultExist && Toast('No results found!')}
         />
         <View style={{
           marginTop: -hp('1%'),
@@ -334,11 +338,12 @@ class SearchPage extends Component {
             height: hp('5.5%')
             }}>
 
-            {['Posts', 'Events', 'Shop', 'PO'].map((o)=><Button 
+            {['POSTS', 'EVENTS', 'SHOP', 'PO'].map((o)=><Button 
             style={{
               flex:1,
               borderBottomWidth: wp('0.5%'),
-              borderBottomColor: selectedTab === o ? ApplicationStyles.primaryColor.color: 'transparent'
+              borderBottomColor: ApplicationStyles.smokeBackground.color,
+              borderBottomColor: selectedTab === o ? ApplicationStyles.primaryColor.color: ApplicationStyles.grayishBackground.color
             }} 
             onPress={()=>this.setState({ selectedTab : o})}
             buttonWrapperStyle={{
@@ -349,14 +354,14 @@ class SearchPage extends Component {
               }}>
               <Text style={{
                 textAlign: 'center',
-                ...ApplicationStyles.button2,
-                color:  selectedTab===o ? ApplicationStyles.primaryColor.color : ApplicationStyles.grayishBackground.color
+                ...ApplicationStyles.fontStyles.button,
+                color:  selectedTab===o ? ApplicationStyles.primaryColor.color : ApplicationStyles.darkColor.color
                 }}>{o}</Text>
             </Button>)} 
           </View>
         <View style={{flex:1}}>
 
-          { ['Posts', 'Events', 'Shop', ].includes(selectedTab) ? <View
+          { ['POSTS', 'EVENTS', 'SHOP' ].includes(selectedTab) ? <View
             style={{
               flex:1,
               flexDirection:'row',
@@ -376,11 +381,14 @@ class SearchPage extends Component {
                 }}
                 onEndReachedThreshold={2}
                 renderItem={({ item })=><Button 
-                onPress={()=>this.openSeeAllScreen( selectedTab === 'Posts' ? 'post': 'event',  item._id)}
-                style={{
-                  width: wp('30%'),
-                  margin:wp('1%'),
-                  height: wp('30%')}}>
+                onPress={()=>this.openSeeAllScreen( selectedTab === 'POSTS' ? 'post': 'event',  item._id)}
+                buttonWrapperStyle={{
+                  width: wp('28%'),
+                  height: wp('28%'),
+                  borderRadius: wp('1.5%'),
+                  overflow:'hidden',
+                  // width: wp('30%'),
+                  margin:wp('1.5%'), }}>
                   <ProgressiveImage
                      source={{ uri: CommonFunctions.getFile(item.files[0],'videoThumb') }}
                     style={{width: '100%', height: '100%'}}
@@ -416,11 +424,11 @@ class SearchPage extends Component {
                   margin:wp('0.5%'),
                   alignItems:'center',
                   height: wp('22%')}}>
-                    <ProgressiveImage
+                    <AvatarImage
+                      size={wp('14%')}
                       source={{ uri: CommonFunctions.getFile(item.picture) }}
-                      style={{width: wp('15%'), height: wp('15%'), borderRadius: wp('40%')}}
                     />
-                    <Text style={{textAlign: 'center', ...ApplicationStyles.subHeadline}}>{item.name}</Text> 
+                    <Text style={{textAlign: 'center', ...ApplicationStyles.fontStyles.body2}}>{item.name}</Text> 
               </Button>}
               />
                

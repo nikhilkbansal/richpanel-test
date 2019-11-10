@@ -69,7 +69,9 @@ class AdditionalPayment extends Component {
       errors: {}
     };
     this.updateTextInput = this.updateTextInput.bind(this);
-    this.passwordRef = React.createRef();
+    this.cardRef = React.createRef();
+    this.expiryRef = React.createRef();
+    this.cvvRef = React.createRef();
     this.continue = this.continue.bind(this);
   }
 
@@ -140,32 +142,30 @@ class AdditionalPayment extends Component {
                 <TextInput
                   error={errors.cardHolderName}
                   label="Card holder's name"
-                  returnKeyType="next"
+                  returnKeyType="done"
+                  placeholder="Card holder's name"
                   onChangeText={text => this.updateTextInput('cardHolderName', text)}
-                  onSubmitEditing={() => this.passwordRef.current.focus()}
                 />
                 <TextInput
                   label="Card number"
                   error={errors.cardNumber}
                   placeholder="XXXX-XXXX-XXXX-XXXX"
                   mask="[0000] [0000] [0000] [0000]"
-                  returnKeyType="next"
+                  returnKeyType="done"
                   onChangeText={(formatted, extracted) => this.updateTextInput('cardNumber', extracted)}
-                  onSubmitEditing={() => this.passwordRef.current.focus()}
                 />
                 <TextInput
                   label="Expiry Date"
                   placeholder="MM/YY"
                   error={errors.expiry}
                   mask="[00]/[00]"
-                  returnKeyType="next"
+                  returnKeyType="done"
                   onChangeText={(formatted, extracted) => this.updateTextInput('expiry', extracted)}
-                  onSubmitEditing={() => this.passwordRef.current.focus()}
                 />
                 <TextInput
                   label="CVV/CVC"
                   error={errors.cvc}
-                  textInputRef={this.passwordRef}
+                  textInputRef={this.cvvRef}
                   placeholder="XXX"
                   returnKeyType="done"
                   maxLength={3}
@@ -182,7 +182,7 @@ class AdditionalPayment extends Component {
                     }}
                     isChecked={isCardSave}
                     rightText="Save this card for future payments"
-                    rightTextStyle={{ ...ApplicationStyles.body, textAlign: 'left' }}
+                    rightTextStyle={{ ...ApplicationStyles.fontStyles.button, textAlign: 'left' }}
                     checkBoxColor={ApplicationStyles.primaryColor.color}
                     uncheckedCheckBoxColor={ApplicationStyles.disabledColor.color}
                   />
@@ -209,7 +209,7 @@ class AdditionalPayment extends Component {
                     }}
                     isChecked={isRememberVpa}
                     rightText="Save my VPA for future payments"
-                    rightTextStyle={{ ...ApplicationStyles.body, textAlign: 'left' }}
+                    rightTextStyle={{ ...ApplicationStyles.fontStyles.button, textAlign: 'left' }}
                     checkBoxColor={ApplicationStyles.primaryColor.color}
                     uncheckedCheckBoxColor={ApplicationStyles.disabledColor.color}
                   />

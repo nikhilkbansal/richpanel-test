@@ -36,6 +36,7 @@ export function* login({ payload }) {
         yield put(userActions.manageRememberMe(payload));
       }
       yield call(delay, 1000);
+      NavigationService.drawer('close');  
       NavigationService.navigate('HomePage');  
     }
 

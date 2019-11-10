@@ -21,7 +21,7 @@ export default {
     return num;
   },
   getPluralString(string, number) {
-    if (number !== 1) {
+    if (number != 1) {
       return `${string}s`;
     }
     return string;

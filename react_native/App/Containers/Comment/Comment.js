@@ -13,6 +13,7 @@ import {
   AvatarImage, EmptyState, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, Text,
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
+import { material} from 'react-native-typography'
 
 
 const styles = StyleSheet.create({
@@ -24,12 +25,14 @@ const styles = StyleSheet.create({
   avatarStyle: {
     paddingRight: wp('1%'),
     paddingTop: hp('0.57%'),
+    marginTop: hp('0.7%'),
+    marginRight: wp('1%')
   },
   contentContainer: { flex: 1 },
   firstContainer: {
-    ...ApplicationStyles.body, flex: 1, flexWrap: 'wrap',
+    ...ApplicationStyles.fontStyles.body1, flex: 1, flexWrap: 'wrap'
   },
-  userName: { ...ApplicationStyles.avatarTitle },
+  userName: { ...ApplicationStyles.fontStyles.body2 },
   secondContainer: {
     flex: 1, flexDirection: 'row',
   },
@@ -38,15 +41,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
+    justifyContent:'center',
   },
   likes: {
-    flex: 1, textAlign: 'left', ...ApplicationStyles.body3,
+    flex: 1, textAlign: 'left', ...ApplicationStyles.fontStyles.caption,
   },
   likeButton: {
     flex: 1, alignContent: 'center', alignItems: 'center', paddingHorizontal: wp('1%'),
   },
   replyButton: {
-    textAlign: 'right', flex: 1, ...ApplicationStyles.body3,
+    textAlign: 'right', flex: 1, ...ApplicationStyles.fontStyles.caption,
   },
   likeButtonWrapper: { flex: 1, paddingBottom: 0 },
 });
@@ -179,7 +183,7 @@ class Comment extends Component {
 
             <View style={styles.actionContainer}>
               <Text style={styles.likes}>
-                {item.likes ? `${CommonFunctions.numberToReadable(item.likes)} Likes` : ''}
+                {item.likes && item.likes > 0 ? `${CommonFunctions.numberToReadable(item.likes)} ${CommonFunctions.getPluralString('Like', item.likes)}` : ''}
               </Text>
 
               <Button
@@ -197,7 +201,7 @@ class Comment extends Component {
                 style={styles.likeButton}
               />
               <Button
-                title="Reply"
+                title="REPLY"
                 style={{ flex: 1 }}
                 onPress={() => this.doReply(item.repliedTo, commentIndex)}
                 titleStyle={styles.replyButton}
@@ -232,7 +236,7 @@ class Comment extends Component {
             <View style={styles.actionContainer}>
 
               <Text style={styles.likes}>
-                {item.likes ? `${CommonFunctions.numberToReadable(item.likes)} ${CommonFunctions.getPluralString('Like', item.likes)}` : ''}
+                {item.likes && item.likes > 0 ? `${CommonFunctions.numberToReadable(item.likes)} ${CommonFunctions.getPluralString('Like', item.likes)}` : ''}
               </Text>
 
 
@@ -246,7 +250,7 @@ class Comment extends Component {
                 style={styles.likeButton}
               />
               <Button
-                title="Reply"
+                title="REPLY"
                 style={{ flex: 1 }}
                 titleStyle={styles.replyButton}
                 onPress={() => this.doReply(item._id)}
@@ -325,7 +329,7 @@ class Comment extends Component {
           <Button
             title="Cancel Reply"
             onPress={this.cancelReply}
-            titleStyle={{ ...ApplicationStyles.info3 }}
+            titleStyle={{...ApplicationStyles.darkColor }}
           />
         </View>
         )}

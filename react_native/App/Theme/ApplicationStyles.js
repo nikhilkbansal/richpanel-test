@@ -1,4 +1,5 @@
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { material, human } from 'react-native-typography';
 import Colors from './Colors';
 import FontSizes from './FontSizes';
 import Fonts from './Fonts';
@@ -26,7 +27,7 @@ export default {
   
   // new
   iconSize: wp('7%'),
-
+  listItemsSpace: hp('0.5%'),
   commonBorderRadius: width => width / 33,
 
 
@@ -104,7 +105,7 @@ export default {
   headline2: {
     color: darkColor,
     fontSize: FontSizes.h3,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
   },
 
   //Header titles
@@ -118,7 +119,7 @@ export default {
   subHeadline: {
     color: grayColor,
     fontSize: FontSizes.h5,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
   },
 
   // Textinput label, fake textinput's label like datepicker, location picker
@@ -155,14 +156,14 @@ export default {
   body: {
     color: darkColor,
     fontSize: FontSizes.h5,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
   },
 
   // Todo: Adjust/remove On Location Selector, for google autocomple
   body2: {
     color: darkColor,
     fontSize: FontSizes.h5,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
     lineHeight: FontSizes.h6 * 1.5,
   },
 
@@ -170,7 +171,7 @@ export default {
   body3: {
     color: grayColor,
     fontSize: FontSizes.h5,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
     lineHeight: FontSizes.h6 * 1.5,
   },
 
@@ -178,21 +179,21 @@ export default {
   info: {
     fontSize: FontSizes.h4,
     color: grayColor,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
   },
 
   // Profile username, ngo profile userName adjust style
   info1: {
     fontSize: FontSizes.h5,
     color: lightGrayColor,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
   },
 
   // Post, event raised money
   info2: {
     fontSize: FontSizes.h4,
     color: grayColor,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
   },
 
   // Todo check this
@@ -202,7 +203,7 @@ export default {
   info3: {
     fontSize: FontSizes.h5,
     color: darkColor,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
   },
 
   // NgoProfile: Follow, donate
@@ -217,14 +218,14 @@ export default {
   primaryInfo: {
     fontSize: FontSizes.h2,
     color: primaryColor,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
   },
 
   // Drawer menu items
   primaryInfo2: {
     fontSize: FontSizes.h3,
     color: primaryColor,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
   },
 
   // avtar user names,
@@ -241,7 +242,7 @@ export default {
   avatarSubtitle: {
     fontSize: FontSizes.h8,
     color: darkColor,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
   },
 
   // No uses
@@ -256,20 +257,59 @@ export default {
   bodySubHeading: {
     fontSize: FontSizes.h9,
     color: grayColor,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
   },
 
   // shares and likes(reactions) counts on event ui, post ui
   bodySubHeading2: {
     fontSize: FontSizes.h9,
     color: darkColor,
-    fontFamily: Fonts.light,
+    fontFamily: Fonts.medium,
   },
 
   // tab labels, reactions labels
   tabLabelStyle: {
     fontSize: FontSizes.h14,
     color: grayColor,
-    fontFamily: Fonts.medium,
+    fontFamily: Fonts.bold,
   },
+  material:{
+    ...material
+  },
+  fontStyles:{
+    display4: {
+      ...material.display4
+    },
+    display3: {
+      ...material.display3
+    },
+    display2: {
+      ...material.display2
+    },
+    display1: {
+      ...material.display1
+    },
+    headline: {
+      ...material.headline
+    },
+    subheading: {
+      ...material.subheading
+    },
+    title: {
+      ...material.title
+    },
+    body2: {
+      ...material.body2
+    },
+    body1: {
+      ...material.body1
+    },
+    caption: {
+      ...material.caption
+    },
+    button: {
+      ...material.button,
+      textAlign:'center'
+    },
+  }
 };

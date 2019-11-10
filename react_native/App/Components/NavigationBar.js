@@ -62,13 +62,13 @@ class NavigationBar extends React.Component {
               onPress={() =>leftFunction ? leftFunction() : goBack()}
               style={{ }}
               iconColor={iconsColor || ApplicationStyles.lightColor.color}
-              buttonWrapperStyle={{ paddingHorizontal: wp('7%') }}
-              icon={leftIcon || "ios-arrow-round-back"}
+              buttonWrapperStyle={{ paddingHorizontal: wp('5%') }}
+              icon={leftIcon || "md-arrow-back"}
             />
             )}
           </View>
           <View style={styles.centerArea}>
-            <Text style={[styles.label, ApplicationStyles.headline3, { color: ApplicationStyles.lightColor.color }]}>
+            <Text style={[styles.label, ApplicationStyles.fontStyles.title, { color: ApplicationStyles.lightColor.color }]}>
               {title}
             </Text>
           </View>

@@ -25,7 +25,7 @@ function Button({
   const Content = () => (
     <Fragment>
       {!!icon && <Icon name={icon} {...iconExtraProps} iconFamily={iconFamily} size={iconSize || ApplicationStyles.iconSize} color={iconColor} style={iconStyle} />}
-      {!!title && <Text style={[{ ...ApplicationStyles.button }, titleStyle]}>{ title }</Text>}
+      {!!title && <Text style={[{...ApplicationStyles.fontStyles.button,...ApplicationStyles.lightColor }, titleStyle]}>{ title }</Text>}
       {!!children && children }
     </Fragment>
   );

@@ -15,7 +15,6 @@ import {
   Colors, FontSizes, Fonts, ApplicationStyles,
 } from '../../Theme';
 import UserActions from '../../Stores/User/Actions';
-
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: ApplicationStyles.lightBackground.color },
   subContainer: { flex: 1, paddingHorizontal: wp('7%') },
@@ -28,9 +27,8 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'space-between',
   },
-  remeberText: { ...ApplicationStyles.button2 },
-  forgetButton: {
-    ...ApplicationStyles.button2,
+  remeberText: { ...ApplicationStyles.fontStyles.button },
+  forgetButton: { ...ApplicationStyles.fontStyles.button
 
   },
   forgetButtonContainer: { alignSelf: 'center' },
@@ -47,8 +45,7 @@ const styles = StyleSheet.create({
     width: wp('80%'), marginVertical: hp('2%'), flexDirection: 'row', alignItems: 'center', alignContent: 'center', justifyContent: 'center',
   },
   signUpContainer: { alignSelf: 'center' },
-  signUpButton: {
-    ...ApplicationStyles.info, ...ApplicationStyles.primaryColor,
+  signUpButton: { ...ApplicationStyles.fontStyles.button, ...ApplicationStyles.primaryColor,
   },
 });
 
@@ -103,8 +100,8 @@ class LoginScreen extends Component {
         <NavigationBar {...navigation} showLeftSection iconsColor={ApplicationStyles.darkColor.color} containerStyle={{ backgroundColor: ApplicationStyles.lightBackground.color, elevation: 0 }} statusBarColor={ApplicationStyles.lightBackground.color} statusBarStyle="dark-content" />
         <KeyboardAwareScrollView style={styles.subContainer}>
           <View style={styles.firstSection}>
-            <Text style={[ApplicationStyles.headline]}>Login</Text>
-            <Text style={ApplicationStyles.subHeadline}>Get started with your journey</Text>
+            <Text style={[ApplicationStyles.fontStyles.headline]}>Login</Text>
+            <Text style={ApplicationStyles.fontStyles.subheading}>Get started with your journey</Text>
           </View>
           <View style={styles.secondSection}>
             <TextInput
@@ -136,7 +133,7 @@ class LoginScreen extends Component {
                 }}
                 isChecked={isRememberMe}
                 rightText="Remember me"
-                rightTextStyle={{ ...ApplicationStyles.button2, textAlign: 'left' }}
+                rightTextStyle={{ ...ApplicationStyles.fontStyles.button, textAlign: 'left' }}
                 checkBoxColor={ApplicationStyles.primaryColor.color}
                 uncheckedCheckBoxColor={ApplicationStyles.disabledColor.color}
               />
@@ -154,7 +151,7 @@ class LoginScreen extends Component {
               title="CONTINUE TO LOGIN"
             />
             <View style={styles.signUpLinkContainer}>
-              <Text style={{ ...ApplicationStyles.info }}>Don't have an account? </Text>
+              <Text style={{ ...ApplicationStyles.fontStyles.body1 }}>Don't have an account? </Text>
               <Button
                 style={styles.signUpContainer}
                 titleStyle={styles.signUpButton}

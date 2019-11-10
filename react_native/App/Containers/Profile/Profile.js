@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
  
 import {
-  Text, NavigationBar, TextInput, Button, ProgressiveImage, MenuItem
+  Text, NavigationBar, TextInput, Button, ProgressiveImage, MenuItem, AvatarImage
 } from '../../Components';
 import {
   Colors, FontSizes, Fonts, ApplicationStyles,
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     marginVertical: wp('2%'),
   },
   nameDetail: { paddingHorizontal: wp('2%'), flex: 1, flexDirection: 'row' },
-  info: { padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.info3 },
+  info: { padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.fontStyles.caption },
 });
 
 function getRandomColor(){
@@ -120,21 +120,13 @@ class Profile extends Component {
             <View
               style={[styles.imageButton, { justifyContent: 'center', alignContent: 'center', alignItems: 'center' }]}
             >
-              <ProgressiveImage
-                resizeMode="cover"
-                style={{
-                  ...ApplicationStyles.elevationS,
-                  width: wp('22%'),
-                  height: wp('22%'),
-                }}
-                source={{ uri: CommonFunctions.getFile(profile.picture, 'avatar', true) }}
-              />
+              <AvatarImage size={wp('14%')} source={{ uri: CommonFunctions.getFile(profile.picture, 'avatar', true) }}/>
             </View>
             <View style={styles.userInfo}>
               <View style={styles.nameDetail}>
                 <View style={{ flex: 2 }}>
-                  <Text style={ApplicationStyles.headline3}>{profile.name}</Text>
-                  <Text style={ApplicationStyles.info1}>
+                  <Text style={ApplicationStyles.fontStyles.title}>{profile.name}</Text>
+                  <Text style={ApplicationStyles.fontStyles.caption}>
                     @
                     {profile.userName}
                   </Text>
@@ -168,7 +160,7 @@ class Profile extends Component {
                       iconColor={ApplicationStyles.disabledColor.color}  />
           </View>
           <View style={[styles.sectionContainer,{flex:1, padding: wp('3%')} ]}>
-            <Text style={{ ...ApplicationStyles.avatarSubtitle, textAlign: 'center'}}>This month's handouts</Text>
+            <Text style={{ ...ApplicationStyles.fontStyles.body1, textAlign: 'center'}}>This month's handouts</Text>
             <LineChart
               style={{ height: 200 }}
               data={ [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]}

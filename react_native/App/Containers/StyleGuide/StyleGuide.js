@@ -11,7 +11,7 @@ import {
 import {
   Colors, FontSizes, Fonts, FontStyles, ApplicationStyles,
 } from '../../Theme';
-
+import { material } from 'react-native-typography'
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
   subContainer: {
@@ -148,6 +148,12 @@ class StyleGuide extends Component {
         {this.textWithStyle(ApplicationStyles.bodySubHeading,'bodySubHeading')}
         {this.textWithStyle(ApplicationStyles.bodySubHeading2,'bodySubHeading2')}
         {this.textWithStyle(ApplicationStyles.tabLabelStyle,'tabLabelStyle')}
+        
+        {this.textWithStyle(material.button,'Material')}
+        {this.textWithStyle(material.headline,'Material')}
+        {this.textWithStyle(material.title,'Material')}
+        {this.textWithStyle(material.subheading,'Material')}
+
 
         <Text>Font Weights: </Text>
         <View style={{ flex: 1, flexWrap: 'wrap', height: 300 }}>

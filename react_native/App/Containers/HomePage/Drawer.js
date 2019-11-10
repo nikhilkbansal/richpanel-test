@@ -54,7 +54,7 @@ class Drawer extends Component {
             >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Icon name={leftIcon.name} style={{width:wp('6.8%')}} size={leftIcon.size ||  wp('6%')} color={leftIcon.color || ApplicationStyles.info3.color} iconFamily={leftIcon.family || "Ionicons"} />
-            <Text style={{ ...ApplicationStyles.primaryInfo2, marginLeft: wp('3.5%'), color: ApplicationStyles.darkColor.color }}> {leftLabel}</Text>
+            <Text style={{ ...ApplicationStyles.fontStyles.button, marginLeft: wp('3.5%'), color: ApplicationStyles.darkColor.color }}> {leftLabel}</Text>
           </View>
         </Button>);
   }
@@ -65,30 +65,31 @@ class Drawer extends Component {
       <ScrollView style={{ ...ApplicationStyles.elevationXLL, flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color}}>
         <View style={{ backgroundColor:ApplicationStyles.lightColor.color, flex:1,paddingHorizontal: wp('4%'), flexDirection: 'row', width: '100%',paddingTop: hp('15%'), paddingBottom:hp('2%') }}>
           <AvatarImage style={{}} source={{ uri: CommonFunctions.getFile(profile.picture, 'avatar', true) }}></AvatarImage>
-          <View style={{marginLeft: wp('2%')}}> 
-            <Text style={{ ...ApplicationStyles.avatarTitle}}>{ profile && profile.name }</Text>
-            <Text style={{ ...ApplicationStyles.info}} onPress={()=>{
+          <View style={{marginLeft: wp('2%'),   justifyContent:'center'}}> 
+            <Text style={{ ...ApplicationStyles.fontStyles.title}}>{ profile && profile.name }</Text>
+            <Text style={{ ...ApplicationStyles.fontStyles.caption, textAlign: 'left'}}
+            onPress={()=>{
               closeDrawer();
               navigate(profile && profile.role === 'ngo' ? 'NgoProfile' : "Profile");
-              }}>See Profile</Text>
+              }}>SEE PROFILE</Text>
           </View>
         </View>
         { profile && profile.role === 'user' ? <View style={{marginTop: hp('3%')}}>
-        { this.getMenuItem('Followings', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}, ()=> navigate('Followings')) }
-        { this.getMenuItem('Handouts', {name: 'hand-paper-o', family: 'FontAwesome', size: wp('5%')}) }
-        { this.getMenuItem('Donations', {name: 'money', family: 'FontAwesome', size: wp('4.9%')}, ()=> navigate('MyDonations')) }
-        { this.getMenuItem('Settings', {name: 'setting', family: 'AntDesign', size: wp('5.4%')}, ()=> navigate('Settings')) }
+        { this.getMenuItem('FOLLOWINGS', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}, ()=> navigate('Followings')) }
+        {/* { this.getMenuItem('Handouts', {name: 'hand-paper-o', family: 'FontAwesome', size: wp('5%')}) } */}
+        { this.getMenuItem('DONATIONS', {name: 'money', family: 'FontAwesome', size: wp('4.9%')}, ()=> navigate('MyDonations')) }
+        { this.getMenuItem('SETTINGS', {name: 'setting', family: 'AntDesign', size: wp('5.4%')}, ()=> navigate('Settings')) }
         </View>
         :<View style={{marginTop: hp('3%')}}>
-        { this.getMenuItem('Followers', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}) }
-        { this.getMenuItem('Handouts', {name: 'hand-paper-o', family: 'FontAwesome', size: wp('5%')}) }
-        { this.getMenuItem('Donations', {name: 'money', family: 'FontAwesome', size: wp('4.9%')}, ()=> navigate('MyDonations',{forPo: true})) }
-        { this.getMenuItem('Posts', {name: 'md-list', family: null, size: wp('5.4%')}) }
-        { this.getMenuItem('Events', {name: 'md-time', family: null, size: wp('5.4%')}) }
-        { this.getMenuItem('Jobs', {name: 'file', family: 'Octicons', size: wp('5.4%')}) }
-        { this.getMenuItem('Shop', {name: 'shopping-bag', family: 'Feather', size: wp('5%')}) }
-        { this.getMenuItem('Analytics', {name: 'md-stats', family: null, size: wp('5%')}) }
-        { this.getMenuItem('Settings', {name: 'setting', family: 'AntDesign', size: wp('5.3%')}, ()=> navigate('Settings')) }
+        { this.getMenuItem('FOLLOWERS', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}) }
+        {/* { this.getMenuItem('Handouts', {name: 'hand-paper-o', family: 'FontAwesome', size: wp('5%')}) } */}
+        { this.getMenuItem('DONATIONS', {name: 'money', family: 'FontAwesome', size: wp('4.9%')}, ()=> navigate('MyDonations',{forPo: true})) }
+        { this.getMenuItem('POSTS', {name: 'md-list', family: null, size: wp('5.4%')}) }
+        { this.getMenuItem('EVENTS', {name: 'md-time', family: null, size: wp('5.4%')}) }
+        { this.getMenuItem('JOBS', {name: 'file', family: 'Octicons', size: wp('5.4%')}) }
+        { this.getMenuItem('SHOP', {name: 'shopping-bag', family: 'Feather', size: wp('5%')}) }
+        { this.getMenuItem('ANALYTICS', {name: 'md-stats', family: null, size: wp('5%')}) }
+        { this.getMenuItem('SETTINGS', {name: 'setting', family: 'AntDesign', size: wp('5.3%')}, ()=> navigate('Settings')) }
         </View>
         }
         {/* <View style={{position:}}>

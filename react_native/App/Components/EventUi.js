@@ -29,12 +29,12 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignContent: 'center',
     justifyContent: 'center',
-    paddingHorizontal: wp('4%'),
+    paddingHorizontal: wp('1%'),
     marginBottom: hp('1%'),
     
   },
 
-  subContainer: { flex: 1, flexDirection: 'row', paddingVertical: hp('2%')  },
+  subContainer: { flex: 1, flexDirection: 'row', paddingBottom: hp('1.1%'), paddingTop: hp('1.5%')   },
   avatarImage: {
     width: wp('12%'), height: wp('12%'), borderRadius: wp('7.5%'), alignSelf: 'center',
   },
@@ -47,12 +47,12 @@ const styles = StyleSheet.create({
     ...ApplicationStyles.elevationS,
     justifyContent: 'space-between',
   },
-  avatarName: { flexDirection: 'row', flex: 3 },
+  avatarName: { flexDirection: 'row', flex: 1 },
   medal: { ...ApplicationStyles.avatarSubtitle, paddingHorizontal: wp('2%'), alignItems: 'center' },
   agoContainer: {
     flex: 1,
     alignSelf: 'flex-start',
-    height: hp('4%'),
+    height: hp('3%'),
     alignContent: 'center',
     borderRadius: wp('10%'),
     backgroundColor: ApplicationStyles.grayishBackground.color,
@@ -77,10 +77,10 @@ const styles = StyleSheet.create({
     paddingVertical: hp('1%'),
   },
   ago: {
-    ...ApplicationStyles.avatarSubtitle,
+    ...ApplicationStyles.fontStyles.caption,
     paddingHorizontal: wp('1.5%'),
   },
-  moreContainer: { flex: 1, justifyContent: 'center' },
+  moreContainer: { flex: 1, alignItems: 'flex-end' },
   subContainerSecond: { paddingHorizontal: wp('3%'), paddingTop: wp('2%') },
   moreWrapperStyle: {
     width: wp('10%'),
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
   raisedSliderContainer: { backgroundColor:ApplicationStyles.smokeBackground.color, height: hp('0.2%') },
   raisedSlider: { backgroundColor: ApplicationStyles.primaryColor.color, width: '56%', height: hp('0.2%') },
-  body: { ...ApplicationStyles.body2, marginBottom: hp('2%') },
+  body: { ...ApplicationStyles.fontStyles.body1, marginBottom: hp('2%') },
   moreStyle: { ...ApplicationStyles.body3, color: ApplicationStyles.primaryColor.color },
   subBody: { padding: wp('2%') },
   raisedMoney: { ...ApplicationStyles.info2, alignContent: 'center', justifyContent: 'center' },
@@ -222,13 +222,14 @@ function EventUi
   return (
     <View style={styles.container}>
       <View style={[styles.subContainer]}>
-        <AvatarImage
-          source={{ uri: CommonFunctions.getFile(userPicture, 'avatar', true) }}
-        />
-        <Button style={[styles.avatarContainer]} onPress={onUserClick}>
-
+        
+        <Button style={{ flex:5, flexDirection:'row'  }} buttonWrapperStyle={{ flex:1, flexDirection:'row' }} onPress={onUserClick}>
+          <AvatarImage
+            source={{ uri: CommonFunctions.getFile(userPicture, 'avatar', true) }}
+          />
+          <View style={[styles.avatarContainer]}>
           <View style={styles.avatarName}>
-            <Text style={ApplicationStyles.avatarTitle}>
+            <Text style={ApplicationStyles.fontStyles.body2}>
               {userName}
             </Text>
             {/* <Text style={[styles.medal]}>
@@ -241,6 +242,7 @@ function EventUi
             <Text style={styles.ago}>
               { moment(createdAt).fromNow()}
             </Text>
+          </View>
           </View>
 
         </Button>
@@ -263,7 +265,7 @@ function EventUi
         <View style={styles.userFeedBack}>
           <ReactionsGot reactionsCount={reactionsCount} topThreeReactions={topThreeReactions} />
           {sharesCount > 0 && (
-          <Text style={{ ...ApplicationStyles.bodySubHeading2 }}>
+          <Text style={{ ...ApplicationStyles.fontStyles.caption }}>
             {CommonFunctions.numberToReadable(sharesCount)}
             {' '}
             {CommonFunctions.getPluralString('Share', sharesCount)}
@@ -284,9 +286,9 @@ function EventUi
 
           </View>
           <View style={styles.titleContainer}>
-            <Text style={ApplicationStyles.headline2}>{title}</Text>
+            <Text style={ApplicationStyles.fontStyles.title}>{title}</Text>
           </View>
-          <Text style={{ ...ApplicationStyles.bodySubHeading, paddingVertical: hp('0.6%'), alignSelf: 'flex-end' }}>{moment(startTime).format('DD MMM')} to {moment(endTime).format('DD MMM YYYY')}</Text>
+          <Text style={{ ...ApplicationStyles.fontStyles.caption, paddingVertical: hp('0.6%'), alignSelf: 'flex-end' }}>{moment(startTime).format('DD MMM')} to {moment(endTime).format('DD MMM YYYY')}</Text>
         </View>
         <View style={styles.subBody}>
           <Text style={styles.body} maxLength={wp('40%')}>
@@ -312,10 +314,10 @@ function EventUi
 
 
             <Text style={{
-              ...ApplicationStyles.body, flex: 1, flexWrap: 'wrap',
+              ...ApplicationStyles.fontStyles.body1, flex: 1, flexWrap: 'wrap',
             }}
             >
-              <Text style={{ ...ApplicationStyles.avatarTitle }}>
+              <Text style={{ ...ApplicationStyles.fontStyles.body2 }}>
                 {`${comment[0].userId.name} `}
               </Text>
               {comment[0].comment}
@@ -325,7 +327,7 @@ function EventUi
           )}
           <Button
             title="View comments"
-            titleStyle={{ ...ApplicationStyles.button2, textAlign: 'right' }}
+            titleStyle={{ ...ApplicationStyles.fontStyles.button,color:ApplicationStyles.darkColor.color,textAlign: 'right' }}
             onPress={onViewComments}
           />
         </View>

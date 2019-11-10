@@ -1,5 +1,5 @@
 import { NavigationActions, StackActions } from 'react-navigation';
-
+import { DrawerActions } from 'react-navigation-drawer'
 /**
  * The navigation is implemented as a service so that it can be used outside of
  * components, for example in sagas.
@@ -33,6 +33,12 @@ function navigate(routeName, params) {
   );
 }
 
+// Manage drawer actions i.e. close, open, toggle
+function drawer(action) {
+  navigator.dispatch(
+    DrawerActions[`${action}Drawer`]()
+  );
+}
 /**
  * Call this function when you want to navigate to a specific route AND reset
  * the navigation history.
@@ -68,6 +74,7 @@ function goBack() {
 
 export default {
   goBack,
+  drawer,
   navigate,
   navigateAndReset,
   setTopLevelNavigator,

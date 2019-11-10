@@ -23,7 +23,7 @@ function MenuItem({
     >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         {!!leftIcon.name && <Icon name={leftIcon.name} size={leftIcon.size ||  wp('5%')} color={leftIcon.color || ApplicationStyles.info3.color} iconFamily={leftIcon.family || "Ionicons"} />}
-        <Text style={{ ...ApplicationStyles.button, color: ApplicationStyles.darkColor.color }}> {leftLabel}</Text>
+        <Text style={{ ...ApplicationStyles.fontStyles.button, color: ApplicationStyles.darkColor.color }}> {leftLabel}</Text>
       </View>
       {!!rightLabel && <Text style={{ ...ApplicationStyles.info3 }}>{rightLabel}</Text>}
       {!!rightIcon.name && <Icon name={rightIcon.name} size={rightIcon.size ||  wp('5%')} color={rightIcon.color || ApplicationStyles.info3.color} iconFamily={rightIcon.family || "Ionicons"} />}
