@@ -11,6 +11,7 @@ import ForgetPassword from 'App/Containers/ForgetPassword/ForgetPassword';
 import GetStarted from 'App/Containers/GetStarted/GetStarted';
 import EditProfile from 'App/Containers/EditProfile/EditProfile';
 import MyDonations from 'App/Containers/MyDonations/MyDonations';
+import RecurringDonations from 'App/Containers/RecurringDonations/RecurringDonations';
 import AddPost from 'App/Containers/AddPost/AddPost';
 import AddEvent from 'App/Containers/AddEvent/AddEvent';
 import Payment from 'App/Containers/Payment/Payment';
@@ -69,12 +70,13 @@ const AppNav = createAppContainer(createStackNavigator(
     AddBankAccount,
     OrgInfo,
     Followings,
+    RecurringDonations,
     PoSlider,
     Settings
   },
   {
     // By default the application will show the this screen
-    initialRouteName: 'LogIn',
+    initialRouteName: 'RecurringDonations',
     // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
     headerMode: 'none',
   },

@@ -1,6 +1,7 @@
 const { generateOrderId } = require('../../../utils/universalFunctions');
 const CashFree = require('./../../../services/cashFreeProviders');
 const Post = require('./../../post/post.model');
+const Subscription = require('./../subscription/subscription.model');
 const APIError = require('../../../utils/APIError');
 const httpStatus = require('http-status');
 const _ = require('lodash');
@@ -65,8 +66,9 @@ exports.saveTransaction = async (req, res, next) => {
 
 exports.createAndSubscribePlan = async (req, res, next) => {
   try {
-    // const { user } = req;
+    const { user } = req;
     const {
+      poId,
       amount,
       intervalType,
       customerEmail,
@@ -76,21 +78,22 @@ exports.createAndSubscribePlan = async (req, res, next) => {
       cardExpiryYear,
       cardCvv,
       cardHolder,
-    } = req.query;
+    } = req.body;
     const planId = generateOrderId();
     const subscriptionId = generateOrderId();
 
-    await CashFree.createPlan({
+    const planParams = {
       planId,
-      planName: 'INID',
-      // planName: `IN${user.id}ID`,
+      planName: `IN${user.id}ID`,
       amount,
-      intervalType,
+      intervalType: 'weekly',
       intervals: 2,
       description: '',
-    });
+      type: 'PERIODIC',
+    };
+    await CashFree.createPlan(planParams);
 
-    await CashFree.createSubscriptions({
+    const subscriptionParams = {
       subscriptionId,
       planId,
       customerEmail,
@@ -101,9 +104,25 @@ exports.createAndSubscribePlan = async (req, res, next) => {
       card_expiryYear: cardExpiryYear,
       card_cvv: cardCvv,
       card_holder: cardHolder,
+    };
+    const subscriptionResponse = await CashFree.createSubscriptions(subscriptionParams);
+    // {
+    //   "status":"OK",
+    //   "message":"Subscription created successfully",
+    //   "subReferenceId": 123,
+    //   "authLink":"https://bit.ly/1234qwer"
+    // }
+    const subscription = new Subscription({
+      senderId: user.id,
+      receiverId: poId,
+      plan: planParams,
+      subscription: {
+        ...subscriptionParams,
+        subReferenceId: subscriptionResponse.subReferenceId,
+      },
     });
-
-    res.json();
+    await subscription.save();
+    res.json(subscriptionResponse.authLink);
   } catch (error) {
     console.log('error', error);
     next(error);

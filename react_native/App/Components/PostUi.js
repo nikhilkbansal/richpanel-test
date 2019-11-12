@@ -255,7 +255,7 @@ function PostUi({
           )}
           <Button
             title="VIEW COMMENTS"
-            titleStyle={{ ...ApplicationStyles.fontStyles.button,color:ApplicationStyles.darkColor.color,textAlign: 'right' }}
+            titleStyle={{ ...ApplicationStyles.fontStyles.caption, color:ApplicationStyles.darkColor.color,textAlign: 'right' }}
             onPress={onViewComments}
           />
         </View>

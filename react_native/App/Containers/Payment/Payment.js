@@ -89,7 +89,7 @@ class Payment extends Component {
 
   componentDidMount() {
     this.getCfToken();
-    // this.createAndSubscribePlan();
+    this.createAndSubscribePlan();
     // console.log('data', data);
   }
 

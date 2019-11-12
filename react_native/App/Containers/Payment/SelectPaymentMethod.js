@@ -79,9 +79,10 @@ class SelectPaymentMethod extends Component {
 
   constructor(props) {
     super(props);
-    const { amount } = props.navigation.state.params;
+    const { amount, paymentMeta  } = props.navigation.state.params;
     this.state = {
       amount,
+      isOneTime: paymentMeta && paymentMeta.donate && paymentMeta.donate === 'once'
     };
     this.addPaymentFunc = this.addPaymentFunc.bind(this);
   }
@@ -206,7 +207,10 @@ class SelectPaymentMethod extends Component {
   getCards() {
     return (
       <View style={{
-        flex: 1, flexDirection: 'row', alignItems: 'center',
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingRight: wp('4%')
       }}
       >
         <Icon name="credit-card" size={wp('4.5%')} iconFamily="Octicons" color={ApplicationStyles.darkColor.color} />
@@ -231,7 +235,7 @@ class SelectPaymentMethod extends Component {
   render() {
     const { navigation } = this.props;
 
-    const { amount } = this.state;
+    const { amount, isOneTime } = this.state;
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} statusBarColor={ApplicationStyles.primaryColor.color} title="Donate" />
@@ -281,7 +285,7 @@ class SelectPaymentMethod extends Component {
             )}
           </View>
 
-          <View style={styles.menuContainer}>
+          {isOneTime && <View style={styles.menuContainer}>
             <View style={styles.menuSubFirst}>
               <View style={styles.mainMenu}>
                 <Icon name="rupee" size={wp('5%')} iconFamily="FontAwesome" color={ApplicationStyles.darkColor.color} />
@@ -295,10 +299,10 @@ class SelectPaymentMethod extends Component {
                 <Icon color={ApplicationStyles.primaryColor.color} name="ios-arrow-forward" />
               </Button>
             </View>
-          </View>
+          </View>}
 
-          {this.menuItem('Net Banking', { name: 'bank', family: 'MaterialCommunityIcons' }, [{ iconName: 'sbiLogo', label: 'SBI' }, { iconName: 'hdfcLogo', label: 'HDFC Bank' }, { iconName: 'axisLogo', label: 'Axis Bank' }])}
-          {this.menuItem('Wallet', { name: 'wallet', family: 'SimpleLineIcons' }, [{ iconName: 'amazonPayLogo', label: 'Amazon Pay' }, { iconName: 'paytmLogo', label: 'Paytm' }, { iconName: 'phonepeLogo', label: 'PhonePe' }])}
+          { isOneTime && this.menuItem('Net Banking', { name: 'bank', family: 'MaterialCommunityIcons' }, [{ iconName: 'sbiLogo', label: 'SBI' }, { iconName: 'hdfcLogo', label: 'HDFC Bank' }, { iconName: 'axisLogo', label: 'Axis Bank' }])}
+          { isOneTime && this.menuItem('Wallet', { name: 'wallet', family: 'SimpleLineIcons' }, [{ iconName: 'amazonPayLogo', label: 'Amazon Pay' }, { iconName: 'paytmLogo', label: 'Paytm' }, { iconName: 'phonepeLogo', label: 'PhonePe' }])}
         </ScrollView>
       </View>
     );

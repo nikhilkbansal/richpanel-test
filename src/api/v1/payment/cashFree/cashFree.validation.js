@@ -14,6 +14,7 @@ module.exports = {
   },
   createAndSubscribePlan: {
     body: {
+      poId: Joi.string().required(),
       amount: Joi.number().required(),
       intervalType: Joi.string().required(),
       customerEmail: Joi.string().required(),

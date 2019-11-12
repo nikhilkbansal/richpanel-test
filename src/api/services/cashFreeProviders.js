@@ -129,6 +129,9 @@ class Cashfree {
     return this.callApi('api/v2/subscriptions', { ...params }, {}, 'InHeader');
   }
 
+  cancelSubscriptions(subReferenceId) {
+    return this.callApi(`api/v2/subscriptions/${subReferenceId}/cancel`, {}, {}, 'InHeader');
+  }
 
   /** **************************
    *  Cashfree Payouts

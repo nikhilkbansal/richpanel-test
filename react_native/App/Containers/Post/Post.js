@@ -106,7 +106,7 @@ class Post extends Component {
         <NavigationBar {...navigation} leftFunction={()=>navigation.toggleDrawer()} leftIcon={'md-menu'} rightButtonAction={() => navigation.navigate('AddPost')} showLeftSection={true} showRightSection={profile && profile.role ==='ngo'} rightIcon="md-add" title="Home"/>
         {homePosts.length < 1 
           ? <EmptyState message='There are no posts to show'> 
-            Tip: Follow some Philanthropy organizations from <Text onPress={()=>navigation.navigate('Search')} style={{...ApplicationStyles.fontStyles.button, textDecorationLine: 'underline', color: ApplicationStyles.darkColor.color, textAlign:'center'}}>search page</Text>
+            Tip: Follow some Philanthropy organizations from <Text onPress={()=>navigation.navigate('Search')} style={{...ApplicationStyles.fontStyles.button, textDecorationLine: 'underline', color: ApplicationStyles.grayishBackground.color, textAlign:'center'}}>search page</Text>
           </EmptyState>
           :<FlatList
             showsVerticalScrollIndicator={false}

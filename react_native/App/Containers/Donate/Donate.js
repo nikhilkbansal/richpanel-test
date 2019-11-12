@@ -6,7 +6,6 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import PropTypes from 'prop-types';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
-
 import PostActions from 'App/Stores/Post/Actions';
 import {
   Dropdown, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, FileSelector,
@@ -21,11 +20,11 @@ const donateOptions = [
 
 const frequencyOptions = [
   { label: 'For 3 months', value: '3month' },
-  { label: 'For 6 months ', value: 'monthly' },
-  { label: 'For 1 year', value: 'yearly' },
-  { label: 'For 5 years', value: 'yearly' },
-  { label: 'For 10 years', value: 'yearly' },
-  { label: 'For lifetime', value: 'yearly' },
+  { label: 'For 6 months ', value: '6month' },
+  { label: 'For 1 year', value: '1year' },
+  { label: 'For 2 year', value: '2year' },
+  { label: 'For 5 years', value: '5year' },
+  { label: 'For lifetime', value: 'lifetime' },
 ];
 
 
@@ -60,6 +59,7 @@ class Donate extends Component {
       donate: 'once',
       files: [],
       amount: 0,
+      frequency: '2year'
     };
     this.goNext = this.goNext.bind(this);
     this.descriptionRef = React.createRef();
@@ -72,7 +72,7 @@ class Donate extends Component {
   }
 
   goNext(){
-    const { amount } = this.state;
+    const { amount, donate } = this.state;
     const { paymentMeta } = this.props.navigation.state.params;
 
     const validateForm = TextInput.validateForm(['amount'], this.state);
@@ -81,10 +81,9 @@ class Donate extends Component {
       return false;
     } else {
       this.setState({ errors: {} });
-
     }
 
-    this.props.navigation.navigate('SelectPaymentMethod', { amount, paymentMeta });
+    this.props.navigation.navigate('SelectPaymentMethod', { amount, paymentMeta: {...paymentMeta, donate} });
   }
 
   render() {
@@ -96,12 +95,13 @@ class Donate extends Component {
         <NavigationBar {...navigation} title="Donate" />
         <KeyboardAwareScrollView style={styles.subContainer}>
           <Dropdown dropDownLabel="Donate" default={donateOptions[0]} placeholder="Donate" options={donateOptions} onValueChange={(label, value) => this.setState({ donate: value })} />
-          {donate !== 'once' && <Dropdown dropDownLabel="Frequency" default={frequencyOptions[0]} placeholder="Donate" options={frequencyOptions} />}
+          {donate !== 'once' && <Dropdown dropDownLabel="Frequency" default={frequencyOptions[0]} placeholder="Donate" options={frequencyOptions} onValueChange={(label, value) => this.setState({ frequency: value })}/>}
           <TextInput
             error={errors.amount}
             multiline
             numberOfLines={1}
             label="Amount"
+            keyboardType={'number-pad'}
             placeholder="e.g. 500"
             returnKeyType="next"
             onChangeText={text => this.updateTextInput('amount', text)}

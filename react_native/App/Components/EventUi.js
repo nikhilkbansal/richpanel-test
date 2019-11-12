@@ -326,8 +326,8 @@ function EventUi
           </View>
           )}
           <Button
-            title="View comments"
-            titleStyle={{ ...ApplicationStyles.fontStyles.button,color:ApplicationStyles.darkColor.color,textAlign: 'right' }}
+            title="VIEW COMMENTS"
+            titleStyle={{ ...ApplicationStyles.fontStyles.caption,color:ApplicationStyles.darkColor.color,textAlign: 'right' }}
             onPress={onViewComments}
           />
         </View>

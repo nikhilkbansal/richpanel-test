@@ -20,8 +20,8 @@ function EmptyState({
     <View style={{ alignItems:'center', marginTop: hp('19%'),...containerStyle}}>
       <View style={{ width: wp('70%'), height: wp('50%'),alignItems:'center', justifyContent:'center', backgroundColor:ApplicationStyles.smokeBackground.color,...messageContainerStyle}}>
         <Icon name='emoji-neutral' iconFamily='Entypo' size={wp('24%')} color={ApplicationStyles.grayishBackground.color}/>
-        <Text style={{...ApplicationStyles.fontStyles.caption, color: ApplicationStyles.darkColor.color}}>{message}</Text>
-        <Text style={{...ApplicationStyles.fontStyles.body1, color: ApplicationStyles.darkColor.color, textAlign:'center'}}>{children}</Text>
+        <Text style={{...ApplicationStyles.fontStyles.caption, color: ApplicationStyles.grayishBackground.color}}>{message}</Text>
+        <Text style={{...ApplicationStyles.fontStyles.body1, color: ApplicationStyles.grayishBackground.color, textAlign:'center'}}>{children}</Text>
       </View>
   </View>
   );

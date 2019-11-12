@@ -105,7 +105,7 @@ class SearchPage extends Component {
       } 
 
       if (this.state.term.length === 0) { putAutoCompleteResults([]); }
-      StatusBar.setHidden(true, true); 
+      // StatusBar.setHidden(true, true); 
     });
   }
 

@@ -11,6 +11,7 @@ const reactionRoutes = require('./reaction/reaction.route');
 const payURoutes = require('./payment/payUMoney/payU.route');
 const transactionRoutes = require('./payment/transaction/transaction.route');
 const cashFreeRoutes = require('./payment/cashFree/cashFree.route');
+const subscriptionRoutes = require('./payment/subscription/subscription.route');
 const tagRoutes = require('./tag/tag.route');
 const shareRoutes = require('./share/share.route');
 
@@ -46,6 +47,7 @@ router.use('/reaction', reactionRoutes);
 router.use('/payment/payU', payURoutes);
 router.use('/payment/cashFree', cashFreeRoutes);
 router.use('/payment/transaction', transactionRoutes);
+router.use('/payment/subscription', subscriptionRoutes);
 router.use('/search', searchRoutes);
 router.use('/tag', tagRoutes);
 

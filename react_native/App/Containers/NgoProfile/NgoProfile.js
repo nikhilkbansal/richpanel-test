@@ -366,7 +366,7 @@ class NgoProfile extends Component {
                 iconSize={wp('5.8%')}
                 titleStyle={{ ...ApplicationStyles.button, color:ApplicationStyles.primaryColor.color}}
               />
-              <Button
+              { !isMe && <Button
                 icon="donate"
                 iconFamily='custom'
                 style={{
@@ -380,7 +380,7 @@ class NgoProfile extends Component {
                   flex: 1,
                 }}
                 titleStyle={{ ...ApplicationStyles.button, color:ApplicationStyles.primaryColor.color}}
-              />
+              />}
               <Button
                 onPress={()=>this.onShare(poData)}
                 icon="share" iconSize={wp('5.3%')} iconFamily="SimpleLineIcons" style={{ flex:1, alignItems:'flex-end'}}   />

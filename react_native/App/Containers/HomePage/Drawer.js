@@ -78,12 +78,14 @@ class Drawer extends Component {
         { this.getMenuItem('FOLLOWINGS', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}, ()=> navigate('Followings')) }
         {/* { this.getMenuItem('Handouts', {name: 'hand-paper-o', family: 'FontAwesome', size: wp('5%')}) } */}
         { this.getMenuItem('DONATIONS', {name: 'money', family: 'FontAwesome', size: wp('4.9%')}, ()=> navigate('MyDonations')) }
+        { this.getMenuItem('RECURRING DONATIONS', {name: 'sync', family: 'AntDesign', size: wp('4.6%')}, ()=> navigate('RecurringDonations')) }
         { this.getMenuItem('SETTINGS', {name: 'setting', family: 'AntDesign', size: wp('5.4%')}, ()=> navigate('Settings')) }
         </View>
         :<View style={{marginTop: hp('3%')}}>
         { this.getMenuItem('FOLLOWERS', {name: 'user-following', family: 'SimpleLineIcons', size: wp('5%')}) }
         {/* { this.getMenuItem('Handouts', {name: 'hand-paper-o', family: 'FontAwesome', size: wp('5%')}) } */}
         { this.getMenuItem('DONATIONS', {name: 'money', family: 'FontAwesome', size: wp('4.9%')}, ()=> navigate('MyDonations',{forPo: true})) }
+        { this.getMenuItem('RECURRING DONATIONS', {name: 'sync', family: 'AntDesign', size: wp('4.6%')}, ()=> navigate('RecurringDonations')) }
         { this.getMenuItem('POSTS', {name: 'md-list', family: null, size: wp('5.4%')}) }
         { this.getMenuItem('EVENTS', {name: 'md-time', family: null, size: wp('5.4%')}) }
         { this.getMenuItem('JOBS', {name: 'file', family: 'Octicons', size: wp('5.4%')}) }

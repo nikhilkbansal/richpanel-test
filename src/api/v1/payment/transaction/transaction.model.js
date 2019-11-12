@@ -6,6 +6,7 @@ const txTypes = [
   'userToDirectPO', // user have sent money directly to ngo,npo etc
   'userToPOShop', // user have sent money to shop of PO
   'platformToPO', // PO=Philanthropy Organization; our platform have sent money to ngo,npo etc
+  'subscriptionToPO', // Recurring payments
 ];
 
 const beneficiarySchema = new mongoose.Schema({

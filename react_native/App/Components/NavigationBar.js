@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   centerArea: {
-    flex: 2,
+    flex: 3,
     alignContent: 'center',
     justifyContent: 'center',
   },
@@ -69,7 +69,7 @@ class NavigationBar extends React.Component {
           </View>
           <View style={styles.centerArea}>
             <Text style={[styles.label, ApplicationStyles.fontStyles.title, { color: ApplicationStyles.lightColor.color }]}>
-              {title}
+              {title && title.toUpperCase()}
             </Text>
           </View>
           <View style={styles.rightArea}>
