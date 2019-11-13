@@ -5,6 +5,7 @@ const Subscription = require('./../subscription/subscription.model');
 const APIError = require('../../../utils/APIError');
 const httpStatus = require('http-status');
 const _ = require('lodash');
+const moment = require('moment');
 const { Transaction, Beneficiary } = require('../transaction/transaction.model');
 
 exports.getCfToken = async (req, res, next) => {
@@ -86,18 +87,18 @@ exports.createAndSubscribePlan = async (req, res, next) => {
       planId,
       planName: `IN${user.id}ID`,
       amount,
-      intervalType: 'weekly',
+      intervalType,
       intervals: 2,
       description: '',
       type: 'PERIODIC',
     };
     await CashFree.createPlan(planParams);
-
     const subscriptionParams = {
       subscriptionId,
       planId,
       customerEmail,
       customerPhone,
+      expiresOn: moment().add(10, 'd').format('YYYY-MM-DD hh:mm:ss'),
       paymentOption: 'card',
       card_number: cardNumber,
       card_expiryMonth: cardExpiryMonth,
@@ -105,24 +106,43 @@ exports.createAndSubscribePlan = async (req, res, next) => {
       card_cvv: cardCvv,
       card_holder: cardHolder,
     };
+
     const subscriptionResponse = await CashFree.createSubscriptions(subscriptionParams);
-    // {
-    //   "status":"OK",
-    //   "message":"Subscription created successfully",
-    //   "subReferenceId": 123,
-    //   "authLink":"https://bit.ly/1234qwer"
-    // }
+
     const subscription = new Subscription({
       senderId: user.id,
       receiverId: poId,
-      plan: planParams,
+      plan: { ...planParams, planType: planParams.type },
       subscription: {
         ...subscriptionParams,
         subReferenceId: subscriptionResponse.subReferenceId,
       },
     });
     await subscription.save();
-    res.json(subscriptionResponse.authLink);
+    res.json({
+      subscriptionAuthLink: subscriptionResponse.authLink,
+      subscriptionId: subscription._id,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.verifySubscription = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const {
+      _id,
+    } = req.body;
+    const subscription = await Subscription.findById(_id);
+    if (!subscription) {
+      throw new APIError({ message: 'Subscription not found' });
+    }
+    const subDetails = await CashFree.getSubscription(subscription.subscription.subReferenceId);
+    subscription.subscription.status = subDetails.subscription.status;
+    await subscription.save();
+
+    res.status(httpStatus.CREATED).json({ status: subDetails.subscription.status });
   } catch (error) {
     console.log('error', error);
     next(error);

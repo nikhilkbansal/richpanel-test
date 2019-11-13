@@ -88,7 +88,7 @@ class Post extends Component {
     userPicture={item.userId.picture}
     onUserClick={()=>this.props.navigation.navigate('NgoProfile',{poUserId:item.userId._id})}
     onViewComments={()=>this.props.navigation.navigate('Comment',{itemId:item._id, itemType:'post'})}
-    onDonatePress={()=>this.props.navigation.navigate('Donate',{paymentMeta:{_id:item._id, txType:'userToPOCampaign'}})}
+    onDonatePress={()=>this.props.navigation.navigate('Donate',{paymentMeta:{_id:item._id, poUserId:item.userId._id, txType:'userToPOCampaign'}})}
     {...item}
     />;
 

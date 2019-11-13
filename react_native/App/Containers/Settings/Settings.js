@@ -95,6 +95,9 @@ class Settings extends Component {
             <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Notifications' />
           </View> */}
           <View style={[styles.sectionContainer, ]}>
+            <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Bank Account' />
+          </View>
+          <View style={[styles.sectionContainer, ]}>
             <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='FAQs' />
           </View>
           <View style={[styles.sectionContainer, ]}>

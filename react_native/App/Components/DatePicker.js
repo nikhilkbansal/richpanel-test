@@ -10,6 +10,7 @@ import {
   Colors, ApplicationStyles,
 } from '../Theme';
 import { CommonFunctions } from '../Utils';
+import moment from 'moment';
 
 const styles = StyleSheet.create({
   container: { flex: 1, marginTop: hp('1%'), paddingBottom: hp('1%') },
@@ -26,25 +27,42 @@ const styles = StyleSheet.create({
 class DatePicker extends React.Component {
   constructor(props) {
     super(props);
+    let dateTime = '';
+    if(props.defaultDateTime && props.onlyDate){
+      dateTime = moment(props.defaultDateTime).format('YYYY/MM/DD');
+    } else {
+      dateTime = moment(props.defaultDateTime).format('YYYY/MM/DD hh:mm:ss');
+    }
     this.state = {
-      dateTime: '',
+      dateTime,
+      defaultDateTime: props.defaultDateTime || new Date(),
     };
 
     this.openDatePicker = this.openDatePicker.bind(this);
   }
 
   async openDatePicker() {
-    const { onChange } = this.props;
+    const { onChange, onlyDate } = this.props;
+    const { defaultDateTime } = this.state;
     try {
       const {
         action, year, month, day,
-      } = await DatePickerAndroid.open();
+      } = await DatePickerAndroid.open({ minDate: new Date(), date: defaultDateTime});
       if (action !== DatePickerAndroid.dismissedAction) {
+        if(onlyDate){
+          onChange(new Date(year, month, day));
+          const formattedDateTime = `${year}/${CommonFunctions.getPaddedZero(month)}/${CommonFunctions.getPaddedZero(day)}`;
+          this.setState({
+            dateTime: formattedDateTime,
+          });
+          return;
+        }
         const { action: timeAction, hour, minute } = await TimePickerAndroid.open({
           hour: 14,
           minute: 0,
           is24Hour: true, // Will display '2 PM'
         });
+        
         if (timeAction !== TimePickerAndroid.dismissedAction) {
           const formattedDateTime = `${year}/${CommonFunctions.getPaddedZero(month)}/${CommonFunctions.getPaddedZero(day)} ${CommonFunctions.getPaddedZero(CommonFunctions.getHoursIn12(hour).hours)}:${CommonFunctions.getPaddedZero(minute)} ${CommonFunctions.getHoursIn12(hour).noonStatus}`;
           onChange(new Date(year, month, day, hour, minute));

@@ -49,7 +49,7 @@ class Cashfree {
     this.notifyUrl = notifyUrl;
   }
 
-  async callApi(apiPath, data, headers = {}, credsPlace = 'inBody', apiType = 'default') {
+  async callApi(apiPath, method = 'post', data, headers = {}, credsPlace = 'inBody', apiType = 'default') {
     const inData = {};
     const inHeader = {};
     let convertData = o => o;
@@ -69,7 +69,7 @@ class Cashfree {
 
     try {
       const apiCall = await axios({
-        method: 'post',
+        method,
         url: apiUrl + apiPath,
         headers: {
           'content-type': 'application/x-www-form-urlencoded',
@@ -101,20 +101,20 @@ class Cashfree {
    * *********************** */
 
   orderCreate(params) {
-    return this.callApi('api/v1/order/create', { ...params, returnUrl: this.returnUrl, notifyUrl: this.notifyUrl });
+    return this.callApi('api/v1/order/create', 'post', { ...params, returnUrl: this.returnUrl, notifyUrl: this.notifyUrl });
   }
 
   getOrderStatus(params) {
-    return this.callApi('api/v1/order/info/status', { ...params });
+    return this.callApi('api/v1/order/info/status', 'post', { ...params });
   }
 
   getOrderDetails(params) {
-    return this.callApi('api/v1/order/info', { ...params });
+    return this.callApi('api/v1/order/info', 'post', { ...params });
   }
 
   // Used with seamless payment
   createCfToken(params) {
-    return this.callApi('api/v2/cftoken/order', { ...params }, {}, 'InHeader');
+    return this.callApi('api/v2/cftoken/order', 'post', { ...params }, {}, 'InHeader');
   }
 
 
@@ -122,26 +122,31 @@ class Cashfree {
    *  Cashfree Subscriptions
    * *********************** */
   createPlan(params) {
-    return this.callApi('api/v2/subscription-plans', { ...params }, {}, 'InHeader');
+    return this.callApi('api/v2/subscription-plans', 'post', { ...params }, {}, 'InHeader');
   }
 
   createSubscriptions(params) {
-    return this.callApi('api/v2/subscriptions', { ...params }, {}, 'InHeader');
+    return this.callApi('api/v2/subscriptions', 'post', { ...params }, {}, 'InHeader');
+  }
+
+  getSubscription(subReferenceId) {
+    return this.callApi(`api/v2/subscriptions/${subReferenceId}`, 'get', {}, {}, 'InHeader');
   }
 
   cancelSubscriptions(subReferenceId) {
-    return this.callApi(`api/v2/subscriptions/${subReferenceId}/cancel`, {}, {}, 'InHeader');
+    return this.callApi(`api/v2/subscriptions/${subReferenceId}/cancel`, 'post', {}, {}, 'InHeader');
   }
+
 
   /** **************************
    *  Cashfree Payouts
    * *********************** */
   authorizePayout(params) {
-    return this.callApi('payout/v1/authorize', { ...params }, {}, 'InHeader', 'payout');
+    return this.callApi('payout/v1/authorize', 'post', { ...params }, {}, 'InHeader', 'payout');
   }
 
   addBeneficiary(params, headers) {
-    return this.callApi('payout/v1/addBeneficiary', { ...params }, headers, 'InHeader', 'payout');
+    return this.callApi('payout/v1/addBeneficiary', 'post', { ...params }, headers, 'InHeader', 'payout');
   }
 }
 

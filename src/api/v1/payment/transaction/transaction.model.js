@@ -59,10 +59,10 @@ transactionSchema.statics = {
   },
 
   async list({
-    skip = 0, perPage = 30, _id, senderId, receiverId, postId, txStatus,
+    skip = 0, perPage = 30, _id, senderId, receiverId, postId, txStatus, txType,
   }, sort = { createdAt: -1 }) {
     const options = omitBy({
-      _id, senderId, receiverId, postId, txStatus,
+      _id, senderId, receiverId, postId, txStatus, txType,
     }, isNil);
     return this.find(options).sort(sort)
       .skip(skip)

@@ -17,7 +17,7 @@ const subscriptionSchema = new mongoose.Schema({
     intervalType: String,
     intervals: String,
     description: String,
-    type: String,
+    planType: String,
     amount: Number,
   },
   subscription: {
@@ -27,6 +27,7 @@ const subscriptionSchema = new mongoose.Schema({
     customerPhone: String,
     paymentOption: String,
     card_number: String,
+    firstChargeDelay: Number,
     subReferenceId: String,
     status: String,
     currentCycle: String,

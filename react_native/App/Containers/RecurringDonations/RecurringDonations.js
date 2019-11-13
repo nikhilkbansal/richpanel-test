@@ -13,7 +13,7 @@ import {
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import AxiosRequest from '../../Services/HttpRequestService';
-
+import CommonFunctions from '../../Utils/CommonFunctions';
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
   subContainer: { flex: 1, paddingHorizontal: wp('5%') },
@@ -39,7 +39,7 @@ class RecurringPayments extends Component {
     super(props);
     const { profile } = props;
     this.state = { 
-      forPo: profile.role === 'ngo',
+      forPo: profile && profile.role === 'ngo',
       donations: [],
       activePayment: null,
     };
@@ -86,41 +86,44 @@ class RecurringPayments extends Component {
   }
 
 
-  subTransactionItem(){
+  subTransactionItem(tx){
     return (<View style={{flex:1, flexDirection: 'row',}}>
-    <Text style={{flex:1, ...ApplicationStyles.fontStyles.body1,textAlign:'center'}}>14 Nov 2019</Text>
-    <Text style={{flex:1,...ApplicationStyles.fontStyles.body2, textAlign:'center'}}>₹1000</Text>
-    <Text style={{flex:1,...ApplicationStyles.fontStyles.body1, textAlign:'center'}}>Success</Text>
+    <Text style={{flex:1, ...ApplicationStyles.fontStyles.body1,textAlign:'center'}}>{ moment(tx.createdAt).format('DD MMM YYYY')}</Text>
+    <Text style={{flex:1,...ApplicationStyles.fontStyles.body2, textAlign:'center'}}>₹{tx.amount}</Text>
+    <Text style={{flex:1,...ApplicationStyles.fontStyles.body1, textAlign:'center'}}>{tx.txStatus}</Text>
   </View>)
   }
 
   transctionItem({item, index}){
     const date = moment(item.createdAt);
     const { activePayment } = this.state;
-    const isActive = activePayment === item.data[0]._id;
+    const isActive = activePayment === item._id;
     return (
       <View style={{flex:1, marginVertical: ApplicationStyles.listItemsSpace, paddingVertical: hp('1%'),backgroundColor:ApplicationStyles.lightBackground.color,  }}>
         <View style={{flex:1, flexDirection: 'row',}}>
           <View style={{flex:1}}>
-            <Text style={{...ApplicationStyles.fontStyles.caption,textAlign:'center'}}>Started on</Text>
+            <Text style={{...ApplicationStyles.fontStyles.caption,textAlign:'center'}}>Created on</Text>
             <Text style={{...ApplicationStyles.fontStyles.title, textAlign:'center'}}>{date.format('DD MMM')}</Text>
             <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>{date.format('YYYY')}</Text>
           </View>
           <View style={{flex:1, }}>
-            <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>₹10 monthly</Text>
-            <Text style={{...ApplicationStyles.fontStyles.title, textAlign:'center'}}>₹1000</Text>
+    <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>₹{item.plan.amount} per {item.plan.intervalType}</Text>
+            <Text style={{...ApplicationStyles.fontStyles.title, textAlign:'center'}}>₹{item.totalAmount}</Text>
             <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>{item.receiverId && item.receiverId.name}</Text>
           </View>
           <View style={{flex:1, justifyContent:'center'}}>
-            <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>Canceled</Text>
-            <Button title={isActive ? 'HIDE' : 'VIEW'} onPress={()=>this.setState({activePayment: isActive ? null : item.data[0]._id})} titleStyle={{...ApplicationStyles.fontStyles.button}}></Button>
-            <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>5 Transactions</Text>
+            <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>{item.subscription.status}</Text>
+            <Button title={isActive ? 'HIDE' : 'VIEW'} onPress={()=>this.setState({activePayment: isActive ? null : item._id})} titleStyle={{...ApplicationStyles.fontStyles.button}}></Button>
+    <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}> {CommonFunctions.numberToReadable(item.transactions.length)}
+            {' '}
+            {CommonFunctions.getPluralString('Transactions', item.transactions.length)}</Text>
           </View>
         </View>
         { isActive && <Fragment>
             <View style={{flex:1, marginTop: hp('1.6%')}}>
-                {this.subTransactionItem()}
-                {this.subTransactionItem()}
+              { item.transactions.map(o=>
+                this.subTransactionItem(o))
+              }
             </View>
             <Button title='STOP DONATIONS' onPress={()=>this.cancelDonations(item._id, index)} titleStyle={{...ApplicationStyles.fontStyles.button, ...ApplicationStyles.warningColor}}></Button>
           </Fragment>

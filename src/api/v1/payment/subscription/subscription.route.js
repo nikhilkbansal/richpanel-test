@@ -16,4 +16,5 @@ router.route('/')
 router.route('/cancel')
   .post(authorize(), validate(cancel), controller.cancel);
 
+
 module.exports = router;

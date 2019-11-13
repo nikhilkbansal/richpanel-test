@@ -15,11 +15,10 @@ import { CommonFunctions } from '../Utils';
 const styles = StyleSheet.create({
   container: { flex: 1, marginTop: hp('1%') },
   button: {
-    paddingTop:0,
-    paddingBottom: hp('1%'),
+    paddingVertical: hp('1%'),
     flex: 1,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: ApplicationStyles.disabledColor.color,
+    // borderBottomWidth: StyleSheet.hairlineWidth,
+    // borderBottomColor: ApplicationStyles.disabledColor.color,
   },
 });
 let data = [{
@@ -89,7 +88,7 @@ class Dropdown extends React.Component {
             <ScrollView>
               { options && options.map(o => (
                 <Button
-                  title={o.label}
+                  title={o.label.toUpperCase()}
                   onPress={() => this.setValue(o.label, o.value)}
                   titleStyle={{ ...ApplicationStyles.fontStyles.body1, ...styles.button }}
                 />

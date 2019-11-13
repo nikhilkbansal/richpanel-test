@@ -233,7 +233,7 @@ class SelectPaymentMethod extends Component {
   }
 
   render() {
-    const { navigation } = this.props;
+    const { navigation, navigation: {state: { params }} } = this.props;
 
     const { amount, isOneTime } = this.state;
     return (
@@ -253,7 +253,7 @@ class SelectPaymentMethod extends Component {
               </View>
               <Button
                 buttonWrapperStyle={styles.menuRightSide}
-                onPress={() => navigation.navigate('AdditionalPayment', { cards: true, orderAmount: amount })}
+                onPress={() => navigation.navigate('AdditionalPayment', { cards: true, orderAmount: amount,...params  })}
               >
                 <Text style={styles.menuRightLabel}>Enter new</Text>
                 <Icon color={ApplicationStyles.primaryColor.color} name="ios-arrow-forward" />
@@ -293,7 +293,7 @@ class SelectPaymentMethod extends Component {
               </View>
               <Button
                 buttonWrapperStyle={styles.menuRightSide}
-                onPress={() => navigation.navigate('AdditionalPayment', { upi: true, orderAmount: amount })}
+                onPress={() => navigation.navigate('AdditionalPayment', { upi: true, orderAmount: amount, ...params })}
               >
                 <Text style={styles.menuRightLabel}>Enter VPA</Text>
                 <Icon color={ApplicationStyles.primaryColor.color} name="ios-arrow-forward" />

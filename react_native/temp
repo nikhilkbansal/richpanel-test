@@ -1,6 +1,8 @@
 Some bugs or enhancements
 1. Form validations
 2. comment edit and delete button
+3. notify url for cashfree if something wrong happens
+4. perPage=100 while fetching transactions in subsctions
 
 
 

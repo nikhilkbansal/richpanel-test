@@ -14,8 +14,8 @@ import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 
 const donateOptions = [
   { label: 'Once', value: 'once' },
-  { label: 'Monthly', value: 'monthly' },
-  { label: 'Yearly', value: 'yearly' },
+  { label: 'Monthly', value: 'month' },
+  { label: 'Yearly', value: 'year' },
 ];
 
 const frequencyOptions = [
@@ -59,7 +59,8 @@ class Donate extends Component {
       donate: 'once',
       files: [],
       amount: 0,
-      frequency: '2year'
+      frequency: '2year',
+      startsFrom: new Date()
     };
     this.goNext = this.goNext.bind(this);
     this.descriptionRef = React.createRef();
@@ -72,7 +73,7 @@ class Donate extends Component {
   }
 
   goNext(){
-    const { amount, donate } = this.state;
+    const { amount, donate, startsFrom } = this.state;
     const { paymentMeta } = this.props.navigation.state.params;
 
     const validateForm = TextInput.validateForm(['amount'], this.state);
@@ -83,18 +84,19 @@ class Donate extends Component {
       this.setState({ errors: {} });
     }
 
-    this.props.navigation.navigate('SelectPaymentMethod', { amount, paymentMeta: {...paymentMeta, donate} });
+    this.props.navigation.navigate('SelectPaymentMethod', { amount, paymentMeta: {...paymentMeta, donate, startsFrom} });
   }
 
   render() {
     const { navigation } = this.props;
 
-    const { errors, donate } = this.state;
+    const { errors, donate, startsFrom } = this.state;
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} title="Donate" />
         <KeyboardAwareScrollView style={styles.subContainer}>
           <Dropdown dropDownLabel="Donate" default={donateOptions[0]} placeholder="Donate" options={donateOptions} onValueChange={(label, value) => this.setState({ donate: value })} />
+          {donate !== 'once' && <DatePicker onlyDate label="Starts From" defaultDateTime={startsFrom} placeholder="Starts From"  onChange={(data) => this.setState({ startsFrom: data })}/>}
           {donate !== 'once' && <Dropdown dropDownLabel="Frequency" default={frequencyOptions[0]} placeholder="Donate" options={frequencyOptions} onValueChange={(label, value) => this.setState({ frequency: value })}/>}
           <TextInput
             error={errors.amount}

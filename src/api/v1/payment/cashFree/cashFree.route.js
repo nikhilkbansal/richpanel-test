@@ -4,6 +4,7 @@ const controller = require('./cashFree.controller');
 const {
   getCfToken,
   createAndSubscribePlan,
+  verifySubscription,
   saveTransaction,
   addPayoutBeneficiary,
 } = require('./cashFree.validation');
@@ -19,8 +20,12 @@ router.route('/getCfToken')
 router.route('/createAndSubscribePlan')
   .post(authorize(), validate(createAndSubscribePlan), controller.createAndSubscribePlan);
 
+router.route('/verifySubscription')
+  .post(authorize(), validate(verifySubscription), controller.verifySubscription);
+
 router.route('/saveTransaction')
   .post(authorize(), validate(saveTransaction), controller.saveTransaction);
+
 
 router.route('/addPayoutBeneficiary')
   .post(authorize(), validate(addPayoutBeneficiary), controller.addPayoutBeneficiary);

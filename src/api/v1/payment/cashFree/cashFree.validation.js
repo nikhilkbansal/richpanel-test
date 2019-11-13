@@ -12,6 +12,11 @@ module.exports = {
 
     },
   },
+  verifySubscription: {
+    body: {
+      _id: Joi.string().required(),
+    },
+  },
   createAndSubscribePlan: {
     body: {
       poId: Joi.string().required(),

@@ -54,6 +54,13 @@ const styles = StyleSheet.create({
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end',
   },
   menuRightLabel: { marginHorizontal: wp('2%'), color: ApplicationStyles.primaryColor.color },
+  signUpLinkContainer: {
+      flex:1,
+      marginBottom: hp('0.9%'), flexDirection: 'row', alignItems: 'center', alignContent: 'center', justifyContent: 'center',
+  },
+  signUpContainer: { alignSelf: 'center', flex:1 },
+  signUpButton: { ...ApplicationStyles.fontStyles.button, ...ApplicationStyles.darkColor,
+  },
 });
 
 
@@ -68,6 +75,8 @@ class Payment extends Component {
   constructor(props) {
     super(props);
     const { orderAmount } = props.navigation.state.params.seamlessParams;
+    const { navigation: { state: { params: { paymentMeta } } } } = this.props;
+    const isOnce = !paymentMeta.donate || paymentMeta.donate === 'once';
     console.log(props);
     this.state = {
       errors: {},
@@ -79,18 +88,25 @@ class Payment extends Component {
       orderAmount,
       txSuccess: true,
       modalVisible: false,
+      isOnce,
+      showEndScreen: isOnce,
+      subscriptionAuthLink:''
     };
-    this.addPost = this.addPost.bind(this);
     this.getCfToken = this.getCfToken.bind(this);
     this.saveTransaction = this.saveTransaction.bind(this);
+    this.createAndSubscribePlan = this.createAndSubscribePlan.bind(this);
+    this.confirmSubscription = this.confirmSubscription.bind(this);
     this.afterPaymentDone = this.afterPaymentDone.bind(this);
   }
 
 
   componentDidMount() {
-    this.getCfToken();
-    this.createAndSubscribePlan();
-    // console.log('data', data);
+    const { isOnce } = this.state;
+    if(isOnce){
+      this.getCfToken();
+    }else{
+      this.createAndSubscribePlan();
+    }
   }
 
   async getCfToken() {
@@ -119,7 +135,7 @@ class Payment extends Component {
       const data = await AxiosRequest({
         method: 'post',
         data: {
-          receiverId: paymentMeta.poId,
+          receiverId: paymentMeta.poUserId,
           postId: paymentMeta._id,
           amount: orderAmount,
           orderId,
@@ -139,37 +155,61 @@ class Payment extends Component {
 
   async createAndSubscribePlan() {
     const { orderAmount } = this.state;
+    console.log('asdasdasd3ed3e', this.props.navigation.state)
+    const { profile, navigation: { state: { params: { paymentMeta, seamlessParams } } } } = this.props;
+
     try {
+
       const data = await AxiosRequest({
         method: 'post',
         data: {
+          poId: paymentMeta.poUserId,
           amount: orderAmount,
-          intervalType: 'monthly',
-          customerEmail: 'ab@ad.com',
-          customerPhone: '+911234567890',
-          cardNumber: 4444333322221111,
-          cardExpiryMonth: '07',
-          cardExpiryYear: '23',
-          cardCvv: 123,
-          cardHolder: 'Steve',
+          intervalType: paymentMeta.donate,
+          firstChargeDelay: moment(paymentMeta.startsFrom).diff(moment(), 'days'),
+          customerEmail: profile.email,
+          customerPhone: profile.phone || 23232,
+          cardNumber: seamlessParams.card_number,
+          cardExpiryMonth: seamlessParams.card_expiryMonth,
+          cardExpiryYear: seamlessParams.card_expiryYear,
+          cardCvv: seamlessParams.card_cvv,
+          cardHolder: seamlessParams.card_holder,
         },
         url: 'payment/cashFree/createAndSubscribePlan',
       });
-      console.log('createAndSubscribePlan', data);
-      // this.setState({ ...data });
+      this.setState({ ...data });
     } catch (e) {
+      console.log('e',e)
       // Toast('Some error occured. Please try again later');
     }
   }
 
+  async confirmSubscription(){
+    const { subscriptionId } = this.state;
+    try {
+      const data = await AxiosRequest({
+        method: 'post',
+        data: { 
+          _id:subscriptionId
+        },
+        url: 'payment/cashFree/verifySubscription',
+      });
 
-  addPost() {
-    const {
-      errors, title, description, files,
-    } = this.state;
-    const { postCreate } = this.props;
-    postCreate({ title, description, files });
+      if (data.status === 'INITIALIZED') {
+        Toast('Have you authenticated your subscription above? If didn\'t please do');
+      } else if(['ACTIVE', 'COMPLETED','BANK APPROVAL PENDING'].includes(data.status)) {
+        this.setState({modalVisible: true});
+      } else if(['ON_HOLD','CANCELLED'].includes(data.status)) {
+        Toast('Payment is cancelled, deauthorized or some error happened. Please try again later.');
+        this.setState({txSuccess: false, showEndScreen: true});
+      }
+    } catch (e) {
+      console.log('e',e)
+      // Toast('Some error occured. Please try again later');
+    }
   }
+
+   
 
   afterPaymentDone() {
     this.setState({ modalVisible: false },
@@ -180,9 +220,9 @@ class Payment extends Component {
     const { navigation, navigation: { state: { params } } } = this.props;
 
     const {
-      orderId, orderAmount, cfToken, txSuccess, modalVisible,
+      orderId, profile, orderAmount, cfToken, txSuccess, modalVisible, isOnce, showEndScreen, subscriptionAuthLink
     } = this.state;
-    console.log('orderId, orderAmount, cfToken', orderId, orderAmount, cfToken);
+    console.log('orderId, orderAmount, cfToken', this.state);
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} statusBarColor={ApplicationStyles.primaryColor.color} title="Donate" />
@@ -208,7 +248,7 @@ class Payment extends Component {
             <Text style={{ ...ApplicationStyles.fontStyles.caption, textAlign: 'center' }}>Thank you for helping the needies</Text>
           </DialogContent>
         </Dialog>
-        {!txSuccess && (
+        {showEndScreen && !txSuccess && (
         <View>
           <Button
             style={[styles.loginContainer, { marginTop: hp('27%') }]}
@@ -224,18 +264,38 @@ class Payment extends Component {
           />
         </View>
         )}
-
-        { orderId && (
+        { !isOnce && !!subscriptionAuthLink && 
+         <Fragment>
+           <WebView
+            source={{uri: subscriptionAuthLink}}
+            style={{flex:1}}
+          />
+          <View style={{  height:hp('17%'), paddingTop: hp('1%')  }}>
+            <Text style={{...ApplicationStyles.fontStyles.caption, textAlign: 'center'}}>If your subscription is authenticated, then click button below</Text>
+            <Button title="NEXT" onPress={this.confirmSubscription} style={{flex:1}} style={styles.loginContainer}/>
+            <View style={styles.signUpLinkContainer}>
+                <Button
+                  style={styles.signUpContainer}
+                  titleStyle={styles.signUpButton}
+                  buttonWrapperStyle={{flex:1}}
+                  title="BACK TO HOME"
+                  onPress={() => navigation.navigate('HomePage')}
+                />
+              </View>
+            </View>
+          </Fragment>
+          }
+          { isOnce && orderId && (
         <CashfreePG
           appId={Config.CASHFREE_APP_ID}
           orderId={orderId}
           orderAmount={orderAmount}
           orderCurrency="INR"
-          orderNote="This is an order note"
+          orderNote={`donation by ${profile.id} for ${params.paymentMeta.poUserId}`}
           source="reactsdk"
-          customerName="John"
-          customerEmail="abc@email.com"
-          customerPhone="1234561234"
+          customerName={profile.name}
+          customerEmail={profile.email}
+          customerPhone={profile.phone || 3434343434}
           notifyUrl="http://localhost:3000"
           paymentModes=""
           env="test" // blank for prod
@@ -266,6 +326,8 @@ class Payment extends Component {
   }
 }
 
-export default connect(null, {
+export default connect(({ user: { profile } }) => ({
+  profile,
+}), {
   paymentInit: PaymentActions.paymentInit,
 })(Payment);
