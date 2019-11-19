@@ -33,8 +33,12 @@ let data = [{
 class Dropdown extends React.Component {
   constructor(props) {
     super(props);
+    let label = ''
+    if(props.options && props.value){
+      label = props.options.find(o=>o.value === props.value).label;
+    }
     this.state = {
-      label: props.default ? props.default.label : '',
+      label,
       modalVisible: false,
     };
 
@@ -56,7 +60,7 @@ class Dropdown extends React.Component {
   render() {
     const { modalVisible, label } = this.state;
     const {
-      placeholder, options, dropDownLabel,
+      placeholder, options, dropDownLabel, value, title
     } = this.props;
     return (
       <View style={styles.container}>
@@ -82,15 +86,15 @@ class Dropdown extends React.Component {
           onTouchOutside={() => {
             this.setState({ modalVisible: false });
           }}
-          dialogTitle={<DialogTitle title="Donate" textStyle={{ ...ApplicationStyles.fontStyles.body2 }} />}
+          dialogTitle={<DialogTitle title={title} textStyle={{ ...ApplicationStyles.fontStyles.caption }} />}
         >
           <DialogContent style={{ width: wp('50%'), maxHeight: hp('30%') }}>
-            <ScrollView>
+            <ScrollView style={{paddingTop: hp('1%')}}>
               { options && options.map(o => (
                 <Button
                   title={o.label.toUpperCase()}
                   onPress={() => this.setValue(o.label, o.value)}
-                  titleStyle={{ ...ApplicationStyles.fontStyles.body1, ...styles.button }}
+                  titleStyle={[value ===o.value ?ApplicationStyles.fontStyles.body2 :ApplicationStyles.fontStyles.body1, { ...styles.button }]}
                 />
               ))}
             </ScrollView>

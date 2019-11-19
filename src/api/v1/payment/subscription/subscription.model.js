@@ -26,6 +26,7 @@ const subscriptionSchema = new mongoose.Schema({
     customerEmail: String,
     customerPhone: String,
     paymentOption: String,
+    expiresOn: String,
     card_number: String,
     firstChargeDelay: Number,
     subReferenceId: String,

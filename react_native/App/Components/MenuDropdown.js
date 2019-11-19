@@ -82,9 +82,9 @@ class MenuDropdown extends React.Component {
             <ScrollView>
               { menus && [...menus, ...defaultMenus].map(o => (
                 <Button
-                  title={o.label.toUpperCase()}
+                  title={o.label}
                   onPress={() => { this.closePicker(); o.func(); }}
-                  titleStyle={{ ...ApplicationStyles.fontStyles.button, color: ApplicationStyles.darkColor.color, ...styles.button, ...menuItemStyle }}
+                  titleStyle={{ ...ApplicationStyles.fontStyles.body1, color: ApplicationStyles.darkColor.color, ...styles.button, ...menuItemStyle }}
                 />
               ))}
             </ScrollView>

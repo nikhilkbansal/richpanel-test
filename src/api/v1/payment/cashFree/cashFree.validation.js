@@ -21,6 +21,7 @@ module.exports = {
     body: {
       poId: Joi.string().required(),
       amount: Joi.number().required(),
+      expiresOn: Joi.string().required(),
       intervalType: Joi.string().required(),
       customerEmail: Joi.string().required(),
       customerPhone: Joi.string().required(),

@@ -63,6 +63,7 @@ class EditProfile extends Component {
       errors: {},
       selectedProfilePic: {},
       picture: null,
+      inputError:[],
       ...profile,
     };
     this.updateProfile = this.updateProfile.bind(this);
@@ -83,22 +84,34 @@ class EditProfile extends Component {
     });
   }
 
-
-  updateTextInput(key, value) {
-    this.setState({ [key]: value });
+  updateTextInput(key, value, error = false) {
+    const { inputError } = this.state;
+    if(error){
+      inputError.push(key);
+    } else {
+      const index = inputError.findIndex(o=>o===key);
+      if(index > -1){
+        inputError.splice(index, 1);
+      }
+    }
+    this.setState({ [key]: value, inputError });
   }
 
   async updateProfile() {
     const { updateUserInit } = this.props;
     const {
-      email, password, userName, name, picture,
+      email, password, userName, name, picture, inputError
     } = this.state;
     const isPasswordGivenArray = password ? ['password'] : [];
-    const validateForm = TextInput.validateForm(['name', ...isPasswordGivenArray, 'confirmPassword', 'email', 'userName'], this.state);
-    if (validateForm) {
+    const validateForm = TextInput.validateForm(['name', ...isPasswordGivenArray, 'phone', 'confirmPassword', 'email', 'userName'], this.state);
+
+    if (validateForm || inputError.length > 0) {
       this.setState({ errors: validateForm });
       return false;
+    } else {
+      this.setState({ errors: {} });
     }
+
     
     const isPasswordGivenObject = password ? { password } : {};
     console.log('isPasswordGivenArray',isPasswordGivenArray)
@@ -119,9 +132,8 @@ class EditProfile extends Component {
 
   render() {
     const { navigation, profile } = this.props;
-    console.log('CommonFunctions.getFile(profile.picture, true)', CommonFunctions.getFile(profile.picture, true));
     const {
-      errors, name, email, userName, picture,
+      errors, name, email, userName, picture, phone
     } = this.state;
     return (
       <View style={styles.container}>
@@ -174,28 +186,42 @@ class EditProfile extends Component {
             value={name}
             returnKeyType="next"
             onChangeText={text => this.updateTextInput('name', text)}
+            onSubmitEditing={() => this.userNameRef.current.focus()}
+          />
+         <TextInput
+            error={errors.userName}
+            label="Username"
+            value={userName}
+            unique='userName'
+            returnKeyType="next"
+            textInputRef={this.userNameRef}
+            onChangeText={text => this.updateTextInput('userName', text, error)}
             onSubmitEditing={() => this.emailRef.current.focus()}
           />
 
           <TextInput
             error={errors.email}
             label="Email"
-            returnKeyType="next"
+            returnKeyType="done"
             value={email}
             textInputRef={this.emailRef}
             onChangeText={text => this.updateTextInput('email', text)}
-            onSubmitEditing={() => this.userNameRef.current.focus()}
           />
           <TextInput
-            error={errors.userName}
-            label="Username"
-            value={userName}
+            error={errors.phone}
+            label="Phone no."
             returnKeyType="next"
-            textInputRef={this.userNameRef}
-            onChangeText={text => this.updateTextInput('userName', text)}
+            editable={false}
+            info="Phone no. can't be changed due to some technical reasons"
+            selectTextOnFocus={false}
+            value={phone}
+            mask='{+}[99] [99999] [9999999999]'
+            placeholder='Phone no. with country code e.g. 91 9xxxxxxx8'
+            unique='phone'
+            textInputRef={(ref)=>this.phoneRef=ref}
+            onChangeText={text => this.updateTextInput('phone', text, error)}
             onSubmitEditing={() => this.passwordRef.current.focus()}
           />
-
           <TextInput
             error={errors.password}
             label="New Password"

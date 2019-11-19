@@ -8,7 +8,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { connect } from 'react-redux';
 import PostActions from 'App/Stores/Post/Actions';
 import {
-  Dropdown, NavigationBar, TextInput, Button, HrLine, DatePicker, LocationSelector, FileSelector,
+  Dropdown, NavigationBar, TextInput, Button, Text, DatePicker, LocationSelector, FileSelector,
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 
@@ -18,13 +18,20 @@ const donateOptions = [
   { label: 'Yearly', value: 'year' },
 ];
 
-const frequencyOptions = [
-  { label: 'For 3 months', value: '3month' },
-  { label: 'For 6 months ', value: '6month' },
-  { label: 'For 1 year', value: '1year' },
-  { label: 'For 2 year', value: '2year' },
-  { label: 'For 5 years', value: '5year' },
-  { label: 'For lifetime', value: 'lifetime' },
+const endsAfterOptions = [
+  { label: '3 months', value: '3month' },
+  { label: '6 months ', value: '6month' },
+  { label: '1 year', value: '1years' },
+  { label: '2 years', value: '2years' },
+  { label: '5 years', value: '5years' },
+  { label: 'lifetime', value: 'lifetime' },
+];
+
+const endsAfterOptionsForYears = [
+  { label: '1 year', value: '1years' },
+  { label: '2 years', value: '2years' },
+  { label: '5 years', value: '5years' },
+  { label: '10 years', value: '10years' },
 ];
 
 
@@ -59,7 +66,7 @@ class Donate extends Component {
       donate: 'once',
       files: [],
       amount: 0,
-      frequency: '2year',
+      endsAfter: '5years',
       startsFrom: new Date()
     };
     this.goNext = this.goNext.bind(this);
@@ -73,7 +80,7 @@ class Donate extends Component {
   }
 
   goNext(){
-    const { amount, donate, startsFrom } = this.state;
+    const { amount, donate, startsFrom, endsAfter } = this.state;
     const { paymentMeta } = this.props.navigation.state.params;
 
     const validateForm = TextInput.validateForm(['amount'], this.state);
@@ -84,20 +91,21 @@ class Donate extends Component {
       this.setState({ errors: {} });
     }
 
-    this.props.navigation.navigate('SelectPaymentMethod', { amount, paymentMeta: {...paymentMeta, donate, startsFrom} });
+    this.props.navigation.navigate('SelectPaymentMethod', { amount, paymentMeta: {...paymentMeta, donate, startsFrom, endsAfter} });
   }
 
   render() {
     const { navigation } = this.props;
 
-    const { errors, donate, startsFrom } = this.state;
+    const { errors, donate, startsFrom, endsAfter } = this.state;
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} title="Donate" />
         <KeyboardAwareScrollView style={styles.subContainer}>
-          <Dropdown dropDownLabel="Donate" default={donateOptions[0]} placeholder="Donate" options={donateOptions} onValueChange={(label, value) => this.setState({ donate: value })} />
-          {donate !== 'once' && <DatePicker onlyDate label="Starts From" defaultDateTime={startsFrom} placeholder="Starts From"  onChange={(data) => this.setState({ startsFrom: data })}/>}
-          {donate !== 'once' && <Dropdown dropDownLabel="Frequency" default={frequencyOptions[0]} placeholder="Donate" options={frequencyOptions} onValueChange={(label, value) => this.setState({ frequency: value })}/>}
+          <Dropdown dropDownLabel="Donate" default={donateOptions[0]} title="Donate" value={donate} options={donateOptions} onValueChange={(label, value) => this.setState({ donate: value })} />
+          {donate !== 'once' && <Text style={ApplicationStyles.fontStyles.caption}>You can cancel this anytime you want from recurring payment section</Text>}
+          {donate !== 'once' && <DatePicker onlyDate label="Starts From"  value={endsAfter}  placeholder="Starts From"  onChange={(data) => this.setState({ startsFrom: data })}/>}
+          {donate !== 'once' && <Dropdown dropDownLabel="Ends after" value={endsAfter} title="Ends after" options={donate==='month'?endsAfterOptions:endsAfterOptionsForYears} onValueChange={(label, value) => this.setState({ endsAfter: value })}/>}
           <TextInput
             error={errors.amount}
             multiline

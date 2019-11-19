@@ -67,6 +67,7 @@ class AddBankAccount extends Component {
       name: profile.name || '',
       email: profile.email || '',
       phone: profile.phone || '',
+      errors: {},
     };
     this.updateTextInput = this.updateTextInput.bind(this);
     this.passwordRef = React.createRef();
@@ -89,7 +90,13 @@ class AddBankAccount extends Component {
 
 
   async addBeneficiaryAccouont() {
-    console.log({ ...this.state });
+    // console.log({ ...this.state });
+    const validateForm = TextInput.validateForm(['name', 'email', 'phone', 'bankAccount', 'ifsc', 'address1'], this.state);
+    if (validateForm) {
+      this.setState({ errors: validateForm });
+      return false;
+    }
+
     await AxiosRequest({
       method: 'post',
       data: {
@@ -102,11 +109,11 @@ class AddBankAccount extends Component {
   render() {
     const { navigation } = this.props;
     const {
-      name, email, phone,
+      name, email, phone, errors
     } = this.state;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} statusBarColor={ApplicationStyles.primaryColor.color} title="Add Bank Account" />
+        <NavigationBar {...navigation} statusBarColor={ApplicationStyles.primaryColor.color} title="Bank Account" />
         <KeyboardAwareScrollView style={styles.subContainer}>
           <View style={styles.secondSection}>
             <TextInput
@@ -119,6 +126,7 @@ class AddBankAccount extends Component {
             <TextInput
               label="Email"
               value={email}
+              error={errors.name}
               returnKeyType="next"
               textInputRef={this.emailRef}
               onSubmitEditing={() => this.phoneRef.current.focus()}
@@ -127,6 +135,7 @@ class AddBankAccount extends Component {
             <TextInput
               label="Phone"
               value={phone}
+              error={errors.phone}
               returnKeyType="next"
               textInputRef={this.phoneRef}
               onSubmitEditing={() => this.bankAccountRef.current.focus()}
@@ -135,6 +144,7 @@ class AddBankAccount extends Component {
             <TextInput
               label="Bank account number"
               returnKeyType="next"
+              error={errors.bankAccount}
               textInputRef={this.bankAccountRef}
               onSubmitEditing={() => this.ifscRef.current.focus()}
               onChangeText={text => this.updateTextInput('bankAccount', text)}
@@ -143,12 +153,14 @@ class AddBankAccount extends Component {
               label="IFSC"
               returnKeyType="next"
               textInputRef={this.ifscRef}
+              error={errors.ifsc}
               onSubmitEditing={() => this.address1Ref.current.focus()}
               onChangeText={text => this.updateTextInput('ifsc', text)}
             />
             <TextInput
               label="Address line 1"
               returnKeyType="next"
+              error={errors.address1}
               textInputRef={this.address1Ref}
               onSubmitEditing={() => this.address2Ref.current.focus()}
               onChangeText={text => this.updateTextInput('address1', text)}
@@ -190,7 +202,7 @@ class AddBankAccount extends Component {
             style={styles.loginContainer}
             titleStyle={styles.loginTitle}
             onPress={this.addBeneficiaryAccouont}
-            title="CONTINUE"
+            title="SAVE"
           />
 
         </KeyboardAwareScrollView>

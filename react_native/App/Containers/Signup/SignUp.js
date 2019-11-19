@@ -60,6 +60,7 @@ class SignUpScreen extends Component {
       password: '',
       userType: 'user',
       errors: {},
+      inputError:[],
     };
     this.updateTextInput = this.updateTextInput.bind(this);
     this.emailRef = React.createRef();
@@ -68,8 +69,17 @@ class SignUpScreen extends Component {
     this.userNameRef = React.createRef();
   }
 
-  updateTextInput(key, value) {
-    this.setState({ [key]: value });
+  updateTextInput(key, value, error = false) {
+    const { inputError } = this.state;
+    if(error){
+      inputError.push(key);
+    } else {
+      const index = inputError.findIndex(o=>o===key);
+      if(index > -1){
+        inputError.splice(index, 1);
+      }
+    }
+    this.setState({ [key]: value, inputError });
   }
 
 
@@ -96,16 +106,18 @@ class SignUpScreen extends Component {
   signUpInit() {
     const { registerInit } = this.props;
     const {
-      email, password, userName, name, userType
+      email, password, userName, name, userType, inputError, phone
     } = this.state;
-    const validateForm = TextInput.validateForm(['name', 'password', 'confirmPassword', 'email', 'userName'], this.state);
-    if (validateForm) {
+    const validateForm = TextInput.validateForm(['name', 'password', 'confirmPassword', 'phone', 'email', 'userName'], this.state);
+    if (validateForm || inputError.length > 0) {
       this.setState({ errors: validateForm });
       return false;
-      }
+    } else {
+      this.setState({ errors: {} });
+    }
 
     registerInit({
-      email, password, userName, name, role: userType 
+      email, password, userName, name, role: userType, phone 
     });
     return true;
   }
@@ -116,7 +128,7 @@ class SignUpScreen extends Component {
       email, password, userType, errors,
     } = this.state;
     const { navigation } = this.props;
-
+console.log('this.phoneRef',this.phoneRef);
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} showLeftSection iconsColor={ApplicationStyles.darkColor.color} containerStyle={{ backgroundColor: ApplicationStyles.lightBackground.color, elevation: 0 }} statusBarColor={ApplicationStyles.lightBackground .color} statusBarStyle='dark-content' />
@@ -153,6 +165,16 @@ class SignUpScreen extends Component {
               returnKeyType="next"
               placeholder={userType === 'ngo' ? 'Philanthropy organization name' :'Name'}
               onChangeText={text => this.updateTextInput('name', text)}
+              onSubmitEditing={() => this.userNameRef.current.focus()}
+            />
+            <TextInput
+              error={errors.userName}
+              label="Username"
+              returnKeyType="next"
+              placeholder='Username'
+              unique='userName'
+              textInputRef={this.userNameRef}
+              onChangeText={(text, error) => this.updateTextInput('userName', text, error)}
               onSubmitEditing={() => this.emailRef.current.focus()}
             />
             <TextInput
@@ -161,16 +183,20 @@ class SignUpScreen extends Component {
               placeholder='Email address'
               textInputRef={this.emailRef}
               returnKeyType="next"
+              keyboardType='email-address'
               onChangeText={text => this.updateTextInput('email', text)}
-              onSubmitEditing={() => this.userNameRef.current.focus()}
+              onSubmitEditing={() => this.phoneRef.focus()}
             />
             <TextInput
-              error={errors.userName}
-              label="Username"
+              error={errors.phone}
+              label="Phone no."
+              placeholder='Phone no. with country code e.g. 91 9xxxxxxx8'
+              unique='phone'
+              keyboardType='phone-pad'
+              mask='{+}[99] [99999] [9999999999]'
+              textInputRef={(ref)=>this.phoneRef=ref}
               returnKeyType="next"
-              placeholder='Username'
-              textInputRef={this.userNameRef}
-              onChangeText={text => this.updateTextInput('userName', text)}
+              onChangeText={(text, error) => this.updateTextInput('phone', text, error)}
               onSubmitEditing={() => this.passwordRef.current.focus()}
             />
             <TextInput

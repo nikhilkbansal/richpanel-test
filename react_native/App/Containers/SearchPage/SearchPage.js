@@ -276,12 +276,12 @@ class SearchPage extends Component {
             onTouchOutside={() => {
               this.setState({ welcomeModal: false });
             }}
-            dialogTitle={<DialogTitle title="Welcome!" textStyle={{ ...ApplicationStyles.textInputLabel }} />}
+            dialogTitle={<DialogTitle title="Welcome!" textStyle={{ ...ApplicationStyles.fontStyles.caption }} />}
           >
             <DialogContent style={{ width: wp('80%'), height: hp('25%') }}>
               <View style={{flex:1,flexDirection:'column'}}>
-                <Text style={{...ApplicationStyles.body, textAlign:'center', marginTop: hp('2.5%')}}>Thank you so much {profile && profile.name}, for becoming the part of Handout family. We together make this world a better place for everyone. </Text>
-                <Text style={{...ApplicationStyles.bodySubHeading, textAlign:'center', marginTop: hp('1%')}}>To get started, Please follow some philanthropy organistaions. We have given some suggestions below and you can also search yours.</Text>
+                <Text style={{...ApplicationStyles.fontStyles.body1, textAlign:'center', marginTop: hp('2.5%')}}>Thank you so much {profile && profile.name}, for becoming the part of Handout family. We together make this world a better place for everyone. </Text>
+                <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center', marginTop: hp('1%')}}>To get started, Please follow some philanthropy organistaions. We have given some suggestions below and you can also search yours.</Text>
               
               </View>
             </DialogContent>
@@ -296,7 +296,7 @@ class SearchPage extends Component {
             paddingBottom: hp('2%'), 
           }}
           inputStyle={{
-            ...ApplicationStyles.fontStyles.body2,
+            ...ApplicationStyles.fontStyles.body1,
             backgroundColor: ApplicationStyles.grayishBackground.color,
             borderWidth: 0,
             verticalAlign: 'center',

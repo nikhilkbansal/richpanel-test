@@ -11,6 +11,7 @@ const {
   forgotPassword,
   resetPassword,
   preferences,
+  exists,
 
 } = require('./user.validation');
 
@@ -45,7 +46,7 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .get(validate(listUsers), controller.list)
+// .get(validate(listUsers), controller.list)
   /**
    * @api {post} v1/users Create User
    * @apiDescription Create a new user
@@ -95,6 +96,10 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated Users can access the data
    */
   .get(authorize(), controller.loggedIn);
+
+router
+  .route('/exists')
+  .get(validate(exists), controller.exists);
 
 
 router
@@ -231,6 +236,7 @@ router
    * @apiError (Not Found 404)    NotFound      User does not exist
    */
   .post(validate(forgotPassword), controller.forgotPassword);
+
 
 router
   .route('/resetPassword')

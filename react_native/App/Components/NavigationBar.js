@@ -78,7 +78,7 @@ class NavigationBar extends React.Component {
               onPress={rightButtonAction}
               icon={rightIcon}
               iconColor={iconsColor || ApplicationStyles.lightColor.color}
-              buttonWrapperStyle={{ paddingHorizontal: wp('7%') }}
+              buttonWrapperStyle={{ paddingHorizontal: wp('5%') }}
               iconSize={wp('6%')}
             />
             )}

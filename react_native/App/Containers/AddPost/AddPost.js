@@ -96,7 +96,7 @@ class AddPost extends Component {
   }
 
   render() {
-    const { navigation } = this.props;
+    const { navigation, profile } = this.props;
 
     const { errors, isCampaign } = this.state;
     return (
@@ -117,7 +117,7 @@ class AddPost extends Component {
           />
           <FileSelector error={errors.files} label="Add images and videos (drag and drop to reorder)" onChange={files => this.updateTextInput('files', files)} />
           <HrLine />
-          <CheckBox
+          { profile.role ==='ngo' && <CheckBox
                 style={{ flex: 1 }}
                 onClick={() => {
                   this.setState({
@@ -130,7 +130,7 @@ class AddPost extends Component {
                 rightTextStyle={{ ...ApplicationStyles.button2, textAlign: 'left' }}
                 checkBoxColor={ApplicationStyles.primaryColor.color}
                 uncheckedCheckBoxColor={ApplicationStyles.disabledColor.color}
-              />
+              />}
           {/* <Text style={{ ...ApplicationStyles.info3 }}>Fill below section if you are creating a campaign </Text> */}
           {isCampaign && <Fragment>
           <TextInput
@@ -172,6 +172,6 @@ class AddPost extends Component {
   }
 }
 
-export default connect(null, {
+export default connect(({ post: { homePosts }, user: {profile} }) => ({ homePosts, profile }), {
   postCreate: PostActions.postCreate,
 })(AddPost);

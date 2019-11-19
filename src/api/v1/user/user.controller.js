@@ -49,6 +49,22 @@ exports.create = async (req, res, next) => {
   }
 };
 
+
+exports.exists = async (req, res, next) => {
+  try {
+    if (Object.keys(req.query).length === 0) {
+      res.json({ isExisted: false });
+      return;
+    }
+
+    const users = await User.list(req.query);
+    res.json({ isExisted: users.length > 0 });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 /**
  * Replace existing user
  * @public

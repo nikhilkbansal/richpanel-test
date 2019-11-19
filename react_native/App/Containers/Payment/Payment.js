@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 import Dialog, { DialogContent, SlideAnimation, DialogTitle } from 'react-native-popup-dialog';
@@ -159,12 +160,12 @@ class Payment extends Component {
     const { profile, navigation: { state: { params: { paymentMeta, seamlessParams } } } } = this.props;
 
     try {
-
       const data = await AxiosRequest({
         method: 'post',
         data: {
           poId: paymentMeta.poUserId,
           amount: orderAmount,
+          expiresOn: moment(paymentMeta.startsFrom).add(moment.duration({[paymentMeta.endsAfter.split(/[0-9]/)[1]]: paymentMeta.endsAfter.split(/[a-z]/)[0] })).add(1, 'days').format('LLL') ,
           intervalType: paymentMeta.donate,
           firstChargeDelay: moment(paymentMeta.startsFrom).diff(moment(), 'days'),
           customerEmail: profile.email,

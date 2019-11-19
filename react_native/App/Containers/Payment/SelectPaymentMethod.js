@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
     height: hp('10%'),
 
   },
-  mainMenu: { flex: 3, flexDirection: 'row', alignItems: 'center' },
-  menuLabel: { marginLeft: wp('2%'), ...ApplicationStyles.fontStyles.button,  },
+  mainMenu: { flex: 3, flexDirection: 'row', alignItems: 'center', alignContent:'center',},
+  menuLabel: { marginLeft: wp('2%'), ...ApplicationStyles.fontStyles.body1,  },
   menuRightSide: {
     flex: 1, flexDirection: 'row', paddingRight: wp('4%'),  alignItems: 'center', justifyContent: 'flex-end',
   },
@@ -140,6 +140,7 @@ class SelectPaymentMethod extends Component {
           ...ApplicationStyles.elevationS,
           borderRadius: wp('12%'),
           padding: wp('1%'),
+          backgroundColor:ApplicationStyles.lightColor.color,
           alignSelf: 'center',
           borderWidth: 0,
           overflow: 'hidden',
@@ -158,16 +159,17 @@ class SelectPaymentMethod extends Component {
       <View style={styles.menuContainer}>
         <View style={styles.menuSubFirst}>
           <View style={styles.mainMenu}>
-            <Icon  name={leftIcon.name} iconFamily={leftIcon.family} size={leftIcon.size || wp('5%')} color={ApplicationStyles.darkColor.color} />
-            <Text style={styles.menuLabel}>{label.toUpperCase()}</Text>
+            <Icon  name={leftIcon.name} style={{marginTop:hp('0.27%')}} iconFamily={leftIcon.family} size={leftIcon.size || wp('3.6%')} color={ApplicationStyles.darkColor.color} />
+            <Text style={styles.menuLabel}>{label}</Text>
           </View>
           <View style={{ ...styles.menuRightSide, paddingRight:0, flex: 2 }}>
             <MenuDropdown
               menuTitle={label === 'Wallet' ? 'Select wallet' : 'Select bank'}
               modalStyle={{
-                width: wp('65%'),
+                width: wp('70%'),
+                maxHeight: hp('70%')
               }}
-              menuItemStyle={{ ...ApplicationStyles.body, textAlign: 'left' }}
+              menuItemStyle={{ ...ApplicationStyles.fontStyles.body1, textAlign: 'left' }}
               buttonStyle={[{ flex:1, paddingRight: wp('4%'), justifyContent: 'flex-end',  alignItems:'center', flexDirection: 'row'}]}
               menus={label === 'Wallet' ? this.addPaymentFunc(wallets, 'wallets') : this.addPaymentFunc(banks, 'banks')}
             >
@@ -248,8 +250,8 @@ class SelectPaymentMethod extends Component {
           <View style={styles.menuContainer}>
             <View style={styles.menuSubFirst}>
               <View style={styles.mainMenu}>
-                <Icon name="credit-card" iconFamily="Octicons" size={wp('5%')} color={ApplicationStyles.darkColor.color} />
-                <Text style={styles.menuLabel}>CARDS</Text>
+                <Icon name="credit-card" iconFamily="Octicons" style={{marginTop:hp('0.27%')}} size={wp('3.9%')} color={ApplicationStyles.darkColor.color} />
+                <Text style={styles.menuLabel}>Cards</Text>
               </View>
               <Button
                 buttonWrapperStyle={styles.menuRightSide}
@@ -288,7 +290,7 @@ class SelectPaymentMethod extends Component {
           {isOneTime && <View style={styles.menuContainer}>
             <View style={styles.menuSubFirst}>
               <View style={styles.mainMenu}>
-                <Icon name="rupee" size={wp('5%')} iconFamily="FontAwesome" color={ApplicationStyles.darkColor.color} />
+                <Icon name="rupee" size={wp('3.5%')} style={{marginTop:hp('0.27%')}} iconFamily="FontAwesome" color={ApplicationStyles.darkColor.color} />
                 <Text style={styles.menuLabel}>UPI</Text>
               </View>
               <Button

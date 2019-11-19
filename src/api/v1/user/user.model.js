@@ -127,7 +127,7 @@ userSchema.pre('save', async function save(next) {
 userSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['id', 'name', 'email', 'followerCount', 'userName', 'isActive', 'picture', 'poInfo', 'role', 'createdAt'];
+    const fields = ['id', 'name', 'email', 'followerCount', 'phone', 'userName', 'isActive', 'picture', 'poInfo', 'role', 'createdAt'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -237,10 +237,10 @@ userSchema.statics = {
 
 
   async list({
-    skip = 0, perPage = 30, _id, $text, causeSupported, role, $or,
+    skip = 0, perPage = 30, _id, $text, causeSupported, role, $or, email, userName, phone,
   }) {
     const options = omitBy({
-      _id, $text, causeSupported, role, $or,
+      _id, $text, causeSupported, role, $or, email, userName, phone,
     }, isNil);
     console.log(options);
     return this.find(options).sort({ createdAt: -1 })

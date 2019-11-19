@@ -41,7 +41,7 @@ module.exports = {
   // PATCH /v1/users/:userId
   updateUser: {
     body: {
-      // email: Joi.string().email(),
+      email: Joi.string().email(),
       password: Joi.string().min(6).max(128),
       oldPassword: Joi.string().min(6).max(128),
       name: Joi.string().max(128),
@@ -71,6 +71,13 @@ module.exports = {
   preferences: {
     body: {
       preferences: Joi.array().items(Joi.string()).required(),
+    },
+  },
+  exists: {
+    query: {
+      email: Joi.string(),
+      phone: Joi.string(),
+      userName: Joi.string(),
     },
   },
 };

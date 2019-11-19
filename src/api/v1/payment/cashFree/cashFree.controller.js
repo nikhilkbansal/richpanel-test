@@ -72,6 +72,8 @@ exports.createAndSubscribePlan = async (req, res, next) => {
       poId,
       amount,
       intervalType,
+      expiresOn,
+      firstChargeDelay,
       customerEmail,
       customerPhone,
       cardNumber,
@@ -98,7 +100,8 @@ exports.createAndSubscribePlan = async (req, res, next) => {
       planId,
       customerEmail,
       customerPhone,
-      expiresOn: moment().add(10, 'd').format('YYYY-MM-DD hh:mm:ss'),
+      firstChargeDelay,
+      expiresOn: moment(expiresOn).format('YYYY-MM-DD hh:mm:ss'),
       paymentOption: 'card',
       card_number: cardNumber,
       card_expiryMonth: cardExpiryMonth,
@@ -190,6 +193,10 @@ exports.addPayoutBeneficiary = async (req, res, next) => {
     await Beneficiary.add({
       beneId,
       userId: user._id,
+      accountDetails: {
+        maskedAccountNumber: `xxxxxxxxxx${String(bankAccount).slice(String(bankAccount).length - 4)}`,
+        maskedIfscCode: `xx${String(ifsc).slice(String(ifsc).length - 3)}`,
+      },
     });
 
     res.status(httpStatus.CREATED).json();

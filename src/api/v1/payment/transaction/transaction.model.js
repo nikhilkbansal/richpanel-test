@@ -18,6 +18,10 @@ const beneficiarySchema = new mongoose.Schema({
     type: String,
     ref: 'User',
   },
+  accountDetails: {
+    maskedAccountNumber: String,
+    maskedIfscCode: String,
+  },
   status: String,
 }, {
   timestamps: true,

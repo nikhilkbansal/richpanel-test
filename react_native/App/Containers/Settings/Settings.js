@@ -94,9 +94,10 @@ class Settings extends Component {
            {/* <View style={[styles.sectionContainer, ]}>
             <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Notifications' />
           </View> */}
-          <View style={[styles.sectionContainer, ]}>
-            <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Bank Account' />
-          </View>
+          {profile && profile.role === 'ngo' && <View style={[styles.sectionContainer, ]}>
+            <MenuItem onPress={()=>navigation.navigate('AddBankAccount')} rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Bank Account' />
+          </View>}
+
           <View style={[styles.sectionContainer, ]}>
             <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='FAQs' />
           </View>

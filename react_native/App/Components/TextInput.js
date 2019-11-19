@@ -13,7 +13,22 @@ import {
   Colors, ApplicationStyles, Fonts, FontSizes,
 } from '../Theme';
 import { Validations } from '../Utils';
+import AxiosRequest from '../Services/HttpRequestService';
 
+async function checkIfUserExists(payload){
+  try {
+    const data = await AxiosRequest({
+      method: 'get',
+      params: payload,
+      url: 'users/exists',
+    }, 'default', false);
+    return data.isExisted;
+  } catch(e) {
+    console.log(e)
+  }
+}
+
+let errors = {};
 class TextInput extends React.Component {
   // static validateForm(keys = ['email', 'password'],
   // [['required', 'email'], ['required', 'password', 'sameAs=confirmAddress']], state) {
@@ -25,7 +40,7 @@ class TextInput extends React.Component {
     const {
       email, password, confirmPassword, userName, usernameOrEmail, name,
     } = state;
-    let errors = {};
+    let errors = {...errors};
 
     // checking if fields are not empty
     // for custom message replace with if statement written after this function
@@ -67,8 +82,10 @@ class TextInput extends React.Component {
     this.state = {
       showEyeIcon: props.secureTextEntry,
       secureTextEntry: false,
+      showUniqueError: false
     };
     this.toggleSecureEntry = !this.toggleSecureEntry;
+    this.onChangeText = this.onChangeText.bind(this);
   }
 
   eyeButton(icon = 'ios-eye') {
@@ -84,15 +101,42 @@ class TextInput extends React.Component {
     this.setState({ secureTextEntry: !secureTextEntry });
   }
 
+  async checkUnique(params){
+    const isExists = await checkIfUserExists(params);
+    if(isExists){
+      const key = Object.keys(params)[0];
+      errors = { [params[key]]: 'Please enter valid '+_.startCase(key) }
+    }
+    this.setState({ showUniqueError: isExists})
+  }
+
+  async onChangeText(value){
+    const { onChangeText, unique } = this.props;
+
+    if(unique){
+      if(value.length>3){
+        await this.checkUnique({[unique]: value});
+        const { showUniqueError } = this.state;
+        onChangeText(value, showUniqueError);
+      } else {
+        onChangeText(value, false);
+      }
+    }else{
+      onChangeText(value);
+    }
+  }
+
   render() {
-    const { showEyeIcon } = this.state;
+    const { showEyeIcon, showUniqueError } = this.state;
     const {
       label, numberOfLines, multiline, secureTextEntry, error,
       placeholder, onChangeText, returnKeyType, textInputRef, onSubmitEditing,
-      containerStyle, inputStyle, rightIcon, leftIcon, 
-      mask, optional,
+      containerStyle, inputStyle, rightIcon, leftIcon, info,
+      mask, optional, unique,
       value, ...props
     } = this.props;
+    let colorCondition = props.editable != undefined && !props.editable ? { color: ApplicationStyles.disabledColor.color} :{};
+
     return (
       <View style={[{ marginTop: hp('1%'), marginBottom: !error ? hp('1%') : 0 }, containerStyle]}>
         {label
@@ -110,14 +154,17 @@ class TextInput extends React.Component {
               numberOfLines={numberOfLines}
               placeholder={placeholder}
               secureTextEntry={secureTextEntry}
-              onChangeText={onChangeText}
+              onChangeText={(formatted,extracted)=>{
+                console.log(formatted,extracted);
+                this.onChangeText(extracted)}}
               returnKeyType={returnKeyType}
               enablesReturnKeyAutomatically
-              ref={textInputRef}
+              refInput={(ref)=>textInputRef(ref)}
               value={value || undefined}
               onSubmitEditing={onSubmitEditing? onSubmitEditing : ()=>{}}
               style={[{
                 ...ApplicationStyles.fontStyles.body2,
+                ...colorCondition,
                 paddingHorizontal: 0,
                 paddingTop: hp('0.5%'),
                 paddingBottom: hp('1.5%'),
@@ -141,7 +188,7 @@ class TextInput extends React.Component {
               numberOfLines={numberOfLines}
               placeholder={placeholder}
               secureTextEntry={secureTextEntry}
-              onChangeText={onChangeText}
+              onChangeText={this.onChangeText}
               returnKeyType={returnKeyType}
               enablesReturnKeyAutomatically
               ref={textInputRef}
@@ -154,6 +201,7 @@ class TextInput extends React.Component {
                 paddingBottom: hp('1.5%'),
                 borderColor: 'transparent',
                 margin: 0,
+                ...colorCondition,
                 borderBottomColor: ApplicationStyles.disabledColor.color,
                 borderWidth: StyleSheet.hairlineWidth ,
               }, inputStyle]}
@@ -161,8 +209,10 @@ class TextInput extends React.Component {
 
               underlineColorAndroid="transparent"
             />
-          )}
-        {error && <Text style={[{ ...ApplicationStyles.fontStyles.caption }, { ...ApplicationStyles.warningColor }]}>{error}</Text>}
+          )} 
+        {info && !error && <Text style={[{ ...ApplicationStyles.fontStyles.caption }, {  marginTop: hp('0.2%') }]}>{info}</Text>}
+        {error && <Text style={[{ ...ApplicationStyles.fontStyles.caption }, { ...ApplicationStyles.warningColor, marginTop: hp('0.2%') }]}>{error}</Text>}
+        {showUniqueError && <Text style={[{ ...ApplicationStyles.fontStyles.caption }, { ...ApplicationStyles.warningColor, marginTop: hp('0.2%') }]}>{`${unique.toLowerCase()} is already exists`}</Text>}
         {false && showEyeIcon && secureTextEntry && this.eyeButton('ios-eye') }
         {false && showEyeIcon && secureTextEntry && this.eyeButton('ios-eye-off') }
         { leftIcon && leftIcon.name &&  <Button style={{ position: 'absolute', left: wp('6%'), top: hp('1%') }} onPress={leftIcon.onPress}>
@@ -210,7 +260,7 @@ TextInput.defaultProps = {
   error: null,
   onChangeText: ()=>{},
   returnKeyType: '',
-  textInputRef: 'input',
+  textInputRef: ()=>{},
   onSubmitEditing: ()=>{},
   containerStyle: {},
   rightIcon: {},
