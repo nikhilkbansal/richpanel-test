@@ -61,8 +61,8 @@ class LoginScreen extends Component {
     super(props);
     const { user: { rememberMe } } = props;
     this.state = {
-      usernameOrEmail: rememberMe ? rememberMe.userName : null,
-      password: rememberMe ? rememberMe.password : null,
+      usernameOrEmail: rememberMe ? rememberMe.userName : '',
+      password: rememberMe ? rememberMe.password : '',
       isRememberMe: !!rememberMe,
       errors: {},
     };
@@ -75,7 +75,6 @@ class LoginScreen extends Component {
     this.setState({ [key]: value });
   }
 
-
   loginInit() {
     const { loginInit } = this.props;
     const { usernameOrEmail, password, isRememberMe } = this.state;
@@ -83,6 +82,8 @@ class LoginScreen extends Component {
     if (validateForm) {
       this.setState({ errors: validateForm });
       return false;
+    } else {
+      this.setState({ errors: {} });
     }
 
     loginInit({ userName: usernameOrEmail, password, isRememberMe });

@@ -1,6 +1,6 @@
 import React, { Fragment, Component } from 'react';
 import {
-  View, StyleSheet, ScrollView, ActivityIndicator,
+  View, StyleSheet, ScrollView, ActivityIndicator, Alert
 } from 'react-native';
 import { connect } from 'react-redux';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -11,6 +11,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import {
   Text, NavigationBar, TextInput, Button,
 } from '../../Components';
+import Toast from '../../Services/ToastService';
 import {
   Colors, FontSizes, Fonts, ApplicationStyles,
 } from '../../Theme';
@@ -50,6 +51,16 @@ const styles = StyleSheet.create({
   signUpButton: {
     ...ApplicationStyles.info, ...ApplicationStyles.primaryColor,
   },
+  sectionContainer: {
+    backgroundColor: ApplicationStyles.lightBackground.color,
+    ...ApplicationStyles.elevationS,
+    borderRadius: wp('2%'),
+    marginTop: hp('3%'),
+    marginHorizontal: wp('2%'),
+    paddingHorizontal: wp('6%'),
+    paddingVertical: wp('3%'),
+    // flex:1,
+  }
 });
 
 
@@ -64,10 +75,11 @@ class AddBankAccount extends Component {
     super(props);
     const { profile } = props;
     this.state = {
-      name: profile.name || '',
-      email: profile.email || '',
-      phone: profile.phone || '',
+      name:   '',
+      email: '',
+      phone: '',
       errors: {},
+      savedBankDetails: null
     };
     this.updateTextInput = this.updateTextInput.bind(this);
     this.passwordRef = React.createRef();
@@ -82,12 +94,26 @@ class AddBankAccount extends Component {
     this.cityRef = React.createRef();
     this.stateRef = React.createRef();
     this.pincodeRef = React.createRef();
+    this.confirm = this.confirm.bind(this);
+    this.getBankAccount = this.getBankAccount.bind(this);
+    this.removePayoutBeneficiary = this.removePayoutBeneficiary.bind(this);
+  }
+  
+  componentDidMount(){
+    this.getBankAccount();
   }
 
   updateTextInput(key, value) {
     this.setState({ [key]: value });
   }
 
+  async getBankAccount(){
+    const bank = await AxiosRequest({
+      method: 'get',
+      url: 'payment/cashFree/getPayoutBeneficiary',
+    },);
+    this.setState({ savedBankDetails: bank})
+  }
 
   async addBeneficiaryAccouont() {
     // console.log({ ...this.state });
@@ -97,24 +123,80 @@ class AddBankAccount extends Component {
       return false;
     }
 
-    await AxiosRequest({
+    const bank = await AxiosRequest({
       method: 'post',
       data: {
         ...this.state,
       },
       url: 'payment/cashFree/addPayoutBeneficiary',
     });
+    Toast('Bank added successfully');
+    this.setState({ savedBankDetails: bank})
+    
   }
 
+  async removePayoutBeneficiary() {
+    const { savedBankDetails } = this.state;
+    await AxiosRequest({
+      method: 'delete',
+      data: {
+        bankId: savedBankDetails._id
+      },
+      url: 'payment/cashFree/removePayoutBeneficiary',
+    });
+    this.setState({savedBankDetails: null})
+  }
+  
+
+  confirm(){
+    Alert.alert(
+      'Confirm',
+      'Are you sure about deleting your bank account?' ,
+      [
+        // {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},  
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: this.removePayoutBeneficiary
+        },
+      ],
+      {cancelable: false},
+    );
+  }
   render() {
     const { navigation } = this.props;
     const {
-      name, email, phone, errors
+      name, email, phone, errors, savedBankDetails
     } = this.state;
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, {backgroundColor: savedBankDetails ? ApplicationStyles.smokeBackground.color: ApplicationStyles.lightBackground.color}]}>
         <NavigationBar {...navigation} statusBarColor={ApplicationStyles.primaryColor.color} title="Bank Account" />
-        <KeyboardAwareScrollView style={styles.subContainer}>
+        { savedBankDetails && savedBankDetails.accountDetails
+          ? <View style={styles.sectionContainer}>
+            <View style={{ flexDirection: 'row', paddingVertical:hp('0.5%'), justifyContent: 'space-between', alignItems:'center'}}>
+              <Text style={ApplicationStyles.fontStyles.body1}>Bank Account:</Text>
+              <Text style={ApplicationStyles.fontStyles.body2}>{savedBankDetails.accountDetails.maskedAccountNumber}</Text>
+            </View>
+            <View style={{ flexDirection: 'row', paddingVertical:hp('0.5%'), justifyContent: 'space-between',  alignItems:'center'}}>
+              <Text style={ApplicationStyles.fontStyles.body1}>Bank Account:</Text>
+              <Text style={ApplicationStyles.fontStyles.body2}>{savedBankDetails.accountDetails.maskedIfscCode}</Text>
+            </View>
+            <View style={{ flexDirection: 'row', paddingVertical:hp('0.5%'), justifyContent: 'space-between',  alignItems:'center'}}>
+              <Text style={ApplicationStyles.fontStyles.body1}>Status:</Text>
+              <Text style={ApplicationStyles.fontStyles.body2}>{savedBankDetails.bankStatus}</Text>
+            </View>
+              <Button
+                style={{height:hp('4%'),}}
+                onPress={this.confirm}
+                buttonWrapperStyle={{flex:1,height:100,}}
+                title='DELETE AND ADD NEW'
+                titleStyle={{ color: ApplicationStyles.warningColor.color}}/>
+          </View>
+        : <KeyboardAwareScrollView style={styles.subContainer}>
           <View style={styles.secondSection}>
             <TextInput
               label="Name"
@@ -133,10 +215,11 @@ class AddBankAccount extends Component {
               onChangeText={text => this.updateTextInput('email', text)}
             />
             <TextInput
-              label="Phone"
+              label="Phone (without country code)"
               value={phone}
               error={errors.phone}
               returnKeyType="next"
+              keyboardType='phone-pad'
               textInputRef={this.phoneRef}
               onSubmitEditing={() => this.bankAccountRef.current.focus()}
               onChangeText={text => this.updateTextInput('phone', text)}
@@ -204,8 +287,9 @@ class AddBankAccount extends Component {
             onPress={this.addBeneficiaryAccouont}
             title="SAVE"
           />
-
+         
         </KeyboardAwareScrollView>
+        }
       </View>
     );
   }

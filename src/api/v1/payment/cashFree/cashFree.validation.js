@@ -4,17 +4,20 @@ const Joi = require('joi');
 const { Transaction } = require('../transaction/transaction.model');
 
 module.exports = {
-
   getCfToken: {
     query: {
       orderAmount: Joi.number().required(),
       orderCurrency: Joi.string().required(),
-
     },
   },
   verifySubscription: {
     body: {
       _id: Joi.string().required(),
+    },
+  },
+  deletePayoutBeneficiary: {
+    body: {
+      bankId: Joi.string().required(),
     },
   },
   createAndSubscribePlan: {

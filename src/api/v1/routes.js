@@ -14,6 +14,7 @@ const cashFreeRoutes = require('./payment/cashFree/cashFree.route');
 const subscriptionRoutes = require('./payment/subscription/subscription.route');
 const tagRoutes = require('./tag/tag.route');
 const shareRoutes = require('./share/share.route');
+const contactUsRoutes = require('./contactUs/contactUs.route');
 
 
 const router = express.Router();
@@ -50,5 +51,6 @@ router.use('/payment/transaction', transactionRoutes);
 router.use('/payment/subscription', subscriptionRoutes);
 router.use('/search', searchRoutes);
 router.use('/tag', tagRoutes);
+router.use('/contactUs', contactUsRoutes);
 
 module.exports = router;

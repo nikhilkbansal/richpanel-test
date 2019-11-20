@@ -26,6 +26,7 @@ import StyleGuide from 'App/Containers/StyleGuide/StyleGuide';
 import AdditionalPayment from 'App/Containers/Payment/AdditionalPayment';
 import AddBankAccount from 'App/Containers/Payment/AddBankAccount';
 import OrgInfo from 'App/Containers/PoPages/OrgInfo';
+import ContactUs from 'App/Containers/ContactUs/ContactUs';
 import PoSlider from 'App/Containers/PoPages/PoSlider';
 import Followings from 'App/Containers/Followings/Followings';
 import Settings from 'App/Containers/Settings/Settings';
@@ -72,7 +73,8 @@ const AppNav = createAppContainer(createStackNavigator(
     Followings,
     RecurringDonations,
     PoSlider,
-    Settings
+    Settings,
+    ContactUs
   },
   {
     // By default the application will show the this screen

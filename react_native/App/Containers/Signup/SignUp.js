@@ -56,7 +56,9 @@ class SignUpScreen extends Component {
     super(props);
     this.state = {
       name: '',
-      email: null,
+      email: '',
+      phone: '',
+      userName: '',
       password: '',
       userType: 'user',
       errors: {},

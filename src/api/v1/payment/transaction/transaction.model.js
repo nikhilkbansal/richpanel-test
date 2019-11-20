@@ -22,7 +22,12 @@ const beneficiarySchema = new mongoose.Schema({
     maskedAccountNumber: String,
     maskedIfscCode: String,
   },
-  status: String,
+  bankStatus: String,
+  status: {
+    type: String,
+    default: 'active',
+    enum: ['active', 'inactive'],
+  },
 }, {
   timestamps: true,
 });

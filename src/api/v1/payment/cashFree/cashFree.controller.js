@@ -152,6 +152,60 @@ exports.verifySubscription = async (req, res, next) => {
   }
 };
 
+exports.getPayoutBeneficiary = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const bank = await Beneficiary.findOne({
+      userId: user._id,
+      status: 'active',
+    });
+
+    if (!bank) {
+      res.json(null);
+      return;
+    }
+    const authorizePayout = await CashFree.authorizePayout();
+
+    const beneficiary = await CashFree.getBeneficiary(bank.beneId, {
+      Authorization: `Bearer ${authorizePayout.data.token}`,
+    });
+
+    bank.bankStatus = beneficiary.status;
+    await bank.save();
+
+    res.json(bank);
+  } catch (error) {
+    console.log('error', error);
+    next(error);
+  }
+};
+
+exports.removePayoutBeneficiary = async (req, res, next) => {
+  try {
+    const { bankId } = req.body;
+
+    const bank = await Beneficiary.findOne({
+      _id: bankId,
+      status: 'active',
+    });
+    if (!bank) {
+      throw new APIError({ message: 'Bank not found' });
+    }
+
+    const authorizePayout = await CashFree.authorizePayout();
+
+    await CashFree.removeBeneficiary({ beneId: bank.beneId }, {
+      Authorization: `Bearer ${authorizePayout.data.token}`,
+    });
+
+    bank.status = 'inactive';
+    await bank.save();
+    res.json();
+  } catch (error) {
+    console.log('error', error);
+    next(error);
+  }
+};
 
 exports.addPayoutBeneficiary = async (req, res, next) => {
   try {
@@ -190,16 +244,17 @@ exports.addPayoutBeneficiary = async (req, res, next) => {
       Authorization: `Bearer ${authorizePayout.data.token}`,
     });
 
-    await Beneficiary.add({
+    const bank = await Beneficiary.add({
       beneId,
       userId: user._id,
       accountDetails: {
         maskedAccountNumber: `xxxxxxxxxx${String(bankAccount).slice(String(bankAccount).length - 4)}`,
         maskedIfscCode: `xx${String(ifsc).slice(String(ifsc).length - 3)}`,
       },
+      bankStatus: 'PENDING',
     });
 
-    res.status(httpStatus.CREATED).json();
+    res.status(httpStatus.CREATED).json(bank);
   } catch (error) {
     console.log('error', error);
     next(error);

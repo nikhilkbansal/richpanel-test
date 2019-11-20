@@ -67,6 +67,18 @@ class Cashfree {
       inHeader['X-Client-Secret'] = apiKey.secretKey;
     }
 
+    console.log({
+      url: apiUrl + apiPath,
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+        ...inHeader,
+        ...headers,
+      },
+      data: convertData({
+        ...inData,
+        ...data,
+      }),
+    });
     try {
       const apiCall = await axios({
         method,
@@ -147,6 +159,14 @@ class Cashfree {
 
   addBeneficiary(params, headers) {
     return this.callApi('payout/v1/addBeneficiary', 'post', { ...params }, headers, 'InHeader', 'payout');
+  }
+
+  getBeneficiary(beneId, headers) {
+    return this.callApi(`payout/v1/getBeneficiary/${beneId}`, 'get', {}, headers, 'InHeader', 'payout');
+  }
+
+  removeBeneficiary(params, headers) {
+    return this.callApi('payout/v1/removeBeneficiary', 'post', { ...params }, headers, 'InHeader', 'payout');
   }
 }
 

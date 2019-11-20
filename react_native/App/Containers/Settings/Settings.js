@@ -105,7 +105,7 @@ class Settings extends Component {
             <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='About us' />
           </View>
           <View style={[styles.sectionContainer, ]}>
-            <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Contact us' />
+            <MenuItem onPress={()=>navigation.navigate('ContactUs')} rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Contact us' />
           </View>
           <View style={[styles.sectionContainer, ]}>
             <MenuItem leftLabel='Logout' onPress={logoutInit}/>

@@ -7,6 +7,7 @@ const {
   verifySubscription,
   saveTransaction,
   addPayoutBeneficiary,
+  deletePayoutBeneficiary,
 } = require('./cashFree.validation');
 const { authorize } = require('../../../middlewares/auth');
 
@@ -26,9 +27,14 @@ router.route('/verifySubscription')
 router.route('/saveTransaction')
   .post(authorize(), validate(saveTransaction), controller.saveTransaction);
 
+router.route('/getPayoutBeneficiary')
+  .get(authorize(), controller.getPayoutBeneficiary);
 
 router.route('/addPayoutBeneficiary')
   .post(authorize(), validate(addPayoutBeneficiary), controller.addPayoutBeneficiary);
+
+router.route('/removePayoutBeneficiary')
+  .delete(authorize(), validate(deletePayoutBeneficiary), controller.removePayoutBeneficiary);
 
 
 module.exports = router;
