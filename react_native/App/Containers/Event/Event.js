@@ -80,6 +80,7 @@ class Event extends Component {
     followUnfollow={()=>this.props.followUnFollow({ type: 'homePageEvents', isFollowed: item.isFollowed , followeeId: item.userId._id })}
     onSharePress={()=>this.onShare(item)}
     onReactionPress={this.props.eventReaction}
+    onRepost={()=>this.props.navigation.navigate('AddEvent',{itemId:item._id, isRepost: true})}
     onReactionRemovePress={this.props.removeEventReaction}
     userPicture={item.userId.picture}
     onUserClick={()=>this.props.navigation.navigate('NgoProfile',{poUserId:item.userId._id})}

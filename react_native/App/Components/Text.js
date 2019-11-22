@@ -1,18 +1,31 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
+
 import {
   Text as RNText,
 } from 'react-native';
 import { ApplicationStyles } from '../Theme';
 
 function getTruncateString(string, maxLength, returnOriginal = false) {
-  if (returnOriginal) {
+  if(typeof string === 'string'){
+    if (returnOriginal) {
+      return string;
+    }
+    if (string.length > maxLength) {
+      return string.slice(0, maxLength);
+    }
     return string;
-  }
-  if (string.length > maxLength) {
-    return string.slice(0, maxLength);
+  }else if(typeof string[string.length-1]  === 'string'){
+    if (returnOriginal) {
+      return string;
+    }
+    if (string[string.length-1].length > maxLength) {
+      string[string.length-1] = string[string.length-1].slice(0, maxLength);
+    }
+    return [...string];
   }
   return string;
+
 }
 
 class Text extends React.Component {
@@ -34,13 +47,13 @@ class Text extends React.Component {
       children, style, maxLength, ...props
     } = this.props;
     const { showHiddenText } = this.state;
-    const showMoreHide = maxLength && typeof children === 'string' && children.length > maxLength;
+    const showMoreHide = maxLength && (typeof children === 'string' || typeof children[children.length-1]  === 'string') && (children.length > maxLength || (children && children[children.length-1].length > maxLength ) );
     const showMoreButton = showMoreHide && !showHiddenText;
     const showHideButton = showMoreHide && showHiddenText;
-
     return (
       <RNText style={[style]} {...props}>
-        {typeof children === 'string' ? getTruncateString(children, maxLength, showHiddenText) : children}
+        { children && <Fragment>
+        {typeof children === 'string' || typeof children[children.length-1]  === 'string' ? getTruncateString(children, maxLength, showHiddenText) : children}
         {showMoreButton && '...'}
         {showMoreButton
         && (
@@ -54,6 +67,8 @@ class Text extends React.Component {
           {' Hide'}
         </RNText>
         )}
+        </Fragment>
+        }
       </RNText>
     );
   }

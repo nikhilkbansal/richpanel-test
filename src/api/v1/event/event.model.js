@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const mongoose = require('mongoose');
 const { omitBy, isNil } = require('lodash');
 
@@ -28,12 +29,18 @@ const eventSchema = new mongoose.Schema({
   },
   title: {
     type: String,
-    required: true,
     trim: true,
   },
   description: {
     type: String,
-    required: true,
+  },
+  isRepost: {
+    type: Boolean,
+    default: false,
+  },
+  repostOf: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post',
   },
   files: {
     type: Array,
@@ -41,11 +48,9 @@ const eventSchema = new mongoose.Schema({
   },
   startTime: {
     type: Date,
-    required: true,
   },
   endTime: {
     type: Date,
-    required: true,
   },
   location: {
     longLat: Array,
@@ -67,11 +72,47 @@ eventSchema.statics = {
     const options = omitBy({
       _id, userId, title, $text, endTime,
     }, isNil);
-    return this.find(options).sort({ createdAt: -1 })
-      .skip(parseInt(skip, 10))
-      .limit(perPage)
-      .populate('userId', 'name _id picture')
-      .exec();
+    const posts = await this.aggregate([
+      { $match: options },
+      {
+        $lookup: {
+          from: 'users', localField: 'userId', foreignField: '_id', as: 'userId',
+        },
+      },
+      {
+        $lookup: {
+          from: 'events', localField: 'repostOf', foreignField: '_id', as: 'repostOf',
+        },
+      },
+      { $unwind: '$userId' },
+      { $unwind: '$repostOf' },
+      { $skip: Number(skip) },
+      { $limit: perPage },
+    ]).exec();
+
+    // const posts = await this.find(options).sort({ createdAt: -1 })
+    //   .skip(parseInt(skip, 10))
+    //   .limit(perPage)
+    //   .populate('userId', 'name _id picture')
+    //   .populate({
+    //     path: 'repostOf',
+    //     populate: {
+    //       path: 'userId',
+    //       select: 'name _id picture',
+    //     },
+    //   })
+    //   .exec();
+
+    return posts.map((event) => {
+      if (event.isRepost && event.repostOf) {
+        event.title = event.repostOf.title;
+        event.raisedMoney = event.repostOf.raisedMoney;
+        event.startTime = event.repostOf.startTime;
+        event.endTime = event.repostOf.endTime;
+        event.files = event.repostOf.files;
+      }
+      return event;
+    });
   },
 
 };

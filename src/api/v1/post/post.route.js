@@ -7,6 +7,7 @@ const {
   createPost,
   updatePost,
   listPosts,
+  repost,
 } = require('./post.validation');
 
 const router = express.Router();
@@ -88,6 +89,10 @@ router
    */
   .get(authorize(), validate(listPosts), controller.list)
   .post(authorize(), validate(createPost), controller.add);
+
+router
+  .route('/repost')
+  .post(authorize(), validate(repost), controller.repost);
 
 router
   .route('/:postId')

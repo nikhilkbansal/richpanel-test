@@ -7,9 +7,9 @@ import PropTypes from 'prop-types';
 import UserActions from 'App/Stores/User/Actions';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
- 
+import AxiosRequest from '../../Services/HttpRequestService';
 import {
-  Text, NavigationBar, TextInput, Button, ProgressiveImage, MenuItem, AvatarImage
+  Text, NavigationBar, EmptyState, Button, ProgressiveImage, MenuItem, AvatarImage
 } from '../../Components';
 import {
   Colors, FontSizes, Fonts, ApplicationStyles,
@@ -19,7 +19,7 @@ import { XAxis, Grid, LineChart } from 'react-native-svg-charts'
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
-  subContainer: { flex: 1, paddingHorizontal: wp('5%') },
+  subContainer: { flex: 1, paddingHorizontal: wp('1%') },
   loginContainer: {
     marginVertical: hp('4%'),
     backgroundColor: ApplicationStyles.primaryColor.color,
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     padding: wp('2%'),
     borderRadius: wp('2%'),
     marginTop: -hp('1%'),
+    paddingLeft: wp('4%'),
     backgroundColor: ApplicationStyles.lightBackground.color,
 
   },
@@ -53,6 +54,17 @@ const styles = StyleSheet.create({
     marginLeft: wp('4%'),
     justifyContent: 'center',
     marginVertical: wp('2%'),
+  },
+  tabContent: {flex:1, minHeight: hp('20%'), flexWrap:'wrap', flexDirection:'row',backgroundColor: ApplicationStyles.lightBackground.color, flexDirection:'row',  justifyContent:'center', },
+  postImage: {
+    // width: '100%',
+    margin: wp('2%'), 
+
+    width: wp('28%'),
+    height: wp('28%'),
+    borderRadius: wp('1.5%'),
+    ...ApplicationStyles.elevationS,
+    overflow: 'hidden',
   },
   nameDetail: { paddingHorizontal: wp('2%'), flex: 1, flexDirection: 'row' },
   info: { padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.fontStyles.caption },
@@ -74,18 +86,46 @@ class Profile extends Component {
       email: null,
       password: '',
       checked: false,
+      recentPosts: []
     };
+    this.getMyRecentPost = this.getMyRecentPost.bind(this);
   }
 
   componentDidMount() {
-    this.navListener = this.props.navigation.addListener('didFocus', () => {
-      StatusBar.setBarStyle('light-content');
-      StatusBar.setBackgroundColor(ApplicationStyles.primaryColor.color);
-    });
+    this.getMyRecentPost();
   }
 
-  componentWillUnmount() {
-    this.navListener.remove();
+  postItem(data) {
+    return ( 
+        <View style={styles.postImage}
+        >
+          <ProgressiveImage
+            resizeMode="cover"
+            style={{width:'100%', height: '100%'}}
+            source={{uri: CommonFunctions.getFile(data.files[0],'videoThumb')}}
+          />
+      </View>
+
+    );
+  }
+
+
+  async getMyRecentPost( ) { 
+    const { recentPosts } = this.state; 
+    const { profile: { id} } = this.props; 
+    try {
+      const data = await AxiosRequest({
+        method: 'get',
+        params:{
+          perPage: 9,
+          userId: id 
+        },
+        url: '/post',
+      });
+      this.setState({ recentPosts: recentPosts.concat(data) });
+    } catch (e) {
+      console.log('error',e)
+    }
   }
 
   getEditIcon({ iconColor, style = {}, buttonWrapperStyle = {}, onPress }){
@@ -102,6 +142,7 @@ class Profile extends Component {
   }
   render() {
     const { navigation, profile, logoutInit } = this.props;
+    const { recentPosts } = this.state;
     const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]
     return (
       <View style={styles.container}>
@@ -159,6 +200,20 @@ class Profile extends Component {
                       style={{right:wp('2%'), borderRadius:wp('10%'), backgroundColor: ApplicationStyles.smokeBackground.color}}
                       iconColor={ApplicationStyles.disabledColor.color}  />
           </View>
+
+          <View style={[styles.sectionContainer, styles.tabContainer]}>
+               <View style={styles.tabContent}>
+                  {recentPosts.length === 0
+                    ? <EmptyState message="No posts availble" containerStyle={{ marginTop: hp('4%'), marginBottom: hp('5%') }} messageContainerStyle={ {backgroundColor: ApplicationStyles.lightColor.color}}/>
+                    : <Fragment>
+                        {recentPosts.map(o=>this.postItem(o))}
+                      </Fragment>
+                  }
+                </View> 
+                {recentPosts.length !== 0 && <Button title='VIEW ALL' style={styles.viewAll}  titleStyle={{...ApplicationStyles.fontStyles.button}}/>}
+            </View>
+            
+
           <View style={[styles.sectionContainer,{flex:1, padding: wp('3%')} ]}>
             <Text style={{ ...ApplicationStyles.fontStyles.body1, textAlign: 'center'}}>This month's handouts</Text>
             <LineChart

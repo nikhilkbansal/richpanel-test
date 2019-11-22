@@ -7,7 +7,7 @@ const Share = require('../share/share.model');
 const Reaction = require('../reaction/reaction.model');
 const Comment = require('../comment/comment.model');
 const { handler: errorHandler } = require('../../middlewares/error');
-// const APIError = require('../../utils/APIError');
+const APIError = require('../../utils/APIError');
 // const { sendMail } = require('../../services/mailProviders');
 // const uuidv4 = require('uuid/v4');
 
@@ -40,6 +40,32 @@ exports.add = async (req, res, next) => {
     next(error);
   }
 };
+
+
+exports.repost = async (req, res, next) => {
+  try {
+    const { postId, description } = req.body;
+    const { user } = req;
+    const post = await Post.findById(postId);
+    if (post) {
+      throw new APIError({ message: 'Post not found' });
+    }
+    delete post._id;
+
+    const repost = new Post({
+      description,
+      isRepost: true,
+      repostOf: postId,
+      userId: user._id,
+    });
+    await repost.save();
+    res.status(httpStatus.CREATED);
+    res.json();
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 /**
  * List posts
@@ -122,7 +148,7 @@ exports.getHomePagePosts = async (req, res, next) => {
       const shares = await Share.getShares({ itemId: post._id, userId: user._id });
       return {
         comment,
-        ...post.toObject(),
+        ...post,
         ...postsCount,
         howUserReacted,
         sharesCount: shares.length,

@@ -121,7 +121,7 @@ function getHumanCurrency(num){
 }
 
 function PostUi({
-  _id, title, description, isFollowed, files, userId, userName, comment, currentVisible, userPicture, onUserClick, raisedMoney, campaignEndDate, onViewComments, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
+  _id, title, description, isFollowed, files, userId, isRepost, repostOf, userName, comment, currentVisible, userPicture, onRepost, onUserClick, raisedMoney, campaignEndDate, onViewComments, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
 }) {
   return (
     <View style={styles.container}>
@@ -157,6 +157,7 @@ function PostUi({
             buttonStyle={[styles.moreWrapperStyle]}
             menus={[
               { label: isFollowed ? 'Unfollow' : 'Follow', func: () => followUnfollow() },
+              { label: 'Repost', func: () => onRepost() },
               { label: 'Copy Link', func: () => { Clipboard.setString('http://handoutapp.com'); Toast('Copied') } },
               { label: 'Report', func: () => {} }]}
           >
@@ -218,15 +219,26 @@ function PostUi({
           )
           }
         </View>
-        <View style={styles.subBody}>
-          <Text style={[styles.body]} maxLength={wp('40%')}>
+        <View style={styles.subBody }>
+          <Text style={[styles.body,isRepost?{marginBottom:0}:{}]} maxLength={wp('40%')}>
+            <Text style={ApplicationStyles.fontStyles.body2}>
+              Reposted by {userName+' '} 
+            </Text>
             {description}
           </Text>
+          { isRepost && <Text style={[styles.body]} maxLength={wp('40%')}>
+            <Text style={ApplicationStyles.fontStyles.body2}>
+              {repostOf.userId.name+' '} 
+            </Text>
+            {repostOf.description}
+          </Text>
+          }
         </View>
+         
         <View style={styles.commentContainer}>
 
         {/* <View style={styles.subBody}> */}
-          {comment && comment.length > 0 && (
+          {comment && comment.length > 0 && comment[0].userId && (
           <View style={{
             flexDirection: 'row',
           }}

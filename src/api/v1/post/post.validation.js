@@ -18,11 +18,19 @@ module.exports = {
     body: {
       files: Joi.array(),
       // title: Joi.string().optional(),
-      description: Joi.string().required(),
+      description: Joi.string(),
       location: Joi.string(),
+      isRepost: Joi.bool(),
+      repostOf: Joi.string(),
+      type: Joi.string(),
     },
   },
-
+  repost: {
+    body: {
+      postId: Joi.string().required(),
+      description: Joi.string(),
+    },
+  },
   updatePost: {
     body: {
       title: Joi.string().max(50),

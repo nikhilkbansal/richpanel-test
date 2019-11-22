@@ -6,6 +6,7 @@ const Share = require('../share/share.model');
 const Reaction = require('../reaction/reaction.model');
 const Comment = require('../comment/comment.model');
 const { handler: errorHandler } = require('../../middlewares/error');
+const APIError = require('../../utils/APIError');
 
 /**
  * Load Event and append to req.
@@ -116,4 +117,29 @@ exports.remove = (req, res, next) => {
   event.remove()
     .then(() => res.status(httpStatus.NO_CONTENT).end())
     .catch(error => next(error));
+};
+
+
+exports.repost = async (req, res, next) => {
+  try {
+    const { eventId, description } = req.body;
+    const { user } = req;
+    const event = await Event.findById(eventId);
+    if (event) {
+      throw new APIError({ message: 'Event not found' });
+    }
+    delete event._id;
+
+    const repost = new Event({
+      description,
+      isRepost: true,
+      repostOf: eventId,
+      userId: user._id,
+    });
+    await repost.save();
+    res.status(httpStatus.CREATED);
+    res.json();
+  } catch (error) {
+    next(error);
+  }
 };

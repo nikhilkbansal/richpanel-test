@@ -86,10 +86,10 @@ class Drawer extends Component {
         {/* { this.getMenuItem('Handouts', {name: 'hand-paper-o', family: 'FontAwesome', size: wp('5%')}) } */}
         { this.getMenuItem('DONATIONS', {name: 'money', family: 'FontAwesome', size: wp('4.9%')}, ()=> navigate('MyDonations',{forPo: true})) }
         { this.getMenuItem('RECURRING DONATIONS', {name: 'sync', family: 'AntDesign', size: wp('4.6%')}, ()=> navigate('RecurringDonations')) }
-        { this.getMenuItem('POSTS', {name: 'md-list', family: null, size: wp('5.4%')}) }
-        { this.getMenuItem('EVENTS', {name: 'md-time', family: null, size: wp('5.4%')}) }
-        { this.getMenuItem('JOBS', {name: 'file', family: 'Octicons', size: wp('5.4%')}) }
-        { this.getMenuItem('SHOP', {name: 'shopping-bag', family: 'Feather', size: wp('5%')}) }
+        {/* { this.getMenuItem('POSTS', {name: 'md-list', family: null, size: wp('5.4%')}) } */}
+        {/* { this.getMenuItem('EVENTS', {name: 'md-time', family: null, size: wp('5.4%')}) } */}
+        {/* { this.getMenuItem('JOBS', {name: 'file', family: 'Octicons', size: wp('5.4%')}) } */}
+        {/* { this.getMenuItem('SHOP', {name: 'shopping-bag', family: 'Feather', size: wp('5%')}) } */}
         { this.getMenuItem('ANALYTICS', {name: 'md-stats', family: null, size: wp('5%')}) }
         { this.getMenuItem('SETTINGS', {name: 'setting', family: 'AntDesign', size: wp('5.3%')}, ()=> navigate('Settings')) }
         </View>

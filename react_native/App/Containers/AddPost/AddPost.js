@@ -37,11 +37,14 @@ class AddPost extends Component {
 
   constructor(props) {
     super(props);
+    const { params } = props.navigation.state;
+    console.log(props)
     this.state = {
       errors: {},
       title: '',
       description: '',
       files: [],
+      isRepost: params && params.isRepost,
       isCampaign: false
     };
     this.addPost = this.addPost.bind(this);
@@ -65,9 +68,18 @@ class AddPost extends Component {
       campaignGoal,
       campaignStartDate,
       campaignEndDate,
+      isRepost
     } = this.state;
-    const { postCreate } = this.props;
-
+    const { postCreate, navigation:{ state: { params: { itemId } }} } = this.props;
+    if(isRepost){
+      postCreate({
+        repostOf: itemId,
+        isRepost: true,
+        type:'post',
+        description, 
+      });
+      return;
+    }
     let keysToValidate = ['description', 'files'];
     if(isCampaign){
       keysToValidate = keysToValidate.concat(['title', 'campaignGoal', 'campaignStartDate', 'campaignEndDate'])
@@ -88,6 +100,7 @@ class AddPost extends Component {
       campaignGoal,
       campaignStartDate,
       campaignEndDate,
+      type: isCampaign ? 'campaign': 'post'
     });
   }
 
@@ -98,7 +111,7 @@ class AddPost extends Component {
   render() {
     const { navigation, profile } = this.props;
 
-    const { errors, isCampaign } = this.state;
+    const { errors, isCampaign, isRepost } = this.state;
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} title="Add Post" />
@@ -108,16 +121,16 @@ class AddPost extends Component {
             multiline
             numberOfLines={4}
             label="About"
-            placeholder="Write here about this post/campaign"
+            placeholder="Write something about this post/campaign"
             inputStyle={ApplicationStyles.body}
             textInputRef={this.descriptionRef}
             returnKeyType="next"
             onChangeText={text => this.updateTextInput('description', text)}
             onSubmitEditing={() => this.passwordRef.current.focus()}
           />
-          <FileSelector error={errors.files} label="Add images and videos (drag and drop to reorder)" onChange={files => this.updateTextInput('files', files)} />
-          <HrLine />
-          { profile.role ==='ngo' && <CheckBox
+          {!isRepost && <FileSelector error={errors.files} label="Add images and videos (drag and drop to reorder)" onChange={files => this.updateTextInput('files', files)} />}
+          {!isRepost && <HrLine /> }
+          { profile.role ==='ngo' && !isRepost && <CheckBox
                 style={{ flex: 1 }}
                 onClick={() => {
                   this.setState({

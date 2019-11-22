@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const mongoose = require('mongoose');
 const { omitBy, isNil } = require('lodash');
 
@@ -10,16 +11,11 @@ const { omitBy, isNil } = require('lodash');
 // const APIError = require('../../utils/APIError');
 // const { env, jwtSecret, jwtExpirationInterval } = require('../../../config/vars');
 
-/**
-* User Roles
-*/
 
 /**
  * Post Schema
  * @private
  */
-
-
 const postSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -38,6 +34,14 @@ const postSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  isRepost: {
+    type: Boolean,
+    default: false,
+  },
+  repostOf: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post',
+  },
   campaignGoal: String,
   campaignStartDate: Date,
   campaignEndDate: Date,
@@ -51,7 +55,16 @@ const postSchema = new mongoose.Schema({
     city: String,
     country: String,
   },
-
+  type: {
+    type: String,
+    enum: ['post', 'campaign'],
+    default: 'post',
+  },
+  status: {
+    type: String,
+    enum: ['active', 'delete', 'originalPostDelete'], // originalPostDelete = Original post is deleted from which it became repost
+    default: 'active',
+  },
 }, {
   timestamps: true,
 });
@@ -68,11 +81,48 @@ postSchema.statics = {
     const options = omitBy({
       _id, userId, title, $text, $or,
     }, isNil);
-    return this.find(options).sort({ createdAt: -1 })
-      .skip(parseInt(skip, 10))
-      .limit(perPage)
-      .populate('userId', 'name _id picture')
-      .exec();
+    const posts = await this.aggregate([
+      { $match: options },
+      {
+        $lookup: {
+          from: 'users', localField: 'userId', foreignField: '_id', as: 'userId',
+        },
+      },
+      {
+        $lookup: {
+          from: 'posts', localField: 'repostOf', foreignField: '_id', as: 'repostOf',
+        },
+      },
+      { $unwind: '$userId' },
+      { $unwind: '$repostOf' },
+      { $skip: Number(skip) },
+      { $limit: perPage },
+    ]).exec();
+    // const posts = await this.find(options).sort({ createdAt: -1 })
+    //   .skip(parseInt(skip, 10))
+    //   .limit(perPage)
+    //   .populate('userId', 'name _id picture')
+    //   .populate({
+    //     path: 'repostOf',
+    //     populate: {
+    //       path: 'userId',
+    //       select: 'name _id picture',
+    //     },
+    //   })
+    //   .exec();
+    console.log('posts', posts);
+    return posts.map((post) => {
+      if (post.isRepost && post.repostOf) {
+        post.title = post.repostOf.title;
+        post.raisedMoney = post.repostOf.raisedMoney;
+        post.campaignGoal = post.repostOf.campaignGoal;
+        post.campaignStartDate = post.repostOf.campaignStartDate;
+        post.campaignEndDate = post.repostOf.campaignEndDate;
+        post.files = post.repostOf.files;
+        post.type = post.repostOf.type;
+      }
+      return post;
+    });
   },
 
 };

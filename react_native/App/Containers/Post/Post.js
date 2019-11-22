@@ -83,6 +83,7 @@ class Post extends Component {
     currentVisible={this.state.currentVisibleIndex === index}
     followUnfollow={()=>this.props.followUnfollow({ type: 'homePagePosts', isFollowed: item.isFollowed , followeeId: item.userId._id })}
     onSharePress={()=>this.onShare(item)}
+    onRepost={()=>this.props.navigation.navigate('AddPost',{itemId:item._id, isRepost: true})}
     onReactionPress={this.props.postReaction}
     onReactionRemovePress={this.props.removeReaction}
     userPicture={item.userId.picture}

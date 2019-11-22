@@ -16,12 +16,14 @@ module.exports = {
   // POST /v1/event
   createEvent: {
     body: {
-      files: Joi.array().required(),
-      title: Joi.string().required().max(50),
+      isRepost: Joi.bool(),
+      repostOf: Joi.string(),
+      files: Joi.array(),
+      title: Joi.string().max(50),
       description: Joi.string(),
       location: Joi.string(),
-      startTime: Joi.string().required(),
-      endTime: Joi.string().required(),
+      startTime: Joi.string(),
+      endTime: Joi.string(),
     },
   },
 
@@ -36,4 +38,10 @@ module.exports = {
     },
   },
 
+  repost: {
+    body: {
+      eventId: Joi.string().required(),
+      description: Joi.string(),
+    },
+  },
 };

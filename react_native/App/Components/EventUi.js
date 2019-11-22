@@ -217,7 +217,7 @@ function EventUi
 // }
 
 ({
-  _id, title, description, isFollowed, files, userId, userName, comment, userPicture,onUserClick, onViewComments, startTime, endTime, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
+  _id, title, description, isFollowed, files, userId, userName, isRepost, repostOf, comment, userPicture, onRepost, onUserClick, onViewComments, startTime, endTime, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
 }) {
   return (
     <View style={styles.container}>
@@ -253,6 +253,7 @@ function EventUi
             buttonStyle={[styles.moreWrapperStyle]}
             menus={[
               { label: isFollowed ? 'Unfollow' : 'Follow', func: () => followUnfollow() },
+              { label: 'Repost', func: () => onRepost() },
               { label: 'Copy Link', func: () => { Clipboard.setString('http://handoutapp.com'); Toast('Copied') } },
               { label: 'Report', func: () => {} }]}
           >
@@ -290,15 +291,25 @@ function EventUi
           </View>
           <Text style={{ ...ApplicationStyles.fontStyles.caption, paddingVertical: hp('0.6%'), alignSelf: 'flex-end' }}>{moment(startTime).format('DD MMM')} to {moment(endTime).format('DD MMM YYYY')}</Text>
         </View>
-        <View style={styles.subBody}>
-          <Text style={styles.body} maxLength={wp('40%')}>
+        <View style={styles.subBody }>
+          <Text style={[styles.body,isRepost?{marginBottom:0}:{}]} maxLength={wp('40%')}>
+            <Text style={ApplicationStyles.fontStyles.body2}>
+              Reposted by {userName+' '} 
+            </Text>
             {description}
           </Text>
+          { isRepost && <Text style={[styles.body]} maxLength={wp('40%')}>
+            <Text style={ApplicationStyles.fontStyles.body2}>
+              {repostOf.userId.name+' '} 
+            </Text>
+            {repostOf.description}
+          </Text>
+          }
         </View>
         <View style={styles.commentContainer}>
 
         {/* <View style={styles.subBody}> */}
-          {comment && comment.length > 0 && (
+          {comment && comment.length > 0 && comment[0].userId && (
           <View style={{
             flexDirection: 'row',
           }}

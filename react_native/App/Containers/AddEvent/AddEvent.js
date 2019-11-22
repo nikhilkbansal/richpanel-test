@@ -36,11 +36,14 @@ class AddEvent extends Component {
 
   constructor(props) {
     super(props);
+    const { params } = props.navigation.state;
+
     this.state = {
       errors: {},
       title: '',
       description: '',
       files: [],
+      isRepost: params && params.isRepost,
     };
     this.addEvent = this.addEvent.bind(this);
     this.descriptionRef = React.createRef();
@@ -55,9 +58,16 @@ class AddEvent extends Component {
       files,
       startTime,
       endTime,
+      isRepost
     } = this.state;
-    const { eventCreate } = this.props;
-
+    const { eventCreate, navigation:{ state: { params: { itemId } }} } = this.props;
+    if(isRepost){
+      eventCreate({
+        repostOf: itemId,
+        isRepost: true,
+        description, 
+      });
+    }
     let keysToValidate = ['title', 'description', 'files','startTime', 'endTime'];
     const validateForm = TextInput.validateForm(keysToValidate, this.state)
     if (validateForm) {
@@ -83,37 +93,41 @@ class AddEvent extends Component {
   render() {
     const { navigation } = this.props;
 
-    const { errors } = this.state;
+    const { errors, isRepost } = this.state;
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} title="Add Event" />
         <KeyboardAwareScrollView style={styles.subContainer}>
-          <TextInput
-            error={errors.title}
-            multiline
-            numberOfLines={1}
-            label="Title"
-            placeholder="e.g. Marathon for generating fund for women education"
-            returnKeyType="next"
-            onChangeText={text => this.updateTextInput('title', text)}
-            onSubmitEditing={() => this.descriptionRef.current.focus()}
-          />
+          {!isRepost && <TextInput
+              error={errors.title}
+              multiline
+              numberOfLines={1}
+              label="Title"
+              placeholder="e.g. Marathon for generating fund for women education"
+              returnKeyType="next"
+              onChangeText={text => this.updateTextInput('title', text)}
+              onSubmitEditing={() => this.descriptionRef.current.focus()}
+            />
+          }
           <TextInput
             error={errors.description}
             multiline
             numberOfLines={4}
             inputStyle={ApplicationStyles.body}
-            label="Description"
-            placeholder=""
+            label="About"
+            placeholder="Write something about this event"
             textInputRef={this.descriptionRef}
             returnKeyType="next"
             onChangeText={text => this.updateTextInput('description', text)}
             onSubmitEditing={() => this.passwordRef.current.focus()}
           />
-          <FileSelector error={errors.files} label="Add images and videos (drag and drop to reorder)" onChange={files => this.updateTextInput('files', files)} />
-          <DatePicker error={errors.startTime} label="Event Starts from" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('startTime', text)} />
-          <DatePicker error={errors.endTime} label="Event Ends on" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('endTime', text)} />
-          {/* <LocationSelector error={errors.location}  label="Location" placeholder="Select location" onChange={text => this.updateTextInput('starts', text)} /> */}
+          {!isRepost && <Fragment>
+            <FileSelector error={errors.files} label="Add images and videos (drag and drop to reorder)" onChange={files => this.updateTextInput('files', files)} />
+            <DatePicker error={errors.startTime} label="Event Starts from" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('startTime', text)} />
+            <DatePicker error={errors.endTime} label="Event Ends on" placeholder="xxxx/xx/xx xx:xx xx" onChange={text => this.updateTextInput('endTime', text)} />
+            {/* <LocationSelector error={errors.location}  label="Location" placeholder="Select location" onChange={text => this.updateTextInput('starts', text)} /> */}
+            </Fragment>
+          }
           <Button
             style={styles.loginContainer}
             onPress={this.addEvent}

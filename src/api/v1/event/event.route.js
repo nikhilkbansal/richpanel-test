@@ -7,6 +7,7 @@ const {
   createEvent,
   updateEvent,
   listEvent,
+  repost,
 } = require('./event.validation');
 
 const router = express.Router();
@@ -113,5 +114,8 @@ router
    */
   .delete(authorize(), authorizeEvent, controller.remove);
 
+router
+  .route('/repost')
+  .post(authorize(), validate(repost), controller.repost);
 
 module.exports = router;
