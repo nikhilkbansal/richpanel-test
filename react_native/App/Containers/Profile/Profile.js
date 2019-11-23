@@ -66,13 +66,50 @@ const styles = StyleSheet.create({
     ...ApplicationStyles.elevationS,
     overflow: 'hidden',
   },
+  avatarContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    // marginTop: -hp('5.5'),
+    // justifyItems: 'center',
+  },
+  avatarImageContainer: {
+    width: '100%',
+    height: '100%',
+    borderRadius: wp('20%'),
+    overflow: 'hidden',
+  },
+  avatarImage: {
+    ...ApplicationStyles.elevationS,
+    width: '100%',
+    height: '100%',
+  },
+  sectionSubContainer:{
+    flex: 1,
+    flexDirection: 'row', 
+    paddingVertical: wp('3%'),
+    paddingHorizontal: wp('3%'),
+    // marginTop: hp('2%'),
+  },
+  nameContainer: { flex: 5, alignItems: 'center' },
+  nameSubContainer:{
+    flex: 1,
+    alignItems: 'flex-start',
+    // justifyItems: 'center',
+  },
+  poNameContainer: {flexDirection: 'row'},
+  poName: {...ApplicationStyles.fontStyles.body2, flex: 1 },
+  follow:{
+    flex: 1,
+    alignItems:'flex-end'
+  },
+  followButton:{ flex: 1 },
   nameDetail: { paddingHorizontal: wp('2%'), flex: 1, flexDirection: 'row' },
   info: { padding: wp('1%'), margin: wp('1%'), ...ApplicationStyles.fontStyles.caption },
 });
 
-function getRandomColor(){
-  return 'red'
-}
+
 class Profile extends Component {
   static get propTypes() {
     return {
@@ -82,17 +119,33 @@ class Profile extends Component {
 
   constructor(props) {
     super(props);
+    const { profile, navigation:{ state: { params }} } = props;
+    const isMe = !params || !params.userId ||params.userId === profile.id;;
+
     this.state = {
       email: null,
       password: '',
       checked: false,
-      recentPosts: []
+      recentPosts: [],
+      isMe,
+      isFollowed: false,
+      userInfo: {},
+      userId: params && params.userId ? params.userId : profile.id
     };
     this.getMyRecentPost = this.getMyRecentPost.bind(this);
+    this.getPoInfo = this.getPoInfo.bind(this);
+    this.checkIfFollowed = this.checkIfFollowed.bind(this);
+    this.followUnfollow = this.followUnfollow.bind(this);
   }
 
   componentDidMount() {
     this.getMyRecentPost();
+    this.getPoInfo();
+
+    const { isMe } = this.state
+
+    !isMe && this.checkIfFollowed(); 
+
   }
 
   postItem(data) {
@@ -109,16 +162,27 @@ class Profile extends Component {
     );
   }
 
+  async getPoInfo( ) { 
+    const { userId} = this.state; 
+    try {
+      const data = await AxiosRequest({
+        method: 'get', 
+        url: `/users/${userId}`,
+      });
+      this.setState({ userInfo: data });
+    } catch (e) {
+      console.log('error',e)
+    }
+  }
 
   async getMyRecentPost( ) { 
-    const { recentPosts } = this.state; 
-    const { profile: { id} } = this.props; 
+    const { recentPosts, userId } = this.state;  
     try {
       const data = await AxiosRequest({
         method: 'get',
         params:{
           perPage: 9,
-          userId: id 
+          userId: userId
         },
         url: '/post',
       });
@@ -128,8 +192,43 @@ class Profile extends Component {
     }
   }
 
-  getEditIcon({ iconColor, style = {}, buttonWrapperStyle = {}, onPress }){
+  async checkIfFollowed( ) { 
+    const { profile } = this.props;
+    const { userId } = this.state; 
+    try {
+      const data = await AxiosRequest({
+        method: 'get', 
+        params:{ 
+          followerId: profile.id,
+          followeeId: userId,
+        },
+        url: `/follow`,
+      });
+      const isFollowed = data.length > 0;
+      this.setState({ isFollowed });
+    } catch (e) {
+      console.log('error',e)
+    }
+  }
 
+  async followUnfollow() { 
+    const { userId, userInfo } = this.state; 
+    try {
+      const data = await AxiosRequest({
+        method: 'post', 
+        data:{ 
+          followeeId: userId,
+        },
+        url: `/follow`,
+      });
+      this.setState({ isFollowed:  data.isFollowed, userInfo: {...userInfo, followerCount: data.isFollowed ? userInfo.followerCount+1 : userInfo.followerCount-1 } });
+    } catch (e) {
+      console.log('error',e)
+    }
+  }
+ 
+
+  getEditIcon({ iconColor, style = {}, buttonWrapperStyle = {}, onPress }){
       return <Button 
       icon='md-create'
       iconColor={iconColor}
@@ -142,63 +241,55 @@ class Profile extends Component {
   }
   render() {
     const { navigation, profile, logoutInit } = this.props;
-    const { recentPosts } = this.state;
+    const { recentPosts, isMe, userInfo, isFollowed } = this.state;
     const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation}      title="Profile" />
-        {profile && (
+        {userInfo && (
         <ScrollView style={styles.subContainer}>
           <View style={styles.sectionContainer}>
-            {/* <Image
-              resizeMode="cover"
-              style={{
-                width: '100%',
-                height: hp('35%'),
-              }}
-              source={ require('../../Assets/Images/child.jpeg')}
-            /> */}
-            <View
-              style={[styles.imageButton, { justifyContent: 'center', alignContent: 'center', alignItems: 'center' }]}
+            <View style={styles.sectionSubContainer}
             >
-              <AvatarImage size={wp('14%')} source={{ uri: CommonFunctions.getFile(profile.picture, 'avatar', true) }}/>
-            </View>
-            <View style={styles.userInfo}>
-              <View style={styles.nameDetail}>
-                <View style={{ flex: 2 }}>
-                  <Text style={ApplicationStyles.fontStyles.title}>{profile.name}</Text>
-                  <Text style={ApplicationStyles.fontStyles.caption}>
-                    @
-                    {profile.userName}
-                  </Text>
-                </View> 
+              <View style={styles.avatarContainer}
+              >
+                <AvatarImage
+                  size={wp('14%')}
+                  // containerStyle={styles.avatarImageContainer}
+                  source={{ uri: CommonFunctions.getFile(userInfo.picture, 'avatar', true) }}
+                />
               </View>
-              <View style={{ flexWrap: 'wrap', flex: 1, flexDirection: 'row' }}>
-                {/* <Text style={styles.info}>
-                  <Icon size={wp('4%')} name="md-female" color={ApplicationStyles.disabledColor.color} />
-                  {' '}
-                      Female
-
-                </Text> */}
-
-                {/* <Text style={styles.info}>
-                  <Icon size={wp('4%')} name="md-pin" color={ApplicationStyles.disabledColor.color} />
-                  {' '}
-                      #123, Gold Street, USA
-
-                </Text> */}
-                <Text style={styles.info}>
-                  {profile.email}
-                </Text>
-                {/* <Text style={styles.info}>
-                     +9392992929
-                </Text> */}
-              </View>
-              </View>
-              <this.getEditIcon 
+              <View style={styles.nameContainer}>
+                <View style={[styles.nameDetail]}>
+                  <View style={styles.nameSubContainer}
+                  >
+                    <View style={styles.poNameContainer}>
+                    <Text style={styles.poName}>{userInfo.name}</Text>
+                    {!isMe 
+                    ? <Button
+                      title={isFollowed ? "Unfollow" : "Follow"}
+                      style={styles.follow}
+                      onPress={this.followUnfollow}
+                      containerStyle={styles.followButton}
+                      buttonWrapperStyle={styles.followButton}
+                      titleStyle={{ ...ApplicationStyles.fontStyles.button, color:ApplicationStyles.primaryColor.color }}
+                    />
+                    : <this.getEditIcon 
                       onPress={()=>navigation.navigate('EditProfile')}
-                      style={{right:wp('2%'), borderRadius:wp('10%'), backgroundColor: ApplicationStyles.smokeBackground.color}}
+                      style={{right:0, borderRadius:wp('10%'), backgroundColor: ApplicationStyles.smokeBackground.color}}
                       iconColor={ApplicationStyles.disabledColor.color}  />
+                    }
+                    </View>
+                    <Text style={[ApplicationStyles.fontStyles.caption, { flex: 1 }]}>
+                      @{userInfo.userName}
+                    </Text>
+                    <Text style={[ApplicationStyles.fontStyles.caption, { flex: 1 }]}>
+                      {CommonFunctions.getFollowerCount(userInfo.followerCount)} { CommonFunctions.getPluralString('Follower', userInfo.followerCount)}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>  
           </View>
 
           <View style={[styles.sectionContainer, styles.tabContainer]}>
@@ -214,7 +305,7 @@ class Profile extends Component {
             </View>
             
 
-          <View style={[styles.sectionContainer,{flex:1, padding: wp('3%')} ]}>
+          {/* <View style={[styles.sectionContainer,{flex:1, padding: wp('3%')} ]}>
             <Text style={{ ...ApplicationStyles.fontStyles.body1, textAlign: 'center'}}>This month's handouts</Text>
             <LineChart
               style={{ height: 200 }}
@@ -235,30 +326,7 @@ class Profile extends Component {
                     contentInset={{ left: 10, right: 10 }}
                     svg={{ fontSize: 10, fill: 'black' }}
                 />
-          </View>
-          {/* {profile.role ==='user' ? <View style={[styles.sectionContainer, ]}>
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('Followings')} leftLabel='Followings' />
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='My Donations' />
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='Recurring Payments' />
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} leftLabel='Stats' />
-              <MenuItem leftLabel='Logout' onPress={logoutInit}/>
-            </View>
-            :<View style={[styles.sectionContainer, { marginBottom: hp('2%') }]}>
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('OrgInfo')} leftLabel='Organization Info' />
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('PoSlider')} leftLabel='Carousel' />
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='Posts' />
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='Events' />
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='Jobs' />
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='Shop' />
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='Stats' />
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations', {forPo: true})} leftLabel='Donations' />
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('MyDonations')} leftLabel='Recurring Donations' />
-              <MenuItem rightIcon={{name: 'ios-arrow-forward', family: 'Ionicons'}} onPress={()=>navigation.navigate('AddBankAccount')} leftLabel='Bank details' />
-              <MenuItem leftLabel='Logout' onPress={logoutInit} />
-
-            </View>
-            } */}
-
+          </View> */}
         </ScrollView>
         )}
 

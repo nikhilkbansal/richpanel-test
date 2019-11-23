@@ -85,7 +85,14 @@ class Event extends Component {
     userPicture={item.userId.picture}
     onUserClick={()=>this.props.navigation.navigate('NgoProfile',{poUserId:item.userId._id})}
     onViewComments={()=>this.props.navigation.navigate('Comment',{itemId:item._id, itemType:'event'})}
-    onDonatePress={()=>this.props.navigation.navigate('Donate',{paymentMeta:{_id:item._id, txType:'userToDirectPO'}})}
+    onRepostUserClick={()=>this.props.navigation.navigate('NgoProfile',{poUserId:item.repostOf && item.repostOf.userId._id})}
+    onDonatePress={()=>this.props.navigation.navigate('Donate',{
+      paymentMeta:{
+        _id: item.isRepost ? item.repostOf._id : item._id,
+        poUserId: item.isRepost ? item.repostOf.userId._id : item.userId._id,
+        txType:'userToDirectPO'
+      }
+    })}
     {...item}
     />;
 

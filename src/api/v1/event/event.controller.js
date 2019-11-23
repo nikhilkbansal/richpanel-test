@@ -94,7 +94,7 @@ exports.getHomePageEvents = async (req, res, next) => {
       const shares = await Share.getShares({ itemId: event._id, userId: user._id });
       return {
         comment,
-        ...event.toObject(),
+        ...event,
         ...eventsCount,
         howUserReacted,
         sharesCount: shares.length,

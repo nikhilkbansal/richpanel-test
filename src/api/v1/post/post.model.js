@@ -81,8 +81,42 @@ postSchema.statics = {
     const options = omitBy({
       _id, userId, title, $text, $or,
     }, isNil);
+    console.log(options);
+    let separateTextCondi = [];
+    if (options.$text) {
+      separateTextCondi = [{
+        $match: { $text: options.$text },
+      }];
+      delete options.$text;
+    }
+
+    if (options.userId && typeof options.userId === 'string') {
+      options.userId = mongoose.Types.ObjectId(options.userId);
+    }
+    if (options._id && typeof options._id === 'string') {
+      options._id = mongoose.Types.ObjectId(options._id);
+    }
+
+    const optionsForRepost = { ...options };
+    delete optionsForRepost.$or;
+
+    const repostOfCondition = {};
+    if (options.$or) {
+      repostOfCondition.$or = [{ 'repostOf.campaignEndDate': { $gte: new Date() } },
+        { 'repostOf.campaignEndDate': { $exists: false } }];
+    }
+
+
     const posts = await this.aggregate([
-      { $match: options },
+      ...separateTextCondi,
+      {
+        $match: {
+          $or: [
+            { ...options, isRepost: false },
+            { isRepost: true, ...optionsForRepost },
+          ],
+        },
+      },
       {
         $lookup: {
           from: 'users', localField: 'userId', foreignField: '_id', as: 'userId',
@@ -95,9 +129,35 @@ postSchema.statics = {
       },
       { $unwind: '$userId' },
       { $unwind: '$repostOf' },
+      {
+        $lookup: {
+          from: 'users', localField: 'repostOf.userId', foreignField: '_id', as: 'repostOf.userId',
+        },
+      },
+      { $unwind: '$repostOf.userId' },
+      {
+        $match: {
+          $or: [
+            { isRepost: false },
+            { isRepost: true, ...repostOfCondition },
+          ],
+        },
+      },
+      // {
+      //   "$project": {
+      //     "_id": 1,
+      //     "campId": 1,
+      //     "articleId": 1,
+      //     "campaign._id": 1,
+      //     "campaign.clientid": 1,
+      //     "campaign.client._id": 1,
+      //     "campaign.client.username": 1
+      //   }
+      // },
       { $skip: Number(skip) },
       { $limit: perPage },
     ]).exec();
+
     // const posts = await this.find(options).sort({ createdAt: -1 })
     //   .skip(parseInt(skip, 10))
     //   .limit(perPage)
@@ -110,7 +170,7 @@ postSchema.statics = {
     //     },
     //   })
     //   .exec();
-    console.log('posts', posts);
+    console.log('posdsts', posts);
     return posts.map((post) => {
       if (post.isRepost && post.repostOf) {
         post.title = post.repostOf.title;

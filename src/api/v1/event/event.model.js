@@ -72,8 +72,41 @@ eventSchema.statics = {
     const options = omitBy({
       _id, userId, title, $text, endTime,
     }, isNil);
+
+    let separateTextCondi = [];
+    if (options.$text) {
+      separateTextCondi = [{
+        $match: { $text: options.$text },
+      }];
+      delete options.$text;
+    }
+
+    if (options._id && typeof options._id === 'string') {
+      options._id = mongoose.Types.ObjectId(options._id);
+    }
+
+    if (options.userId && typeof options.userId === 'string') {
+      options.userId = mongoose.Types.ObjectId(options.userId);
+    }
+
+    const optionsForRepost = { ...options };
+    delete optionsForRepost.endTime;
+
+    const repostOfCondition = {};
+    if (options.endTime) {
+      repostOfCondition['repostOf.endTime'] = options.endTime;
+    }
+
     const posts = await this.aggregate([
-      { $match: options },
+      ...separateTextCondi,
+      {
+        $match: {
+          $or: [
+            { ...options, isRepost: false },
+            { isRepost: true, ...optionsForRepost },
+          ],
+        },
+      },
       {
         $lookup: {
           from: 'users', localField: 'userId', foreignField: '_id', as: 'userId',
@@ -86,6 +119,20 @@ eventSchema.statics = {
       },
       { $unwind: '$userId' },
       { $unwind: '$repostOf' },
+      {
+        $lookup: {
+          from: 'users', localField: 'repostOf.userId', foreignField: '_id', as: 'repostOf.userId',
+        },
+      },
+      { $unwind: '$repostOf.userId' },
+      {
+        $match: {
+          $or: [
+            { isRepost: false },
+            { isRepost: true, ...repostOfCondition },
+          ],
+        },
+      },
       { $skip: Number(skip) },
       { $limit: perPage },
     ]).exec();

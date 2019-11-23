@@ -74,7 +74,8 @@ exports.repost = async (req, res, next) => {
 exports.list = async (req, res, next) => {
   try {
     const posts = await Post.list(req.query);
-    res.json(posts);
+    res
+      .json(posts);
   } catch (error) {
     next(error);
   }

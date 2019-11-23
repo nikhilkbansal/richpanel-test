@@ -87,7 +87,7 @@ exports.getSearch = async (req, res, next) => {
         const shares = await Share.getShares({ itemId: post._id, userId: user._id });
         return {
           comment,
-          ...post.toObject(),
+          ...post,
           ...postsCount,
           howUserReacted,
           sharesCount: shares.length,
@@ -99,9 +99,17 @@ exports.getSearch = async (req, res, next) => {
     if (type === 'event') {
       events = await Promise.map(events, async (event) => {
         const isFollowedByMe = await Follow.list({ followeeId: event.userId, followerId: user.id });
+        const postsCount = await Reaction.findReactionsCounts(event._id);
+        const howUserReacted = await Reaction.howUserReacted(user._id, event._id);
+        const comment = await Comment.list({ perPage: 1, itemId: event._id, itemType: 'event' });
+        const shares = await Share.getShares({ itemId: event._id, userId: user._id });
         return {
-          ...event.toObject(),
-          isFollowedByMe: isFollowedByMe.length > 0,
+          comment,
+          ...event,
+          ...postsCount,
+          howUserReacted,
+          sharesCount: shares.length,
+          isFollowed: isFollowedByMe.length > 0,
         };
       });
     }

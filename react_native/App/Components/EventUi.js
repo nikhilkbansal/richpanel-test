@@ -217,7 +217,7 @@ function EventUi
 // }
 
 ({
-  _id, title, description, isFollowed, files, userId, userName, isRepost, repostOf, comment, userPicture, onRepost, onUserClick, onViewComments, startTime, endTime, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
+  _id, title, description, isFollowed, files, userId, userName, isRepost, repostOf, comment, userPicture, onRepostUserClick, onRepost, onUserClick, onViewComments, startTime, endTime, onReactionRemovePress, onReactionPress, onSharePress, reactionsCount, followUnfollow, sharesCount, topThreeReactions, createdAt, campaignGoal, howUserReacted, onPress, containerStyle, theme, onDonatePress,
 }) {
   return (
     <View style={styles.container}>
@@ -294,13 +294,13 @@ function EventUi
         <View style={styles.subBody }>
           <Text style={[styles.body,isRepost?{marginBottom:0}:{}]} maxLength={wp('40%')}>
             <Text style={ApplicationStyles.fontStyles.body2}>
-              Reposted by {userName+' '} 
+              {userName+' '} 
             </Text>
             {description}
           </Text>
           { isRepost && <Text style={[styles.body]} maxLength={wp('40%')}>
-            <Text style={ApplicationStyles.fontStyles.body2}>
-              {repostOf.userId.name+' '} 
+            <Text style={ApplicationStyles.fontStyles.body2} onPress={onRepostUserClick}>
+            Reposted from {repostOf.userId.name+' '} 
             </Text>
             {repostOf.description}
           </Text>

@@ -113,9 +113,16 @@ class Post extends Component {
     onReactionPress={this.props.postReaction}
     onReactionRemovePress={this.props.removeReaction}
     userPicture={item.userId.picture}
-    onUserClick={()=>this.props.navigation.navigate('NgoProfile',{poUserId:item.userId._id})}
     onViewComments={()=>this.props.navigation.navigate('Comment',{itemId:item._id, itemType:'event'})}
-    onDonatePress={()=>this.props.navigation.navigate('Donate',{paymentMeta:{_id:item._id, txType:'userToDirectPO'}})}
+    onUserClick={()=>this.props.navigation.navigate(item.userId.role==='user'?'Profile':'NgoProfile',{poUserId:item.userId._id, userId:item.userId._id })}
+    onRepostUserClick={()=>item.repostOf && this.props.navigation.navigate(  item.repostOf.userId.role==='user'? 'Profile' :'NgoProfile',{poUserId:item.repostOf.userId._id, userId:item.repostOf.userId._id})}
+    onDonatePress={()=>this.props.navigation.navigate('Donate',{
+      paymentMeta:{
+        _id: item.isRepost ? item.repostOf._id : item._id,
+        poUserId: item.isRepost ? item.repostOf.userId._id : item.userId._id,
+        txType:'userToDirectPO'
+      }
+    })}
     {...item}
     />;
 
@@ -126,9 +133,16 @@ class Post extends Component {
     onReactionPress={this.props.postReaction}
     onReactionRemovePress={this.props.removeReaction}
     userPicture={item.userId.picture}
-    onUserClick={()=>this.props.navigation.navigate('NgoProfile',{poUserId:item.userId._id})}
     onViewComments={()=>this.props.navigation.navigate('Comment',{itemId:item._id, itemType:'post'})}
-    onDonatePress={()=>this.props.navigation.navigate('Donate',{paymentMeta:{_id:item._id, txType:'userToPOCampaign'}})}
+    onUserClick={()=>this.props.navigation.navigate(item.userId.role==='user'?'Profile':'NgoProfile',{poUserId:item.userId._id, userId:item.userId._id })}
+    onRepostUserClick={()=>item.repostOf && this.props.navigation.navigate(  item.repostOf.userId.role==='user'? 'Profile' :'NgoProfile',{poUserId:item.repostOf.userId._id, userId:item.repostOf.userId._id})}
+    onDonatePress={()=>this.props.navigation.navigate('Donate',{
+      paymentMeta:{
+        _id: item.isRepost ? item.repostOf._id : item._id,
+        poUserId: item.isRepost ? item.repostOf.userId._id : item.userId._id,
+        txType:'userToPOCampaign'
+      }
+    })}
     {...item}
     />;
 
