@@ -6,4 +6,5 @@ export const INITIAL_STATE = {
   profile: null,
   token: null,
   rememberMe: null,
+  deviceToken: null
 };

@@ -8,7 +8,7 @@ import CommonFunctions from '../Utils/CommonFunctions';
  * @param {*} files array of files or single file object
  * @param {*} extra extra fileds send to file upload api
  */
-async function UploadFiles(files, extra) {
+async function UploadFiles(files, extra = {}) {
   return new Promise(async (resolve, reject) => {
     try {
       const formData = CommonFunctions.createFormData(files, 'file', extra);

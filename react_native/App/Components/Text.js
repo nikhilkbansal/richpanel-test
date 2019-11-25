@@ -47,7 +47,7 @@ class Text extends React.Component {
       children, style, maxLength, ...props
     } = this.props;
     const { showHiddenText } = this.state;
-    const showMoreHide = maxLength && (typeof children === 'string' || typeof children[children.length-1]  === 'string') && (children.length > maxLength || (children && children[children.length-1].length > maxLength ) );
+    const showMoreHide = maxLength && children && (typeof children === 'string' || typeof children[children.length-1]  === 'string') && (children.length > maxLength || (children && children[children.length-1].length > maxLength ) );
     const showMoreButton = showMoreHide && !showHiddenText;
     const showHideButton = showMoreHide && showHiddenText;
     return (

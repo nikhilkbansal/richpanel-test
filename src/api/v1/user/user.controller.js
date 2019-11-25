@@ -4,6 +4,7 @@ const User = require('./user.model');
 const { handler: errorHandler } = require('../../middlewares/error');
 const APIError = require('../../utils/APIError');
 const { sendMail } = require('../../services/mailProviders');
+const { sendSms } = require('../../services/awsProviders');
 const uuidv4 = require('uuid/v4');
 const { sendGridForgotPassword } = require('../../../config/vars');
 
@@ -131,6 +132,25 @@ exports.remove = (req, res, next) => {
   user.remove()
     .then(() => res.status(httpStatus.NO_CONTENT).end())
     .catch(e => next(e));
+};
+
+
+exports.sendOtp = async (req, res, next) => {
+  try {
+    const { phone } = req.query;
+    const otp = Math.floor(100000 + (Math.random() * 900000));
+    console.log(otp);
+    const data = await sendSms({
+      Message: `${otp} is your OTP for phone number verification. \nRegards, \nHandout Team`,
+      MessageStructure: 'string',
+      PhoneNumber: phone,
+    });
+    console.log(data);
+    res.json({ otp });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
 };
 
 /**

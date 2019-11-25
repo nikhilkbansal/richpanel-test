@@ -242,7 +242,8 @@ class Profile extends Component {
   render() {
     const { navigation, profile, logoutInit } = this.props;
     const { recentPosts, isMe, userInfo, isFollowed } = this.state;
-    const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]
+    const realUserInfo = isMe ? profile : userInfo;
+    // const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation}      title="Profile" />
@@ -256,7 +257,7 @@ class Profile extends Component {
                 <AvatarImage
                   size={wp('14%')}
                   // containerStyle={styles.avatarImageContainer}
-                  source={{ uri: CommonFunctions.getFile(userInfo.picture, 'avatar', true) }}
+                  source={{ uri: CommonFunctions.getFile(realUserInfo.picture, 'avatar', true) }}
                 />
               </View>
               <View style={styles.nameContainer}>
@@ -264,7 +265,7 @@ class Profile extends Component {
                   <View style={styles.nameSubContainer}
                   >
                     <View style={styles.poNameContainer}>
-                    <Text style={styles.poName}>{userInfo.name}</Text>
+                    <Text style={styles.poName}>{realUserInfo.name}</Text>
                     {!isMe 
                     ? <Button
                       title={isFollowed ? "Unfollow" : "Follow"}
@@ -281,7 +282,7 @@ class Profile extends Component {
                     }
                     </View>
                     <Text style={[ApplicationStyles.fontStyles.caption, { flex: 1 }]}>
-                      @{userInfo.userName}
+                      @{realUserInfo.userName}
                     </Text>
                     <Text style={[ApplicationStyles.fontStyles.caption, { flex: 1 }]}>
                       {CommonFunctions.getFollowerCount(userInfo.followerCount)} { CommonFunctions.getPluralString('Follower', userInfo.followerCount)}

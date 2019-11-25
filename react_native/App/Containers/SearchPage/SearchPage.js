@@ -52,6 +52,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
   },
+  tabs: {flex:1,  backgroundColor:ApplicationStyles.grayishBackground.color , flexDirection:'row', justifyContent: 'space-around'},
+
 });
 
 
@@ -72,7 +74,8 @@ class SearchPage extends Component {
       welcomeModal: params && params.showWelcomeModal,
       postRecommendations: [],
       poRecommendations:[],
-      eventRecommendations: []
+      eventRecommendations: [],
+      activeTab: 'posts'
     };
     this.termRef = React.createRef();
     this.searchSection = this.searchSection.bind(this);
@@ -254,7 +257,7 @@ class SearchPage extends Component {
 
   render() {
     const { autoComplete, navigation, profile } = this.props;
-    const { selectedTab, postRecommendations, welcomeModal, poRecommendations, eventRecommendations, term } = this.state;
+    const { selectedTab, postRecommendations, welcomeModal, poRecommendations, eventRecommendations, term, activeTab } = this.state;
     const searchResultExist = (autoComplete.posts && autoComplete.posts.length > 0)
     || (autoComplete.events && autoComplete.events.length > 0)
     || (autoComplete.ngos && autoComplete.ngos.length > 0);
@@ -338,7 +341,7 @@ class SearchPage extends Component {
             height: hp('5.5%')
             }}>
 
-            {['POSTS', 'EVENTS', 'SHOP', 'PO'].map((o)=><Button 
+            {['POST', 'EVENT', 'PO', 'USER'].map((o)=><Button 
             style={{
               flex:1,
               borderBottomWidth: wp('0.5%'),
@@ -448,6 +451,24 @@ class SearchPage extends Component {
             marginBottom: hp('2%'),
           }}
           >
+             {/* <View   style={styles.tabs}>
+                <Button title='PO' onPress={()=>this.setActiveTab('shop')}
+                  buttonWrapperStyle={{  height: '100%',  margin:0,padding:0, paddingVertical: hp('0.7%')}}
+                  style={[styles.scrollButton,activeTab === 'shop' ? activeTabStyle : '']}
+                  titleStyle={[ ApplicationStyles.fontStyles.button,{borderBottomColor:ApplicationStyles.grayishBackground.color, color: ApplicationStyles.darkColor.color,textAlign:'center'},activeTab === 'shop' ? activeTabLabelStyle:"",]} />
+                <Button title='USER' onPress={()=>this.setActiveTab('shop')}
+                  buttonWrapperStyle={{  height: '100%',  margin:0,padding:0, paddingVertical: hp('0.7%')}}
+                  style={[styles.scrollButton,activeTab === 'shop' ? activeTabStyle : '']}
+                  titleStyle={[ ApplicationStyles.fontStyles.button,{borderBottomColor:ApplicationStyles.grayishBackground.color, color: ApplicationStyles.darkColor.color,textAlign:'center'},activeTab === 'shop' ? activeTabLabelStyle:"",]} />
+               <Button title='POST' onPress={()=>this.setActiveTab('post')} 
+                  buttonWrapperStyle={{  height: '100%',  margin:0,padding:0, paddingVertical: hp('0.7%')}}
+                  style={[styles.scrollButton,activeTab === 'post' ? activeTabStyle : '']}
+                  titleStyle={[ ApplicationStyles.fontStyles.button,{borderBottomColor:ApplicationStyles.grayishBackground.color, color: ApplicationStyles.darkColor.color,textAlign:'center'},activeTab === 'post' ? activeTabLabelStyle:"",]} />
+                <Button title='EVENT' onPress={()=>this.setActiveTab('event')}
+                  buttonWrapperStyle={{  height: '100%',  margin:0,padding:0, paddingVertical: hp('0.7%')}}
+                  style={[styles.scrollButton,activeTab === 'event' ? activeTabStyle : '']}
+                  titleStyle={[ ApplicationStyles.fontStyles.button,{borderBottomColor:ApplicationStyles.grayishBackground.color, color: ApplicationStyles.darkColor.color,textAlign:'center'},activeTab === 'event' ? activeTabLabelStyle:"",]} />
+              </View> */}
             {autoComplete.ngos && autoComplete.ngos.length > 0 && this.searchSection('NGOs', 'ngo', autoComplete.ngos)}
             {autoComplete.posts && autoComplete.posts.length > 0 && this.searchSection('Posts', 'post', autoComplete.posts)}
             {autoComplete.events && autoComplete.events.length > 0 && this.searchSection('Events', 'event', autoComplete.events)}

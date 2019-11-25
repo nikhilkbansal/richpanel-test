@@ -98,7 +98,7 @@ class LoginScreen extends Component {
     } = this.state;
     return (
       <View style={styles.container}>
-        <NavigationBar {...navigation} showLeftSection iconsColor={ApplicationStyles.darkColor.color} containerStyle={{ backgroundColor: ApplicationStyles.lightBackground.color, elevation: 0 }} statusBarColor={ApplicationStyles.lightBackground.color} statusBarStyle="dark-content" />
+        <NavigationBar {...navigation} showLeftSection={false} iconsColor={ApplicationStyles.darkColor.color} containerStyle={{ backgroundColor: ApplicationStyles.lightBackground.color, elevation: 0 }} statusBarColor={ApplicationStyles.lightBackground.color} statusBarStyle="dark-content" />
         <KeyboardAwareScrollView style={styles.subContainer}>
           <View style={styles.firstSection}>
             <Text style={[ApplicationStyles.fontStyles.headline]}>Login</Text>

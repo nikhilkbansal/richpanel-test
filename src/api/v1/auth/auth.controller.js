@@ -38,7 +38,11 @@ async function generateTokenResponse(user, accessToken, refreshObjectId = null) 
  */
 exports.register = async (req, res, next) => {
   try {
-    const { email, userName } = req.body;
+    const {
+      email, userName, clientType, deviceToken,
+    } = req.body;
+    delete req.body.deviceToken;
+    delete req.body.clientType;
     const isEmailExisted = await User.findOne({ email });
     if (isEmailExisted) {
       throw new APIError({ message: 'The email you entered is already registered' });
@@ -55,7 +59,7 @@ exports.register = async (req, res, next) => {
     }
     const user = await (new User({ ...req.body, ...isActiveCondition })).save();
     const userTransformed = user.transform();
-    const token = await generateTokenResponse(user, user.token());
+    const token = await generateTokenResponse({ ...user, clientType, clientMeta: { deviceToken } }, user.token());
     res.status(httpStatus.CREATED);
     return res.json({ token, profile: { ...userTransformed, pictures: [] } });
   } catch (error) {
@@ -78,7 +82,7 @@ exports.login = async (req, res, next) => {
     delete req.body.clientType;
     const { user, accessToken } = await User.findAndGenerateToken(req.body);
     const tokenObject = await generateTokenResponse(
-      { ...user.toObject(), clientType, deviceToken },
+      { ...user.toObject(), clientType, clientMeta: { deviceToken } },
       accessToken,
     );
     console.log('tokenObject', tokenObject);

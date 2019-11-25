@@ -12,4 +12,10 @@ module.exports = {
       txStatus: Joi.string(),
     },
   },
+  update: {
+    body: {
+      transactionId: Joi.string(),
+      files: Joi.array(),
+    },
+  },
 };

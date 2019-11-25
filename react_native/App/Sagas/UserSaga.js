@@ -1,7 +1,7 @@
 import {
   all, call, put, takeLatest, select,
 } from 'redux-saga/effects';
-
+import { Platform } from 'react-native';
 import { delay } from 'redux-saga';
 import userActions, { UserTypes } from '../Stores/User/Actions';
 import postActions from '../Stores/Post/Actions';
@@ -20,10 +20,14 @@ export function* login({ payload }) {
       yield put(userActions.manageRememberMe(null));
     }
 
+    const userData = yield select(({ user }) => user);
+
     const payloadData = {
       method: 'post',
       data: {
         ...payload,
+        clientType: Platform.OS,
+        deviceToken: userData.deviceToken 
       },
       url: 'auth/login',
     };
@@ -63,10 +67,14 @@ export function* forgotPassword({ payload }) {
 
 export function* register({ payload }) {
   try {
+    const userData = yield select(({ user }) => user);
+
     const payloadData = {
       method: 'post',
       data: {
         ...payload,
+        clientType: Platform.OS,
+        deviceToken: userData.deviceToken 
       },
       url: 'auth/register',
     };
@@ -135,7 +143,7 @@ export function* logoutInit() {
       url: 'auth/logout',
     };
     yield call(httpClient, payloadData);
-    NavigationService.navigate('LogIn');
+    NavigationService.navigateAndReset('LogIn');
     yield put(userActions.logoutSuccess());
   } catch (e) {
   }

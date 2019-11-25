@@ -1,5 +1,5 @@
 const express = require('express');
-// const morgan = require('morgan');
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const compress = require('compression');
 const methodOverride = require('method-override');
@@ -10,7 +10,7 @@ const passport = require('passport');
 const routes = require('../api/v1/routes');
 const strategies = require('./passport');
 const error = require('../api/middlewares/error');
-const { whitelist } = require('./vars');
+const { whitelist, logs } = require('./vars');
 const _expressLogs = require('express-server-logs');
 const busboy = require('connect-busboy');
 
@@ -38,14 +38,14 @@ const xlogs = new _expressLogs(false);
 // app.use(ddosInstance.express);
 
 // request logging. dev: console | production: file
-// app.use(morgan(logs));
+app.use(morgan(logs));
 
 
 // parse body params and attache them to req.body
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// app.use(xlogs.logger);
+app.use(xlogs.logger);
 
 
 // gzip compression

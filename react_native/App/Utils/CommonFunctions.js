@@ -87,7 +87,7 @@ export default {
     return encodeURI(`${Config.API_URL}files/${id}?${params}`);
   },
 
-  createFormData(photo, fileKeyName, body) {
+  createFormData(photo, fileKeyName, body={}) {
     const data = new FormData();
 
     // For multiple files
@@ -95,7 +95,7 @@ export default {
       photo.forEach((item) => {
         // [] = For making it for multiple files upload
         data.append(`${fileKeyName}[]`, {
-          name: getFileNameFromUrl(item.path),
+          name: item.name || getFileNameFromUrl(item.path),
           type: item.mime,
           uri:
             Platform.OS === 'android' ? item.path : item.path.replace('file://', ''),
@@ -105,7 +105,7 @@ export default {
     // For single file
     } else {
       data.append(fileKeyName, {
-        name: getFileNameFromUrl(photo.path),
+        name: photo.name ||  getFileNameFromUrl(photo.path),
         type: photo.mime,
         uri:
           Platform.OS === 'android' ? photo.path : photo.path.replace('file://', ''),

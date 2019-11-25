@@ -68,7 +68,9 @@ class MyDonations extends Component {
   }
 
   transctionItem({item}){
+    const { profile, navigation } = this.props;
     const date = moment(item.createdAt);
+    const anotherUser =  item.receiverId && profile.id === item.receiverId._id ? item.senderId : item.receiverId
     return (
       <View style={{flex:1, flexDirection: 'row', marginVertical: ApplicationStyles.listItemsSpace, paddingVertical: hp('1%'),backgroundColor:ApplicationStyles.lightBackground.color,  }}>
         <View style={{flex:1}}>
@@ -79,11 +81,11 @@ class MyDonations extends Component {
         <View style={{flex:1, }}>
         <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}> </Text>
           <Text style={{...ApplicationStyles.fontStyles.title, textAlign:'center'}}>₹{item.amount}</Text>
-          <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>{item.receiverId && item.receiverId.name}</Text>
+          <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>{anotherUser && anotherUser.name}</Text>
         </View>
         <View style={{flex:1, justifyContent:'center'}}>
           <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}> </Text>
-          <Button title='VIEW' titleStyle={{...ApplicationStyles.fontStyles.button}}></Button>
+          <Button title='VIEW' titleStyle={{...ApplicationStyles.fontStyles.button}} onPress={()=>navigation.navigate('SingleDonation')}></Button>
           <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>No Attachment</Text>
         </View>
       </View>

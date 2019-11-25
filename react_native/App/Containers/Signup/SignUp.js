@@ -11,6 +11,9 @@ import {
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import UserActions from '../../Stores/User/Actions';
+import Toast from '../../Services/ToastService';
+import AxiosRequest from '../../Services/HttpRequestService';
+import Dialog, { DialogContent, SlideAnimation, DialogTitle } from 'react-native-popup-dialog';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: ApplicationStyles.lightBackground.color },
@@ -41,6 +44,9 @@ const styles = StyleSheet.create({
   signUpLinkContainer: {
     width: wp('80%'),   flexDirection: 'row', alignItems: 'center', alignContent: 'center', justifyContent: 'center',
   },
+  signUpContainer: { alignSelf: 'center' },
+  signUpButton: { ...ApplicationStyles.fontStyles.button, ...ApplicationStyles.primaryColor,}
+
 });
 
 
@@ -63,12 +69,21 @@ class SignUpScreen extends Component {
       userType: 'user',
       errors: {},
       inputError:[],
+      otpModalVisible: false,
+      orgOtp:'',
+      resendTimer:0
     };
     this.updateTextInput = this.updateTextInput.bind(this);
+    this.startTimer = this.startTimer.bind(this);
+    this.sendOtp = this.sendOtp.bind(this);
     this.emailRef = React.createRef();
     this.passwordRef = React.createRef();
     this.confirmPasswordRef = React.createRef();
     this.userNameRef = React.createRef();
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.timerInterval)
   }
 
   updateTextInput(key, value, error = false) {
@@ -104,6 +119,34 @@ class SignUpScreen extends Component {
     }
   }
 
+  async sendOtp() {
+    const { phone } = this.state;
+    try {
+      const data = await AxiosRequest({
+        method: 'get',
+        params: {
+          phone
+        },
+        url: 'users/sendOtp',
+      });
+      this.setState({ orgOtp: data.otp, otpModalVisible: true, resendTimer: 30 }, ()=>{
+        this.startTimer();
+      });
+    } catch (e) {
+      Toast('Some error occured. Please try again later');
+    }
+  }
+
+  startTimer(){
+    this.timerInterval = setInterval(()=>{
+      const { resendTimer } = this.state;
+      if(resendTimer > 0){
+        this.setState({resendTimer: resendTimer - 1})
+      }else{
+        clearInterval(this.timerInterval)
+      }
+    },1000)
+  }
 
   signUpInit() {
     const { registerInit } = this.props;
@@ -118,22 +161,83 @@ class SignUpScreen extends Component {
       this.setState({ errors: {} });
     }
 
+    this.sendOtp();
+
+  }
+
+  signUpComplete() {
+    const { registerInit } = this.props;
+    const {
+      email, password, userName, name, userType, phone, otp, orgOtp
+    } = this.state;
+
+    if(otp != orgOtp){
+      Toast('Incorrect OTP!');
+      return;
+    }
+    this.setState({   otpModalVisible: false });
+
     registerInit({
       email, password, userName, name, role: userType, phone 
     });
     return true;
   }
 
-
   render() {
     const {
-      email, password, userType, errors,
+      email, password, otpModalVisible, userType, errors, resendTimer
     } = this.state;
     const { navigation } = this.props;
-console.log('this.phoneRef',this.phoneRef);
+// console.log('this.phoneRef',this.phoneRef);
     return (
       <View style={styles.container}>
         <NavigationBar {...navigation} showLeftSection iconsColor={ApplicationStyles.darkColor.color} containerStyle={{ backgroundColor: ApplicationStyles.lightBackground.color, elevation: 0 }} statusBarColor={ApplicationStyles.lightBackground .color} statusBarStyle='dark-content' />
+        
+        <Dialog
+          visible={otpModalVisible}
+          dialogAnimation={new SlideAnimation({
+            slideFrom: 'bottom',
+          })}
+          onTouchOutside={()=>this.setState({otpModalVisible:false})}
+        >
+          <DialogContent style={{
+            width: wp('70%'),
+            maxHeight: hp('70%'),
+            justifyContent: 'center',
+            alignItems: 'center',
+            justifyItems: 'center',
+            alignContent: 'center',
+            paddingTop: hp('3%'),
+          }}
+          >
+             <TextInput
+              error={errors.name}
+              label={"Enter OTP"}
+              returnKeyType="done"
+              mask='[9] [9] [9]  [9] [9] [9]'
+              keyboardType='number-pad'
+              placeholder='X X X X X X'
+              containerStyle={{ width:'100%'}}
+              onChangeText={(text, error) => this.updateTextInput('otp', text, error)}
+            />
+
+            <Button
+              style={[styles.submitContainer, { width: '90%', marginTop: hp('3%')}]}
+              titleStyle={styles.submitTitle}
+              title="NEXT"
+              onPress={() => this.signUpComplete()}
+            />
+            <View style={[styles.signUpLinkContainer,{marginTop: hp('0.9%')}]}>
+        <Text style={{ ...ApplicationStyles.fontStyles.body1 }}>{resendTimer > 0 ? "You can resend in "+resendTimer+" sec" : "Didn't get any otp?"}</Text>
+              <Button
+                style={styles.signUpContainer}
+                titleStyle={styles.signUpButton}
+                title={resendTimer > 0 ? "" :" Resend"}
+                onPress={() =>resendTimer < 1 && this.sendOtp()}
+              />
+            </View>
+          </DialogContent>
+        </Dialog>
         <KeyboardAwareScrollView style={styles.subContainer}>
           <View style={styles.firstSection}>
             <Text style={ApplicationStyles.fontStyles.headline}>Signup</Text>
@@ -184,18 +288,19 @@ console.log('this.phoneRef',this.phoneRef);
               label="Email"
               placeholder='Email address'
               textInputRef={this.emailRef}
+              unique='email'
               returnKeyType="next"
               keyboardType='email-address'
-              onChangeText={text => this.updateTextInput('email', text)}
+              onChangeText={(text, error)  => this.updateTextInput('email', text, error)}
               onSubmitEditing={() => this.phoneRef.focus()}
             />
             <TextInput
               error={errors.phone}
               label="Phone no."
-              placeholder='Phone no. with country code e.g. 91 9xxxxxxx8'
+              placeholder='Phone no.'
               unique='phone'
               keyboardType='phone-pad'
-              mask='{+}[99] [99999] [9999999999]'
+              mask='{+91} [99999] [9999999999]'
               textInputRef={(ref)=>this.phoneRef=ref}
               returnKeyType="next"
               onChangeText={(text, error) => this.updateTextInput('phone', text, error)}

@@ -72,7 +72,7 @@ refreshTokenSchema.statics = {
       }, { new: true }).exec();
     } else {
       tokenObject = new RefreshToken({
-        token, userId, userEmail, expires, clientType: user.clientType, 'clientMeta.deviceToken': user.deviceToken,
+        token, userId, userEmail, expires, clientType: user.clientType, clientMeta: user.clientMeta,
       });
       tokenObject.save();
     }

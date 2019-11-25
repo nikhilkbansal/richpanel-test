@@ -218,10 +218,10 @@ class Payment extends Component {
   }
 
   render() {
-    const { navigation, navigation: { state: { params } } } = this.props;
+    const { navigation, profile, navigation: { state: { params } } } = this.props;
 
     const {
-      orderId, profile, orderAmount, cfToken, txSuccess, modalVisible, isOnce, showEndScreen, subscriptionAuthLink
+      orderId, orderAmount, cfToken, txSuccess, modalVisible, isOnce, showEndScreen, subscriptionAuthLink
     } = this.state;
     console.log('orderId, orderAmount, cfToken', this.state);
     return (

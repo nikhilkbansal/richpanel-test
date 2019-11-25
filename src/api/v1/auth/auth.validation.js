@@ -10,7 +10,7 @@ module.exports = {
       userName: Joi.string().required(),
       name: Joi.string().required(),
       clientType: Joi.string().valid('browser', 'ios', 'android').optional(),
-      deviceToken: Joi.string().optional(),
+      deviceToken: Joi.any().optional(),
     },
   },
 
@@ -20,7 +20,7 @@ module.exports = {
       userName: Joi.string().required(),
       password: Joi.string().required().max(128),
       clientType: Joi.string().valid('browser', 'ios', 'android').optional(),
-      deviceToken: Joi.string().optional(),
+      deviceToken: Joi.any().optional(),
     },
   },
 

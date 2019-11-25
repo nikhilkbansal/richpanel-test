@@ -47,6 +47,7 @@ const transactionSchema = new mongoose.Schema({
     ref: 'Post',
   },
   amount: Number,
+  files: Array,
   txStatus: String,
   txData: {},
   txType: {

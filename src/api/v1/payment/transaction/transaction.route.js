@@ -10,7 +10,8 @@ const router = express.Router();
 
 
 router.route('/')
-  .get(authorize(), validate(list), controller.list);
+  .get(authorize(), validate(list), controller.list)
+  .patch(authorize(), validate(list), controller.update);
 
 
 module.exports = router;

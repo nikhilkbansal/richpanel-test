@@ -1,5 +1,6 @@
 import { AppState } from 'react-native';
 import FCM, { FCMEvent } from 'react-native-fcm';
+import userActions from '../Stores/User/Actions';
 
 let notificationListener,
   refreshTokenListener;
@@ -19,10 +20,9 @@ export function pushNotificationInit(store) {
   FCM.requestPermissions(); // for iOS
   // FCM token on intial app load.
   FCM.getFCMToken().then((token) => {
-    console.log('token', token);
-    // if (token) {
-    //   store.dispatch(userActions.setDeviceToken(token));
-    // }
+    if (token) {
+      store.dispatch(userActions.patchUserInfo({ deviceToken: token}));
+    }
   });
 
   // Receive Notification in kill state, inactive state or bankground state.
@@ -37,10 +37,9 @@ export function pushNotificationInit(store) {
 
   // Fcm token may not be available on first load, catch it here
   refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (token) => {
-    console.log('token refresh', token);
-    // if (token) {
-    //   store.dispatch(userActions.setDeviceToken(token));
-    // }
+    if (token) {
+      store.dispatch(userActions.patchUserInfo({ deviceToken: token}));
+    }
   });
 }
 

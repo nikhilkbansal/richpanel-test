@@ -83,9 +83,9 @@ class Event extends Component {
     onRepost={()=>this.props.navigation.navigate('AddEvent',{itemId:item._id, isRepost: true})}
     onReactionRemovePress={this.props.removeEventReaction}
     userPicture={item.userId.picture}
-    onUserClick={()=>this.props.navigation.navigate('NgoProfile',{poUserId:item.userId._id})}
     onViewComments={()=>this.props.navigation.navigate('Comment',{itemId:item._id, itemType:'event'})}
-    onRepostUserClick={()=>this.props.navigation.navigate('NgoProfile',{poUserId:item.repostOf && item.repostOf.userId._id})}
+    onUserClick={()=>this.props.navigation.navigate(item.userId.role==='user'?'Profile':'NgoProfile',{poUserId:item.userId._id, userId:item.userId._id })}
+    onRepostUserClick={()=>item.repostOf && this.props.navigation.navigate(  item.repostOf.userId.role==='user'? 'Profile' :'NgoProfile',{poUserId:item.repostOf.userId._id, userId:item.repostOf.userId._id})}
     onDonatePress={()=>this.props.navigation.navigate('Donate',{
       paymentMeta:{
         _id: item.isRepost ? item.repostOf._id : item._id,

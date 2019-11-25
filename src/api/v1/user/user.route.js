@@ -12,6 +12,7 @@ const {
   resetPassword,
   preferences,
   exists,
+  sendOtp,
 
 } = require('./user.validation');
 
@@ -100,6 +101,10 @@ router
 router
   .route('/exists')
   .get(validate(exists), controller.exists);
+
+router
+  .route('/sendOtp')
+  .get(validate(sendOtp), controller.sendOtp);
 
 
 router

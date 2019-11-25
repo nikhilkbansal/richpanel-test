@@ -8,10 +8,10 @@ import { createReducer } from 'reduxsauce';
 import { INITIAL_STATE } from './InitialState';
 import { UserTypes } from './Actions';
 
-export const putUserInfo = (state, { payload }) => ({ ...payload });
+export const putUserInfo = (state, { payload }) => ({ rememberMe: state.rememberMe , deviceToken: state.deviceToken, ...payload });
 export const patchUserInfo = (state, { payload }) => ({ ...state, ...payload });
 export const manageRememberMe = (state, { payload }) => ({ ...state, rememberMe: payload });
-export const logoutSuccess = state => ({ ...INITIAL_STATE, rememberMe: { ...state.rememberMe } });
+export const logoutSuccess = state => ({ ...INITIAL_STATE, rememberMe: state.rememberMe , deviceToken: state.deviceToken });
 
 /**
  * @see https://github.com/infinitered/reduxsauce#createreducer

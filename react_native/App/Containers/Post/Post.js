@@ -87,8 +87,8 @@ class Post extends Component {
     onReactionPress={this.props.postReaction}
     onReactionRemovePress={this.props.removeReaction}
     userPicture={item.userId.picture}
-    onUserClick={()=>this.props.navigation.navigate(item.userId.role==='user'?'Profile':'NgoProfile',{poUserId:item.userId._id, userId:item.userId._id })}
     onViewComments={()=>this.props.navigation.navigate('Comment',{itemId:item._id, itemType:'post'})}
+    onUserClick={()=>this.props.navigation.navigate(item.userId.role==='user'?'Profile':'NgoProfile',{poUserId:item.userId._id, userId:item.userId._id })}
     onRepostUserClick={()=>item.repostOf && this.props.navigation.navigate(  item.repostOf.userId.role==='user'? 'Profile' :'NgoProfile',{poUserId:item.repostOf.userId._id, userId:item.repostOf.userId._id})}
     onDonatePress={()=>this.props.navigation.navigate('Donate',{
       paymentMeta:{

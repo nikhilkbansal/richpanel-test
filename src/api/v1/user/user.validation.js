@@ -80,4 +80,9 @@ module.exports = {
       userName: Joi.string(),
     },
   },
+  sendOtp: {
+    query: {
+      phone: Joi.string().required(),
+    },
+  },
 };

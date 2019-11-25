@@ -1,5 +1,6 @@
 const moment = require('moment-timezone');
 const { Transaction } = require('../transaction/transaction.model');
+const APIError = require('../../../utils/APIError');
 
 function numToOrdinal(n) {
   switch (n) {
@@ -50,6 +51,23 @@ exports.list = async (req, res, next) => {
     });
 
     res.json(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.update = async (req, res, next) => {
+  try {
+    const { transactionId, files } = req.body;
+    const transaction = await Transaction.findOne({ _id: transactionId });
+    if (!transaction) {
+      throw new APIError({ message: 'Transaction not found' });
+    }
+
+    transaction.files = files;
+    await transaction.save();
+
+    res.json({});
   } catch (error) {
     next(error);
   }
