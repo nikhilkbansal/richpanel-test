@@ -1,6 +1,10 @@
 const express = require('express');
 const controller = require('./files.controller');
+const validate = require('express-validation');
 const { authorize } = require('../../middlewares/auth');
+const {
+  list,
+} = require('./files.validation');
 
 const router = express.Router();
 
@@ -23,6 +27,7 @@ router
    * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users can create the data
    * @apiError (Forbidden 403)     Forbidden        Only admins can create the data
    */
+  .get(authorize(), validate(list), controller.list)
   .post(authorize(), controller.create);
 
 router

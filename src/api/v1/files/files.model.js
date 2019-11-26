@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { omitBy, isNil } = require('lodash');
 
 /**
  * Files Schema
@@ -10,7 +11,7 @@ const filesSchema = new mongoose.Schema({
   isTemp: { type: Boolean, default: false },
   tempLocation: { type: String },
   fileOriginalName: { type: String },
-  fileType: { type: String, default: 'image', enum: ['video', 'image'] },
+  fileType: { type: String, default: 'image', enum: ['video', 'image', 'pdf'] },
   fileSize: { type: Number, default: 0 },
   fileMimeType: { type: String },
   fileExtension: { type: String },
@@ -40,7 +41,18 @@ filesSchema.method({
  * Statics
  */
 filesSchema.statics = {
-
+  async list({
+    skip = 0, perPage = 30, _id,
+  }, sort = { createdAt: -1 }) {
+    const options = omitBy({
+      _id,
+    }, isNil);
+    return this.find(options)
+      .sort(sort)
+      .skip(skip)
+      .limit(perPage)
+      .exec();
+  },
 };
 
 /**

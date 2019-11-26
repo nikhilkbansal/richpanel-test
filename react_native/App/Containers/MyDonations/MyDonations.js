@@ -13,6 +13,7 @@ import {
 } from '../../Components';
 import { Colors, FontSizes, ApplicationStyles } from '../../Theme';
 import AxiosRequest from '../../Services/HttpRequestService';
+import { CommonFunctions } from '../../Utils';
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: ApplicationStyles.smokeBackground.color },
@@ -79,14 +80,17 @@ class MyDonations extends Component {
           <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>{date.format('YYYY')}</Text>
         </View>
         <View style={{flex:1, }}>
-        <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}> </Text>
+        <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>{item.txData.orderId} </Text>
           <Text style={{...ApplicationStyles.fontStyles.title, textAlign:'center'}}>₹{item.amount}</Text>
           <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>{anotherUser && anotherUser.name}</Text>
         </View>
         <View style={{flex:1, justifyContent:'center'}}>
           <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}> </Text>
-          <Button title='VIEW' titleStyle={{...ApplicationStyles.fontStyles.button}} onPress={()=>navigation.navigate('SingleDonation')}></Button>
-          <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>No Attachment</Text>
+          <Button title='VIEW' titleStyle={{...ApplicationStyles.fontStyles.button}} onPress={()=>navigation.navigate('SingleDonation', {donation: item})}></Button>
+          <Text style={{...ApplicationStyles.fontStyles.caption, textAlign:'center'}}>
+          {CommonFunctions.numberToReadable(item.files.length)}
+            {' '}
+            {CommonFunctions.getPluralString('Attachment', item.files.length)} </Text>
         </View>
       </View>
     )

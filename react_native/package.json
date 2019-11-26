@@ -48,6 +48,8 @@
     "react-native-document-picker": "^3.2.4",
     "react-native-draggable-flatlist": "1.1.9",
     "react-native-fcm": "16.2.4",
+    "react-native-file-viewer": "^1.0.15",
+    "react-native-fs": "^2.13.2",
     "react-native-gesture-handler": "1.0.5",
     "react-native-google-autocomplete": "0.1.7",
     "react-native-image-crop-picker": "0.24.1",

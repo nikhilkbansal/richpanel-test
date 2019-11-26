@@ -38,7 +38,7 @@ exports.saveTransaction = async (req, res, next) => {
       postId, orderId, receiverId, txType, txData,
     } = req.body;
 
-    const post = Post.findById(postId);
+    const post = await Post.findById(postId);
     const orderDetail = await CashFree.getOrderDetails({
       orderId,
     });
@@ -54,7 +54,7 @@ exports.saveTransaction = async (req, res, next) => {
       receiverId: receiverId || post.userId,
       amount: parseFloat(orderDetail.details.orderAmount),
       txStatus: _.camelCase(orderDetail.details.orderStatus),
-      txData: JSON.parse(txData),
+      txData: JSON.parse(JSON.parse(txData)),
       txType,
     });
 

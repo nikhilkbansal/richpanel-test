@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const mongoose = require('mongoose');
 const universalFunctions = require('../../utils/universalFunctions');
+const APIError = require('../../utils/APIError');
 
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffmpeg = require('fluent-ffmpeg');
@@ -19,6 +20,16 @@ async function mkDir(folderPath) {
     await asyncFsMkdir(folderPath, { mode: '0777', recursive: true });
   }
 }
+
+exports.list = async (req, res, next) => {
+  try {
+    const { ids } = req.query;
+    const files = await Files.list({ _id: { $in: ids } });
+    res.json(files);
+  } catch (e) {
+    next(e);
+  }
+};
 
 /**
  * Add new file
@@ -40,13 +51,21 @@ exports.create = async (req, res, next) => {
     // });
 
     busboy.on('file', async (fieldname, file, filename, encoding, mimetype) => {
-      const fileType = mimetype.includes('video/') ? 'video' : 'image';
+      if (!mimetype.includes('video/') && !mimetype.includes('application/pdf') && !mimetype.includes('image/')) {
+        next(new APIError({ message: 'Unsupported file format' }));
+        return;
+      }
+
+      let fileType = mimetype.includes('video/') ? 'video' : 'image';
+      fileType = mimetype.includes('application/pdf') ? 'pdf' : fileType;
+
       const userData = req.user;
       const folderPath = path.join(__dirname, `../../../../cdn/${userData.id}`);
       console.log('filename', filename);
       let extension = path.extname(filename); // i.e. .png
       extension = extension || '.png';
-      const mongoObjectId = `${mongoose.Types.ObjectId()}__${fileType === 'video' ? 'vv' : 'ii'}`;
+      // eslint-disable-next-line no-nested-ternary
+      const mongoObjectId = `${mongoose.Types.ObjectId()}__${fileType === 'video' ? 'vv' : fileType === 'image' ? 'ii' : 'pdf'}`;
       currentUploadingFile = mongoObjectId;
 
       const customeFileName = mongoObjectId + extension;
@@ -154,6 +173,13 @@ exports.getFile = async (req, res, next) => {
 
         // Get the re sized image
         universalFunctions.resizeImage(filePath, format, Number(width), Number(height)).pipe(res);
+      } else if (file.fileType === 'pdf') {
+        res.type('application/pdf');
+        const head = {
+          'Content-Type': 'application/pdf',
+        };
+        res.writeHead(200, head);
+        fs.createReadStream(filePath).pipe(res);
       } else {
       // handle video. see here to know more https://medium.com/@daspinola/video-stream-with-node-js-and-html5-320b3191a6b6
         const stat = fs.statSync(filePath);

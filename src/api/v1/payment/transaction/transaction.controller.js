@@ -59,6 +59,7 @@ exports.list = async (req, res, next) => {
 exports.update = async (req, res, next) => {
   try {
     const { transactionId, files } = req.body;
+    console.log('req.body', req.body);
     const transaction = await Transaction.findOne({ _id: transactionId });
     if (!transaction) {
       throw new APIError({ message: 'Transaction not found' });

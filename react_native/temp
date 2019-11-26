@@ -4,6 +4,7 @@ Some bugs or enhancements
 3. notify url for cashfree if something wrong happens
 4. perPage=100 while fetching transactions in subsctions
 5. OTP is not secure, returning OTP from API 
+6. file upload enable only specific video and image format
 
 
 

@@ -76,8 +76,9 @@ transactionSchema.statics = {
     }, isNil);
     return this.find(options).sort(sort)
       .skip(skip)
-      .populate('senderId', 'name userName _id picture')
-      .populate('receiverId', 'name userName _id picture')
+      .populate('senderId', 'name userName _id picture role')
+      .populate('receiverId', 'name userName _id picture poInfo role')
+      .populate('postId', 'title _id')
       .limit(perPage)
       .exec();
   },

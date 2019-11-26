@@ -373,7 +373,7 @@ class NgoProfile extends Component {
                   flex: 1,
                   alignItems:'center'
                 }}
-                onPress={()=>navigation.navigate('Donate', {paymentMeta:{poId: poData.id, txType: 'userToDirectPO'}, txType:'userToDirectPO'})}
+                onPress={()=>navigation.navigate('Donate', {paymentMeta:{poUserId: poData.id, txType: 'userToDirectPO'}, txType:'userToDirectPO'})}
                 iconSize={wp('6.2%')}
                 containerStyle={{ flex: 1 }}
                 buttonWrapperStyle={{

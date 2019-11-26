@@ -3,6 +3,8 @@ package com.handout;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.vinzscam.reactnativefileviewer.RNFileViewerPackage;
+import com.rnfs.RNFSPackage;
 import io.github.elyx0.reactnativedocumentpicker.DocumentPickerPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.github.yamill.orientation.OrientationPackage;
@@ -51,6 +53,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFileViewerPackage(),
+            new RNFSPackage(),
             new DocumentPickerPackage(),
             new LinearGradientPackage(),
             new OrientationPackage(),

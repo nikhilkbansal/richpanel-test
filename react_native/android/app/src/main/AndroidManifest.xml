@@ -20,7 +20,16 @@
       tools:node="replace"
       android:theme="@style/AppTheme"
       android:windowSoftInputMode="adjustPan">
-      
+      <provider
+		android:name="com.vinzscam.reactnativefileviewer.FileProvider"
+		android:authorities="${applicationId}.provider"
+		android:exported="false"
+		android:grantUriPermissions="true">
+		<meta-data
+			android:name="android.support.FILE_PROVIDER_PATHS"
+			android:resource="@xml/file_viewer_provider_paths"
+		/>
+	</provider>
       <meta-data
           android:name="com.google.android.geo.API_KEY"
           android:value="AIzaSyA9aWctXh_G2dXxkSd-PVSWfjqjUigYCkI" />

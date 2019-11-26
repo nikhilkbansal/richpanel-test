@@ -8,6 +8,8 @@ pod 'GoogleMaps', '= 2.0.1'
 
 
 # Add new pods below this line
+pod 'RNFS', :path => '../node_modules/react-native-fs'
+
 pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
 
 pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
