@@ -7,6 +7,7 @@ const httpStatus = require('http-status');
 const _ = require('lodash');
 const moment = require('moment');
 const { Transaction, Beneficiary } = require('../transaction/transaction.model');
+const notification = require('../../notification/notification.controller');
 
 exports.getCfToken = async (req, res, next) => {
   try {
@@ -48,7 +49,7 @@ exports.saveTransaction = async (req, res, next) => {
       await Post.updateRaisedMoney(postId, parseFloat(orderDetail.details.orderAmount));
     }
 
-    await Transaction.add({
+    const txn = await Transaction.add({
       senderId: user._id,
       postId: postId || null,
       receiverId: receiverId || post.userId,
@@ -56,6 +57,17 @@ exports.saveTransaction = async (req, res, next) => {
       txStatus: _.camelCase(orderDetail.details.orderStatus),
       txData: JSON.parse(JSON.parse(txData)),
       txType,
+    });
+
+    await notification.sendNotification({
+      type: 'newDonation',
+      receiverId: receiverId || post.userId,
+      senderId: user._id,
+      donationAmount: parseFloat(orderDetail.details.orderAmount),
+      meta: {
+        transactionId: txn._id,
+        postId: postId || null,
+      },
     });
 
     res.status(httpStatus.CREATED).json();
@@ -122,6 +134,17 @@ exports.createAndSubscribePlan = async (req, res, next) => {
       },
     });
     await subscription.save();
+
+    await notification.sendNotification({
+      type: 'newRecurringDonation',
+      receiverId: poId,
+      senderId: user._id,
+      donationAmount: parseFloat(amount),
+      meta: {
+        paymentSubscriptionId: subscription._id,
+      },
+    });
+
     res.json({
       subscriptionAuthLink: subscriptionResponse.authLink,
       subscriptionId: subscription._id,

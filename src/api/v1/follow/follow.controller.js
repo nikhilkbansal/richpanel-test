@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const User = require('../user/user.model');
 const follow = require('./follow.model');
+const notification = require('../notification/notification.controller');
 
 const { handler: errorHandler } = require('../../middlewares/error');
 
@@ -29,6 +30,13 @@ exports.follow = async (req, res, next) => {
     const { user } = req;
     const followerId = user._id;
     const followResult = await follow.add(followeeId, followerId);
+
+    await notification.sendNotification({
+      type: 'newFollower',
+      receiverId: followeeId,
+      senderId: user._id,
+    });
+
     res.status(httpStatus.CREATED);
     res.json({ isFollowed: followResult.isActive });
   } catch (error) {

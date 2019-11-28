@@ -1,6 +1,7 @@
 const moment = require('moment-timezone');
 const { Transaction } = require('../transaction/transaction.model');
 const APIError = require('../../../utils/APIError');
+const notification = require('../../notification/notification.controller');
 
 function numToOrdinal(n) {
   switch (n) {
@@ -58,6 +59,7 @@ exports.list = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
+    const { user } = req;
     const { transactionId, files } = req.body;
     console.log('req.body', req.body);
     const transaction = await Transaction.findOne({ _id: transactionId });
@@ -66,6 +68,17 @@ exports.update = async (req, res, next) => {
     }
 
     transaction.files = files;
+    if (files) {
+      await notification.sendNotification({
+        type: 'newDonationAttatchment',
+        receiverId: transaction.receiverId,
+        senderId: user._id,
+        meta: {
+          transactionId,
+        },
+      });
+    }
+
     await transaction.save();
 
     res.json({});

@@ -22,15 +22,7 @@ const fcm = new FCM(fcmServerKey);
  *   },
  * }
  */
-exports.sendFcmMessage = async function sendFcmMessage(message, userId = null) {
-  let to = '';
-  let tokens = null;
-  if (userId) { tokens = await RefreshToken.findOne({ userId, isLogout: false }); }
-
-  if (tokens && tokens.clientMeta && tokens.clientMeta.deviceToken) {
-    to = tokens.clientMeta.deviceToken;
-  }
-
-  return Promise.promisify(fcm.send)({ to, message });
+exports.sendFcmMessage = async function sendFcmMessage(message) {
+  return Promise.promisify(fcm.send)({ message });
 };
 

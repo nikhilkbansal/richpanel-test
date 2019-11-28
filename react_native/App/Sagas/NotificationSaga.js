@@ -3,9 +3,9 @@ import {
 } from 'redux-saga/effects';
 import httpClient from './HttpClient';
 import { Config } from '../Config';
-import notificaitonActions, { NotificationTypes } from '../Stores/Notification/Actions';
+import notificationActions, { NotificationTypes } from '../Stores/Notification/Actions';
 
-export function* getNotifications({ payload }) {
+export function* getNotifications({ payload = {} }) {
   try {
     const payloadData = {
       method: 'get',
@@ -16,9 +16,10 @@ export function* getNotifications({ payload }) {
       url: 'notification',
     };
     const data = yield call(httpClient, payloadData, 'default', !payload.skip);
-    yield put(notificaitonActions.gotComments(data));
+    yield put(notificationActions.pushNotifications(data));
   } catch (e) {
     // catch errors here
+    console.log('error',e)
   }
 }
 

@@ -40,7 +40,7 @@ class Notification extends Component {
     this.navListener.remove();
   }
 
-  _renderItem = ({item}) =><NotificationUi />;
+  _renderItem = ({item}) =><NotificationUi {...item} />;
 
   render() {
     const { email, password, checked } = this.state;
@@ -53,7 +53,7 @@ class Notification extends Component {
         ? <EmptyState message='There are no notifications to show'> 
           </EmptyState>
         :<FlatList
-          style={{paddingHorizontal: wp('3%')}}
+          // style={{paddingHorizontal: wp('3%')}}
           data={notifications} 
           renderItem={this._renderItem}
         />

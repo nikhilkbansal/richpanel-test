@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import _ from 'lodash';
 import { View, StyleSheet, Image } from 'react-native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import themeStyles from '../Theme/ApplicationStyles';
 import ApplicationStyles from '../Theme/ApplicationStyles';
-
+const colors = ['#F7ECFB','#ECF7FB', '#FBECF0', '#ECF0FB', '#FBECF7'];
+ 
 const styles = StyleSheet.create({
   container: { 
     borderColor:ApplicationStyles.primaryColor.color,
@@ -12,7 +14,8 @@ const styles = StyleSheet.create({
     justifyContent:"center",
     alignItems:'center',
     padding: wp('1%'),
-    overflow: 'hidden'
+    overflow: 'hidden',
+    backgroundColor: _.sample(colors)
    },
 });
 

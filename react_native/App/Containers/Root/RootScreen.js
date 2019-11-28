@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createAppContainer } from 'react-navigation';
+import { createAppContainer } from '@react-navigation/native';
 import NavigationService from 'App/Services/NavigationService';
 import { View, StatusBar } from 'react-native';
 // import ExampleScreen from 'App/Containers/Example/ExampleScreen';

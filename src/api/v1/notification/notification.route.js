@@ -4,7 +4,7 @@ const controller = require('./notification.controller');
 const { authorize } = require('../../middlewares/auth');
 // const { admin: ADMIN, loggedInUser: LOGGED_USER } = require('../../../config/vars');
 const {
-  getNotification
+  getNotification,
 } = require('./notification.validation');
 
 const router = express.Router();
@@ -12,7 +12,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(authorize(), validate(getNotification), controller.post)
+  .get(authorize(), validate(getNotification), controller.get);
 
 
 module.exports = router;

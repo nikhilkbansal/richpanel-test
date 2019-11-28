@@ -2,7 +2,10 @@ const httpStatus = require('http-status');
 // const { omit } = require('lodash');
 const Comment = require('./comment.model');
 const User = require('../user/user.model');
+const Post = require('../post/post.model');
+const Event = require('../event/event.model');
 const Reaction = require('../reaction/reaction.model');
+const notification = require('../notification/notification.controller');
 // const APIError = require('../../utils/APIError');
 // const { sendMail } = require('../../services/mailProviders');
 // const uuidv4 = require('uuid/v4');
@@ -11,14 +14,31 @@ const Reaction = require('../reaction/reaction.model');
 exports.post = async (req, res, next) => {
   try {
     const { user } = req;
-
+    const { repliedTo } = req.body;
     const commentSaved = new Comment({ ...req.body, userId: user._id });
+
     await commentSaved.save();
+    const commentObject = commentSaved.toObject();
+
+    const item = commentSaved.itemType === 'event'
+      ? await Event.findOne({ _id: commentSaved.itemId })
+      : await Post.findOne({ _id: commentSaved.itemId });
+
+    await notification.sendNotification({
+      type: repliedTo ? 'newCommentReply' : 'newComment',
+      receiverId: item.userId,
+      senderId: user._id,
+      meta: {
+        postId: commentSaved.itemType === 'post' ? commentSaved.itemId : undefined,
+        eventId: commentSaved.itemType === 'event' ? commentSaved.itemId : undefined,
+        commentId: commentObject._id,
+      },
+    });
+
     res.status(httpStatus.CREATED);
     res.json({
-      ...commentSaved.toObject(),
+      ...commentObject,
       userId: { name: user.name, picture: user.picture, _id: user._id },
-      replies: [],
       isAvailbleReplies: false,
       howUserReacted: false,
     });
@@ -26,6 +46,7 @@ exports.post = async (req, res, next) => {
     next(error);
   }
 };
+
 
 exports.likeUnlike = async (req, res, next) => {
   try {

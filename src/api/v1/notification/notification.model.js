@@ -2,21 +2,55 @@ const mongoose = require('mongoose');
 const { omitBy, isNil } = require('lodash');
 
 /**
- * Post Schema
+ * Notification Schema
  * @private
  */
-const notificationTypes = ['event', 'post', 'comment'];
+
+
+const notificationTypes = [
+  'newDonationAttatchment',
+  'newRecurringDonation',
+  'newDonation',
+  'newComment',
+  'newCommentReply',
+  'newFollower',
+];
 
 const notificationSchema = new mongoose.Schema({
-  userId: {
+  receiverId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  senderId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
   notification: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post',
-    required: true,
+    type: String,
+  },
+  meta: {
+    commentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
+    },
+    postId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post',
+    },
+    eventId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Event',
+    },
+    transactionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Transaction',
+    },
+    paymentSubscriptionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'PaymentSubscription',
+    },
   },
   type: {
     type: String,
@@ -43,7 +77,7 @@ notificationSchema.statics = {
     }, isNil);
     return this.find(options).sort(sort)
       .skip(skip)
-      .populate('userId', 'name _id picture')
+      .populate('receiverId', 'name _id picture role')
       .limit(perPage)
       .exec();
   },

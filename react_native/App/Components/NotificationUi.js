@@ -4,10 +4,15 @@ import { Image, View } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Text from './Text';
 import Button from './Button';
+import Icon from './Icon';
+import MenuDropdown from './MenuDropdown';
+import AvatarImage from './AvatarImage';
 import { Colors, ApplicationStyles } from '../Theme';
+import moment from 'moment';
+import { CommonFunctions } from '../Utils';
 
 function NotificationUi({
-  title, onPress, containerStyle, theme,
+  notification, createdAt, receiverId
 }) {
   return (
 
@@ -17,30 +22,39 @@ function NotificationUi({
       flexDirection: 'row',
       padding: wp('2%'),
       alignContent: 'center',
-      justifyContent: 'center',
-      margin: wp('1%'),
+      justifyContent: 'center', 
       marginVertical: hp('1%'),
       ...ApplicationStyles.elevationS,
+      paddingHorizontal: wp('3%')
     }}
+
     >
-      <Image
-        style={{
-          width: wp('14%'), height: wp('14%'), borderRadius: wp('7.5%'), alignSelf: 'center',
-        }}
-        source={require('../Assets/Images/child.jpeg')}
-      />
+      <AvatarImage source={ CommonFunctions.getFile( receiverId && receiverId.picture)} />
       <View style={{
-        flex: 1, paddingHorizontal: wp('2%'), justifyContent: 'space-between',
+        flex: 1, paddingHorizontal: wp('2%'), justifyContent:'space-around',
       }}
       >
-        <Text>
-          <Text style={{ ...ApplicationStyles.info, ...ApplicationStyles.primaryColor }}>Goonj</Text>
-         Rahul
-          <Text style={{ ...ApplicationStyles.info }}> replied you</Text>
-        </Text>
-        <Text size="h5">2 hours ago</Text>
+        
+        <Text style={{ ...ApplicationStyles.fontStyles.body1 }}>{notification}</Text>
+        <Text style={{...ApplicationStyles.fontStyles.caption}}>{moment(createdAt).fromNow() }</Text>
       </View>
-      <Button
+      <MenuDropdown
+            menuTitle={'Notification'}
+            containerStyle={{
+              width: wp('5%'),
+              backgroundColor:'red',
+            }}
+            buttonStyle={[{
+              width: wp('5%'),
+              alignItems: 'center',
+              overflow: 'hidden',
+            }]}
+            menus={[
+              { label: 'Report', func: () => {} }]}
+          > 
+            <Icon name="md-more" size={25} color={ApplicationStyles.darkColor.color} />
+          </MenuDropdown>
+      {/* <Button
         icon="md-more"
         iconSize={25}
         iconColor={ApplicationStyles.disabledColor.color}
@@ -55,7 +69,7 @@ function NotificationUi({
           alignItems: 'center',
           overflow: 'hidden',
         }}
-      />
+      /> */}
 
     </View>
   );
