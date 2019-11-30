@@ -6,7 +6,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath("com.android.tools.build:gradle:3.4.2")
 
 
         classpath 'com.google.gms:google-services:4.0.1' // google-services plugin
@@ -17,15 +17,23 @@ buildscript {
 
 allprojects {
   repositories {
-  mavenLocal()
-  jcenter()
-  google()
-  maven { url 'https://maven.google.com' }
-  maven { url "https://jitpack.io" }
-  maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "$rootDir/../node_modules/react-native/android"
-        }
+    mavenLocal()
+    maven {
+        url 'https://maven.google.com'
+    }
+    maven {
+        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+        url "$rootDir/../node_modules/react-native/android"
+    }
+
+    maven {
+        // Android JSC is installed from npm
+        url("$rootDir/../node_modules/jsc-android/dist")
+    }
+    google()
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://maven.google.com' }
+    jcenter()
 }
 }
 
@@ -50,10 +58,10 @@ subprojects {
 }
 
 ext {
-    buildToolsVersion = "28.0.3"
+   buildToolsVersion = "28.0.3"
     minSdkVersion = 19
     compileSdkVersion = 28
-    targetSdkVersion = 27
+    targetSdkVersion = 28
     supportLibVersion = "28.0.0"
     googlePlayServicesVersion = "11.8.0"
     androidMapsUtilsVersion = "0.5+"

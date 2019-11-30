@@ -283,3 +283,35 @@ exports.addPayoutBeneficiary = async (req, res, next) => {
     next(error);
   }
 };
+
+
+exports.requestTransfer = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { amount } = req.body;
+    const bene = await Beneficiary.findOne({ userId: user.id, status: 'active' });
+    const authorizePayout = await CashFree.authorizePayout();
+    const transferId = generateOrderId();
+
+    const response = await CashFree.requestTransfer({
+      beneId: bene.beneId,
+      amount,
+      transferId,
+      remarks: `${user.id} amount ${amount}`,
+    }, {
+      Authorization: `Bearer ${authorizePayout.data.token}`,
+    });
+
+    const txn = await Transaction.add({
+      receiverId: user._id,
+      amount: parseFloat(amount),
+      txStatus: response.status,
+      txData: JSON.parse(JSON.parse(response)),
+      txType: 'platformToPO',
+    });
+    res.json(txn);
+  } catch (error) {
+    console.log('error', error);
+    next(error);
+  }
+};

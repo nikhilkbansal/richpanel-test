@@ -20,6 +20,11 @@ module.exports = {
       bankId: Joi.string().required(),
     },
   },
+  requestTransfer: {
+    body: {
+      amount: Joi.number().required(),
+    },
+  },
   createAndSubscribePlan: {
     body: {
       poId: Joi.string().required(),

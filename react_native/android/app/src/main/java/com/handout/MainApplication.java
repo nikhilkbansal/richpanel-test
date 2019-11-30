@@ -1,7 +1,7 @@
 package com.handout;
 
 import android.app.Application;
-
+import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.vinzscam.reactnativefileviewer.RNFileViewerPackage;
 import com.rnfs.RNFSPackage;
@@ -23,66 +23,44 @@ import superinfotech.suraj.reactnativepayumoney.PayumoneyPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.microsoft.codepush.react.CodePush;
-import com.airbnb.android.react.lottie.LottiePackage;
 import com.facebook.react.ReactNativeHost;
-import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
+import com.facebook.react.ReactPackage; 
 import com.facebook.soloader.SoLoader;
+import java.lang.reflect.InvocationTargetException;
 import com.google.firebase.FirebaseApp;
 import androidx.multidex.MultiDex;
 import android.content.Context;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
-  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-
+  private final ReactNativeHost mReactNativeHost =
+      new ReactNativeHost(this) {
         @Override
         protected String getJSBundleFile() {
-        return CodePush.getJSBundleFile();
+          return CodePush.getJSBundleFile();
         }
-    
-    @Override
-    public boolean getUseDeveloperSupport() {
-      return BuildConfig.DEBUG;
-    }
 
-    @Override
-    protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new RNFileViewerPackage(),
-            new RNFSPackage(),
-            new DocumentPickerPackage(),
-            new LinearGradientPackage(),
-            new OrientationPackage(),
-            new KCKeepAwakePackage(),
-            new ReactVideoPackage(),
-            new RNGestureHandlerPackage(),
-            new RNScreensPackage(),
-            new ReanimatedPackage(),
-            new FIRMessagingPackage(),
-            new RNTextInputMaskPackage(),
-            new SvgPackage(),
-            new RNSharePackage(),
-            new MapsPackage(),
-            new PickerPackage(),
-            new PayumoneyPackage(),
-            new ImagePickerPackage(),
-            new VectorIconsPackage(),
-            new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
-            new LottiePackage()
-      );
-    }
+        @Override
+        public boolean getUseDeveloperSupport() {
+          return BuildConfig.DEBUG;
+        }
 
+        @Override
+        protected List<ReactPackage> getPackages() {
+          @SuppressWarnings("UnnecessaryLocalVariable")
+          List<ReactPackage> packages = new PackageList(this).getPackages();
+          // Packages that cannot be autolinked yet can be added manually here, for example:
+          // packages.add(new MyReactNativePackage());
+          return packages;
+        }
 
-    @Override
-    protected String getJSMainModuleName() {
-      return "index";
-    }
-  };
+        @Override
+        protected String getJSMainModuleName() {
+          return "index";
+        }
+      };
 
   @Override
   public ReactNativeHost getReactNativeHost() {
@@ -95,6 +73,7 @@ public class MainApplication extends Application implements ReactApplication {
     MultiDex.install(this);
   }
 
+
   @Override
   public void onCreate() {
     super.onCreate();
@@ -103,6 +82,33 @@ public class MainApplication extends Application implements ReactApplication {
       FirebaseApp.initializeApp(this);
     }
     catch (Exception e) {
+    }
+    initializeFlipper(this); // Remove this line if you don't want Flipper enabled
+  }
+
+  /**
+   * Loads Flipper in React Native templates.
+   *
+   * @param context
+   */
+  private static void initializeFlipper(Context context) {
+    if (BuildConfig.DEBUG) {
+      try {
+        /*
+         We use reflection here to pick up the class that initializes Flipper,
+        since Flipper library is not available in release mode
+        */
+        Class<?> aClass = Class.forName("com.facebook.flipper.ReactNativeFlipper");
+        aClass.getMethod("initializeFlipper", Context.class).invoke(null, context);
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      } catch (NoSuchMethodException e) {
+        e.printStackTrace();
+      } catch (IllegalAccessException e) {
+        e.printStackTrace();
+      } catch (InvocationTargetException e) {
+        e.printStackTrace();
+      }
     }
   }
 }

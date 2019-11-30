@@ -157,6 +157,10 @@ class Cashfree {
     return this.callApi('payout/v1/authorize', 'post', { ...params }, {}, 'InHeader', 'payout');
   }
 
+  requestTransfer(params, headers) {
+    return this.callApi('payout/v1/requestTransfer', 'post', { ...params }, headers, 'InHeader', 'payout');
+  }
+
   addBeneficiary(params, headers) {
     return this.callApi('payout/v1/addBeneficiary', 'post', { ...params }, headers, 'InHeader', 'payout');
   }

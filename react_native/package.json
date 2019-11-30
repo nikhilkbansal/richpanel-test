@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node --max-old-space-size=8192 node_modules/react-native/local-cli/cli.js start",
-    "test": "jest",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
     "adb-reverse": "adb reverse tcp:8081 tcp:8081",
     "menu": "adb shell input keyevent 82",
     "prettier-fix": "prettier --write **/*.js",
@@ -17,7 +18,8 @@
     "preBuildApk": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "buildApk": "cd android && ./gradlew assembleRelease",
     "code-push-keys": "code-push deployment ls help --displayKeys",
-    "postinstall": "jetifier &&  cp -Rf node_modules_fix/. node_modules"
+    "postinstall": "jetifier &&  cp -Rf node_modules_fix/. node_modules",
+    "lint": "eslint ."
   },
   "rnpm": {
     "assets": [
@@ -25,6 +27,8 @@
     ]
   },
   "dependencies": {
+    "@react-navigation/core": "3.5.0",
+    "@react-navigation/native": "3.6.2",
     "@shoutem/ui": "0.23.9",
     "add": "2.0.6",
     "apisauce": "0.15.2",
@@ -34,12 +38,11 @@
     "immutable": "3.8.2",
     "jetifier": "1.6.4",
     "lodash": "4.17.15",
-    "lottie-react-native": "2.5.10",
     "moment": "2.24.0",
     "or": "0.2.0",
     "prop-types": "15.6.1",
-    "react": "16.5.0",
-    "react-native": "0.57.1",
+    "react": "16.9.0",
+    "react-native": "0.61.5",
     "react-native-action-button": "2.8.5",
     "react-native-af-video-player": "0.2.1",
     "react-native-check-box": "2.1.7",
@@ -77,8 +80,6 @@
     "react-native-vector-icons": "6.1.0",
     "react-native-video": "5.0.2",
     "react-navigation": "4.0.10",
-    "@react-navigation/core": "3.5.0",
-    "@react-navigation/native": "3.6.2",
     "react-navigation-drawer": "2.3.1",
     "react-navigation-stack": "1.10.2",
     "react-navigation-tabs": "2.5.6",
@@ -91,11 +92,15 @@
     "yarn": "1.17.3"
   },
   "devDependencies": {
-    "@babel/core": "7.6.4",
-    "@babel/runtime": "7.6.3",
+    "@babel/core": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
+    "@react-native-community/eslint-config": "^0.0.5",
+    "babel-jest": "^24.9.0",
+    "eslint": "^6.5.1",
+    "jest": "^24.9.0",
+    "metro-react-native-babel-preset": "^0.56.0",
+    "react-test-renderer": "16.9.0",
     "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "23.2.0",
-    "eslint": "4.19.1",
     "eslint-config-airbnb": "17.1.0",
     "eslint-config-prettier": "2.9.0",
     "eslint-config-standard": "11.0.0",
@@ -107,11 +112,8 @@
     "eslint-plugin-react": "7.7.0",
     "eslint-plugin-react-native": "3.2.1",
     "eslint-plugin-standard": "3.0.1",
-    "jest": "23.3.0",
-    "metro-react-native-babel-preset": "0.45.0",
     "prettier": "1.11.1",
-    "react-native-rename": "2.2.2",
-    "react-test-renderer": "16.3.1"
+    "react-native-rename": "2.2.2"
   },
   "jest": {
     "preset": "react-native"

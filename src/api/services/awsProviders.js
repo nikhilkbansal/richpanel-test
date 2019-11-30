@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk');
 const { awsConfig } = require('../../config/vars');
 
+
 AWS.config = new AWS.Config();
 AWS.config.accessKeyId = awsConfig.accessKey;
 AWS.config.secretAccessKey = awsConfig.secretKey;
