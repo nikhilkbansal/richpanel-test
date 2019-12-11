@@ -12,7 +12,7 @@ exports.twitterReverse = async (req, res, next) => {
         consumer_secret: twitterConfig.consumerSecret,
       },
       form: {
-        oauth_callback: 'http://127.0.0.1:3000',
+        oauth_callback: 'https://salty-plains-79519.herokuapp.com',
       }
     }, (err, r, body) => {
       console.log("err", err, body);

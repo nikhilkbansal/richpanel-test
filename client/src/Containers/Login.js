@@ -20,7 +20,7 @@ import { LoaderContext } from '../LoaderContextManagement'
 import Fetch from '../Fetch'
 
 // async function twitterVerify (){
-//   const data =  await fetch('http://localhost:5000/v1/auth/twitter', {
+//   const data =  await fetch('https://salty-plains-79519.herokuapp.com/v1/auth/twitter', {
 //      method: 'POST',
 //      headers: {
 //        'Accept': 'application/json',
@@ -33,7 +33,7 @@ import Fetch from '../Fetch'
 //  }
 
 async function verifyTwitter (query, props, loader) {
-  const data = await Fetch('http://localhost:5000/v1/auth/twitter', loader,
+  const data = await Fetch('https://salty-plains-79519.herokuapp.com/v1/auth/twitter', loader,
     {
       body: JSON.stringify({ ...query })
     }, {}, false)
@@ -45,7 +45,7 @@ async function verifyTwitter (query, props, loader) {
 }
 
 async function twitterInit (loader) {
-  const data = await Fetch('http://localhost:5000/v1/auth/twitter/reverse', loader)
+  const data = await Fetch('https://salty-plains-79519.herokuapp.com/v1/auth/twitter/reverse', loader)
   window.location.href = 'https://api.twitter.com/oauth/authenticate?oauth_token=' + data.oauth_token
 }
 
