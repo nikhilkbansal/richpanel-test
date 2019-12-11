@@ -38,7 +38,7 @@ import Fetch from '../Fetch'
 import { LoaderContext } from '../LoaderContextManagement'
 
 async function getUserInfo (loader) {
-  const data = await Fetch('http://localhost:3002/v1/twitter/userInfo', loader, { method: 'GET' })
+  const data = await Fetch('http://localhost:5000/v1/twitter/userInfo', loader, { method: 'GET' })
   return data
 }
 
@@ -50,14 +50,14 @@ function logout (history, loader) {
 }
 
 async function getTweets (loader) {
-  const data = await Fetch('http://localhost:3002/v1/twitter/getTweets', loader, {
+  const data = await Fetch('http://localhost:5000/v1/twitter/getTweets', loader, {
     method: 'GET'
   })
   return data
 }
 
 async function postReplies (query, loader, setReply, setReplyTweet) {
-  const data = await Fetch('http://localhost:3002/v1/twitter/postReplies', loader, {
+  const data = await Fetch('http://localhost:5000/v1/twitter/postReplies', loader, {
     body: JSON.stringify({
       inReplyToStatusId: query.activeTweet.id_str,
       status: query.reply

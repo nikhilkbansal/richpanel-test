@@ -34,17 +34,21 @@ const app = express();
 
 // npm module for preventing ddos attack. See more https://www.npmjs.com/package/ddos
 // app.use(ddosInstance.express);
-app.use(express.static(path.join(__dirname, 'client/build')));
-
+// app.use(function(r,res,next){
+//   console.log('rrrrr before');
+//   next();
+// })
+app.use('/', express.static(path.join(__dirname, '../../client/build/')));
+// app.use(function(r,res,next){
+//   console.log('rrrrr after', path.join(__dirname, '../../client/build'));
+//   next();
+// })
 // request logging. dev: console | production: file
 app.use(morgan(logs));
-
 
 // parse body params and attache them to req.body
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-
 
 // gzip compression
 app.use(compress());

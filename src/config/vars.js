@@ -8,7 +8,7 @@ const defaultConfig = {
   admin: 'admin',
   loggedUser: '_loggedUser',
   env: process.env.NODE_ENV,
-  port: process.env.PORT || 3002,
+  port: process.env.PORT || 5000,
   jwtSecret: 'bA2xcjpf8y5aSUFsNB2qN5yymUBSs6es3qHoFpGkec75RCeBb8cpKauGefw5qy4',
   jwtExpirationInterval: 30,
   twitterConfig: {
