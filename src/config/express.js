@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const compress = require('compression');
@@ -33,6 +34,7 @@ const app = express();
 
 // npm module for preventing ddos attack. See more https://www.npmjs.com/package/ddos
 // app.use(ddosInstance.express);
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 // request logging. dev: console | production: file
 app.use(morgan(logs));
