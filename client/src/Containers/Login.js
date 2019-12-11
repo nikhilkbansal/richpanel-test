@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { withRouter, Link } from 'react-router-dom'
 import {
- Alert,
+  Alert,
   Container,
   Row,
   Col,
@@ -37,6 +37,11 @@ async function verifyTwitter (query, props, loader) {
     {
       body: JSON.stringify({ ...query })
     }, {}, false)
+
+  if (!data.headers.get('x-auth-token')) {
+    window.alert('Please try again later')
+    return
+  }
   window.localStorage.setItem('atkn', data.headers.get('x-auth-token'))
   // Wating for localStorage to set
   setTimeout(() => {
@@ -46,7 +51,11 @@ async function verifyTwitter (query, props, loader) {
 
 async function twitterInit (loader) {
   const data = await Fetch('https://salty-plains-79519.herokuapp.com/v1/auth/twitter/reverse', loader)
-  window.location.href = 'https://api.twitter.com/oauth/authenticate?oauth_token=' + data.oauth_token
+  if (data && data.oauth_token) {
+    window.location.href = 'https://api.twitter.com/oauth/authenticate?oauth_token=' + data.oauth_token
+  } else {
+    window.alert('Please try again later')
+  }
 }
 
 function Login (props) {
