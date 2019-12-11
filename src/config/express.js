@@ -11,12 +11,11 @@ const routes = require('../api/v1/routes');
 const strategies = require('./passport');
 const error = require('../api/middlewares/error');
 const { whitelist, logs } = require('./vars');
-const _expressLogs = require('express-server-logs');
-const busboy = require('connect-busboy');
 
 
 // const ddosInstance = new Ddos(ddosConfig);
 const corsOptions = {
+  exposedHeaders: ['x-auth-token'],
   origin(origin, callback) {
     if (!whitelist || whitelist.indexOf(origin) !== -1) {
       callback(null, true);
@@ -26,13 +25,11 @@ const corsOptions = {
   },
 };
 
-
 /**
 * Express instance
       * @public
           */
 const app = express();
-const xlogs = new _expressLogs(false);
 
 // npm module for preventing ddos attack. See more https://www.npmjs.com/package/ddos
 // app.use(ddosInstance.express);
@@ -45,7 +42,6 @@ app.use(morgan(logs));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(xlogs.logger);
 
 
 // gzip compression
@@ -63,10 +59,7 @@ app.use(cors(corsOptions));
 
 // enable authentication
 app.use(passport.initialize());
-app.use(busboy());
-passport.use('jwt', strategies.jwt);
-passport.use('facebook', strategies.facebook);
-passport.use('google', strategies.google);
+passport.use(strategies.twitter);
 
 // mount api v1 routes
 app.use('/v1', routes);
