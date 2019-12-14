@@ -36,3 +36,17 @@
     transform: rotate(360deg);
   }
 }
+
+.list-group-item.active{
+  color: #485155;
+  background-color: #ebf8fe;
+  border:none;
+  border-left: 4px solid #0d448b;
+}
+
+.navbar{
+  background-color: #0c458b!important;
+}
+body{
+  background-color:rgb(238, 239, 243);
+}

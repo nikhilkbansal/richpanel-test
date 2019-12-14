@@ -2,8 +2,10 @@ const moment = require('moment-timezone')
 const { jwtExpirationInterval, twitterConfig, jwtSecret } = require('../../../config/vars')
 const request = require('request')
 const jwt = require('jwt-simple')
+const { userActivityWebhook } = require('./../../../config/twitterWebhook')
 
 exports.twitterReverse = async (req, res, next) => {
+  console.log('abcbdvbkfdbvh')
   request.post({
     url: 'https://api.twitter.com/oauth/request_token',
     oauth: {
@@ -11,7 +13,7 @@ exports.twitterReverse = async (req, res, next) => {
       consumer_secret: twitterConfig.consumerSecret
     },
     form: {
-      oauth_callback: 'https://salty-plains-79519.herokuapp.com'
+      oauth_callback: 'http://127.0.0.1:3000'
     }
   }, (err, r, body) => {
     try {
@@ -25,6 +27,7 @@ exports.twitterReverse = async (req, res, next) => {
       console.log(jsonStr)
       res.send(JSON.parse(jsonStr))
     } catch (error) {
+      console.log('error' , error)
       return next(error)
     }
   })
@@ -41,7 +44,8 @@ exports.twitterAuthToken = async (req, res, next) => {
     req.token = jwt.encode(playload, jwtSecret)
 
     res.setHeader('x-auth-token', req.token)
-
+    console.log('req.body', req.body)
+    // userActivityWebhook()
     return res.status(200).send()
   } catch (error) {
     console.log('errpr', error)
