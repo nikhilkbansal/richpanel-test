@@ -20,6 +20,7 @@ export default async function Fetch (url, loader, fetchProps = {}, headers = {},
   })
   if (doJson) {
     const jsonParsed = await data.json()
+    loader.setLoader(false)
     return jsonParsed
   }
   if (data.headers.get('x-auth-token')) {
