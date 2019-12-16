@@ -22,13 +22,15 @@ exports.setUserActivityWebhook = function (app) {
 //   oauth_verifier: 'eHZZxnAYyKNhk2VixfMyH8fMNTmi0PcC',
 //   oauth_token_secret: 'YsddpcFj7hqbjHfItDGHAYK8vKh32FRUoN3rkWAOiXfWE',
 //   user_id: '1203275558521470976' }
-exports.userActivityWebhook = function (userId,
-  accessToken, accessTokenSecret) {
+exports.userActivityWebhook = function ({
+  user_id,
+  oauth_token, oauth_token_secret
+}) {
   // Subscribe for a particular user activity
   return userActivityWebhook.subscribe({
-    userId,
-    accessToken,
-    accessTokenSecret
+    userId: user_id,
+    accessToken: oauth_token,
+    accessTokenSecret: oauth_token_secret
   })
 }
 
