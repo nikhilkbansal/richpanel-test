@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Redirect
 } from 'react-router-dom'
 import { Spinner } from 'reactstrap'
 import Login from './Containers/Login'
@@ -16,16 +17,19 @@ export const LadingContext = React.createContext({
 })
 
 function App () {
-  const setLoader = (isLoading) => {
+  const setLoaderAndUpdateLoginStatus = (isLoading) => {
     setState({ ...state, isLoading: isLoading })
+    console.log('window.localStorage.getItem(atkn)', window.localStorage.getItem('atkn'))
+    setLoggedin(!!window.localStorage.getItem('atkn'))
   }
 
   const initState = {
     isLoading: false,
-    setLoader: setLoader
+    setLoader: setLoaderAndUpdateLoginStatus
   }
 
   const [state, setState] = useState(initState)
+  const [isLoggedIn, setLoggedin] = useState(!!window.localStorage.getItem('atkn'))
   return (
     <LoaderContext.Provider value={state}>
       <Router>
@@ -44,6 +48,8 @@ function App () {
         </div>}
         <div>
           <Switch>
+            {!isLoggedIn && <Redirect from='/home' to='/' exact />}
+            {isLoggedIn && <Redirect from='/' to='/home' exact />}
             <Route exact path='/home' component={Home} />
             <Route exact path='/' component={Login} />
           </Switch>
