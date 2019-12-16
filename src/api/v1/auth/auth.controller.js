@@ -25,7 +25,7 @@ exports.twitterReverse = async (req, res, next) => {
 
       const jsonStr = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}'
       console.log(jsonStr)
-      res.send(JSON.parse(jsonStr))
+      return res.send(JSON.parse(jsonStr))
     } catch (error) {
       console.log('error' , error)
       return next(error)
@@ -35,13 +35,13 @@ exports.twitterReverse = async (req, res, next) => {
 
 exports.twitterAuthToken = async (req, res, next) => {
   try {
-    const playload = {
+    const payload = {
       exp: moment().add(jwtExpirationInterval, 'days').unix(),
       iat: moment().unix(),
       sub: req.body.user_id,
       ...req.body
     }
-    req.token = jwt.encode(playload, jwtSecret)
+    req.token = jwt.encode(payload, jwtSecret)
 
     res.setHeader('x-auth-token', req.token)
     console.log('req.body', req.body)
