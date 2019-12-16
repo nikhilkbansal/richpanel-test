@@ -9,6 +9,7 @@ module.exports = {
       socket.on('authenticate', (data) => {
         console.log('data ', data)
         const userData = jwt.decode(data.token, jwtSecret)
+        console.log('userData', userData)
         const userActivityWebhook = twitterWebhook.userActivityWebhook(userData)
         userActivityWebhook.then(function (userActivity) {
           console.log('useractivity', userActivity)
@@ -18,6 +19,7 @@ module.exports = {
               console.log('data inside socket', data)
             })
         })
+          .catch(error => console.log('error in socket', error))
       })
     })
   },
