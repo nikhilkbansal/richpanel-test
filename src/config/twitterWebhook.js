@@ -6,7 +6,7 @@ let userActivityWebhook = {}
 exports.setUserActivityWebhook = function (app) {
   userActivityWebhook = twitterWebhooks.userActivity({
     serverUrl: 'https://salty-plains-79519.herokuapp.com',
-    route: '/webhook/twitter', // default : '/'
+    route: '/', // default : '/'
     consumerKey: twitterConfig.consumerKey,
     consumerSecret: twitterConfig.consumerSecret,
     accessToken: twitterConfig.accessToken,
