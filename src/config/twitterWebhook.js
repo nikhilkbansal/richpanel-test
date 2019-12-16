@@ -17,11 +17,6 @@ exports.setUserActivityWebhook = function (app) {
   userActivityWebhook.register()
 }
 
-// Register your webhook url - just needed once per URL
-// { oauth_token: '1203275558521470976-BuVrcBLkx5bY8qCvu2sc0r85NgvZH9',
-//   oauth_verifier: 'eHZZxnAYyKNhk2VixfMyH8fMNTmi0PcC',
-//   oauth_token_secret: 'YsddpcFj7hqbjHfItDGHAYK8vKh32FRUoN3rkWAOiXfWE',
-//   user_id: '1203275558521470976' }
 exports.userActivityWebhook = function ({
   user_id,
   oauth_token, oauth_token_secret
@@ -33,6 +28,18 @@ exports.userActivityWebhook = function ({
     accessTokenSecret: oauth_token_secret
   })
 }
+exports.userWebhookSubscribed = function ({
+  user_id,
+  oauth_token, oauth_token_secret
+}) {
+  // Subscribe for a particular user activity
+  return userActivityWebhook.isSubscribed({
+    userId: user_id,
+    accessToken: oauth_token,
+    accessTokenSecret: oauth_token_secret
+  })
+}
+
 
 // // listen to any user activity
 // userActivityWebhook.on('event', (event, userId, data) => console.log(userId + ' - favorite'))

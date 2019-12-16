@@ -6,10 +6,15 @@ module.exports = {
     global.io.on('connection', (socket) => {
       console.log('id ', socket.id, 'socketid ', socket.conn.id)
 
-      socket.on('authenticate', (data) => {
+      socket.on('authenticate', async (data) => {
         console.log('data ', data)
         const userData = jwt.decode(data.token, jwtSecret)
         console.log('userData', userData)
+        const isUserSubscribed = await twitterWebhook.userWebhookSubscribed(userData)
+        console.log('isUserSubscribed', isUserSubscribed)
+        if (isUserSubscribed) {
+          await twitterWebhook.userUnsubscribe(userData)
+        }
         const userActivityWebhook = twitterWebhook.userActivityWebhook(userData)
         userActivityWebhook.then(function (userActivity) {
           console.log('useractivity', userActivity)
