@@ -28,18 +28,28 @@ exports.userActivityWebhook = function ({
     accessTokenSecret: oauth_token_secret
   })
 }
-exports.userWebhookSubscribed = function ({
+exports.userGetSubscriptions = function ({
   user_id,
   oauth_token, oauth_token_secret
 }) {
   // Subscribe for a particular user activity
-  return userActivityWebhook.isSubscribed({
+  return userActivityWebhook.getSubsciptions({
     userId: user_id,
     accessToken: oauth_token,
     accessTokenSecret: oauth_token_secret
   })
 }
-
+exports.userUnsubscribe = function ({
+  user_id,
+  oauth_token, oauth_token_secret
+}) {
+  // Subscribe for a particular user activity
+  return userActivityWebhook.unsubscribe({
+    userId: user_id,
+    accessToken: oauth_token,
+    accessTokenSecret: oauth_token_secret
+  })
+}
 
 // // listen to any user activity
 // userActivityWebhook.on('event', (event, userId, data) => console.log(userId + ' - favorite'))
