@@ -23,7 +23,7 @@ socketUtils.newConnection()
 // open mongoose connection
 
 // listen to requests
-app.listen(port, () => console.info(`server started on port ${port} (${env})`))
+server.listen(port, () => console.info(`server started on port ${port} (${env})`))
 
 /**
 * Exports express
