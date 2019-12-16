@@ -60,7 +60,9 @@ passport.use(strategies.twitter)
 // mount api v1 routes
 app.use('/v1', routes)
 setUserActivityWebhook(app)
+app.get('/', handleRender); app.get('*', handleRender)
 
+function handleRender (req, res) { res.sendFile(path.join(__dirname, '../../client/build/index.html')) }
 // if error is not an instanceOf APIError, convert it.
 app.use(error.converter)
 
