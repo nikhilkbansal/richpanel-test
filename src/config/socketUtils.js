@@ -9,11 +9,14 @@ module.exports = {
       socket.on('authenticate', (data) => {
         console.log('data ', data)
         const userData = jwt.decode(data.token, jwtSecret)
-        return
         const userActivityWebhook = twitterWebhook.userActivityWebhook(userData)
         userActivityWebhook.then(function (userActivity) {
+          console.log('useractivity', userActivity)
           userActivity
-            .on('tweet_create', (data) => socket.emit('newTweets'))
+            .on('tweet_create', (data) => {
+              socket.emit('newTweets')
+              console.log('data inside socket', data)
+            })
         })
       })
     })
