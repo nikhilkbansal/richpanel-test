@@ -12,10 +12,10 @@ console.config(signaleConfig)
 
 const app = require('./config/express')
 const socketUtils = require('./config/socketUtils')
-const server = require('http').createServer()
+const server = require('http').createServer(app)
 
 global.io = require('socket.io').listen(server)
-server.listen(socketPort, socketUrl, () => console.info(`socket server started on ${socketUrl}:${socketPort}`));
+// server.listen(socketPort, socketUrl, () => console.info(`socket server started on ${socketUrl}:${socketPort}`));
 
 
 socketUtils.newConnection()

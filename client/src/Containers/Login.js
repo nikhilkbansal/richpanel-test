@@ -42,7 +42,6 @@ async function verifyTwitter (query, props, loader) {
     window.alert('Please try again later')
     return
   }
-  window.localStorage.setItem('atkn', data.headers.get('x-auth-token'))
   // Wating for localStorage to set
   setTimeout(() => {
     props.history.push('/home')

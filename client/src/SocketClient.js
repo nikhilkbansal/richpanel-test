@@ -9,7 +9,7 @@ class SocketClient {
     this.services = services;
     this.endpoint = 'http://127.0.0.1:5001';
     this.authenticate = this.authenticate.bind(this);
-    this.connection = io.connect(`${this.endpoint}`, { forceNew: true });
+    this.connection = io.connect();
     this.socketHandler = this.socketHandler.bind(this);
     this.socketHandler();
   }
