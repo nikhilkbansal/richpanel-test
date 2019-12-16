@@ -2,7 +2,6 @@ const moment = require('moment-timezone')
 const { jwtExpirationInterval, twitterConfig, jwtSecret } = require('../../../config/vars')
 const request = require('request')
 const jwt = require('jwt-simple')
-const { userActivityWebhook } = require('./../../../config/twitterWebhook')
 
 exports.twitterReverse = async (req, res, next) => {
   console.log('abcbdvbkfdbvh')
@@ -24,7 +23,7 @@ exports.twitterReverse = async (req, res, next) => {
       }
 
       const jsonStr = '{ "' + body.replace(/&/g, '", "').replace(/=/g, '": "') + '"}'
-      console.log(jsonStr)
+      console.log('jsonstring', jsonStr)
       return res.send(JSON.parse(jsonStr))
     } catch (error) {
       console.log('error' , error)

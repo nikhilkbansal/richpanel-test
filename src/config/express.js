@@ -40,7 +40,6 @@ app.use(morgan(logs))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-setUserActivityWebhook(app)
 // gzip compression
 app.use(compress())
 
@@ -60,6 +59,7 @@ passport.use(strategies.twitter)
 
 // mount api v1 routes
 app.use('/v1', routes)
+setUserActivityWebhook(app)
 
 // if error is not an instanceOf APIError, convert it.
 app.use(error.converter)
