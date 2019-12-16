@@ -18,10 +18,14 @@ export default async function Fetch (url, loader, fetchProps = {}, headers = {},
     },
     ...fetchProps
   })
-  loader.setLoader(false)
   if (doJson) {
     const jsonParsed = await data.json()
     return jsonParsed
   }
+  if (data.headers.get('x-auth-token')) {
+    window.localStorage.setItem('atkn', data.headers.get('x-auth-token'))
+  }
+  loader.setLoader(false)
+
   return data
 }

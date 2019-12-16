@@ -86,7 +86,7 @@ function Login (props) {
       </Row>
       <Row>
         <Col sm='12' md={{ size: 6, offset: 3 }} style={{ verticalAlign: 'center' }}>
-          <Card style={{ height: '1em', border: 'none' }}>
+          <Card style={{ height: '1em', border: 'none', backgroundColor: 'transparent' }}>
             <CardBody
               style={{
                 display: 'flex',
