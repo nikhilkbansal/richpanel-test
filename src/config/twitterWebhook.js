@@ -50,6 +50,9 @@ exports.userUnsubscribe = function ({
     accessTokenSecret: oauth_token_secret
   })
 }
+exports.getAccountWebHook = function () {
+  return userActivityWebhook.getWebhook()
+}
 
 // // listen to any user activity
 // userActivityWebhook.on('event', (event, userId, data) => console.log(userId + ' - favorite'))
