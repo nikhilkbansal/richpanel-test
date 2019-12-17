@@ -10,7 +10,7 @@ module.exports = {
         console.log('data ', data)
         const userData = jwt.decode(data.token, jwtSecret)
         console.log('userData', userData)
-        const subscriptions = await twitterWebhook.userGetSubscriptions(userData)
+        // const subscriptions = await twitterWebhook.userGetSubscriptions(userData)
         console.log('subscriptions', subscriptions)
         if (true) {
           await twitterWebhook.userUnsubscribe(userData)
